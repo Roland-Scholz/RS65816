@@ -1,0 +1,17 @@
+AUTO_TS_P2P:FROM:clk:TO:phi0:1
+AUTO_TS_F2P:FROM:counter<2>.Q:TO:phi0:1
+AUTO_TS_F2P:FROM:counter<0>.Q:TO:phi0:1
+AUTO_TS_F2P:FROM:counter<1>.Q:TO:phi0:1
+AUTO_TS_F2F:FROM:counter<0>.Q:TO:counter<0>.D:1
+AUTO_TS_F2F:FROM:counter<1>.Q:TO:counter<0>.D:1
+AUTO_TS_F2F:FROM:counter<2>.Q:TO:counter<0>.D:1
+AUTO_TS_P2F:FROM:clk:TO:counter<0>.D:1
+AUTO_TS_F2F:FROM:counter<0>.Q:TO:counter<1>.D:1
+AUTO_TS_F2F:FROM:counter<1>.Q:TO:counter<1>.D:1
+AUTO_TS_F2F:FROM:counter<2>.Q:TO:counter<1>.D:1
+AUTO_TS_P2F:FROM:clk:TO:counter<1>.D:1
+AUTO_TS_F2F:FROM:counter<1>.Q:TO:counter<2>.D:1
+AUTO_TS_F2F:FROM:counter<2>.Q:TO:counter<2>.D:1
+AUTO_TS_F2F:FROM:counter<0>.Q:TO:counter<2>.D:1
+AUTO_TS_P2F:FROM:clk:TO:counter<2>.D:1
+AUTO_TS_P2F:FROM:clk:TO:FCLKIO_0:1

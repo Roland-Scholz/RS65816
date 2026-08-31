@@ -1,0 +1,322 @@
+MDF Database:  version 1.0
+MDF_INFO | cpumodule | XC9536-15-PC44
+MACROCELL | 0 | 16 | ras_OBUF
+ATTRIBUTES | 396034 | 0
+INPUTS | 15 | vda  | rom.PIN  | counter<1>  | counter<2>  | vpa  | refcnt<0>  | refcnt<1>  | refcnt<2>  | refcnt<3>  | refcnt<4>  | refcnt<5>  | refcnt<6>  | refcnt<7>  | EXP0_.EXP  | io.PIN
+INPUTMC | 11 | 1 | 13 | 1 | 12 | 1 | 6 | 1 | 17 | 1 | 5 | 1 | 4 | 1 | 15 | 1 | 14 | 1 | 11 | 1 | 2 | 0 | 15
+INPUTP | 4 | 9 | 18 | 4 | 34
+IMPORTS | 1 | 0 | 15
+EQ | 15 | 
+   !ras = vda & counter<1> & !counter<2> & io.PIN & 
+	rom.PIN
+	# vda & !counter<1> & counter<2> & io.PIN & 
+	rom.PIN
+	# counter<1> & !counter<2> & vpa & io.PIN & 
+	rom.PIN
+	# !counter<1> & counter<2> & vpa & io.PIN & 
+	rom.PIN
+	# !counter<1> & counter<2> & !refcnt<0> & !refcnt<1> & 
+	!refcnt<2> & !refcnt<3> & !refcnt<4> & !refcnt<5> & !refcnt<6> & 
+	!refcnt<7>
+;Imported pterms FB1_16
+	# counter<1> & !counter<2> & !refcnt<0> & !refcnt<1> & 
+	!refcnt<2> & !refcnt<3> & !refcnt<4> & !refcnt<5> & !refcnt<6> & 
+	!refcnt<7>;
+
+MACROCELL | 1 | 10 | io_OBUF
+ATTRIBUTES | 4621058 | 0
+INPUTS | 20 | counter<1>  | counter<2>  | counter<0>  | iocnt<0>  | iocnt<1>  | iocnt<2>  | vda  | bank<3>  | bank<2>  | bank<1>  | bank<0>  | a15_13<2>  | a15_13<1>  | a15_13<0>  | bank<7>  | bank<6>  | bank<5>  | bank<4>  | vpa  | io.PIN
+INPUTMC | 6 | 1 | 13 | 1 | 12 | 1 | 9 | 1 | 16 | 1 | 8 | 1 | 7
+INPUTP | 14 | 9 | 36 | 35 | 8 | 12 | 37 | 13 | 38 | 33 | 14 | 29 | 28 | 4 | 34
+EQ | 7 | 
+   io.T = counter<1> & counter<2> & !counter<0> & iocnt<0> & 
+	iocnt<1> & iocnt<2> & !io.PIN
+	# vda & bank<3> & bank<2> & bank<1> & bank<0> & 
+	a15_13<2> & a15_13<1> & a15_13<0> & bank<7> & bank<6> & 
+	bank<5> & bank<4> & !counter<1> & !counter<2> & counter<0> & 
+	!iocnt<0> & !iocnt<1> & !iocnt<2> & !vpa & io.PIN;
+   !io.CLK = clk;	// GCK
+GLOBALS | 1 | 2 | clk
+
+MACROCELL | 0 | 12 | rom_OBUF
+ATTRIBUTES | 4621058 | 0
+INPUTS | 17 | counter<1>  | counter<2>  | counter<0>  | vda  | bank<3>  | bank<2>  | bank<1>  | bank<0>  | a15_13<2>  | a15_13<1>  | a15_13<0>  | bank<7>  | bank<6>  | bank<5>  | bank<4>  | vpa  | rom.PIN
+INPUTMC | 3 | 1 | 13 | 1 | 12 | 1 | 9
+INPUTP | 14 | 9 | 36 | 35 | 8 | 12 | 37 | 13 | 38 | 33 | 14 | 29 | 28 | 4 | 18
+EQ | 10 | 
+   rom.T = counter<1> & counter<2> & !counter<0> & !rom.PIN
+	# vda & !bank<3> & !bank<2> & !bank<1> & !bank<0> & 
+	a15_13<2> & a15_13<1> & a15_13<0> & !bank<7> & !bank<6> & 
+	!bank<5> & !bank<4> & !counter<1> & !counter<2> & counter<0> & 
+	rom.PIN
+	# !bank<3> & !bank<2> & !bank<1> & !bank<0> & 
+	a15_13<2> & a15_13<1> & a15_13<0> & !bank<7> & !bank<6> & 
+	!bank<5> & !bank<4> & !counter<1> & !counter<2> & counter<0> & 
+	vpa & rom.PIN;
+   !rom.CLK = clk;	// GCK
+GLOBALS | 1 | 2 | clk
+
+MACROCELL | 1 | 13 | counter<1>
+ATTRIBUTES | 8553216 | 0
+OUTPUTMC | 19 | 0 | 16 | 1 | 10 | 0 | 12 | 1 | 13 | 1 | 12 | 1 | 9 | 1 | 16 | 1 | 8 | 1 | 7 | 1 | 6 | 1 | 17 | 1 | 5 | 0 | 8 | 1 | 15 | 1 | 14 | 1 | 11 | 1 | 2 | 0 | 15 | 1 | 4
+INPUTS | 3 | counter<1>  | counter<0>  | counter<2>
+INPUTMC | 3 | 1 | 13 | 1 | 9 | 1 | 12
+EQ | 3 | 
+   counter<1>.D = !counter<1> & counter<0>
+	# counter<1> & !counter<2> & !counter<0>;
+   !counter<1>.CLK = clk;	// GCK
+GLOBALS | 1 | 2 | clk
+
+MACROCELL | 1 | 12 | counter<2>
+ATTRIBUTES | 8553216 | 0
+OUTPUTMC | 20 | 0 | 16 | 1 | 10 | 0 | 12 | 1 | 13 | 1 | 12 | 1 | 9 | 1 | 16 | 1 | 8 | 1 | 7 | 1 | 6 | 1 | 17 | 1 | 5 | 0 | 15 | 1 | 15 | 1 | 14 | 1 | 11 | 1 | 2 | 1 | 3 | 0 | 8 | 1 | 4
+INPUTS | 3 | counter<1>  | counter<2>  | counter<0>
+INPUTMC | 3 | 1 | 13 | 1 | 12 | 1 | 9
+EQ | 3 | 
+   counter<2>.D = !counter<1> & counter<2>
+	# counter<1> & !counter<2> & counter<0>;
+   !counter<2>.CLK = clk;	// GCK
+GLOBALS | 1 | 2 | clk
+
+MACROCELL | 1 | 9 | counter<0>
+ATTRIBUTES | 4358912 | 0
+OUTPUTMC | 17 | 1 | 10 | 0 | 12 | 1 | 13 | 1 | 12 | 1 | 9 | 1 | 16 | 1 | 8 | 1 | 7 | 1 | 6 | 1 | 17 | 1 | 5 | 0 | 8 | 1 | 15 | 1 | 14 | 1 | 11 | 1 | 2 | 1 | 4
+INPUTS | 3 | counter<1>  | counter<2>  | counter<0>
+INPUTMC | 3 | 1 | 13 | 1 | 12 | 1 | 9
+EQ | 2 | 
+   !counter<0>.T = counter<1> & counter<2> & !counter<0>;
+   !counter<0>.CLK = clk;	// GCK
+GLOBALS | 1 | 2 | clk
+
+MACROCELL | 1 | 16 | iocnt<0>
+ATTRIBUTES | 4358912 | 0
+OUTPUTMC | 4 | 1 | 10 | 1 | 16 | 1 | 8 | 1 | 7
+INPUTS | 19 | vda  | bank<3>  | bank<2>  | bank<1>  | bank<0>  | a15_13<2>  | a15_13<1>  | a15_13<0>  | bank<7>  | bank<6>  | bank<5>  | bank<4>  | counter<1>  | counter<2>  | counter<0>  | iocnt<0>  | iocnt<1>  | iocnt<2>  | vpa
+INPUTMC | 6 | 1 | 13 | 1 | 12 | 1 | 9 | 1 | 16 | 1 | 8 | 1 | 7
+INPUTP | 13 | 9 | 36 | 35 | 8 | 12 | 37 | 13 | 38 | 33 | 14 | 29 | 28 | 4
+EQ | 8 | 
+   iocnt<0>.T = counter<1> & counter<2> & !counter<0> & iocnt<0>
+	# counter<1> & counter<2> & !counter<0> & iocnt<1>
+	# counter<1> & counter<2> & !counter<0> & iocnt<2>
+	# vda & bank<3> & bank<2> & bank<1> & bank<0> & 
+	a15_13<2> & a15_13<1> & a15_13<0> & bank<7> & bank<6> & 
+	bank<5> & bank<4> & !counter<1> & !counter<2> & counter<0> & 
+	!iocnt<0> & !iocnt<1> & !iocnt<2> & !vpa;
+   !iocnt<0>.CLK = clk;	// GCK
+GLOBALS | 1 | 2 | clk
+
+MACROCELL | 1 | 8 | iocnt<1>
+ATTRIBUTES | 4358912 | 0
+OUTPUTMC | 4 | 1 | 10 | 1 | 16 | 1 | 7 | 0 | 8
+INPUTS | 4 | counter<1>  | counter<2>  | counter<0>  | iocnt<0>
+INPUTMC | 4 | 1 | 13 | 1 | 12 | 1 | 9 | 1 | 16
+EQ | 2 | 
+   iocnt<1>.T = counter<1> & counter<2> & !counter<0> & iocnt<0>;
+   !iocnt<1>.CLK = clk;	// GCK
+GLOBALS | 1 | 2 | clk
+
+MACROCELL | 1 | 7 | iocnt<2>
+ATTRIBUTES | 4358912 | 0
+OUTPUTMC | 3 | 1 | 10 | 1 | 16 | 0 | 8
+INPUTS | 5 | counter<1>  | counter<2>  | counter<0>  | iocnt<0>  | iocnt<1>
+INPUTMC | 5 | 1 | 13 | 1 | 12 | 1 | 9 | 1 | 16 | 1 | 8
+EQ | 3 | 
+   iocnt<2>.T = counter<1> & counter<2> & !counter<0> & iocnt<0> & 
+	iocnt<1>;
+   !iocnt<2>.CLK = clk;	// GCK
+GLOBALS | 1 | 2 | clk
+
+MACROCELL | 1 | 6 | refcnt<0>
+ATTRIBUTES | 4358916 | 0
+OUTPUTMC | 11 | 0 | 16 | 1 | 17 | 1 | 5 | 0 | 15 | 1 | 15 | 1 | 14 | 1 | 11 | 1 | 2 | 1 | 3 | 0 | 8 | 1 | 4
+INPUTS | 3 | counter<1>  | counter<2>  | counter<0>
+INPUTMC | 3 | 1 | 13 | 1 | 12 | 1 | 9
+EQ | 2 | 
+   refcnt<0>.T = counter<1> & counter<2> & !counter<0>;
+   !refcnt<0>.CLK = clk;	// GCK
+GLOBALS | 1 | 2 | clk
+
+MACROCELL | 1 | 17 | refcnt<1>
+ATTRIBUTES | 4358916 | 0
+OUTPUTMC | 11 | 0 | 16 | 1 | 17 | 1 | 5 | 0 | 15 | 1 | 15 | 1 | 14 | 1 | 11 | 1 | 2 | 1 | 3 | 0 | 8 | 1 | 4
+INPUTS | 11 | refcnt<0>  | counter<1>  | counter<2>  | counter<0>  | refcnt<1>  | refcnt<2>  | refcnt<3>  | refcnt<4>  | refcnt<5>  | refcnt<6>  | refcnt<7>
+INPUTMC | 11 | 1 | 6 | 1 | 13 | 1 | 12 | 1 | 9 | 1 | 17 | 1 | 5 | 1 | 4 | 1 | 15 | 1 | 14 | 1 | 11 | 1 | 2
+EQ | 7 | 
+   !refcnt<1>.T = !counter<1>
+	# !counter<2>
+	# counter<0>
+	# refcnt<0>
+	# !refcnt<1> & !refcnt<2> & !refcnt<3> & !refcnt<4> & 
+	!refcnt<5> & !refcnt<6> & !refcnt<7>;
+   !refcnt<1>.CLK = clk;	// GCK
+GLOBALS | 1 | 2 | clk
+
+MACROCELL | 1 | 5 | refcnt<2>
+ATTRIBUTES | 4358912 | 0
+OUTPUTMC | 11 | 0 | 16 | 1 | 17 | 0 | 15 | 1 | 15 | 1 | 14 | 1 | 11 | 1 | 2 | 1 | 3 | 0 | 8 | 1 | 4 | 1 | 5
+INPUTS | 6 | counter<1>  | counter<2>  | counter<0>  | refcnt<0>  | refcnt<1>  | refcnt<2>
+INPUTMC | 6 | 1 | 13 | 1 | 12 | 1 | 9 | 1 | 6 | 1 | 17 | 1 | 5
+EXPORTS | 1 | 1 | 4
+EQ | 5 | 
+   refcnt<2>.T = counter<1> & counter<2> & !counter<0> & 
+	!refcnt<0> & !refcnt<1>;
+   !refcnt<2>.CLK = clk;	// GCK
+    refcnt<2>.EXP  =  counter<1> & counter<2> & !counter<0> & 
+	!refcnt<0> & !refcnt<1> & !refcnt<2>
+GLOBALS | 1 | 2 | clk
+
+MACROCELL | 1 | 4 | refcnt<3>
+ATTRIBUTES | 4358912 | 0
+OUTPUTMC | 10 | 0 | 16 | 1 | 17 | 1 | 15 | 1 | 14 | 1 | 11 | 1 | 2 | 1 | 3 | 0 | 8 | 0 | 15 | 1 | 4
+INPUTS | 15 | counter<2>  | counter<1>  | counter<0>  | vda  | vpa  | refcnt<0>  | refcnt<1>  | refcnt<2>  | refcnt<3>  | refcnt<4>  | refcnt<5>  | refcnt<6>  | refcnt<7>  | refcnt<2>.EXP  | rom.PIN
+INPUTMC | 12 | 1 | 12 | 1 | 13 | 1 | 9 | 1 | 6 | 1 | 17 | 1 | 5 | 1 | 4 | 1 | 15 | 1 | 14 | 1 | 11 | 1 | 2 | 1 | 5
+INPUTP | 3 | 9 | 4 | 18
+EXPORTS | 1 | 1 | 3
+IMPORTS | 1 | 1 | 5
+EQ | 10 | 
+   refcnt<3>.T = ;Imported pterms FB2_6
+	  counter<1> & counter<2> & !counter<0> & 
+	!refcnt<0> & !refcnt<1> & !refcnt<2>;
+   !refcnt<3>.CLK = clk;	// GCK
+    refcnt<3>.EXP  =  counter<1> & counter<0>
+	# !counter<1> & !counter<0>
+	# counter<2> & !rom.PIN
+	# !vda & counter<2> & !vpa
+	# counter<2> & !refcnt<0> & !refcnt<1> & !refcnt<2> & 
+	!refcnt<3> & !refcnt<4> & !refcnt<5> & !refcnt<6> & !refcnt<7>
+GLOBALS | 1 | 2 | clk
+
+MACROCELL | 1 | 15 | refcnt<4>
+ATTRIBUTES | 4358912 | 0
+OUTPUTMC | 9 | 0 | 16 | 1 | 17 | 1 | 15 | 1 | 14 | 1 | 11 | 1 | 2 | 0 | 15 | 0 | 8 | 1 | 4
+INPUTS | 11 | counter<1>  | counter<2>  | counter<0>  | refcnt<0>  | refcnt<1>  | refcnt<2>  | refcnt<3>  | refcnt<4>  | refcnt<5>  | refcnt<6>  | refcnt<7>
+INPUTMC | 11 | 1 | 13 | 1 | 12 | 1 | 9 | 1 | 6 | 1 | 17 | 1 | 5 | 1 | 4 | 1 | 15 | 1 | 14 | 1 | 11 | 1 | 2
+EQ | 9 | 
+   refcnt<4>.T = counter<1> & counter<2> & !counter<0> & 
+	!refcnt<0> & !refcnt<1> & !refcnt<2> & !refcnt<3> & refcnt<4>
+	# counter<1> & counter<2> & !counter<0> & 
+	!refcnt<0> & !refcnt<1> & !refcnt<2> & !refcnt<3> & refcnt<5>
+	# counter<1> & counter<2> & !counter<0> & 
+	!refcnt<0> & !refcnt<1> & !refcnt<2> & !refcnt<3> & refcnt<6>
+	# counter<1> & counter<2> & !counter<0> & 
+	!refcnt<0> & !refcnt<1> & !refcnt<2> & !refcnt<3> & refcnt<7>;
+   !refcnt<4>.CLK = clk;	// GCK
+GLOBALS | 1 | 2 | clk
+
+MACROCELL | 1 | 14 | refcnt<5>
+ATTRIBUTES | 4358912 | 0
+OUTPUTMC | 9 | 0 | 16 | 1 | 17 | 1 | 15 | 1 | 14 | 1 | 11 | 1 | 2 | 0 | 15 | 0 | 8 | 1 | 4
+INPUTS | 11 | counter<1>  | counter<2>  | counter<0>  | refcnt<0>  | refcnt<1>  | refcnt<2>  | refcnt<3>  | refcnt<4>  | refcnt<6>  | refcnt<7>  | refcnt<5>
+INPUTMC | 11 | 1 | 13 | 1 | 12 | 1 | 9 | 1 | 6 | 1 | 17 | 1 | 5 | 1 | 4 | 1 | 15 | 1 | 11 | 1 | 2 | 1 | 14
+EQ | 10 | 
+   refcnt<5>.T = counter<1> & counter<2> & !counter<0> & 
+	!refcnt<0> & !refcnt<1> & !refcnt<2> & !refcnt<3> & !refcnt<4> & 
+	refcnt<5>
+	# counter<1> & counter<2> & !counter<0> & 
+	!refcnt<0> & !refcnt<1> & !refcnt<2> & !refcnt<3> & !refcnt<4> & 
+	refcnt<6>
+	# counter<1> & counter<2> & !counter<0> & 
+	!refcnt<0> & !refcnt<1> & !refcnt<2> & !refcnt<3> & !refcnt<4> & 
+	refcnt<7>;
+   !refcnt<5>.CLK = clk;	// GCK
+GLOBALS | 1 | 2 | clk
+
+MACROCELL | 1 | 11 | refcnt<6>
+ATTRIBUTES | 4358912 | 0
+OUTPUTMC | 9 | 0 | 16 | 1 | 17 | 1 | 15 | 1 | 14 | 1 | 11 | 1 | 2 | 0 | 15 | 0 | 8 | 1 | 4
+INPUTS | 11 | counter<1>  | counter<2>  | counter<0>  | refcnt<0>  | refcnt<1>  | refcnt<2>  | refcnt<3>  | refcnt<4>  | refcnt<5>  | refcnt<7>  | refcnt<6>
+INPUTMC | 11 | 1 | 13 | 1 | 12 | 1 | 9 | 1 | 6 | 1 | 17 | 1 | 5 | 1 | 4 | 1 | 15 | 1 | 14 | 1 | 2 | 1 | 11
+EQ | 7 | 
+   refcnt<6>.T = counter<1> & counter<2> & !counter<0> & 
+	!refcnt<0> & !refcnt<1> & !refcnt<2> & !refcnt<3> & !refcnt<4> & 
+	!refcnt<5> & refcnt<6>
+	# counter<1> & counter<2> & !counter<0> & 
+	!refcnt<0> & !refcnt<1> & !refcnt<2> & !refcnt<3> & !refcnt<4> & 
+	!refcnt<5> & refcnt<7>;
+   !refcnt<6>.CLK = clk;	// GCK
+GLOBALS | 1 | 2 | clk
+
+MACROCELL | 1 | 2 | refcnt<7>
+ATTRIBUTES | 4358912 | 0
+OUTPUTMC | 10 | 0 | 16 | 1 | 17 | 1 | 15 | 1 | 14 | 1 | 11 | 1 | 2 | 0 | 8 | 0 | 15 | 1 | 4 | 1 | 3
+INPUTS | 11 | counter<1>  | counter<2>  | counter<0>  | refcnt<0>  | refcnt<1>  | refcnt<2>  | refcnt<3>  | refcnt<4>  | refcnt<5>  | refcnt<6>  | refcnt<7>
+INPUTMC | 11 | 1 | 13 | 1 | 12 | 1 | 9 | 1 | 6 | 1 | 17 | 1 | 5 | 1 | 4 | 1 | 15 | 1 | 14 | 1 | 11 | 1 | 2
+EXPORTS | 1 | 1 | 3
+EQ | 8 | 
+   refcnt<7>.T = counter<1> & counter<2> & !counter<0> & 
+	!refcnt<0> & !refcnt<1> & !refcnt<2> & !refcnt<3> & !refcnt<4> & 
+	!refcnt<5> & !refcnt<6>;
+   !refcnt<7>.CLK = clk;	// GCK
+    refcnt<7>.EXP  =  !counter<2> & refcnt<4>
+	# !counter<2> & refcnt<5>
+	# !counter<2> & refcnt<6>
+	# !counter<2> & refcnt<7>
+GLOBALS | 1 | 2 | clk
+
+MACROCELL | 1 | 3 | cas_OBUF
+ATTRIBUTES | 396034 | 0
+INPUTS | 8 | counter<2>  | refcnt<0>  | refcnt<1>  | refcnt<2>  | refcnt<3>  | refcnt<7>.EXP  | refcnt<3>.EXP  | io.PIN
+INPUTMC | 7 | 1 | 12 | 1 | 6 | 1 | 17 | 1 | 5 | 1 | 4 | 1 | 2 | 1 | 4
+INPUTP | 1 | 34
+IMPORTS | 2 | 1 | 2 | 1 | 4
+EQ | 17 | 
+   cas = counter<2> & !io.PIN
+	# !counter<2> & refcnt<0>
+	# !counter<2> & refcnt<1>
+	# !counter<2> & refcnt<2>
+	# !counter<2> & refcnt<3>
+;Imported pterms FB2_3
+	# !counter<2> & refcnt<4>
+	# !counter<2> & refcnt<5>
+	# !counter<2> & refcnt<6>
+	# !counter<2> & refcnt<7>
+;Imported pterms FB2_5
+	# counter<1> & counter<0>
+	# !counter<1> & !counter<0>
+	# counter<2> & !rom.PIN
+	# !vda & counter<2> & !vpa
+	# counter<2> & !refcnt<0> & !refcnt<1> & !refcnt<2> & 
+	!refcnt<3> & !refcnt<4> & !refcnt<5> & !refcnt<6> & !refcnt<7>;
+
+MACROCELL | 0 | 8 | phi0_OBUF
+ATTRIBUTES | 396034 | 0
+INPUTS | 13 | iocnt<1>  | counter<2>  | iocnt<2>  | counter<1>  | counter<0>  | refcnt<0>  | refcnt<1>  | refcnt<2>  | refcnt<3>  | refcnt<4>  | refcnt<5>  | refcnt<6>  | refcnt<7>
+INPUTMC | 13 | 1 | 8 | 1 | 12 | 1 | 7 | 1 | 13 | 1 | 9 | 1 | 6 | 1 | 17 | 1 | 5 | 1 | 4 | 1 | 15 | 1 | 14 | 1 | 11 | 1 | 2
+EQ | 6 | 
+   phi0 = counter<2>
+	# iocnt<1>
+	# iocnt<2>
+	# counter<1> & counter<0>
+	# refcnt<0> & !refcnt<1> & refcnt<2> & refcnt<3> & 
+	!refcnt<4> & !refcnt<5> & !refcnt<6> & refcnt<7>;
+
+MACROCELL | 0 | 15 | EXP0_
+ATTRIBUTES | 2048 | 0
+OUTPUTMC | 1 | 0 | 16
+INPUTS | 10 | counter<1>  | counter<2>  | refcnt<0>  | refcnt<1>  | refcnt<2>  | refcnt<3>  | refcnt<4>  | refcnt<5>  | refcnt<6>  | refcnt<7>
+INPUTMC | 10 | 1 | 13 | 1 | 12 | 1 | 6 | 1 | 17 | 1 | 5 | 1 | 4 | 1 | 15 | 1 | 14 | 1 | 11 | 1 | 2
+EXPORTS | 1 | 0 | 16
+EQ | 3 | 
+       EXP0_.EXP  =  counter<1> & !counter<2> & !refcnt<0> & !refcnt<1> & 
+	!refcnt<2> & !refcnt<3> & !refcnt<4> & !refcnt<5> & !refcnt<6> & 
+	!refcnt<7>
+
+PIN | vda | 64 | 0 | N/A | 9 | 5 | 0 | 16 | 1 | 10 | 0 | 12 | 1 | 16 | 1 | 4
+PIN | bank<3> | 64 | 0 | N/A | 36 | 3 | 1 | 10 | 0 | 12 | 1 | 16
+PIN | bank<2> | 64 | 0 | N/A | 35 | 3 | 1 | 10 | 0 | 12 | 1 | 16
+PIN | bank<1> | 64 | 0 | N/A | 8 | 3 | 1 | 10 | 0 | 12 | 1 | 16
+PIN | bank<0> | 64 | 0 | N/A | 12 | 3 | 1 | 10 | 0 | 12 | 1 | 16
+PIN | a15_13<2> | 64 | 0 | N/A | 37 | 3 | 1 | 10 | 0 | 12 | 1 | 16
+PIN | a15_13<1> | 64 | 0 | N/A | 13 | 3 | 1 | 10 | 0 | 12 | 1 | 16
+PIN | a15_13<0> | 64 | 0 | N/A | 38 | 3 | 1 | 10 | 0 | 12 | 1 | 16
+PIN | bank<7> | 64 | 0 | N/A | 33 | 3 | 1 | 10 | 0 | 12 | 1 | 16
+PIN | bank<6> | 64 | 0 | N/A | 14 | 3 | 1 | 10 | 0 | 12 | 1 | 16
+PIN | bank<5> | 64 | 0 | N/A | 29 | 3 | 1 | 10 | 0 | 12 | 1 | 16
+PIN | bank<4> | 64 | 0 | N/A | 28 | 3 | 1 | 10 | 0 | 12 | 1 | 16
+PIN | vpa | 64 | 0 | N/A | 4 | 5 | 0 | 16 | 1 | 10 | 0 | 12 | 1 | 16 | 1 | 4
+PIN | clk | 4096 | 0 | N/A | 5 | 16 | 1 | 10 | 0 | 12 | 1 | 13 | 1 | 12 | 1 | 9 | 1 | 16 | 1 | 8 | 1 | 7 | 1 | 6 | 1 | 17 | 1 | 5 | 1 | 4 | 1 | 15 | 1 | 14 | 1 | 11 | 1 | 2
+PIN | ras | 536871040 | 0 | N/A | 24
+PIN | cas | 536871040 | 0 | N/A | 43
+PIN | phi0 | 536871040 | 0 | N/A | 11
+PIN | io | 536870976 | 0 | N/A | 34 | 3 | 0 | 16 | 1 | 3 | 1 | 10
+PIN | rom | 536870976 | 0 | N/A | 18 | 3 | 0 | 16 | 1 | 4 | 0 | 12

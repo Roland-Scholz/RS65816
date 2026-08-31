@@ -1,0 +1,2 @@
+vhdl work "cpumodule.vhd"
+vhdl work "cpumoduleTest.vhd"

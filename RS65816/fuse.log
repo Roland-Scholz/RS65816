@@ -1,0 +1,20 @@
+Running: C:\Xilinx\14.7\ISE_DS\ISE\bin\nt64\unwrapped\fuse.exe -intstyle ise -o C:/github/RS65816/RS65816/cpumoduleTest_isim_beh.exe -prj C:/github/RS65816/RS65816/cpumoduleTest_beh.prj work.cpumoduleTest 
+ISim P.20131013 (signature 0x7708f090)
+Number of CPUs detected in this system: 12
+Turning on mult-threading, number of parallel sub-compilation jobs: 24 
+Determining compilation order of HDL files
+Parsing VHDL file "C:/github/RS65816/RS65816/cpumodule.vhd" into library work
+Parsing VHDL file "C:/github/RS65816/RS65816/cpumoduleTest.vhd" into library work
+Starting static elaboration
+Completed static elaboration
+Compiling package standard
+Compiling package std_logic_1164
+Compiling package std_logic_arith
+Compiling package std_logic_unsigned
+Compiling architecture behavioral of entity cpumodule [cpumodule_default]
+Compiling architecture behavior of entity cpumoduletest
+Time Resolution for simulation is 1ps.
+Compiled 7 VHDL Units
+Built simulation executable C:/github/RS65816/RS65816/cpumoduleTest_isim_beh.exe
+Fuse Memory Usage: 41136 KB
+Fuse CPU Usage: 359 ms

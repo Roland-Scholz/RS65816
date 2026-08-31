@@ -1,0 +1,1 @@
+-intstyle "ise" -o "C:/github/RS65816/RS65816/cpumoduleTest_isim_beh.exe" -prj "C:/github/RS65816/RS65816/cpumoduleTest_beh.prj" "work.cpumoduleTest" 
