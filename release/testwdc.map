@@ -1,0 +1,60 @@
+Section CODE:
+	00000200 _BEG_CODE
+	0000020b _~debug
+	00000265 _~unlink
+	0000028e _~print_str
+	000002c7 _~write
+	00000361 _~read
+	00000379 _~close
+	00000392 _~open
+	000003bd _~isatty
+	000003e4 _~lseek
+	00000415 _~main
+	000004f2 _~farmalloc
+	0000062f _~farsbrk
+	0000067f _~fprintf
+	000006b9 _~free
+	0000077c _~malloc
+	00000852 _~printf
+	00000895 _~sbrk
+	000008df _~strlen
+	000008f9 _~vsprintf
+	00000951 _~~swt
+	00000977 _~_format
+	00001150 _~~ludv
+	00001165 _~~lumd
+	00001175 _~_flsbuf
+	0000140c _~_getbuf
+	000014cf _~~comdiv
+	0000150f _~~udv
+	00001543 _~_closeall
+	00001582 _~fclose
+	0000167a _~fflush
+	000016f1 _~strcpy
+	00001712 _~~umd
+	00001717 _END_CODE
+
+Section DATA:
+	00001717 _BEG_DATA
+	00001717 _~far_heap_start
+	0000171b _~far_heap_end
+	0000171f _~heap_start
+	00001723 _~heap_end
+	00001727 _~debug_char
+	0000172b _~debug_hex
+	0000172f _~ansi_white
+	00001738 _~ansi_red
+	00001742 _~ansi_yellow
+	0000186c _~_iob
+	00001a1e _~_ctype
+	00001b23 _END_DATA
+
+Section UDATA:
+	00001b23 _BEG_UDATA
+	00001b23 _~_far_heap_top
+	00001b27 _~_heap_top
+	00001b2b _~_far_mem_start
+	00001d2f _~_mem_start
+	00001d33 _~_close_stdio
+	00001d35 _END_UDATA
+

@@ -13,37 +13,42 @@
 #include "lib65816/cpu.h"
 #include "lib65816/cpuevent.h"
 
-static byte memory[64*1024];
+static byte memory[256*64*1024];
 
-void load_mem()
-{
+void read_file(char *filename, word32 address) {
     FILE *fin;
     int flen;
 
-    fin = fopen("..\\release\\vectors.raw", "rb");
+    fin = fopen(filename, "rb");
     if (fin)
     {
-        flen = fread(&memory[0xffe0], 1, 32, fin);
+        flen = fread(&memory[address], 1, 0xffff, fin);
         fclose(fin);
-        printf("%d bytes read into 0xffe0 \n", flen);
+        printf("%d 0x%04X bytes read into %04X \n", flen, flen, address);
+    } else {
+        printf("can't read file: %s\n", filename);
     }
+}
 
-    fin = fopen("..\\release\\testc.raw", "rb");
-    if (fin)
-    {
-        flen = fread(&memory[0x0200], 1, 0x8000, fin);
-        fclose(fin);
-        printf("%d bytes read into 0x0200 \n", flen);
-    }
+void load_mem_wdc()
+{
+    read_file("..\\release\\testwdc.bin", 0x0000);
 
-    printf("----------------------------------------\n");
-    printf("- Emulation started\n");
-    printf("----------------------------------------\n");
+    memory[0xfffc] = 0x00;
+    memory[0xfffd] = 0x02;
+}
+
+void load_mem_calypsi()
+{
+    read_file("..\\release\\vectors.raw", 0xffe0);
+    read_file("..\\release\\testc.raw", 0x0200);
+
+
 }
 
 byte MEM_readMem(word32 address, word32 timestamp, word32 emulFlags)
 {
-    return memory[address & 0xffff];
+    return memory[address];
 }
 
 void MEM_writeMem(word32 address, byte b, word32 timestamp)
@@ -57,9 +62,10 @@ void MEM_writeMem(word32 address, byte b, word32 timestamp)
         printf("%02X", b);
         break;
     default:
+        break;
     }
 
-    memory[address & 0xffff] = b;
+    memory[address] = b;
 }
 
 void EMUL_handleWDM(byte opcode, word32 timestamp)
@@ -120,26 +126,24 @@ void EMUL_handleWDM(byte opcode, word32 timestamp)
 
 int main(int argc, char *argv[])
 {
-    long l;
-    int i;
-    short s;
-    char *ptr, ptr1[256];
-    word32 w32;
-    size_t st;
-
-    printf("LONG   : %lld\n", sizeof(l));
-    printf("INT    : %lld\n", sizeof(i));
-    printf("SHORT  : %lld\n", sizeof(s));
-    printf("PTR    : %lld\n", sizeof(ptr));
-    printf("PTR1   : %lld\n", sizeof(ptr1));
-    printf("word32 : %lld\n", sizeof(w32));
-    printf("size_t : %lld\n", sizeof(st));
+    /*
+    printf("LONG   : %d\n", sizeof(long));
+    printf("INT    : %d\n", sizeof(int));
+    printf("SHORT  : %d\n", sizeof(short));
+    printf("PTR    : %d\n", sizeof(void *));
+    printf("word32 : %d\n", sizeof(word32));
+    printf("size_t : %d\n", sizeof(size_t));
     fflush(stdout);
+    */
+
+    load_mem_wdc();
+    //load_mem_calypsi();
+
+    printf("----------------------------------------\n");
+    printf("- Emulation started\n");
+    printf("----------------------------------------\n");
 
     CPUEvent_initialize();
-
-    load_mem();
-
     CPU_reset();
     CPU_setTrace(0);
     CPU_run();

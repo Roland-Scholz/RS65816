@@ -123,26 +123,27 @@ int addrmodes[256] = {
 
 void CPU_debug(void) {
 	int	opcode;
-	//int	mode;
-	//int	operand;
-    //int ea;
-    //char operands[40];
+	int	mode;
+	int	operand;
+    int ea;
+    char operands[40];
 
 	opcode = M_READ(PC.A);
-	//mode = addrmodes[opcode];
+	mode = addrmodes[opcode];
+	/*
 	printf(" A=%04X X=%04X Y=%04X S=%04X D=%04X B=%02X P=%02X ", (int) A.W, (int) X.W,
 									   (int) Y.W, (int) S.W,
 									   (int) D.W, (int) DB,
 									   (int) P);
 	printf("%02X/%04X %02X ",(int) PC.B.PB,(int) PC.W.PC,opcode);
-	/*
+	*/
 	printf("Cyc=%012d A=%04X X=%04X Y=%04X S=%04X D=%04X B=%02X P=%02X E=%1d  ", cpu_cycle_sum, (int) A.W, (int) X.W,
 									   (int) Y.W, (int) S.W,
 									   (int) D.W, (int) DB,
 									   (int) P, (int) E);
 	printf("%02X/%04X  %s ",(int) PC.B.PB,(int) PC.W.PC,mnemonics[opcode]);
-	*/
-	/* switch (mode) {
+
+	switch (mode) {
         case IMM8:
             sprintf( operands, "#$%02X", M_READ(PC.A+1) );
             break;
@@ -316,7 +317,7 @@ void CPU_debug(void) {
         case BLK:
             sprintf( operands, "$%02X, $%02X", M_READ(PC.A+2), M_READ(PC.A+1) );
             break;
-	} */
+	}
 //    printf( "%s\n", operands );
     printf( "\n");
 	fflush(stdout);

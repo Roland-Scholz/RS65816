@@ -1,7 +1,7 @@
 ###############################################################################
 #                                                                             #
 # Calypsi ISO C compiler for 65816                               version 5.18 #
-#                                                       08/Sep/2026  18:44:54 #
+#                                                       08/Sep/2026  20:20:45 #
 # Command line: -O2 --code-model compact --data-model huge -o                 #
 #               C:\github\RS65816\release\obj\testc.o --list-file             #
 #               C:\github\RS65816\release\lst\testc.lst                       #
@@ -20,90 +20,87 @@
     \ 000000                      .extern _Vfp
     \ 000000                      .extern malloc
     \ 000000                      .extern printf
-0001                  //#pragma clang section rodata="code"
-0002                  #pragma require __call_heap_initialize
+0001                  #include <stdio.h>
+0002                  #include <stdlib.h>
 0003                  
-0004                  #include <stdio.h>
-0005                  #include <stdlib.h>
-0006                  
-0007                  int i = 6;
+0004                  int i = 6;
     \ 000000                      .section huge,data
     \ 000000                      .public i
     \ 000000 0600     i:          .word   6
-0008                  int j;
+0005                  int j;
     \ 000000                      .section zhuge,bss
     \ 000000                      .public j
     \ 000000          j:          .space  2
-0009                  
-0010                  int _Stub_close(int fd) {
+0006                  
+0007                  int _Stub_close(int fd) {
     \ 000000                      .section compactcode,text
     \ 000000                      .public _Stub_close
     \ 000000          _Stub_close:
-0011                      return 0;
+0008                      return 0;
     \ 000000 a90000               lda     ##0
-0012                  }
+0009                  }
     \ 000003 60                   rts
-0013                  
-0014                  long _Stub_lseek(int fd, long offset, int whence) {
+0010                  
+0011                  long _Stub_lseek(int fd, long offset, int whence) {
     \ 000000                      .section compactcode,text
     \ 000000                      .public _Stub_lseek
     \ 000000          _Stub_lseek:
-0015                      return 0;
+0012                      return 0;
     \ 000000 a90000               lda     ##0
     \ 000003 aa                   tax
-0016                  }
+0013                  }
     \ 000004 60                   rts
-0017                  
-0018                  void _write(char c) {
+0014                  
+0015                  void _write(char c) {
     \ 000000                      .section compactcode,text
     \ 000000                      .public _write
     \ 000000          _write:
-0019                      __asm (
-0020                          " sep #0x20\n"
+0016                      __asm (
+0017                          " sep #0x20\n"
     \ 000000 e220                 sep     #32
     \ 000002 8d00d8               sta     0xd800
     \ 000005 c220                 rep     #32
-0021                          " sta 0xD800\n"
-0022                          " rep #0x20"
-0023                      ); 
-0024                  }
+0018                          " sta 0xD800\n"
+0019                          " rep #0x20"
+0020                      ); 
+0021                  }
     \ 000007 60                   rts
-0025                  
-0026                  void debug_byte(char c) {
+0022                  
+0023                  void debug_byte(char c) {
     \ 000000                      .section compactcode,text
     \ 000000                      .public debug_byte
     \ 000000          debug_byte:
-0027                      __asm (
-0028                          " sep #0x20\n"
+0024                      __asm (
+0025                          " sep #0x20\n"
     \ 000000 e220                 sep     #32
     \ 000002 8d01d8               sta     0xd801
     \ 000005 c220                 rep     #32
-0029                          " sta 0xD801\n"
-0030                          " rep #0x20"
-0031                      ); 
-0032                  }
+0026                          " sta 0xD801\n"
+0027                          " rep #0x20"
+0028                      ); 
+0029                  }
     \ 000007 60                   rts
-0033                  
-0034                  void debug_word(unsigned int i) {
+0030                  
+0031                  void debug_word(unsigned int i) {
     \ 000000                      .section compactcode,text
     \ 000000                      .public debug_word
     \ 000000 5a       debug_word: phy
     \ 000001 8301                 sta     1,s
-0035                  	debug_byte(i >> 8);
+0032                  	debug_byte(i >> 8);
     \ 000003 a302                 lda     2,s
     \ 000005 20....               jsr     .kbank debug_byte
-0036                  	debug_byte(i & 0xff);
+0033                  	debug_byte(i & 0xff);
     \ 000008 a301                 lda     1,s
     \ 00000a 20....               jsr     .kbank debug_byte
-0037                  	_write(' ');
+0034                  	_write(' ');
     \ 00000d a92000               lda     ##32
     \ 000010 20....               jsr     .kbank _write
-0038                  }
+0035                  }
     \ 000013 7a                   ply
     \ 000014 60                   rts
-0039                  
-0040                  
-0041                  size_t _Stub_write(int fd, const void *buf, size_t count) {
+0036                  
+0037                  
+0038                  size_t _Stub_write(int fd, const void *buf, size_t count) {
     \ 000000                      .section compactcode,text
     \ 000000                      .public _Stub_write
     \ 000000          _Stub_write:
@@ -114,22 +111,22 @@
     \ 000007 85..                 sta     dp:.tiny (_Dp+8)
     \ 000009 a5..                 lda     dp:.tiny (_Dp+2)
     \ 00000b 85..                 sta     dp:.tiny (_Dp+10)
-0042                  	
-0043                      char *b = (char *)buf;
-0044                  	
-0045                  	//debug_word(count);
-0046                  	
-0047                      for(;count > 0; count--) {
+0039                  	
+0040                      char *b = (char *)buf;
+0041                  	
+0042                  	//debug_word(count);
+0043                  	
+0044                      for(;count > 0; count--) {
     \ 00000d a5..                 lda     dp:.tiny (_Dp+4)
     \ 00000f 8301                 sta     1,s
     \ 000011 a301     `?L22`:     lda     1,s
     \ 000013 d00b                 bne     `?L21`
-0048                          _write(*b);
-0049                  		b++;
-0050                      }
-0051                  	return 0;
+0045                          _write(*b);
+0046                  		b++;
+0047                      }
+0048                  	return 0;
     \ 000015 a90000               lda     ##0
-0052                  }
+0049                  }
     \ 000018 7a                   ply
     \ 000019 7a                   ply
     \ 00001a 84..                 sty     dp:.tiny (_Dp+10)
@@ -151,80 +148,80 @@
     \ 000033 3a                   dec     a
     \ 000034 8301                 sta     1,s
     \ 000036 80d9                 bra     `?L22`
-0053                  
-0054                  
-0055                  int main (int argc, char** argv) {
+0050                  
+0051                  
+0052                  int main (int argc, char** argv) {
     \ 000000                      .section compactcode,text
     \ 000000                      .public main
     \ 000000          main:
     \ 000000 d4..                 pei     dp:.tiny (_Dp+8)
     \ 000002 d4..                 pei     dp:.tiny (_Dp+10)
     \ 000004 5a                   phy
-0056                  
-0057                  	void *p = (void *)0xff;
+0053                  
+0054                  	void *p = (void *)0xff;
     \ 000005 a9ff00               lda     ##255
     \ 000008 85..                 sta     dp:.tiny (_Dp+8)
     \ 00000a a90000               lda     ##0
     \ 00000d 85..                 sta     dp:.tiny (_Dp+10)
-0058                  	
-0059                      printf("Hallo Welt mit Calypsi!\n");
+0055                  	
+0056                      printf("Hallo Welt mit Calypsi!\n");
     \ 00000f a9....               lda     ##.word0 `_StringLiteral_FormatString_[72,97,108,108,111,32,87,101,108,116,32,109,105,116,32,67,97,108,121,112,115,105,33,10]`
     \ 000012 85..                 sta     dp:.tiny _Dp
     \ 000014 a9....               lda     ##.word2 `_StringLiteral_FormatString_[72,97,108,108,111,32,87,101,108,116,32,109,105,116,32,67,97,108,121,112,115,105,33,10]`
     \ 000017 85..                 sta     dp:.tiny (_Dp+2)
     \ 000019 20....               jsr     .kbank printf
-0060                  
-0061                      printf("size char: %d \n", sizeof(char));
+0057                  
+0058                      printf("size char: %d \n", sizeof(char));
     \ 00001c f40100               pea     ##1
     \ 00001f a9....               lda     ##.word0 `_StringLiteral_FormatString_[115,105,122,101,32,99,104,97,114,58,32,37,100,32,10]`
     \ 000022 85..                 sta     dp:.tiny _Dp
     \ 000024 a9....               lda     ##.word2 `_StringLiteral_FormatString_[115,105,122,101,32,99,104,97,114,58,32,37,100,32,10]`
     \ 000027 20....               jsr     .kbank `?L54`
     \ 00002a 8303                 sta     3,s
-0062                      printf("size int: %d \n", sizeof(int));
+0059                      printf("size int: %d \n", sizeof(int));
     \ 00002c f40200               pea     ##2
     \ 00002f a9....               lda     ##.word0 `_StringLiteral_FormatString_[115,105,122,101,32,105,110,116,58,32,37,100,32,10]`
     \ 000032 85..                 sta     dp:.tiny _Dp
     \ 000034 a9....               lda     ##.word2 `_StringLiteral_FormatString_[115,105,122,101,32,105,110,116,58,32,37,100,32,10]`
     \ 000037 20....               jsr     .kbank `?L54`
     \ 00003a 8305                 sta     5,s
-0063                      printf("size short: %d \n", sizeof(short));
+0060                      printf("size short: %d \n", sizeof(short));
     \ 00003c f40200               pea     ##2
     \ 00003f a9....               lda     ##.word0 `_StringLiteral_FormatString_[115,105,122,101,32,115,104,111,114,116,58,32,37,100,32,10]`
     \ 000042 85..                 sta     dp:.tiny _Dp
     \ 000044 a9....               lda     ##.word2 `_StringLiteral_FormatString_[115,105,122,101,32,115,104,111,114,116,58,32,37,100,32,10]`
     \ 000047 20....               jsr     .kbank `?L54`
     \ 00004a 8307                 sta     7,s
-0064                      printf("size size_t: %d \n", sizeof(size_t));
+0061                      printf("size size_t: %d \n", sizeof(size_t));
     \ 00004c f40200               pea     ##2
     \ 00004f a9....               lda     ##.word0 `_StringLiteral_FormatString_[115,105,122,101,32,115,105,122,101,95,116,58,32,37,100,32,10]`
     \ 000052 85..                 sta     dp:.tiny _Dp
     \ 000054 a9....               lda     ##.word2 `_StringLiteral_FormatString_[115,105,122,101,32,115,105,122,101,95,116,58,32,37,100,32,10]`
     \ 000057 20....               jsr     .kbank `?L54`
     \ 00005a 8309                 sta     9,s
-0065                      printf("size long: %d \n", sizeof(long));
+0062                      printf("size long: %d \n", sizeof(long));
     \ 00005c f40400               pea     ##4
     \ 00005f a9....               lda     ##.word0 `_StringLiteral_FormatString_[115,105,122,101,32,108,111,110,103,58,32,37,100,32,10]`
     \ 000062 85..                 sta     dp:.tiny _Dp
     \ 000064 a9....               lda     ##.word2 `_StringLiteral_FormatString_[115,105,122,101,32,108,111,110,103,58,32,37,100,32,10]`
     \ 000067 20....               jsr     .kbank `?L54`
     \ 00006a 830b                 sta     11,s
-0066                      printf("size char*: %d \n", sizeof(char*));
+0063                      printf("size char*: %d \n", sizeof(char*));
     \ 00006c f40400               pea     ##4
     \ 00006f a9....               lda     ##.word0 `_StringLiteral_FormatString_[115,105,122,101,32,99,104,97,114,42,58,32,37,100,32,10]`
     \ 000072 85..                 sta     dp:.tiny _Dp
     \ 000074 a9....               lda     ##.word2 `_StringLiteral_FormatString_[115,105,122,101,32,99,104,97,114,42,58,32,37,100,32,10]`
     \ 000077 20....               jsr     .kbank `?L54`
     \ 00007a 830d                 sta     13,s
-0067                      printf("size long long: %d \n", sizeof(long long));
+0064                      printf("size long long: %d \n", sizeof(long long));
     \ 00007c f40800               pea     ##8
     \ 00007f a9....               lda     ##.word0 `_StringLiteral_FormatString_[115,105,122,101,32,108,111,110,103,32,108,111,110,103,58,32,37,100,32,10]`
     \ 000082 85..                 sta     dp:.tiny _Dp
     \ 000084 a9....               lda     ##.word2 `_StringLiteral_FormatString_[115,105,122,101,32,108,111,110,103,32,108,111,110,103,58,32,37,100,32,10]`
     \ 000087 20....               jsr     .kbank `?L54`
     \ 00008a 830f                 sta     15,s
-0068                  
-0069                  	for(;p;) {
+0065                  
+0066                  	for(;p;) {
     \ 00008c 3b                   tsc
     \ 00008d 18                   clc
     \ 00008e 690e00               adc     ##14
@@ -234,11 +231,11 @@
     \ 000094 05..                 ora     dp:.tiny (_Dp+10)
     \ 000096 d002                 bne     `?L29`
     \ 000098          `?L34`:
-0070                  		p = malloc(0x80);
-0071                  		printf("%p\n", p);
-0072                  	}
-0073                  
-0074                  	for(;;)
+0067                  		p = malloc(0x80);
+0068                  		printf("%p\n", p);
+0069                  	}
+0070                  
+0071                  	for(;;)
     \ 000098 80fe                 bra     `?L34`
     \ 00009a a98000   `?L29`:     lda     ##128
     \ 00009d 20....               jsr     .kbank malloc
@@ -256,10 +253,10 @@
     \ 0000b7 68                   pla
     \ 0000b8 68                   pla
     \ 0000b9 80d7                 bra     `?L30`
-0075                  		;
-0076                  	
-0077                      return 0;
-0078                  }
+0072                  		;
+0073                  	
+0074                      return 0;
+0075                  }
     \ 000000                      .section compactcode,text
     \ 000000          `?L54`:
     \ 000000 85..                 sta     dp:.tiny (_Dp+2)

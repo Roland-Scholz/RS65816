@@ -1,6 +1,3 @@
-//#pragma clang section rodata="code"
-#pragma require __call_heap_initialize
-
 #include <stdio.h>
 #include <stdlib.h>
 
