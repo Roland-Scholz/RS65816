@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="rs65816-emulator" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="bin/Debug/rs65816-emulator" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Debug/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+					<Add option="-DDEBUG" />
+					<Add directory="C:/github/RS65816/rs65816-emulator/" />
+				</Compiler>
+			</Target>
+			<Target title="Release">
+				<Option output="bin/Release/rs65816-emulator" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+		</Compiler>
+		<Unit filename="lib65816/config.h" />
+		<Unit filename="lib65816/cpu.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="lib65816/cpu.h" />
+		<Unit filename="lib65816/cpuevent.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="lib65816/cpuevent.h" />
+		<Unit filename="lib65816/cpumacro.h" />
+		<Unit filename="lib65816/cpumicro.h" />
+		<Unit filename="lib65816/cputable.h" />
+		<Unit filename="lib65816/cycles.h" />
+		<Unit filename="lib65816/debugger.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="lib65816/dispatch.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="lib65816/opcodes.h" />
+		<Unit filename="lib65816/opcodes1.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="lib65816/opcodes2.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="lib65816/opcodes3.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="lib65816/opcodes4.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="lib65816/opcodes5.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="lib65816/table.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="main.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Extensions />
+	</Project>
+</CodeBlocks_project_file>

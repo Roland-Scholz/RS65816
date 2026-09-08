@@ -1,0 +1,1125 @@
+###############################################################################
+#                                                                             #
+# Calypsi linker for 65816                                       version 5.18 #
+#                                                       08/Sep/2026  18:44:59 #
+# Command line: --list-file C:\github\RS65816\release\lst\testc.lin           #
+#               --raw-multiple-memories --output-format raw --output-file     #
+#               C:\github\RS65816\release\testc.elf                           #
+#               C:\github\RS65816\release\obj\testc.o clib-cc-hd.a            #
+#               C:\github\RS65816\src\testc.scm                               #
+#                                                                             #
+###############################################################################
+
+####################
+#                  #
+# Memories summary #
+#                  #
+####################
+
+Name       Range         Size    Used    Checksum  Largest unallocated
+----------------------------------------------------------------------
+DirectPage 000000-0000ff 000100    7.8%  none      0000ec
+STACK      000100-0001ff 000100  100.0%  none      none
+COMPACT    000200-007fff 007e00   24.3%  none      005f6c
+HUGEVAR    008000-00ffdf 007fe0    1.0%  none      007ea1
+VECTORS    00ffe0-00ffff 000020    6.3%  none      00001c
+HEAPMEM    010000-ffffff ff0000    0.2%  none      fe8000
+
+
+####################
+#                  #
+# Sections summary #
+#                  #
+####################
+
+Name            Range          Size    Memory     Fragments
+-----------------------------------------------------------
+registers       000000-000013  000014  DirectPage 1
+stack           000100-0001ff  000100  STACK      1
+compactcode     000200-001d9b  001b9c  COMPACT    41
+code            001d9c-001db4  000019  COMPACT    1
+chuge           001db5-001dcd  000019  COMPACT    1
+switch          001dce-001de5  000018  COMPACT    1
+compactcode     001de6-001e11  00002c  COMPACT    2
+chuge           001e12-001e26  000015  COMPACT    1
+compactcode     001e27-001e4c  000026  COMPACT    2
+chuge           001e4d-001e80  000034  COMPACT    3
+compactcode     001e81-001ec0  000040  COMPACT    4
+chuge           001ec1-001ee0  000020  COMPACT    2
+compactcode     001ee1-001efe  00001e  COMPACT    2
+chuge           001eff-001f0d  00000f  COMPACT    1
+compactcode     001f0e-001feb  0000de  COMPACT    19
+data_init_table 001fec-001ff5  00000a  COMPACT    1
+compactcode     001ff6-002046  000051  COMPACT    9
+chuge           002047-00204e  000008  COMPACT    1
+compactcode     00204f-00206b  00001d  COMPACT    4
+chuge           00206c-002072  000007  COMPACT    1
+compactcode     002073-002089  000017  COMPACT    5
+chuge           00208a-00208d  000004  COMPACT    1
+compactcode     00208e-002093  000006  COMPACT    3
+zhuge           008000-00813e  00013f  HUGEVAR    9
+reset           00fffc-00fffd  000002  VECTORS    1
+heap            010000-017fff  008000  HEAPMEM    1
+
+
+###################
+#                 #
+# Placement rules #
+#                 #
+###################
+
+Name       Address range  Key
+----------------------------------------------------------------------
+COMPACT    000200-007fff  Plain
+  > compactcode
+  > chuge
+  > ihuge
+  > switch
+  > data_init_table
+  > code
+DirectPage 000000-0000ff  Plain
+  > registers
+HEAPMEM    010000-ffffff  
+  > heap
+HUGEVAR    008000-00ffdf  Plain
+  > huge
+  > zhuge
+STACK      000100-0001ff  Plain
+  > stack
+VECTORS    00ffe0-00ffff  Plain
+  > (reset 00fffc)
+
+Name  Size   Align
+-------------------
+stack 000100 no
+heap  008000 no
+
+Name             Memory     Offset
+-----------------------------------
+_DirectPageStart DirectPage 000000
+_NearBaseAddress COMPACT    000000
+
+################
+#              #
+# Object files #
+#              #
+################
+
+Unit Filename                              Archive
+-------------------------------------------------------
+  0  C:\github\RS65816\release\obj\testc.o -
+          >  chuge       000095
+          >  compactcode 000109
+  2  cstartup.o                            clib-cc-hd.a
+          # picked based on cstartup=normal (built-in default)
+          >  code        000019
+          >  compactcode 000044
+          >  reset       000002
+  3  exit.o                                clib-cc-hd.a
+          # picked based on exit=stdexit (built-in default)
+          >  compactcode 000056
+  5  controlFlow.o                         clib-cc-hd.a
+          >  compactcode 000005
+  6  pseudoRegisters.o                     clib-cc-hd.a
+          >  registers 000014
+  7  atexit.o                              clib-cc-hd.a
+          >  zhuge 000042
+  8  exitC99.o                             clib-cc-hd.a
+          >  compactcode 000004
+  9  defaultExit.o                         clib-cc-hd.a
+          >  compactcode 000001
+ 11  streamlist.o                          clib-cc-hd.a
+          >  compactcode 0000ad
+          >  zhuge       000061
+ 12  lib_printf.o                          clib-cc-hd.a
+          >  compactcode 00002e
+ 13  lib_vfprintf.o                        clib-cc-hd.a
+          >  compactcode 000056
+ 17  __vsprintf_reduced.o                  clib-cc-hd.a
+          # picked based on printf=reduced (format string requirement determined by compiler)
+          >  chuge       00000f
+          >  compactcode 0009ec
+          >  switch      000018
+ 18  lib_stdoutstream.o                    clib-cc-hd.a
+          >  compactcode 000110
+ 19  lib_libfflush.o                       clib-cc-hd.a
+          >  compactcode 000223
+ 20  errno.o                               clib-cc-hd.a
+          >  zhuge 000002
+ 22  heap_initialize.o                     clib-cc-hd.a
+          >  compactcode 0002b9
+          >  zhuge       00009a
+ 23  lib_memset.o                          clib-cc-hd.a
+          >  compactcode 000047
+ 24  addfreechunk.o                        clib-cc-hd.a
+          >  compactcode 000187
+ 25  lib_fputc.o                           clib-cc-hd.a
+          >  compactcode 000089
+ 26  lib_libfwrite.o                       clib-cc-hd.a
+          >  compactcode 000237
+ 27  lib_rdflush.o                         clib-cc-hd.a
+          >  compactcode 0000e0
+ 28  lib_fseek.o                           clib-cc-hd.a
+          >  compactcode 00008b
+ 30  lib_wrflush.o                         clib-cc-hd.a
+          >  compactcode 000032
+ 32  lib_fclose.o                          clib-cc-hd.a
+          >  compactcode 00002d
+ 33  lib_fflush.o                          clib-cc-hd.a
+          >  compactcode 000036
+ 34  lib_libflushall.o                     clib-cc-hd.a
+          >  compactcode 00008c
+ 35  lib_libnoflush.o                      clib-cc-hd.a
+          >  compactcode 000004
+ 36  malloc.o                              clib-cc-hd.a
+          >  compactcode 0001cf
+ 37  initialize.o                          clib-cc-hd.a
+          # picked based on initialize=normal (built-in default)
+          >  compactcode 0000b0
+ 39  lib_memcpy.o                          clib-cc-hd.a
+          >  compactcode 000080
+ 40  vswitch16.o                           clib-cc-hd.a
+          >  compactcode 00007b
+ 42  integer.o                             clib-cc-hd.a
+          >  compactcode 000067
+
+###################
+#                 #
+# Cross reference #
+#                 #
+###################
+
+_Dp in section 'registers'  placed at address 000000-000013 of size 000014
+(pseudoRegisters.o (from clib-cc-hd.a) unit 6 section index 2)
+    Defines:
+        _Vfp = 000010
+        _Dp = 000000
+    Referenced from:
+        _Stub_write (C:\github\RS65816\release\obj\testc.o unit 0 section index 9)
+        main (C:\github\RS65816\release\obj\testc.o unit 0 section index 10)
+        (C:\github\RS65816\release\obj\testc.o unit 0 section index 11)
+        __program_start (cstartup.o (from clib-cc-hd.a) unit 2 section index 2)
+        __data_initialization_needed (cstartup.o (from clib-cc-hd.a) unit 2 section index 5)
+        __call_heap_initialize (cstartup.o (from clib-cc-hd.a) unit 2 section index 7)
+        exit (exit.o (from clib-cc-hd.a) unit 3 section index 2)
+        _JmpInd (controlFlow.o (from clib-cc-hd.a) unit 5 section index 2)
+        ... 68 more
+
+Section 'stack'  placed at address 000100-0001ff of size 000100
+(linker generated)
+
+vsprintf_internal in section 'compactcode'
+ placed at address 000200-000a70 of size 000871
+(__vsprintf_reduced.o (from clib-cc-hd.a) unit 17 section index 5)
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-hd.a) unit 6 section index 2)
+        _JmpInd in (controlFlow.o (from clib-cc-hd.a) unit 5 section index 2)
+        `_StringLiteral_*float*` in (__vsprintf_reduced.o (from clib-cc-hd.a) unit 17 section index 3)
+        _ValueSwitch16 in (vswitch16.o (from clib-cc-hd.a) unit 40 section index 2)
+        __lib_vsprintf in (__vsprintf_reduced.o (from clib-cc-hd.a) unit 17 section index 6)
+        __ultoa_invert in (__vsprintf_reduced.o (from clib-cc-hd.a) unit 17 section index 4)
+
+__lib_fwrite in section 'compactcode'
+ placed at address 000a71-000c64 of size 0001f4
+(lib_libfwrite.o (from clib-cc-hd.a) unit 26 section index 2)
+    Defines:
+        __lib_fwrite = 000a71
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-hd.a) unit 6 section index 2)
+        _Stub_write in (C:\github\RS65816\release\obj\testc.o unit 0 section index 9)
+        __lib_fflush in (lib_libfflush.o (from clib-cc-hd.a) unit 19 section index 2)
+        __lib_rdflush in (lib_rdflush.o (from clib-cc-hd.a) unit 27 section index 2)
+        errno in (errno.o (from clib-cc-hd.a) unit 20 section index 2)
+    Referenced from:
+        fputc (lib_fputc.o (from clib-cc-hd.a) unit 25 section index 2)
+
+__lib_fflush in section 'compactcode'
+ placed at address 000c65-000e37 of size 0001d3
+(lib_libfflush.o (from clib-cc-hd.a) unit 19 section index 2)
+    Defines:
+        __lib_fflush = 000c65
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-hd.a) unit 6 section index 2)
+        _Stub_write in (C:\github\RS65816\release\obj\testc.o unit 0 section index 9)
+        errno in (errno.o (from clib-cc-hd.a) unit 20 section index 2)
+    Referenced from:
+        (lib_stdoutstream.o (from clib-cc-hd.a) unit 18 section index 3)
+        fputc (lib_fputc.o (from clib-cc-hd.a) unit 25 section index 2)
+        __lib_fwrite (lib_libfwrite.o (from clib-cc-hd.a) unit 26 section index 2)
+        __lib_wrflush (lib_wrflush.o (from clib-cc-hd.a) unit 30 section index 2)
+        fflush (lib_fflush.o (from clib-cc-hd.a) unit 33 section index 2)
+
+malloc in section 'compactcode'  placed at address 000e38-000fd9 of size 0001a2
+(malloc.o (from clib-cc-hd.a) unit 36 section index 2)
+    Defines:
+        malloc = 000e38
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-hd.a) unit 6 section index 2)
+        __addfreechunk in (addfreechunk.o (from clib-cc-hd.a) unit 24 section index 3)
+        __default_heap in (heap_initialize.o (from clib-cc-hd.a) unit 22 section index 10)
+        __size2ndx in (addfreechunk.o (from clib-cc-hd.a) unit 24 section index 2)
+    Referenced from:
+        main (C:\github\RS65816\release\obj\testc.o unit 0 section index 10)
+
+__heap_initialize in section 'compactcode'
+ placed at address 000fda-00112f of size 000156
+(heap_initialize.o (from clib-cc-hd.a) unit 22 section index 3)
+    Defines:
+        __heap_initialize = 000fda
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-hd.a) unit 6 section index 2)
+        __heap_addregion in (heap_initialize.o (from clib-cc-hd.a) unit 22 section index 2)
+        memset in (lib_memset.o (from clib-cc-hd.a) unit 23 section index 2)
+    Referenced from:
+        __call_heap_initialize (cstartup.o (from clib-cc-hd.a) unit 2 section index 7)
+
+__addfreechunk in section 'compactcode'
+ placed at address 001130-001279 of size 00014a
+(addfreechunk.o (from clib-cc-hd.a) unit 24 section index 3)
+    Defines:
+        __addfreechunk = 001130
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-hd.a) unit 6 section index 2)
+        __size2ndx in (addfreechunk.o (from clib-cc-hd.a) unit 24 section index 2)
+    Referenced from:
+        __heap_addregion (heap_initialize.o (from clib-cc-hd.a) unit 22 section index 2)
+        malloc (malloc.o (from clib-cc-hd.a) unit 36 section index 2)
+
+__heap_addregion in section 'compactcode'
+ placed at address 00127a-001374 of size 0000fb
+(heap_initialize.o (from clib-cc-hd.a) unit 22 section index 2)
+    Defines:
+        __heap_addregion = 00127a
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-hd.a) unit 6 section index 2)
+        __addfreechunk in (addfreechunk.o (from clib-cc-hd.a) unit 24 section index 3)
+    Referenced from:
+        __heap_initialize (heap_initialize.o (from clib-cc-hd.a) unit 22 section index 3)
+
+__lib_rdflush in section 'compactcode'
+ placed at address 001375-001438 of size 0000c4
+(lib_rdflush.o (from clib-cc-hd.a) unit 27 section index 2)
+    Defines:
+        __lib_rdflush = 001375
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-hd.a) unit 6 section index 2)
+        errno in (errno.o (from clib-cc-hd.a) unit 20 section index 2)
+        fseek in (lib_fseek.o (from clib-cc-hd.a) unit 28 section index 2)
+    Referenced from:
+        __lib_fwrite (lib_libfwrite.o (from clib-cc-hd.a) unit 26 section index 2)
+        fseek (lib_fseek.o (from clib-cc-hd.a) unit 28 section index 2)
+
+__ultoa_invert in section 'compactcode'
+ placed at address 001439-0014f4 of size 0000bc
+(__vsprintf_reduced.o (from clib-cc-hd.a) unit 17 section index 4)
+    Defines:
+        __ultoa_invert = 001439
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-hd.a) unit 6 section index 2)
+    Referenced from:
+        (__vsprintf_reduced.o (from clib-cc-hd.a) unit 17 section index 5)
+
+main in section 'compactcode'  placed at address 0014f5-0015af of size 0000bb
+(C:\github\RS65816\release\obj\testc.o unit 0 section index 10)
+    Defines:
+        main = 0014f5
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-hd.a) unit 6 section index 2)
+        `_StringLiteral_FormatString_[115,105,122,101,32,105,110,116,58,32,37,100,32,10]` in (C:\github\RS65816\release\obj\testc.o unit 0 section index 16)
+        `_StringLiteral_FormatString_[115,105,122,101,32,108,111,110,103,32,108,111,110,103,58,32,37,100,32,10]` in (C:\github\RS65816\release\obj\testc.o unit 0 section index 17)
+        `_StringLiteral_FormatString_[115,105,122,101,32,108,111,110,103,58,32,37,100,32,10]` in (C:\github\RS65816\release\obj\testc.o unit 0 section index 18)
+        `_StringLiteral_FormatString_[115,105,122,101,32,115,104,111,114,116,58,32,37,100,32,10]` in (C:\github\RS65816\release\obj\testc.o unit 0 section index 19)
+        `_StringLiteral_FormatString_[115,105,122,101,32,115,105,122,101,95,116,58,32,37,100,32,10]` in (C:\github\RS65816\release\obj\testc.o unit 0 section index 20)
+        `_StringLiteral_FormatString_[115,105,122,101,32,99,104,97,114,42,58,32,37,100,32,10]` in (C:\github\RS65816\release\obj\testc.o unit 0 section index 14)
+        `_StringLiteral_FormatString_[115,105,122,101,32,99,104,97,114,58,32,37,100,32,10]` in (C:\github\RS65816\release\obj\testc.o unit 0 section index 15)
+        `_StringLiteral_FormatString_[37,112,10]` in (C:\github\RS65816\release\obj\testc.o unit 0 section index 12)
+        `_StringLiteral_FormatString_[72,97,108,108,111,32,87,101,108,116,32,109,105,116,32,67,97,108,121,112,115,105,33,10]` in (C:\github\RS65816\release\obj\testc.o unit 0 section index 13)
+        malloc in (malloc.o (from clib-cc-hd.a) unit 36 section index 2)
+        printf in (lib_printf.o (from clib-cc-hd.a) unit 12 section index 2)
+    Referenced from:
+        (cstartup.o (from clib-cc-hd.a) unit 2 section index 8)
+
+__initialize_sections in section 'compactcode'
+ placed at address 0015b0-001653 of size 0000a4
+(initialize.o (from clib-cc-hd.a) unit 37 section index 2)
+    Defines:
+        __initialize_sections = 0015b0
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-hd.a) unit 6 section index 2)
+        memcpy in (lib_memcpy.o (from clib-cc-hd.a) unit 39 section index 2)
+        memset in (lib_memset.o (from clib-cc-hd.a) unit 23 section index 2)
+    Referenced from:
+        __data_initialization_needed (cstartup.o (from clib-cc-hd.a) unit 2 section index 5)
+
+__lib_flushall in section 'compactcode'
+ placed at address 001654-0016df of size 00008c
+(lib_libflushall.o (from clib-cc-hd.a) unit 34 section index 2)
+    Defines:
+        __lib_flushall = 001654
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-hd.a) unit 6 section index 2)
+        fflush in (lib_fflush.o (from clib-cc-hd.a) unit 33 section index 2)
+    Referenced from:
+        fflush (lib_fflush.o (from clib-cc-hd.a) unit 33 section index 2)
+
+fputc in section 'compactcode'  placed at address 0016e0-001768 of size 000089
+(lib_fputc.o (from clib-cc-hd.a) unit 25 section index 2)
+    Defines:
+        fputc = 0016e0
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-hd.a) unit 6 section index 2)
+        __lib_fflush in (lib_libfflush.o (from clib-cc-hd.a) unit 19 section index 2)
+        __lib_fwrite in (lib_libfwrite.o (from clib-cc-hd.a) unit 26 section index 2)
+    Referenced from:
+        (lib_stdoutstream.o (from clib-cc-hd.a) unit 18 section index 2)
+
+fseek in section 'compactcode'  placed at address 001769-0017ea of size 000082
+(lib_fseek.o (from clib-cc-hd.a) unit 28 section index 2)
+    Defines:
+        fseek = 001769
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-hd.a) unit 6 section index 2)
+        _Stub_lseek in (C:\github\RS65816\release\obj\testc.o unit 0 section index 5)
+        __lib_rdflush in (lib_rdflush.o (from clib-cc-hd.a) unit 27 section index 2)
+        __lib_wrflush in (lib_wrflush.o (from clib-cc-hd.a) unit 30 section index 2)
+        errno in (errno.o (from clib-cc-hd.a) unit 20 section index 2)
+    Referenced from:
+        __lib_rdflush (lib_rdflush.o (from clib-cc-hd.a) unit 27 section index 2)
+
+memcpy in section 'compactcode'  placed at address 0017eb-00186a of size 000080
+(lib_memcpy.o (from clib-cc-hd.a) unit 39 section index 2)
+    Defines:
+        memcpy = 0017eb
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-hd.a) unit 6 section index 2)
+    Referenced from:
+        __initialize_sections (initialize.o (from clib-cc-hd.a) unit 37 section index 2)
+
+_ValueSwitch16 in section 'compactcode'
+ placed at address 00186b-0018e5 of size 00007b
+(vswitch16.o (from clib-cc-hd.a) unit 40 section index 2)
+    Defines:
+        _ValueSwitch16 = 00186b
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-hd.a) unit 6 section index 2)
+    Referenced from:
+        (__vsprintf_reduced.o (from clib-cc-hd.a) unit 17 section index 5)
+
+`?L3` in section 'compactcode'  placed at address 0018e6-001954 of size 00006f
+(lib_stdoutstream.o (from clib-cc-hd.a) unit 18 section index 2)
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-hd.a) unit 6 section index 2)
+        errno in (errno.o (from clib-cc-hd.a) unit 20 section index 2)
+        fputc in (lib_fputc.o (from clib-cc-hd.a) unit 25 section index 2)
+
+__lib_stdoutstream in section 'compactcode'
+ placed at address 001955-0019bd of size 000069
+(lib_stdoutstream.o (from clib-cc-hd.a) unit 18 section index 4)
+    Defines:
+        __lib_stdoutstream = 001955
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-hd.a) unit 6 section index 2)
+        __lib_noflush in (lib_libnoflush.o (from clib-cc-hd.a) unit 35 section index 2)
+    Referenced from:
+        vfprintf (lib_vfprintf.o (from clib-cc-hd.a) unit 13 section index 2)
+
+_DivModSign16 in section 'compactcode'
+ placed at address 0019be-0019c5 of size 000008
+(integer.o (from clib-cc-hd.a) unit 42 section index 9)
+    Defines:
+        _DivModSign16 = 0019be
+
+_UDivMod32 in section 'compactcode'
+ placed at address 0019c6-001a0e of size 000049
+(integer.o (from clib-cc-hd.a) unit 42 section index 11)
+    Defines:
+        _UDivMod32 = 0019c6
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-hd.a) unit 6 section index 2)
+    Referenced from:
+        (__vsprintf_reduced.o (from clib-cc-hd.a) unit 17 section index 20)
+
+_DivModSign32 in section 'compactcode'
+ placed at address 001a0f-001a24 of size 000016
+(integer.o (from clib-cc-hd.a) unit 42 section index 14)
+    Defines:
+        _DivModSign32 = 001a0f
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-hd.a) unit 6 section index 2)
+
+`?L5` in section 'compactcode'  placed at address 001a25-001a87 of size 000063
+(streamlist.o (from clib-cc-hd.a) unit 11 section index 7)
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-hd.a) unit 6 section index 2)
+        _Stub_close in (C:\github\RS65816\release\obj\testc.o unit 0 section index 4)
+        __close in (lib_fclose.o (from clib-cc-hd.a) unit 32 section index 2)
+        __global_streams in (streamlist.o (from clib-cc-hd.a) unit 11 section index 6)
+        fflush in (lib_fflush.o (from clib-cc-hd.a) unit 33 section index 2)
+
+exit in section 'compactcode'  placed at address 001a88-001add of size 000056
+(exit.o (from clib-cc-hd.a) unit 3 section index 2)
+    Defines:
+        exit = 001a88
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-hd.a) unit 6 section index 2)
+        _Exit in (exitC99.o (from clib-cc-hd.a) unit 8 section index 2)
+        _ExitCloseStreams in (streamlist.o (from clib-cc-hd.a) unit 11 section index 2)
+        _JmpInd in (controlFlow.o (from clib-cc-hd.a) unit 5 section index 2)
+        __atexit in (atexit.o (from clib-cc-hd.a) unit 7 section index 2)
+        __atexit_index in (atexit.o (from clib-cc-hd.a) unit 7 section index 3)
+    Referenced from:
+        (cstartup.o (from clib-cc-hd.a) unit 2 section index 8)
+
+vfprintf in section 'compactcode'
+ placed at address 001ade-001b33 of size 000056
+(lib_vfprintf.o (from clib-cc-hd.a) unit 13 section index 2)
+    Defines:
+        vfprintf = 001ade
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-hd.a) unit 6 section index 2)
+        __lib_stdoutstream in (lib_stdoutstream.o (from clib-cc-hd.a) unit 18 section index 4)
+        __lib_vsprintf in (__vsprintf_reduced.o (from clib-cc-hd.a) unit 17 section index 6)
+    Referenced from:
+        printf (lib_printf.o (from clib-cc-hd.a) unit 12 section index 2)
+
+__initialize_global_streams in section 'compactcode'
+ placed at address 001b34-001b7d of size 00004a
+(streamlist.o (from clib-cc-hd.a) unit 11 section index 8)
+    Defines:
+        __initialize_global_streams = 001b34
+    References:
+        _ExitCloseStreams in (streamlist.o (from clib-cc-hd.a) unit 11 section index 2)
+        __global_streams in (streamlist.o (from clib-cc-hd.a) unit 11 section index 6)
+    Referenced from:
+        __call_initialize_global_streams (cstartup.o (from clib-cc-hd.a) unit 2 section index 6)
+
+memset in section 'compactcode'  placed at address 001b7e-001bc4 of size 000047
+(lib_memset.o (from clib-cc-hd.a) unit 23 section index 2)
+    Defines:
+        memset = 001b7e
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-hd.a) unit 6 section index 2)
+    Referenced from:
+        __heap_initialize (heap_initialize.o (from clib-cc-hd.a) unit 22 section index 3)
+        __initialize_sections (initialize.o (from clib-cc-hd.a) unit 37 section index 2)
+
+_Trampoline_program_start in section 'compactcode'
+ placed at address 001bc5-001bc7 of size 000003
+(cstartup.o (from clib-cc-hd.a) unit 2 section index 4)
+    References:
+        __low_level_init in (cstartup.o (from clib-cc-hd.a) unit 2 section index 9)
+
+__data_initialization_needed in section 'compactcode'
+ placed at address 001bc8-001bde of size 000017
+(cstartup.o (from clib-cc-hd.a) unit 2 section index 5)
+    Defines:
+        __data_initialization_needed = 001bc8
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-hd.a) unit 6 section index 2)
+        .sectionEnd(data_init_table)
+        .sectionStart(data_init_table)
+        __initialize_sections in (initialize.o (from clib-cc-hd.a) unit 37 section index 2)
+
+__call_initialize_global_streams in section 'compactcode'
+ placed at address 001bdf-001be1 of size 000003
+(cstartup.o (from clib-cc-hd.a) unit 2 section index 6)
+    Defines:
+        __call_initialize_global_streams = 001bdf
+    References:
+        __initialize_global_streams in (streamlist.o (from clib-cc-hd.a) unit 11 section index 8)
+
+__call_heap_initialize in section 'compactcode'
+ placed at address 001be2-001bfe of size 00001d
+(cstartup.o (from clib-cc-hd.a) unit 2 section index 7)
+    Defines:
+        __call_heap_initialize = 001be2
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-hd.a) unit 6 section index 2)
+        .sectionSize(heap)
+        .sectionStart(heap)
+        __default_heap in (heap_initialize.o (from clib-cc-hd.a) unit 22 section index 10)
+        __heap_initialize in (heap_initialize.o (from clib-cc-hd.a) unit 22 section index 3)
+
+Section 'compactcode'  placed at address 001bff-001c07 of size 000009
+(cstartup.o (from clib-cc-hd.a) unit 2 section index 8)
+    References:
+        exit in (exit.o (from clib-cc-hd.a) unit 3 section index 2)
+        main in (C:\github\RS65816\release\obj\testc.o unit 0 section index 10)
+
+_Stub_write in section 'compactcode'
+ placed at address 001c08-001c3f of size 000038
+(C:\github\RS65816\release\obj\testc.o unit 0 section index 9)
+    Defines:
+        _Stub_write = 001c08
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-hd.a) unit 6 section index 2)
+        _write in (C:\github\RS65816\release\obj\testc.o unit 0 section index 6)
+    Referenced from:
+        __lib_fflush (lib_libfflush.o (from clib-cc-hd.a) unit 19 section index 2)
+        __lib_fwrite (lib_libfwrite.o (from clib-cc-hd.a) unit 26 section index 2)
+
+fflush in section 'compactcode'  placed at address 001c40-001c75 of size 000036
+(lib_fflush.o (from clib-cc-hd.a) unit 33 section index 2)
+    Defines:
+        fflush = 001c40
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-hd.a) unit 6 section index 2)
+        __global_streams in (streamlist.o (from clib-cc-hd.a) unit 11 section index 6)
+        __lib_fflush in (lib_libfflush.o (from clib-cc-hd.a) unit 19 section index 2)
+        __lib_flushall in (lib_libflushall.o (from clib-cc-hd.a) unit 34 section index 2)
+        errno in (errno.o (from clib-cc-hd.a) unit 20 section index 2)
+    Referenced from:
+        (streamlist.o (from clib-cc-hd.a) unit 11 section index 7)
+        __lib_flushall (lib_libflushall.o (from clib-cc-hd.a) unit 34 section index 2)
+
+printf in section 'compactcode'  placed at address 001c76-001ca3 of size 00002e
+(lib_printf.o (from clib-cc-hd.a) unit 12 section index 2)
+    Defines:
+        printf = 001c76
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-hd.a) unit 6 section index 2)
+        __global_streams in (streamlist.o (from clib-cc-hd.a) unit 11 section index 6)
+        vfprintf in (lib_vfprintf.o (from clib-cc-hd.a) unit 13 section index 2)
+    Referenced from:
+        main (C:\github\RS65816\release\obj\testc.o unit 0 section index 10)
+        (C:\github\RS65816\release\obj\testc.o unit 0 section index 11)
+
+__close in section 'compactcode'
+ placed at address 001ca4-001cd0 of size 00002d
+(lib_fclose.o (from clib-cc-hd.a) unit 32 section index 2)
+    Defines:
+        __close = 001ca4
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-hd.a) unit 6 section index 2)
+        _Stub_close in (C:\github\RS65816\release\obj\testc.o unit 0 section index 4)
+        errno in (errno.o (from clib-cc-hd.a) unit 20 section index 2)
+    Referenced from:
+        (streamlist.o (from clib-cc-hd.a) unit 11 section index 7)
+
+`?L34` in section 'compactcode'  placed at address 001cd1-001cf7 of size 000027
+(heap_initialize.o (from clib-cc-hd.a) unit 22 section index 4)
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-hd.a) unit 6 section index 2)
+
+__lib_wrflush in section 'compactcode'
+ placed at address 001cf8-001d1d of size 000026
+(lib_wrflush.o (from clib-cc-hd.a) unit 30 section index 2)
+    Defines:
+        __lib_wrflush = 001cf8
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-hd.a) unit 6 section index 2)
+        __lib_fflush in (lib_libfflush.o (from clib-cc-hd.a) unit 19 section index 2)
+    Referenced from:
+        fseek (lib_fseek.o (from clib-cc-hd.a) unit 28 section index 2)
+
+`?L277` in section 'compactcode'
+ placed at address 001d1e-001d40 of size 000023
+(__vsprintf_reduced.o (from clib-cc-hd.a) unit 17 section index 8)
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-hd.a) unit 6 section index 2)
+
+stdoutstream_flush in section 'compactcode'
+ placed at address 001d41-001d60 of size 000020
+(lib_stdoutstream.o (from clib-cc-hd.a) unit 18 section index 3)
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-hd.a) unit 6 section index 2)
+        __lib_fflush in (lib_libfflush.o (from clib-cc-hd.a) unit 19 section index 2)
+
+__size2ndx in section 'compactcode'
+ placed at address 001d61-001d7e of size 00001e
+(addfreechunk.o (from clib-cc-hd.a) unit 24 section index 2)
+    Defines:
+        __size2ndx = 001d61
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-hd.a) unit 6 section index 2)
+    Referenced from:
+        __addfreechunk (addfreechunk.o (from clib-cc-hd.a) unit 24 section index 3)
+        malloc (malloc.o (from clib-cc-hd.a) unit 36 section index 2)
+
+__lib_vsprintf in section 'compactcode'
+ placed at address 001d7f-001d9b of size 00001d
+(__vsprintf_reduced.o (from clib-cc-hd.a) unit 17 section index 6)
+    Defines:
+        __lib_vsprintf = 001d7f
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-hd.a) unit 6 section index 2)
+    Referenced from:
+        vfprintf (lib_vfprintf.o (from clib-cc-hd.a) unit 13 section index 2)
+        (__vsprintf_reduced.o (from clib-cc-hd.a) unit 17 section index 5)
+
+__program_start in section 'code'
+ placed at address 001d9c-001db4 of size 000019
+(cstartup.o (from clib-cc-hd.a) unit 2 section index 2)
+    Defines:
+        __program_start = 001d9c
+    References:
+        _DirectPageStart
+        _NearBaseAddress
+        .sectionEnd(stack)
+        _Vfp in (pseudoRegisters.o (from clib-cc-hd.a) unit 6 section index 2)
+    Referenced from:
+        __program_root_section (cstartup.o (from clib-cc-hd.a) unit 2 section index 3)
+
+`_StringLiteral_FormatString_[72,97,108,108,111,32,87,101,108,116,32,109,105,116,32,67,97,108,121,112,115,105,33,10]` in section 'chuge'
+ placed at address 001db5-001dcd of size 000019
+(C:\github\RS65816\release\obj\testc.o unit 0 section index 13)
+    Defines:
+        `_StringLiteral_FormatString_[72,97,108,108,111,32,87,101,108,116,32,109,105,116,32,67,97,108,121,112,115,105,33,10]` = 001db5
+    Referenced from:
+        main (C:\github\RS65816\release\obj\testc.o unit 0 section index 10)
+
+`?L191` in section 'switch'  placed at address 001dce-001de5 of size 000018
+(__vsprintf_reduced.o (from clib-cc-hd.a) unit 17 section index 21)
+
+`?L37` in section 'compactcode'  placed at address 001de6-001dfb of size 000016
+(addfreechunk.o (from clib-cc-hd.a) unit 24 section index 4)
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-hd.a) unit 6 section index 2)
+
+`?L48` in section 'compactcode'  placed at address 001dfc-001e11 of size 000016
+(lib_libfflush.o (from clib-cc-hd.a) unit 19 section index 5)
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-hd.a) unit 6 section index 2)
+
+`_StringLiteral_FormatString_[115,105,122,101,32,108,111,110,103,32,108,111,110,103,58,32,37,100,32,10]` in section 'chuge'
+ placed at address 001e12-001e26 of size 000015
+(C:\github\RS65816\release\obj\testc.o unit 0 section index 17)
+    Defines:
+        `_StringLiteral_FormatString_[115,105,122,101,32,108,111,110,103,32,108,111,110,103,58,32,37,100,32,10]` = 001e12
+    Referenced from:
+        main (C:\github\RS65816\release\obj\testc.o unit 0 section index 10)
+
+`?L50` in section 'compactcode'  placed at address 001e27-001e3a of size 000014
+(lib_libfflush.o (from clib-cc-hd.a) unit 19 section index 6)
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-hd.a) unit 6 section index 2)
+
+`?L39` in section 'compactcode'  placed at address 001e3b-001e4c of size 000012
+(malloc.o (from clib-cc-hd.a) unit 36 section index 4)
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-hd.a) unit 6 section index 2)
+
+`_StringLiteral_FormatString_[115,105,122,101,32,115,105,122,101,95,116,58,32,37,100,32,10]` in section 'chuge'
+ placed at address 001e4d-001e5e of size 000012
+(C:\github\RS65816\release\obj\testc.o unit 0 section index 20)
+    Defines:
+        `_StringLiteral_FormatString_[115,105,122,101,32,115,105,122,101,95,116,58,32,37,100,32,10]` = 001e4d
+    Referenced from:
+        main (C:\github\RS65816\release\obj\testc.o unit 0 section index 10)
+
+`_StringLiteral_FormatString_[115,105,122,101,32,115,104,111,114,116,58,32,37,100,32,10]` in section 'chuge'
+ placed at address 001e5f-001e6f of size 000011
+(C:\github\RS65816\release\obj\testc.o unit 0 section index 19)
+    Defines:
+        `_StringLiteral_FormatString_[115,105,122,101,32,115,104,111,114,116,58,32,37,100,32,10]` = 001e5f
+    Referenced from:
+        main (C:\github\RS65816\release\obj\testc.o unit 0 section index 10)
+
+`_StringLiteral_FormatString_[115,105,122,101,32,99,104,97,114,42,58,32,37,100,32,10]` in section 'chuge'
+ placed at address 001e70-001e80 of size 000011
+(C:\github\RS65816\release\obj\testc.o unit 0 section index 14)
+    Defines:
+        `_StringLiteral_FormatString_[115,105,122,101,32,99,104,97,114,42,58,32,37,100,32,10]` = 001e70
+    Referenced from:
+        main (C:\github\RS65816\release\obj\testc.o unit 0 section index 10)
+
+`?L38` in section 'compactcode'  placed at address 001e81-001e90 of size 000010
+(heap_initialize.o (from clib-cc-hd.a) unit 22 section index 8)
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-hd.a) unit 6 section index 2)
+
+`?L35` in section 'compactcode'  placed at address 001e91-001ea0 of size 000010
+(heap_initialize.o (from clib-cc-hd.a) unit 22 section index 5)
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-hd.a) unit 6 section index 2)
+
+`?L25` in section 'compactcode'  placed at address 001ea1-001eb0 of size 000010
+(lib_rdflush.o (from clib-cc-hd.a) unit 27 section index 4)
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-hd.a) unit 6 section index 2)
+
+`?L47` in section 'compactcode'  placed at address 001eb1-001ec0 of size 000010
+(lib_libfflush.o (from clib-cc-hd.a) unit 19 section index 4)
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-hd.a) unit 6 section index 2)
+
+`_StringLiteral_FormatString_[115,105,122,101,32,108,111,110,103,58,32,37,100,32,10]` in section 'chuge'
+ placed at address 001ec1-001ed0 of size 000010
+(C:\github\RS65816\release\obj\testc.o unit 0 section index 18)
+    Defines:
+        `_StringLiteral_FormatString_[115,105,122,101,32,108,111,110,103,58,32,37,100,32,10]` = 001ec1
+    Referenced from:
+        main (C:\github\RS65816\release\obj\testc.o unit 0 section index 10)
+
+`_StringLiteral_FormatString_[115,105,122,101,32,99,104,97,114,58,32,37,100,32,10]` in section 'chuge'
+ placed at address 001ed1-001ee0 of size 000010
+(C:\github\RS65816\release\obj\testc.o unit 0 section index 15)
+    Defines:
+        `_StringLiteral_FormatString_[115,105,122,101,32,99,104,97,114,58,32,37,100,32,10]` = 001ed1
+    Referenced from:
+        main (C:\github\RS65816\release\obj\testc.o unit 0 section index 10)
+
+`?L281` in section 'compactcode'
+ placed at address 001ee1-001eef of size 00000f
+(__vsprintf_reduced.o (from clib-cc-hd.a) unit 17 section index 12)
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-hd.a) unit 6 section index 2)
+
+`?L40` in section 'compactcode'  placed at address 001ef0-001efe of size 00000f
+(malloc.o (from clib-cc-hd.a) unit 36 section index 5)
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-hd.a) unit 6 section index 2)
+
+`_StringLiteral_FormatString_[115,105,122,101,32,105,110,116,58,32,37,100,32,10]` in section 'chuge'
+ placed at address 001eff-001f0d of size 00000f
+(C:\github\RS65816\release\obj\testc.o unit 0 section index 16)
+    Defines:
+        `_StringLiteral_FormatString_[115,105,122,101,32,105,110,116,58,32,37,100,32,10]` = 001eff
+    Referenced from:
+        main (C:\github\RS65816\release\obj\testc.o unit 0 section index 10)
+
+`?L57` in section 'compactcode'  placed at address 001f0e-001f1b of size 00000e
+(lib_libfwrite.o (from clib-cc-hd.a) unit 26 section index 4)
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-hd.a) unit 6 section index 2)
+
+`?L12` in section 'compactcode'  placed at address 001f1c-001f27 of size 00000c
+(initialize.o (from clib-cc-hd.a) unit 37 section index 3)
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-hd.a) unit 6 section index 2)
+
+`?L279` in section 'compactcode'
+ placed at address 001f28-001f33 of size 00000c
+(__vsprintf_reduced.o (from clib-cc-hd.a) unit 17 section index 10)
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-hd.a) unit 6 section index 2)
+
+`?L278` in section 'compactcode'
+ placed at address 001f34-001f3f of size 00000c
+(__vsprintf_reduced.o (from clib-cc-hd.a) unit 17 section index 9)
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-hd.a) unit 6 section index 2)
+
+`?L38` in section 'compactcode'  placed at address 001f40-001f4b of size 00000c
+(malloc.o (from clib-cc-hd.a) unit 36 section index 3)
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-hd.a) unit 6 section index 2)
+
+`?L39` in section 'compactcode'  placed at address 001f4c-001f57 of size 00000c
+(heap_initialize.o (from clib-cc-hd.a) unit 22 section index 9)
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-hd.a) unit 6 section index 2)
+
+`?L36` in section 'compactcode'  placed at address 001f58-001f63 of size 00000c
+(heap_initialize.o (from clib-cc-hd.a) unit 22 section index 6)
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-hd.a) unit 6 section index 2)
+
+`?L14` in section 'compactcode'  placed at address 001f64-001f6f of size 00000c
+(lib_wrflush.o (from clib-cc-hd.a) unit 30 section index 3)
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-hd.a) unit 6 section index 2)
+
+`?L26` in section 'compactcode'  placed at address 001f70-001f7b of size 00000c
+(lib_stdoutstream.o (from clib-cc-hd.a) unit 18 section index 6)
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-hd.a) unit 6 section index 2)
+
+`?L25` in section 'compactcode'  placed at address 001f7c-001f87 of size 00000c
+(lib_stdoutstream.o (from clib-cc-hd.a) unit 18 section index 5)
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-hd.a) unit 6 section index 2)
+
+`?L24` in section 'compactcode'  placed at address 001f88-001f93 of size 00000c
+(lib_rdflush.o (from clib-cc-hd.a) unit 27 section index 3)
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-hd.a) unit 6 section index 2)
+
+`?L59` in section 'compactcode'  placed at address 001f94-001f9f of size 00000c
+(lib_libfwrite.o (from clib-cc-hd.a) unit 26 section index 6)
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-hd.a) unit 6 section index 2)
+
+`?L56` in section 'compactcode'  placed at address 001fa0-001fab of size 00000c
+(lib_libfwrite.o (from clib-cc-hd.a) unit 26 section index 3)
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-hd.a) unit 6 section index 2)
+
+`?L46` in section 'compactcode'  placed at address 001fac-001fb7 of size 00000c
+(lib_libfflush.o (from clib-cc-hd.a) unit 19 section index 3)
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-hd.a) unit 6 section index 2)
+
+`?L285` in section 'compactcode'
+ placed at address 001fb8-001fc2 of size 00000b
+(__vsprintf_reduced.o (from clib-cc-hd.a) unit 17 section index 16)
+
+`?L284` in section 'compactcode'
+ placed at address 001fc3-001fcd of size 00000b
+(__vsprintf_reduced.o (from clib-cc-hd.a) unit 17 section index 15)
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-hd.a) unit 6 section index 2)
+
+`?L61` in section 'compactcode'  placed at address 001fce-001fd7 of size 00000a
+(lib_libfwrite.o (from clib-cc-hd.a) unit 26 section index 8)
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-hd.a) unit 6 section index 2)
+
+`?L60` in section 'compactcode'  placed at address 001fd8-001fe1 of size 00000a
+(lib_libfwrite.o (from clib-cc-hd.a) unit 26 section index 7)
+    References:
+        errno in (errno.o (from clib-cc-hd.a) unit 20 section index 2)
+
+`?L51` in section 'compactcode'  placed at address 001fe2-001feb of size 00000a
+(lib_libfflush.o (from clib-cc-hd.a) unit 19 section index 7)
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-hd.a) unit 6 section index 2)
+
+Section 'data_init_table'  placed at address 001fec-001ff5 of size 00000a
+(linker generated)
+
+`?L288` in section 'compactcode'
+ placed at address 001ff6-001ffe of size 000009
+(__vsprintf_reduced.o (from clib-cc-hd.a) unit 17 section index 19)
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-hd.a) unit 6 section index 2)
+
+`?L283` in section 'compactcode'
+ placed at address 001fff-002007 of size 000009
+(__vsprintf_reduced.o (from clib-cc-hd.a) unit 17 section index 14)
+
+`?L282` in section 'compactcode'
+ placed at address 002008-002010 of size 000009
+(__vsprintf_reduced.o (from clib-cc-hd.a) unit 17 section index 13)
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-hd.a) unit 6 section index 2)
+
+`?L280` in section 'compactcode'
+ placed at address 002011-002019 of size 000009
+(__vsprintf_reduced.o (from clib-cc-hd.a) unit 17 section index 11)
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-hd.a) unit 6 section index 2)
+
+`?L276` in section 'compactcode'
+ placed at address 00201a-002022 of size 000009
+(__vsprintf_reduced.o (from clib-cc-hd.a) unit 17 section index 7)
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-hd.a) unit 6 section index 2)
+
+`?L37` in section 'compactcode'  placed at address 002023-00202b of size 000009
+(heap_initialize.o (from clib-cc-hd.a) unit 22 section index 7)
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-hd.a) unit 6 section index 2)
+
+`?L38` in section 'compactcode'  placed at address 00202c-002034 of size 000009
+(addfreechunk.o (from clib-cc-hd.a) unit 24 section index 5)
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-hd.a) unit 6 section index 2)
+
+`?L58` in section 'compactcode'  placed at address 002035-00203d of size 000009
+(lib_libfwrite.o (from clib-cc-hd.a) unit 26 section index 5)
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-hd.a) unit 6 section index 2)
+
+`?L17` in section 'compactcode'  placed at address 00203e-002046 of size 000009
+(lib_fseek.o (from clib-cc-hd.a) unit 28 section index 3)
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-hd.a) unit 6 section index 2)
+
+`_StringLiteral_*float*` in section 'chuge'
+ placed at address 002047-00204e of size 000008
+(__vsprintf_reduced.o (from clib-cc-hd.a) unit 17 section index 3)
+    Defines:
+        `_StringLiteral_*float*` = 002047
+    Referenced from:
+        (__vsprintf_reduced.o (from clib-cc-hd.a) unit 17 section index 5)
+
+_write in section 'compactcode'  placed at address 00204f-002056 of size 000008
+(C:\github\RS65816\release\obj\testc.o unit 0 section index 6)
+    Defines:
+        _write = 00204f
+    Referenced from:
+        _Stub_write (C:\github\RS65816\release\obj\testc.o unit 0 section index 9)
+
+`?L289` in section 'compactcode'
+ placed at address 002057-00205d of size 000007
+(__vsprintf_reduced.o (from clib-cc-hd.a) unit 17 section index 20)
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-hd.a) unit 6 section index 2)
+        _UDivMod32 in (integer.o (from clib-cc-hd.a) unit 42 section index 11)
+
+`?L287` in section 'compactcode'
+ placed at address 00205e-002064 of size 000007
+(__vsprintf_reduced.o (from clib-cc-hd.a) unit 17 section index 18)
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-hd.a) unit 6 section index 2)
+
+`?L286` in section 'compactcode'
+ placed at address 002065-00206b of size 000007
+(__vsprintf_reduced.o (from clib-cc-hd.a) unit 17 section index 17)
+
+g_nullstring in section 'chuge'  placed at address 00206c-002072 of size 000007
+(__vsprintf_reduced.o (from clib-cc-hd.a) unit 17 section index 2)
+
+_JmpInd in section 'compactcode'
+ placed at address 002073-002077 of size 000005
+(controlFlow.o (from clib-cc-hd.a) unit 5 section index 2)
+    Defines:
+        _JmpInd = 002073
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-hd.a) unit 6 section index 2)
+    Referenced from:
+        exit (exit.o (from clib-cc-hd.a) unit 3 section index 2)
+        (__vsprintf_reduced.o (from clib-cc-hd.a) unit 17 section index 5)
+
+`?L54` in section 'compactcode'  placed at address 002078-00207c of size 000005
+(C:\github\RS65816\release\obj\testc.o unit 0 section index 11)
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-hd.a) unit 6 section index 2)
+        printf in (lib_printf.o (from clib-cc-hd.a) unit 12 section index 2)
+
+_Stub_lseek in section 'compactcode'
+ placed at address 00207d-002081 of size 000005
+(C:\github\RS65816\release\obj\testc.o unit 0 section index 5)
+    Defines:
+        _Stub_lseek = 00207d
+    Referenced from:
+        fseek (lib_fseek.o (from clib-cc-hd.a) unit 28 section index 2)
+
+_Exit in section 'compactcode'  placed at address 002082-002085 of size 000004
+(exitC99.o (from clib-cc-hd.a) unit 8 section index 2)
+    Defines:
+        _Exit = 002082
+    References:
+        _Stub_exit in (defaultExit.o (from clib-cc-hd.a) unit 9 section index 2)
+    Referenced from:
+        exit (exit.o (from clib-cc-hd.a) unit 3 section index 2)
+
+__lib_noflush in section 'compactcode'
+ placed at address 002086-002089 of size 000004
+(lib_libnoflush.o (from clib-cc-hd.a) unit 35 section index 2)
+    Defines:
+        __lib_noflush = 002086
+    Referenced from:
+        __lib_stdoutstream (lib_stdoutstream.o (from clib-cc-hd.a) unit 18 section index 4)
+
+`_StringLiteral_FormatString_[37,112,10]` in section 'chuge'
+ placed at address 00208a-00208d of size 000004
+(C:\github\RS65816\release\obj\testc.o unit 0 section index 12)
+    Defines:
+        `_StringLiteral_FormatString_[37,112,10]` = 00208a
+    Referenced from:
+        main (C:\github\RS65816\release\obj\testc.o unit 0 section index 10)
+
+_Stub_close in section 'compactcode'
+ placed at address 00208e-002091 of size 000004
+(C:\github\RS65816\release\obj\testc.o unit 0 section index 4)
+    Defines:
+        _Stub_close = 00208e
+    Referenced from:
+        (streamlist.o (from clib-cc-hd.a) unit 11 section index 7)
+        __close (lib_fclose.o (from clib-cc-hd.a) unit 32 section index 2)
+
+__low_level_init in section 'compactcode'
+ placed at address 002092-002092 of size 000001
+(cstartup.o (from clib-cc-hd.a) unit 2 section index 9)
+    Defines:
+        __low_level_init = 002092
+    Referenced from:
+        (cstartup.o (from clib-cc-hd.a) unit 2 section index 4)
+
+_Stub_exit in section 'compactcode'
+ placed at address 002093-002093 of size 000001
+(defaultExit.o (from clib-cc-hd.a) unit 9 section index 2)
+    Defines:
+        _Stub_exit = 002093
+    Referenced from:
+        _Exit (exitC99.o (from clib-cc-hd.a) unit 8 section index 2)
+
+__default_heap in section 'zhuge'
+ placed at address 008000-008099 of size 00009a
+(heap_initialize.o (from clib-cc-hd.a) unit 22 section index 10)
+    Defines:
+        __default_heap = 008000
+    Referenced from:
+        __call_heap_initialize (cstartup.o (from clib-cc-hd.a) unit 2 section index 7)
+        malloc (malloc.o (from clib-cc-hd.a) unit 36 section index 2)
+
+__atexit_index in section 'zhuge'
+ placed at address 00809a-00809b of size 000002
+(atexit.o (from clib-cc-hd.a) unit 7 section index 3)
+    Defines:
+        __atexit_index = 00809a
+    Referenced from:
+        exit (exit.o (from clib-cc-hd.a) unit 3 section index 2)
+
+__atexit in section 'zhuge'  placed at address 00809c-0080db of size 000040
+(atexit.o (from clib-cc-hd.a) unit 7 section index 2)
+    Defines:
+        __atexit = 00809c
+    Referenced from:
+        exit (exit.o (from clib-cc-hd.a) unit 3 section index 2)
+
+__global_streams in section 'zhuge'
+ placed at address 0080dc-0080ef of size 000014
+(streamlist.o (from clib-cc-hd.a) unit 11 section index 6)
+    Defines:
+        __global_streams = 0080dc
+    Referenced from:
+        (streamlist.o (from clib-cc-hd.a) unit 11 section index 7)
+        __initialize_global_streams (streamlist.o (from clib-cc-hd.a) unit 11 section index 8)
+        printf (lib_printf.o (from clib-cc-hd.a) unit 12 section index 2)
+        fflush (lib_fflush.o (from clib-cc-hd.a) unit 33 section index 2)
+
+__stderr in section 'zhuge'  placed at address 0080f0-008108 of size 000019
+(streamlist.o (from clib-cc-hd.a) unit 11 section index 5)
+
+__stdout in section 'zhuge'  placed at address 008109-008121 of size 000019
+(streamlist.o (from clib-cc-hd.a) unit 11 section index 4)
+
+__stdin in section 'zhuge'  placed at address 008122-00813a of size 000019
+(streamlist.o (from clib-cc-hd.a) unit 11 section index 3)
+
+_ExitCloseStreams in section 'zhuge'
+ placed at address 00813b-00813c of size 000002
+(streamlist.o (from clib-cc-hd.a) unit 11 section index 2)
+    Defines:
+        _ExitCloseStreams = 00813b
+    Referenced from:
+        exit (exit.o (from clib-cc-hd.a) unit 3 section index 2)
+        __initialize_global_streams (streamlist.o (from clib-cc-hd.a) unit 11 section index 8)
+
+errno in section 'zhuge'  placed at address 00813d-00813e of size 000002
+(errno.o (from clib-cc-hd.a) unit 20 section index 2)
+    Defines:
+        errno = 00813d
+    Referenced from:
+        (lib_stdoutstream.o (from clib-cc-hd.a) unit 18 section index 2)
+        __lib_fflush (lib_libfflush.o (from clib-cc-hd.a) unit 19 section index 2)
+        __lib_fwrite (lib_libfwrite.o (from clib-cc-hd.a) unit 26 section index 2)
+        (lib_libfwrite.o (from clib-cc-hd.a) unit 26 section index 7)
+        __lib_rdflush (lib_rdflush.o (from clib-cc-hd.a) unit 27 section index 2)
+        fseek (lib_fseek.o (from clib-cc-hd.a) unit 28 section index 2)
+        __close (lib_fclose.o (from clib-cc-hd.a) unit 32 section index 2)
+        fflush (lib_fflush.o (from clib-cc-hd.a) unit 33 section index 2)
+
+__program_root_section in section 'reset'
+ placed at address 00fffc-00fffd of size 000002
+(cstartup.o (from clib-cc-hd.a) unit 2 section index 3)
+    Defines:
+        __program_root_section = 00fffc
+    References:
+        __program_start in (cstartup.o (from clib-cc-hd.a) unit 2 section index 2)
+
+Section 'heap'  placed at address 010000-017fff of size 008000
+(linker generated)
+
+##########################
+#                        #
+# Memory sizes (decimal) #
+#                        #
+##########################
+
+Executable       (Text):  7830 bytes
+Data                   :   319 bytes
+Non-initialized        : 33044 bytes
