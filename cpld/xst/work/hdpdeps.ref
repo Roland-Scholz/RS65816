@@ -1,0 +1,6 @@
+V3 3
+FL C:/github/RS65816/RS65816/cpumodule.vhd 2026/09/05.12:40:26 P.20131013
+EN work/cpumodule 1788604829 FL C:/github/RS65816/RS65816/cpumodule.vhd \
+      PB ieee/std_logic_1164 1381692176 PB ieee/STD_LOGIC_UNSIGNED 1381692179
+AR work/cpumodule/Behavioral 1788604830 \
+      FL C:/github/RS65816/RS65816/cpumodule.vhd EN work/cpumodule 1788604829

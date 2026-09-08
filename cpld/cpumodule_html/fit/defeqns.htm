@@ -1,0 +1,273 @@
+<html><head><link type='text/css' href='style.css' rel='stylesheet'></head><body class='pgBgnd'>
+<h3 align='center'>Equations</h3>
+<table width='90%' align='center' border='1' cellpadding='0' cellspacing='0'>
+<tr><td>
+</td></tr><tr><td>
+********** Mapped Logic **********
+</td></tr><tr><td>
+</td></tr><tr><td>
+$OpTx$FX_DC$50 <= ((NOT vda AND NOT vpa AND ras.PIN)
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	OR (bank(7) AND bank(6) AND bank(5) AND bank(4) AND 
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	bank(3) AND bank(2) AND bank(1) AND bank(0) AND a15_13(2) AND 
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	a15_13(1) AND a15_13(0) AND ras.PIN)
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	OR (NOT bank(7) AND NOT bank(6) AND NOT bank(5) AND NOT bank(4) AND 
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	NOT bank(3) AND NOT bank(2) AND NOT bank(1) AND NOT bank(0) AND a15_13(2) AND 
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	a15_13(1) AND a15_13(0) AND rw AND ras.PIN));
+</td></tr><tr><td>
+</td></tr><tr><td>
+</td></tr><tr><td>
+</td></tr><tr><td>
+</td></tr><tr><td>
+</td></tr><tr><td>
+</td></tr><tr><td>
+</td></tr><tr><td>
+</td></tr><tr><td>
+FDCPE_cas0: FDCPE port map (cas0,cas0_D,NOT clk,'0','0');
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cas0_D <= ((a12_11(1) AND counter(2) AND cas0.PIN)
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	OR (a12_11(0) AND counter(2) AND cas0.PIN)
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	OR (counter(2) AND iocnt(2) AND cas0.PIN)
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	OR (refcnt(7).EXP)
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	OR (NOT counter(0) AND NOT counter(2) AND refcnt(3))
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	OR (NOT counter(0) AND NOT counter(2) AND refcnt(4))
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	OR (NOT counter(0) AND NOT counter(2) AND refcnt(5))
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	OR (NOT counter(0) AND NOT counter(2) AND refcnt(6))
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	OR (NOT counter(0) AND NOT counter(2) AND refcnt(7))
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	OR (counter(0) AND cas0.PIN)
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	OR (NOT counter(0) AND counter(1))
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	OR (NOT counter(0) AND NOT counter(2) AND refcnt(0))
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	OR (NOT counter(0) AND NOT counter(2) AND refcnt(1))
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	OR (NOT counter(0) AND NOT counter(2) AND refcnt(2)));
+</td></tr><tr><td>
+FDCPE_cas1: FDCPE port map (cas1,cas1_D,NOT clk,'0','0');
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cas1_D <= ((NOT a12_11(0) AND cas1.PIN)
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	OR (counter(0) AND cas1.PIN)
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	OR (NOT counter(2) AND cas1.PIN)
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	OR (NOT counter(0) AND counter(1) AND counter(2))
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	OR (NOT vda AND NOT vpa AND cas1.PIN)
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	OR (NOT refcnt(0) AND NOT refcnt(1) AND NOT refcnt(2) AND NOT refcnt(3) AND 
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	NOT refcnt(4) AND NOT refcnt(5) AND NOT refcnt(6) AND NOT refcnt(7) AND cas1.PIN)
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	OR (a12_11(1) AND cas1.PIN)
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	OR (iocnt(2) AND cas1.PIN)
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	OR (iocnt(0) AND cas1.PIN)
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	OR (iocnt(1) AND cas1.PIN)
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	OR (NOT rom.PIN AND cas1.PIN));
+</td></tr><tr><td>
+FDCPE_cas2: FDCPE port map (cas2,cas2_D,NOT clk,'0','0');
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cas2_D <= ((EXP0_.EXP)
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	OR (NOT a12_11(1) AND cas2.PIN)
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	OR (a12_11(0) AND cas2.PIN)
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	OR (iocnt(0) AND cas2.PIN)
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	OR (iocnt(1) AND cas2.PIN)
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	OR (NOT rom.PIN AND cas2.PIN)
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	OR (iocnt(2) AND cas2.PIN));
+</td></tr><tr><td>
+FDCPE_cas3: FDCPE port map (cas3,cas3_D,NOT clk,'0','0');
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cas3_D <= ((refcnt(4).EXP)
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	OR (NOT a12_11(1) AND cas3.PIN)
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	OR (NOT a12_11(0) AND cas3.PIN)
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	OR (iocnt(0) AND cas3.PIN)
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	OR (iocnt(1) AND cas3.PIN)
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	OR (NOT rom.PIN AND cas3.PIN)
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	OR (iocnt(2) AND cas3.PIN));
+</td></tr><tr><td>
+FTCPE_counter0: FTCPE port map (counter(0),counter_T(0),NOT clk,'0','0');
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;counter_T(0) <= (NOT counter(0) AND counter(1) AND counter(2));
+</td></tr><tr><td>
+FDCPE_counter1: FDCPE port map (counter(1),counter_D(1),NOT clk,'0','0');
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;counter_D(1) <= ((counter(0) AND NOT counter(1))
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	OR (NOT counter(0) AND counter(1) AND NOT counter(2)));
+</td></tr><tr><td>
+FDCPE_counter2: FDCPE port map (counter(2),counter_D(2),NOT clk,'0','0');
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;counter_D(2) <= ((NOT counter(1) AND counter(2))
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	OR (counter(0) AND counter(1) AND NOT counter(2)));
+</td></tr><tr><td>
+FTCPE_io0: FTCPE port map (io0,io0_T,NOT clk,'0','0');
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;io0_T <= ((NOT counter(0) AND counter(1) AND counter(2) AND iocnt(2) AND 
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	iocnt(0) AND NOT iocnt(1) AND NOT io0.PIN)
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	OR (NOT a12_11(1) AND NOT a12_11(0) AND NOT a10 AND NOT counter(0) AND 
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	counter(1) AND counter(2) AND NOT iocnt(2) AND iocnt(0) AND NOT iocnt(1) AND 
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	io0.PIN));
+</td></tr><tr><td>
+FTCPE_io1: FTCPE port map (io1,io1_T,NOT clk,'0','0');
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;io1_T <= ((NOT counter(0) AND counter(1) AND counter(2) AND iocnt(2) AND 
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	iocnt(0) AND NOT iocnt(1) AND NOT io1.PIN)
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	OR (NOT a12_11(1) AND NOT a12_11(0) AND a10 AND NOT counter(0) AND 
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	counter(1) AND counter(2) AND NOT iocnt(2) AND iocnt(0) AND NOT iocnt(1) AND 
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	io1.PIN));
+</td></tr><tr><td>
+FTCPE_io2: FTCPE port map (io2,io2_T,NOT clk,'0','0');
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;io2_T <= ((NOT counter(0) AND counter(1) AND counter(2) AND iocnt(2) AND 
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	iocnt(0) AND NOT iocnt(1) AND NOT io2.PIN)
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	OR (NOT a12_11(1) AND a12_11(0) AND NOT a10 AND NOT counter(0) AND 
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	counter(1) AND counter(2) AND NOT iocnt(2) AND iocnt(0) AND NOT iocnt(1) AND 
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	io2.PIN));
+</td></tr><tr><td>
+FTCPE_io3: FTCPE port map (io3,io3_T,NOT clk,'0','0');
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;io3_T <= ((NOT counter(0) AND counter(1) AND counter(2) AND iocnt(2) AND 
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	iocnt(0) AND NOT iocnt(1) AND NOT io3.PIN)
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	OR (NOT a12_11(1) AND a12_11(0) AND a10 AND NOT counter(0) AND 
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	counter(1) AND counter(2) AND NOT iocnt(2) AND iocnt(0) AND NOT iocnt(1) AND 
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	io3.PIN));
+</td></tr><tr><td>
+FTCPE_io4: FTCPE port map (io4,io4_T,NOT clk,'0','0');
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;io4_T <= ((NOT counter(0) AND counter(1) AND counter(2) AND iocnt(2) AND 
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	iocnt(0) AND NOT iocnt(1) AND NOT io4.PIN)
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	OR (a12_11(1) AND NOT a12_11(0) AND NOT a10 AND NOT counter(0) AND 
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	counter(1) AND counter(2) AND NOT iocnt(2) AND iocnt(0) AND NOT iocnt(1) AND 
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	io4.PIN));
+</td></tr><tr><td>
+FTCPE_io5: FTCPE port map (io5,io5_T,NOT clk,'0','0');
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;io5_T <= ((NOT counter(0) AND counter(1) AND counter(2) AND iocnt(2) AND 
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	iocnt(0) AND NOT iocnt(1) AND NOT io5.PIN)
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	OR (a12_11(1) AND NOT a12_11(0) AND a10 AND NOT counter(0) AND 
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	counter(1) AND counter(2) AND NOT iocnt(2) AND iocnt(0) AND NOT iocnt(1) AND 
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	io5.PIN));
+</td></tr><tr><td>
+FTCPE_io6: FTCPE port map (io6,io6_T,NOT clk,'0','0');
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;io6_T <= ((NOT counter(0) AND counter(1) AND counter(2) AND iocnt(2) AND 
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	iocnt(0) AND NOT iocnt(1) AND NOT io6.PIN)
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	OR (a12_11(1) AND a12_11(0) AND NOT a10 AND NOT counter(0) AND 
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	counter(1) AND counter(2) AND NOT iocnt(2) AND iocnt(0) AND NOT iocnt(1) AND 
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	io6.PIN));
+</td></tr><tr><td>
+FTCPE_io7: FTCPE port map (io7,io7_T,NOT clk,'0','0');
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;io7_T <= ((NOT counter(0) AND counter(1) AND counter(2) AND iocnt(2) AND 
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	iocnt(0) AND NOT iocnt(1) AND NOT io7.PIN)
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	OR (a12_11(1) AND a12_11(0) AND a10 AND NOT counter(0) AND 
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	counter(1) AND counter(2) AND NOT iocnt(2) AND iocnt(0) AND NOT iocnt(1) AND 
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	io7.PIN));
+</td></tr><tr><td>
+FTCPE_iocnt0: FTCPE port map (iocnt(0),iocnt_T(0),NOT clk,'0','0');
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;iocnt_T(0) <= ((NOT counter(0) AND counter(1) AND counter(2) AND iocnt(2))
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	OR (NOT counter(0) AND counter(1) AND counter(2) AND iocnt(0))
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	OR (NOT counter(0) AND counter(1) AND counter(2) AND iocnt(1))
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	OR (bank(7) AND bank(6) AND bank(5) AND bank(4) AND 
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	bank(3) AND bank(2) AND bank(1) AND bank(0) AND vda AND a15_13(2) AND 
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	a15_13(1) AND a15_13(0) AND counter(0) AND NOT counter(1) AND 
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	NOT counter(2) AND NOT iocnt(2) AND NOT iocnt(0) AND NOT iocnt(1) AND NOT vpa));
+</td></tr><tr><td>
+FTCPE_iocnt1: FTCPE port map (iocnt(1),iocnt_T(1),NOT clk,'0','0');
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;iocnt_T(1) <= ((NOT counter(0) AND counter(1) AND counter(2) AND NOT iocnt(2) AND 
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	iocnt(0))
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	OR (NOT counter(0) AND counter(1) AND counter(2) AND iocnt(0) AND 
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	iocnt(1)));
+</td></tr><tr><td>
+FTCPE_iocnt2: FTCPE port map (iocnt(2),iocnt_T(2),NOT clk,'0','0');
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;iocnt_T(2) <= ((NOT counter(0) AND counter(1) AND counter(2) AND iocnt(2) AND 
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	iocnt(0))
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	OR (NOT counter(0) AND counter(1) AND counter(2) AND iocnt(0) AND 
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	iocnt(1)));
+</td></tr><tr><td>
+FDCPE_phi0: FDCPE port map (phi0,phi0_D,NOT clk,'0','0');
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;phi0_D <= ((NOT counter(0) AND counter(1) AND NOT counter(2))
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	OR (iocnt(2) AND NOT iocnt(0) AND phi0.PIN)
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	OR (NOT iocnt(2) AND iocnt(0) AND phi0.PIN)
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	OR (NOT counter(0) AND counter(1) AND NOT iocnt(2) AND NOT iocnt(0) AND 
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	NOT iocnt(1) AND NOT refcnt(0) AND NOT refcnt(1) AND NOT refcnt(2) AND NOT refcnt(3) AND 
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	NOT refcnt(4) AND NOT refcnt(5) AND NOT refcnt(6) AND NOT refcnt(7) AND rom.PIN)
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	OR (counter(0) AND phi0.PIN)
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	OR (NOT counter(1) AND phi0.PIN)
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	OR (iocnt(1) AND phi0.PIN));
+</td></tr><tr><td>
+FDCPE_phi1: FDCPE port map (phi1,phi1_D,NOT clk,'0','0');
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;phi1_D <= ((iocnt(2) AND NOT iocnt(0) AND NOT phi1.PIN)
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	OR (NOT counter(0) AND counter(1) AND NOT iocnt(2) AND NOT iocnt(0) AND 
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	NOT iocnt(1) AND NOT refcnt(0) AND NOT refcnt(1) AND NOT refcnt(2) AND NOT refcnt(3) AND 
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	NOT refcnt(4) AND NOT refcnt(5) AND NOT refcnt(6) AND NOT refcnt(7) AND rom.PIN)
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	OR (counter(0) AND NOT phi1.PIN)
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	OR (NOT counter(1) AND NOT phi1.PIN)
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	OR (iocnt(1) AND NOT phi1.PIN)
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	OR (NOT counter(0) AND counter(1) AND NOT counter(2))
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	OR (NOT iocnt(2) AND iocnt(0) AND NOT phi1.PIN));
+</td></tr><tr><td>
+FDCPE_ras: FDCPE port map (ras,ras_D,NOT clk,'0','0');
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ras_D <= ((counter(1) AND NOT refcnt(0) AND NOT refcnt(1) AND NOT refcnt(2) AND 
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	NOT refcnt(3) AND NOT refcnt(4) AND NOT refcnt(5) AND NOT refcnt(6) AND NOT refcnt(7) AND 
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	NOT ras.PIN)
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	OR (counter(0) AND NOT counter(1) AND NOT counter(2) AND 
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	NOT refcnt(0) AND NOT refcnt(1) AND NOT refcnt(2) AND NOT refcnt(3) AND NOT refcnt(4) AND 
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	NOT refcnt(5) AND NOT refcnt(6) AND NOT refcnt(7))
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	OR (NOT counter(0) AND NOT $OpTx$FX_DC$50 AND NOT ras.PIN)
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	OR (counter(1) AND NOT $OpTx$FX_DC$50 AND NOT ras.PIN)
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	OR (counter(0) AND NOT counter(1) AND NOT counter(2) AND 
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	NOT $OpTx$FX_DC$50)
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	OR (NOT counter(0) AND NOT refcnt(0) AND NOT refcnt(1) AND NOT refcnt(2) AND 
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	NOT refcnt(3) AND NOT refcnt(4) AND NOT refcnt(5) AND NOT refcnt(6) AND NOT refcnt(7) AND 
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	NOT ras.PIN));
+</td></tr><tr><td>
+FTCPE_refcnt0: FTCPE port map (refcnt(0),refcnt_T(0),NOT clk,'0','0');
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;refcnt_T(0) <= (NOT counter(0) AND counter(1) AND counter(2));
+</td></tr><tr><td>
+FTCPE_refcnt1: FTCPE port map (refcnt(1),refcnt_T(1),NOT clk,'0','0');
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;refcnt_T(1) <= ((NOT counter(1))
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	OR (NOT counter(2))
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	OR (refcnt(0))
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	OR (counter(0))
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	OR (NOT refcnt(1) AND NOT refcnt(2) AND NOT refcnt(3) AND NOT refcnt(4) AND 
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	NOT refcnt(5) AND NOT refcnt(6) AND NOT refcnt(7)));
+</td></tr><tr><td>
+FTCPE_refcnt2: FTCPE port map (refcnt(2),refcnt_T(2),NOT clk,'0','0');
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;refcnt_T(2) <= (NOT counter(0) AND counter(1) AND counter(2) AND 
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	NOT refcnt(0) AND NOT refcnt(1));
+</td></tr><tr><td>
+FTCPE_refcnt3: FTCPE port map (refcnt(3),refcnt_T(3),NOT clk,'0','0');
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;refcnt_T(3) <= (NOT counter(0) AND counter(1) AND counter(2) AND 
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	NOT refcnt(0) AND NOT refcnt(1) AND NOT refcnt(2));
+</td></tr><tr><td>
+FTCPE_refcnt4: FTCPE port map (refcnt(4),refcnt_T(4),NOT clk,'0','0');
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;refcnt_T(4) <= ((NOT counter(0) AND counter(1) AND counter(2) AND 
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	NOT refcnt(0) AND NOT refcnt(1) AND NOT refcnt(2) AND NOT refcnt(3) AND refcnt(4))
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	OR (NOT counter(0) AND counter(1) AND counter(2) AND 
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	NOT refcnt(0) AND NOT refcnt(1) AND NOT refcnt(2) AND NOT refcnt(3) AND refcnt(5))
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	OR (NOT counter(0) AND counter(1) AND counter(2) AND 
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	NOT refcnt(0) AND NOT refcnt(1) AND NOT refcnt(2) AND NOT refcnt(3) AND refcnt(6))
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	OR (NOT counter(0) AND counter(1) AND counter(2) AND 
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	NOT refcnt(0) AND NOT refcnt(1) AND NOT refcnt(2) AND NOT refcnt(3) AND refcnt(7)));
+</td></tr><tr><td>
+FTCPE_refcnt5: FTCPE port map (refcnt(5),refcnt_T(5),NOT clk,'0','0');
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;refcnt_T(5) <= ((NOT counter(0) AND counter(1) AND counter(2) AND 
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	NOT refcnt(0) AND NOT refcnt(1) AND NOT refcnt(2) AND NOT refcnt(3) AND NOT refcnt(4) AND 
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	refcnt(5))
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	OR (NOT counter(0) AND counter(1) AND counter(2) AND 
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	NOT refcnt(0) AND NOT refcnt(1) AND NOT refcnt(2) AND NOT refcnt(3) AND NOT refcnt(4) AND 
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	refcnt(6))
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	OR (NOT counter(0) AND counter(1) AND counter(2) AND 
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	NOT refcnt(0) AND NOT refcnt(1) AND NOT refcnt(2) AND NOT refcnt(3) AND NOT refcnt(4) AND 
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	refcnt(7)));
+</td></tr><tr><td>
+FTCPE_refcnt6: FTCPE port map (refcnt(6),refcnt_T(6),NOT clk,'0','0');
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;refcnt_T(6) <= ((NOT counter(0) AND counter(1) AND counter(2) AND 
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	NOT refcnt(0) AND NOT refcnt(1) AND NOT refcnt(2) AND NOT refcnt(3) AND NOT refcnt(4) AND 
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	NOT refcnt(5) AND refcnt(6))
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	OR (NOT counter(0) AND counter(1) AND counter(2) AND 
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	NOT refcnt(0) AND NOT refcnt(1) AND NOT refcnt(2) AND NOT refcnt(3) AND NOT refcnt(4) AND 
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	NOT refcnt(5) AND refcnt(7)));
+</td></tr><tr><td>
+FTCPE_refcnt7: FTCPE port map (refcnt(7),refcnt_T(7),NOT clk,'0','0');
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;refcnt_T(7) <= (NOT counter(0) AND counter(1) AND counter(2) AND 
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	NOT refcnt(0) AND NOT refcnt(1) AND NOT refcnt(2) AND NOT refcnt(3) AND NOT refcnt(4) AND 
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	NOT refcnt(5) AND NOT refcnt(6));
+</td></tr><tr><td>
+FTCPE_rom: FTCPE port map (rom,rom_T,NOT clk,'0','0');
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rom_T <= ((NOT counter(0) AND counter(1) AND counter(2) AND NOT rom.PIN)
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	OR (NOT bank(7) AND NOT bank(6) AND NOT bank(5) AND NOT bank(4) AND 
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	NOT bank(3) AND NOT bank(2) AND NOT bank(1) AND NOT bank(0) AND vda AND a15_13(2) AND 
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	a15_13(1) AND a15_13(0) AND counter(0) AND NOT counter(1) AND 
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	NOT counter(2) AND rw AND rom.PIN)
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	OR (NOT bank(7) AND NOT bank(6) AND NOT bank(5) AND NOT bank(4) AND 
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	NOT bank(3) AND NOT bank(2) AND NOT bank(1) AND NOT bank(0) AND a15_13(2) AND 
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	a15_13(1) AND a15_13(0) AND counter(0) AND NOT counter(1) AND 
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	NOT counter(2) AND vpa AND rw AND rom.PIN));
+</td></tr><tr><td>
+Register Legend:
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; FDCPE (Q,D,C,CLR,PRE); 
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; FTCPE (Q,D,C,CLR,PRE); 
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; LDCP  (Q,D,G,CLR,PRE); 
+</td></tr><tr><td>
+</td></tr>
+</table>
+<form><span class="pgRef"><table width="90%" align="center"><tr>
+<td align="left"><input type="button" onclick="javascript:parent.leftnav.showTop()" onmouseover="window.status='goto top of page'; return true;" onmouseout="window.status=''" value="back to top"></td>
+<td align="right"><input type="button" onclick="window.print()" onmouseover="window.status='print page'; return true;" onmouseout="window.status=''" value="print page"></td>
+</tr></table></span></form>
+</body></html>

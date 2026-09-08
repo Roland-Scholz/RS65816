@@ -1,0 +1,2766 @@
+NDS Database:  version P.20131013
+
+NDS_INFO | xc9500 | 953644PC | XC9536-15-PC44
+
+DEVICE | 9536 | 953644PC | 
+
+NETWORK | cpumodule | 0 | 0 | 201342983
+
+INPUT_INSTANCE | 0 | 0 | NULL | bank_7_IBUF | cpumodule_COPY_0_COPY_0 | 0 | 1 | 1
+INPUT_NODE_TYPE | 0 | 5 | II_IN
+NODE | bank<7> | 4846 | PI | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | NULL | 0 | 100 | NOTYPE
+OUTPUT_NODE_TYPE | 0 | 5 | II_IMUX
+NODE | bank_7_IBUF | 4765 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | bank_7_IBUF | 0 | 5 | II_IMUX
+
+INPUT_INSTANCE | 0 | 0 | NULL | bank_6_IBUF | cpumodule_COPY_0_COPY_0 | 0 | 1 | 1
+INPUT_NODE_TYPE | 0 | 5 | II_IN
+NODE | bank<6> | 4847 | PI | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | NULL | 0 | 100 | NOTYPE
+OUTPUT_NODE_TYPE | 0 | 5 | II_IMUX
+NODE | bank_6_IBUF | 4766 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | bank_6_IBUF | 0 | 5 | II_IMUX
+
+INPUT_INSTANCE | 0 | 0 | NULL | bank_5_IBUF | cpumodule_COPY_0_COPY_0 | 0 | 1 | 1
+INPUT_NODE_TYPE | 0 | 5 | II_IN
+NODE | bank<5> | 4848 | PI | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | NULL | 0 | 100 | NOTYPE
+OUTPUT_NODE_TYPE | 0 | 5 | II_IMUX
+NODE | bank_5_IBUF | 4767 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | bank_5_IBUF | 0 | 5 | II_IMUX
+
+INPUT_INSTANCE | 0 | 0 | NULL | bank_4_IBUF | cpumodule_COPY_0_COPY_0 | 0 | 1 | 1
+INPUT_NODE_TYPE | 0 | 5 | II_IN
+NODE | bank<4> | 4849 | PI | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | NULL | 0 | 100 | NOTYPE
+OUTPUT_NODE_TYPE | 0 | 5 | II_IMUX
+NODE | bank_4_IBUF | 4768 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | bank_4_IBUF | 0 | 5 | II_IMUX
+
+INPUT_INSTANCE | 0 | 0 | NULL | bank_3_IBUF | cpumodule_COPY_0_COPY_0 | 0 | 1 | 1
+INPUT_NODE_TYPE | 0 | 5 | II_IN
+NODE | bank<3> | 4850 | PI | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | NULL | 0 | 100 | NOTYPE
+OUTPUT_NODE_TYPE | 0 | 5 | II_IMUX
+NODE | bank_3_IBUF | 4769 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | bank_3_IBUF | 0 | 5 | II_IMUX
+
+INPUT_INSTANCE | 0 | 0 | NULL | bank_2_IBUF | cpumodule_COPY_0_COPY_0 | 0 | 1 | 1
+INPUT_NODE_TYPE | 0 | 5 | II_IN
+NODE | bank<2> | 4851 | PI | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | NULL | 0 | 100 | NOTYPE
+OUTPUT_NODE_TYPE | 0 | 5 | II_IMUX
+NODE | bank_2_IBUF | 4770 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | bank_2_IBUF | 0 | 5 | II_IMUX
+
+INPUT_INSTANCE | 0 | 0 | NULL | bank_1_IBUF | cpumodule_COPY_0_COPY_0 | 0 | 1 | 1
+INPUT_NODE_TYPE | 0 | 5 | II_IN
+NODE | bank<1> | 4852 | PI | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | NULL | 0 | 100 | NOTYPE
+OUTPUT_NODE_TYPE | 0 | 5 | II_IMUX
+NODE | bank_1_IBUF | 4771 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | bank_1_IBUF | 0 | 5 | II_IMUX
+
+INPUT_INSTANCE | 0 | 0 | NULL | bank_0_IBUF | cpumodule_COPY_0_COPY_0 | 0 | 1 | 1
+INPUT_NODE_TYPE | 0 | 5 | II_IN
+NODE | bank<0> | 4853 | PI | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | NULL | 0 | 100 | NOTYPE
+OUTPUT_NODE_TYPE | 0 | 5 | II_IMUX
+NODE | bank_0_IBUF | 4772 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | bank_0_IBUF | 0 | 5 | II_IMUX
+
+INPUT_INSTANCE | 0 | 0 | NULL | a12_11_1_IBUF | cpumodule_COPY_0_COPY_0 | 0 | 1 | 1
+INPUT_NODE_TYPE | 0 | 5 | II_IN
+NODE | a12_11<1> | 4854 | PI | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | NULL | 0 | 100 | NOTYPE
+OUTPUT_NODE_TYPE | 0 | 5 | II_IMUX
+NODE | a12_11_1_IBUF | 4773 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | a12_11_1_IBUF | 0 | 5 | II_IMUX
+
+INPUT_INSTANCE | 0 | 0 | NULL | a12_11_0_IBUF | cpumodule_COPY_0_COPY_0 | 0 | 1 | 1
+INPUT_NODE_TYPE | 0 | 5 | II_IN
+NODE | a12_11<0> | 4855 | PI | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | NULL | 0 | 100 | NOTYPE
+OUTPUT_NODE_TYPE | 0 | 5 | II_IMUX
+NODE | a12_11_0_IBUF | 4774 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | a12_11_0_IBUF | 0 | 5 | II_IMUX
+
+INPUT_INSTANCE | 0 | 0 | NULL | vda_IBUF | cpumodule_COPY_0_COPY_0 | 0 | 1 | 1
+INPUT_NODE_TYPE | 0 | 5 | II_IN
+NODE | vda | 4856 | PI | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | NULL | 0 | 100 | NOTYPE
+OUTPUT_NODE_TYPE | 0 | 5 | II_IMUX
+NODE | vda_IBUF | 4775 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | vda_IBUF | 0 | 5 | II_IMUX
+
+INPUT_INSTANCE | 0 | 0 | NULL | a15_13_2_IBUF | cpumodule_COPY_0_COPY_0 | 0 | 1 | 1
+INPUT_NODE_TYPE | 0 | 5 | II_IN
+NODE | a15_13<2> | 4857 | PI | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | NULL | 0 | 100 | NOTYPE
+OUTPUT_NODE_TYPE | 0 | 5 | II_IMUX
+NODE | a15_13_2_IBUF | 4776 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | a15_13_2_IBUF | 0 | 5 | II_IMUX
+
+INPUT_INSTANCE | 0 | 0 | NULL | a15_13_1_IBUF | cpumodule_COPY_0_COPY_0 | 0 | 1 | 1
+INPUT_NODE_TYPE | 0 | 5 | II_IN
+NODE | a15_13<1> | 4858 | PI | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | NULL | 0 | 100 | NOTYPE
+OUTPUT_NODE_TYPE | 0 | 5 | II_IMUX
+NODE | a15_13_1_IBUF | 4777 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | a15_13_1_IBUF | 0 | 5 | II_IMUX
+
+INPUT_INSTANCE | 0 | 0 | NULL | a15_13_0_IBUF | cpumodule_COPY_0_COPY_0 | 0 | 1 | 1
+INPUT_NODE_TYPE | 0 | 5 | II_IN
+NODE | a15_13<0> | 4859 | PI | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | NULL | 0 | 100 | NOTYPE
+OUTPUT_NODE_TYPE | 0 | 5 | II_IMUX
+NODE | a15_13_0_IBUF | 4778 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | a15_13_0_IBUF | 0 | 5 | II_IMUX
+
+INPUT_INSTANCE | 0 | 0 | NULL | a10_IBUF | cpumodule_COPY_0_COPY_0 | 0 | 1 | 1
+INPUT_NODE_TYPE | 0 | 5 | II_IN
+NODE | a10 | 4860 | PI | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | NULL | 0 | 100 | NOTYPE
+OUTPUT_NODE_TYPE | 0 | 5 | II_IMUX
+NODE | a10_IBUF | 4779 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | a10_IBUF | 0 | 5 | II_IMUX
+
+INPUT_INSTANCE | 0 | 0 | NULL | clk_IBUF | cpumodule_COPY_0_COPY_0 | 0 | 1 | 1
+INPUT_NODE_TYPE | 0 | 5 | II_IN
+NODE | clk | 4861 | PI | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | NULL | 0 | 100 | NOTYPE
+OUTPUT_NODE_TYPE | 7 | 5 | II_FCLKINV
+NODE | FCLK-IO_0 | 4780 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | clk_IBUF | 7 | 5 | II_FCLKINV
+
+INPUT_INSTANCE | 0 | 0 | NULL | rw_IBUF | cpumodule_COPY_0_COPY_0 | 0 | 1 | 1
+INPUT_NODE_TYPE | 0 | 5 | II_IN
+NODE | rw | 4863 | PI | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | NULL | 0 | 100 | NOTYPE
+OUTPUT_NODE_TYPE | 0 | 5 | II_IMUX
+NODE | rw_IBUF | 4828 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | rw_IBUF | 0 | 5 | II_IMUX
+
+INPUT_INSTANCE | 0 | 0 | NULL | vpa_IBUF | cpumodule_COPY_0_COPY_0 | 0 | 1 | 1
+INPUT_NODE_TYPE | 0 | 5 | II_IN
+NODE | vpa | 4862 | PI | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | NULL | 0 | 100 | NOTYPE
+OUTPUT_NODE_TYPE | 0 | 5 | II_IMUX
+NODE | vpa_IBUF | 4827 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | vpa_IBUF | 0 | 5 | II_IMUX
+
+MACROCELL_INSTANCE | PrldHigh+Tff+OptxMapped+OeInv | rom_OBUF | cpumodule_COPY_0_COPY_0 | 2290094592 | 19 | 2
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<0> | 4813 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<0>.Q | counter<0> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<1> | 4814 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<1>.Q | counter<1> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<2> | 4815 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<2>.Q | counter<2> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | bank_7_IBUF | 4765 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | bank_7_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | bank_6_IBUF | 4766 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | bank_6_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | bank_5_IBUF | 4767 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | bank_5_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | bank_4_IBUF | 4768 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | bank_4_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | bank_3_IBUF | 4769 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | bank_3_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | bank_2_IBUF | 4770 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | bank_2_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | bank_1_IBUF | 4771 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | bank_1_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | bank_0_IBUF | 4772 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | bank_0_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | vda_IBUF | 4775 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | vda_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | a15_13_2_IBUF | 4776 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | a15_13_2_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | a15_13_1_IBUF | 4777 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | a15_13_1_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | a15_13_0_IBUF | 4778 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | a15_13_0_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | rw_IBUF | 4828 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | rw_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | vpa_IBUF | 4827 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | vpa_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | FCLK-IO_0 | 4780 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | clk_IBUF | 7 | 5 | II_FCLKINV
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | rom_PIN_BUF_ | 5018 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | Pfbk_Created_rom | 0 | 5 | II_IMUX
+OUTPUT_NODE_TYPE | 0 | 0 | MC_Q
+NODE | rom_OBUF$Q | 4781 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | rom_OBUF.Q | rom_OBUF | 0 | 0 | MC_Q
+OUTPUT_NODE_TYPE | 1 | 0 | MC_UIM
+NODE | rom_OBUF | 4782 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | rom_OBUF.Q | rom_OBUF | 1 | 0 | MC_UIM
+
+SIGNAL_INSTANCE | rom_OBUF.SI | rom_OBUF | 0 | 18 | 2
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<0> | 4813 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<0>.Q | counter<0> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<1> | 4814 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<1>.Q | counter<1> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<2> | 4815 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<2>.Q | counter<2> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | bank_7_IBUF | 4765 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | bank_7_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | bank_6_IBUF | 4766 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | bank_6_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | bank_5_IBUF | 4767 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | bank_5_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | bank_4_IBUF | 4768 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | bank_4_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | bank_3_IBUF | 4769 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | bank_3_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | bank_2_IBUF | 4770 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | bank_2_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | bank_1_IBUF | 4771 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | bank_1_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | bank_0_IBUF | 4772 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | bank_0_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | vda_IBUF | 4775 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | vda_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | a15_13_2_IBUF | 4776 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | a15_13_2_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | a15_13_1_IBUF | 4777 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | a15_13_1_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | a15_13_0_IBUF | 4778 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | a15_13_0_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | rw_IBUF | 4828 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | rw_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | vpa_IBUF | 4827 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | vpa_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | rom_PIN_BUF_ | 5018 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | Pfbk_Created_rom | 0 | 5 | II_IMUX
+OUTPUT_NODE_TYPE | 1 | 9 | MC_SI_D1
+SIGNAL | NODE | rom_OBUF.D1 | 4865 | ? | 0 | 4096 | rom_OBUF | NULL | NULL | rom_OBUF.SI | 1 | 9 | MC_SI_D1
+SPPTERM | 0 | IV_ZERO
+OUTPUT_NODE_TYPE | 2 | 9 | MC_SI_D2
+SIGNAL | NODE | rom_OBUF.D2 | 4866 | ? | 0 | 4096 | rom_OBUF | NULL | NULL | rom_OBUF.SI | 2 | 9 | MC_SI_D2
+SPPTERM | 4 | IV_FALSE | counter<0> | IV_TRUE | counter<1> | IV_TRUE | counter<2> | IV_FALSE | rom_PIN_BUF_
+SPPTERM | 17 | IV_FALSE | bank_7_IBUF | IV_FALSE | bank_6_IBUF | IV_FALSE | bank_5_IBUF | IV_FALSE | bank_4_IBUF | IV_FALSE | bank_3_IBUF | IV_FALSE | bank_2_IBUF | IV_FALSE | bank_1_IBUF | IV_FALSE | bank_0_IBUF | IV_TRUE | vda_IBUF | IV_TRUE | a15_13_2_IBUF | IV_TRUE | a15_13_1_IBUF | IV_TRUE | a15_13_0_IBUF | IV_TRUE | counter<0> | IV_FALSE | counter<1> | IV_FALSE | counter<2> | IV_TRUE | rw_IBUF | IV_TRUE | rom_PIN_BUF_
+SPPTERM | 17 | IV_FALSE | bank_7_IBUF | IV_FALSE | bank_6_IBUF | IV_FALSE | bank_5_IBUF | IV_FALSE | bank_4_IBUF | IV_FALSE | bank_3_IBUF | IV_FALSE | bank_2_IBUF | IV_FALSE | bank_1_IBUF | IV_FALSE | bank_0_IBUF | IV_TRUE | a15_13_2_IBUF | IV_TRUE | a15_13_1_IBUF | IV_TRUE | a15_13_0_IBUF | IV_TRUE | counter<0> | IV_FALSE | counter<1> | IV_FALSE | counter<2> | IV_TRUE | vpa_IBUF | IV_TRUE | rw_IBUF | IV_TRUE | rom_PIN_BUF_
+
+SRFF_INSTANCE | rom_OBUF.REG | rom_OBUF | 0 | 2 | 1
+INPUT_NODE_TYPE | 0 | 8 | SRFF_D
+NODE | rom_OBUF.D | 4864 | ? | 0 | 0 | rom_OBUF | NULL | NULL | rom_OBUF.XOR | 0 | 7 | ALU_F
+INPUT_NODE_TYPE | 1 | 8 | SRFF_C
+NODE | FCLK-IO_0 | 4780 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | clk_IBUF | 7 | 5 | II_FCLKINV
+OUTPUT_NODE_TYPE | 0 | 8 | SRFF_Q
+NODE | rom_OBUF.Q | 4867 | ? | 0 | 0 | rom_OBUF | NULL | NULL | rom_OBUF.REG | 0 | 8 | SRFF_Q
+
+MACROCELL_INSTANCE | Inv+PrldLow+OptxMapped+OeInv | phi1_OBUF | cpumodule_COPY_0_COPY_0 | 2290091264 | 9 | 2
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | iocnt<1> | 4818 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | iocnt<1>.Q | iocnt<1> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<0> | 4813 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<0>.Q | counter<0> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<1> | 4814 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<1>.Q | counter<1> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<2> | 4815 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<2>.Q | counter<2> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | iocnt<2> | 4816 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | iocnt<2>.Q | iocnt<2> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | iocnt<0> | 4817 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | iocnt<0>.Q | iocnt<0> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<1>.EXP | 5013 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<1>.EXP | refcnt<1> | 4 | 0 | MC_EXPORT
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | phi1_PIN_BUF_ | 5019 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | Pfbk_Created_phi1 | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | FCLK-IO_0 | 4780 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | clk_IBUF | 7 | 5 | II_FCLKINV
+OUTPUT_NODE_TYPE | 0 | 0 | MC_Q
+NODE | phi1_OBUF$Q | 4783 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | phi1_OBUF.Q | phi1_OBUF | 0 | 0 | MC_Q
+OUTPUT_NODE_TYPE | 1 | 0 | MC_UIM
+NODE | phi1_OBUF | 4784 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | phi1_OBUF.Q | phi1_OBUF | 1 | 0 | MC_UIM
+
+SIGNAL_INSTANCE | phi1_OBUF.SI | phi1_OBUF | 0 | 8 | 2
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | iocnt<1> | 4818 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | iocnt<1>.Q | iocnt<1> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<0> | 4813 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<0>.Q | counter<0> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<1> | 4814 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<1>.Q | counter<1> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<2> | 4815 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<2>.Q | counter<2> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | iocnt<2> | 4816 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | iocnt<2>.Q | iocnt<2> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | iocnt<0> | 4817 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | iocnt<0>.Q | iocnt<0> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<1>.EXP | 5013 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<1>.EXP | refcnt<1> | 4 | 0 | MC_EXPORT
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | phi1_PIN_BUF_ | 5019 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | Pfbk_Created_phi1 | 0 | 5 | II_IMUX
+OUTPUT_NODE_TYPE | 1 | 9 | MC_SI_D1
+SIGNAL | NODE | phi1_OBUF.D1 | 4869 | ? | 0 | 4096 | phi1_OBUF | NULL | NULL | phi1_OBUF.SI | 1 | 9 | MC_SI_D1
+SPPTERM | 0 | IV_ZERO
+OUTPUT_NODE_TYPE | 2 | 9 | MC_SI_D2
+SIGNAL | NODE | phi1_OBUF.D2 | 4870 | ? | 0 | 4096 | phi1_OBUF | NULL | NULL | phi1_OBUF.SI | 2 | 9 | MC_SI_D2
+SPPTERM | 1 | IV_TRUE | refcnt<1>.EXP
+SPPTERM | 2 | IV_TRUE | counter<0> | IV_FALSE | phi1_PIN_BUF_
+SPPTERM | 2 | IV_FALSE | counter<1> | IV_FALSE | phi1_PIN_BUF_
+SPPTERM | 2 | IV_TRUE | iocnt<1> | IV_FALSE | phi1_PIN_BUF_
+SPPTERM | 3 | IV_FALSE | counter<0> | IV_TRUE | counter<1> | IV_FALSE | counter<2>
+SPPTERM | 3 | IV_FALSE | iocnt<2> | IV_TRUE | iocnt<0> | IV_FALSE | phi1_PIN_BUF_
+
+SRFF_INSTANCE | phi1_OBUF.REG | phi1_OBUF | 0 | 2 | 1
+INPUT_NODE_TYPE | 0 | 8 | SRFF_D
+NODE | phi1_OBUF.D | 4868 | ? | 0 | 0 | phi1_OBUF | NULL | NULL | phi1_OBUF.XOR | 0 | 7 | ALU_F
+INPUT_NODE_TYPE | 1 | 8 | SRFF_C
+NODE | FCLK-IO_0 | 4780 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | clk_IBUF | 7 | 5 | II_FCLKINV
+OUTPUT_NODE_TYPE | 0 | 8 | SRFF_Q
+NODE | phi1_OBUF.Q | 4871 | ? | 0 | 0 | phi1_OBUF | NULL | NULL | phi1_OBUF.REG | 0 | 8 | SRFF_Q
+
+MACROCELL_INSTANCE | PrldHigh+OptxMapped+OeInv | cas0_OBUF | cpumodule_COPY_0_COPY_0 | 2290090496 | 10 | 2
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<0> | 4813 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<0>.Q | counter<0> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<1> | 4814 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<1>.Q | counter<1> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<2> | 4815 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<2>.Q | counter<2> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<0> | 4819 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<0>.Q | refcnt<0> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<1> | 4820 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<1>.Q | refcnt<1> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<2> | 4821 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<2>.Q | refcnt<2> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<6>.EXP | 5003 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<6>.EXP | refcnt<6> | 4 | 0 | MC_EXPORT
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | EXP3_.EXP | 5017 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | EXP3_.EXP | EXP3_ | 4 | 0 | MC_EXPORT
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | cas0_PIN_BUF_ | 5020 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | Pfbk_Created_cas0 | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | FCLK-IO_0 | 4780 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | clk_IBUF | 7 | 5 | II_FCLKINV
+OUTPUT_NODE_TYPE | 0 | 0 | MC_Q
+NODE | cas0_OBUF$Q | 4785 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | cas0_OBUF.Q | cas0_OBUF | 0 | 0 | MC_Q
+OUTPUT_NODE_TYPE | 1 | 0 | MC_UIM
+NODE | cas0_OBUF | 4786 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | cas0_OBUF.Q | cas0_OBUF | 1 | 0 | MC_UIM
+
+SIGNAL_INSTANCE | cas0_OBUF.SI | cas0_OBUF | 0 | 9 | 2
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<0> | 4813 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<0>.Q | counter<0> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<1> | 4814 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<1>.Q | counter<1> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<2> | 4815 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<2>.Q | counter<2> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<0> | 4819 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<0>.Q | refcnt<0> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<1> | 4820 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<1>.Q | refcnt<1> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<2> | 4821 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<2>.Q | refcnt<2> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<6>.EXP | 5003 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<6>.EXP | refcnt<6> | 4 | 0 | MC_EXPORT
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | EXP3_.EXP | 5017 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | EXP3_.EXP | EXP3_ | 4 | 0 | MC_EXPORT
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | cas0_PIN_BUF_ | 5020 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | Pfbk_Created_cas0 | 0 | 5 | II_IMUX
+OUTPUT_NODE_TYPE | 1 | 9 | MC_SI_D1
+SIGNAL | NODE | cas0_OBUF.D1 | 4873 | ? | 0 | 4096 | cas0_OBUF | NULL | NULL | cas0_OBUF.SI | 1 | 9 | MC_SI_D1
+SPPTERM | 0 | IV_ZERO
+OUTPUT_NODE_TYPE | 2 | 9 | MC_SI_D2
+SIGNAL | NODE | cas0_OBUF.D2 | 4874 | ? | 0 | 4096 | cas0_OBUF | NULL | NULL | cas0_OBUF.SI | 2 | 9 | MC_SI_D2
+SPPTERM | 1 | IV_TRUE | refcnt<6>.EXP
+SPPTERM | 1 | IV_TRUE | EXP3_.EXP
+SPPTERM | 2 | IV_TRUE | counter<0> | IV_TRUE | cas0_PIN_BUF_
+SPPTERM | 2 | IV_FALSE | counter<0> | IV_TRUE | counter<1>
+SPPTERM | 3 | IV_FALSE | counter<0> | IV_FALSE | counter<2> | IV_TRUE | refcnt<0>
+SPPTERM | 3 | IV_FALSE | counter<0> | IV_FALSE | counter<2> | IV_TRUE | refcnt<1>
+SPPTERM | 3 | IV_FALSE | counter<0> | IV_FALSE | counter<2> | IV_TRUE | refcnt<2>
+
+SRFF_INSTANCE | cas0_OBUF.REG | cas0_OBUF | 0 | 2 | 1
+INPUT_NODE_TYPE | 0 | 8 | SRFF_D
+NODE | cas0_OBUF.D | 4872 | ? | 0 | 0 | cas0_OBUF | NULL | NULL | cas0_OBUF.XOR | 0 | 7 | ALU_F
+INPUT_NODE_TYPE | 1 | 8 | SRFF_C
+NODE | FCLK-IO_0 | 4780 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | clk_IBUF | 7 | 5 | II_FCLKINV
+OUTPUT_NODE_TYPE | 0 | 8 | SRFF_Q
+NODE | cas0_OBUF.Q | 4875 | ? | 0 | 0 | cas0_OBUF | NULL | NULL | cas0_OBUF.REG | 0 | 8 | SRFF_Q
+
+MACROCELL_INSTANCE | PrldHigh+OptxMapped+OeInv | cas1_OBUF | cpumodule_COPY_0_COPY_0 | 2290090496 | 9 | 2
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | iocnt<2> | 4816 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | iocnt<2>.Q | iocnt<2> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | iocnt<0> | 4817 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | iocnt<0>.Q | iocnt<0> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | iocnt<1> | 4818 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | iocnt<1>.Q | iocnt<1> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | cas1_PIN_BUF_ | 5021 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | Pfbk_Created_cas1 | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | a12_11_1_IBUF | 4773 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | a12_11_1_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<3>.EXP | 5004 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<3>.EXP | refcnt<3> | 4 | 0 | MC_EXPORT
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<5>.EXP | 5005 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<5>.EXP | refcnt<5> | 4 | 0 | MC_EXPORT
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | rom_PIN_BUF_ | 5018 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | Pfbk_Created_rom | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | FCLK-IO_0 | 4780 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | clk_IBUF | 7 | 5 | II_FCLKINV
+OUTPUT_NODE_TYPE | 0 | 0 | MC_Q
+NODE | cas1_OBUF$Q | 4787 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | cas1_OBUF.Q | cas1_OBUF | 0 | 0 | MC_Q
+OUTPUT_NODE_TYPE | 1 | 0 | MC_UIM
+NODE | cas1_OBUF | 4788 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | cas1_OBUF.Q | cas1_OBUF | 1 | 0 | MC_UIM
+
+SIGNAL_INSTANCE | cas1_OBUF.SI | cas1_OBUF | 0 | 8 | 2
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | iocnt<2> | 4816 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | iocnt<2>.Q | iocnt<2> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | iocnt<0> | 4817 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | iocnt<0>.Q | iocnt<0> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | iocnt<1> | 4818 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | iocnt<1>.Q | iocnt<1> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | cas1_PIN_BUF_ | 5021 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | Pfbk_Created_cas1 | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | a12_11_1_IBUF | 4773 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | a12_11_1_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<3>.EXP | 5004 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<3>.EXP | refcnt<3> | 4 | 0 | MC_EXPORT
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<5>.EXP | 5005 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<5>.EXP | refcnt<5> | 4 | 0 | MC_EXPORT
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | rom_PIN_BUF_ | 5018 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | Pfbk_Created_rom | 0 | 5 | II_IMUX
+OUTPUT_NODE_TYPE | 1 | 9 | MC_SI_D1
+SIGNAL | NODE | cas1_OBUF.D1 | 4877 | ? | 0 | 4096 | cas1_OBUF | NULL | NULL | cas1_OBUF.SI | 1 | 9 | MC_SI_D1
+SPPTERM | 0 | IV_ZERO
+OUTPUT_NODE_TYPE | 2 | 9 | MC_SI_D2
+SIGNAL | NODE | cas1_OBUF.D2 | 4878 | ? | 0 | 4096 | cas1_OBUF | NULL | NULL | cas1_OBUF.SI | 2 | 9 | MC_SI_D2
+SPPTERM | 1 | IV_TRUE | refcnt<3>.EXP
+SPPTERM | 1 | IV_TRUE | refcnt<5>.EXP
+SPPTERM | 2 | IV_TRUE | a12_11_1_IBUF | IV_TRUE | cas1_PIN_BUF_
+SPPTERM | 2 | IV_TRUE | iocnt<2> | IV_TRUE | cas1_PIN_BUF_
+SPPTERM | 2 | IV_TRUE | iocnt<0> | IV_TRUE | cas1_PIN_BUF_
+SPPTERM | 2 | IV_TRUE | iocnt<1> | IV_TRUE | cas1_PIN_BUF_
+SPPTERM | 2 | IV_FALSE | rom_PIN_BUF_ | IV_TRUE | cas1_PIN_BUF_
+
+SRFF_INSTANCE | cas1_OBUF.REG | cas1_OBUF | 0 | 2 | 1
+INPUT_NODE_TYPE | 0 | 8 | SRFF_D
+NODE | cas1_OBUF.D | 4876 | ? | 0 | 0 | cas1_OBUF | NULL | NULL | cas1_OBUF.XOR | 0 | 7 | ALU_F
+INPUT_NODE_TYPE | 1 | 8 | SRFF_C
+NODE | FCLK-IO_0 | 4780 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | clk_IBUF | 7 | 5 | II_FCLKINV
+OUTPUT_NODE_TYPE | 0 | 8 | SRFF_Q
+NODE | cas1_OBUF.Q | 4879 | ? | 0 | 0 | cas1_OBUF | NULL | NULL | cas1_OBUF.REG | 0 | 8 | SRFF_Q
+
+MACROCELL_INSTANCE | PrldHigh+OptxMapped+OeInv | cas2_OBUF | cpumodule_COPY_0_COPY_0 | 2290090496 | 15 | 3
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | iocnt<2> | 4816 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | iocnt<2>.Q | iocnt<2> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<0> | 4813 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<0>.Q | counter<0> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<1> | 4814 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<1>.Q | counter<1> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<2> | 4815 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<2>.Q | counter<2> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<0> | 4819 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<0>.Q | refcnt<0> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<1> | 4820 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<1>.Q | refcnt<1> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<2> | 4821 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<2>.Q | refcnt<2> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<3> | 4822 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<3>.Q | refcnt<3> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<4> | 4823 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<4>.Q | refcnt<4> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<5> | 4824 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<5>.Q | refcnt<5> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<6> | 4825 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<6>.Q | refcnt<6> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<7> | 4826 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<7>.Q | refcnt<7> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | EXP1_.EXP | 5007 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | EXP1_.EXP | EXP1_ | 4 | 0 | MC_EXPORT
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | cas2_PIN_BUF_ | 5022 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | Pfbk_Created_cas2 | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | FCLK-IO_0 | 4780 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | clk_IBUF | 7 | 5 | II_FCLKINV
+OUTPUT_NODE_TYPE | 0 | 0 | MC_Q
+NODE | cas2_OBUF$Q | 4789 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | cas2_OBUF.Q | cas2_OBUF | 0 | 0 | MC_Q
+OUTPUT_NODE_TYPE | 1 | 0 | MC_UIM
+NODE | cas2_OBUF | 4790 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | cas2_OBUF.Q | cas2_OBUF | 1 | 0 | MC_UIM
+OUTPUT_NODE_TYPE | 4 | 0 | MC_EXPORT
+NODE | cas2_OBUF.EXP | 5008 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | cas2_OBUF.EXP | cas2_OBUF | 4 | 0 | MC_EXPORT
+
+SIGNAL_INSTANCE | cas2_OBUF.SI | cas2_OBUF | 0 | 14 | 3
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | iocnt<2> | 4816 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | iocnt<2>.Q | iocnt<2> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<0> | 4813 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<0>.Q | counter<0> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<1> | 4814 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<1>.Q | counter<1> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<2> | 4815 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<2>.Q | counter<2> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<0> | 4819 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<0>.Q | refcnt<0> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<1> | 4820 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<1>.Q | refcnt<1> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<2> | 4821 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<2>.Q | refcnt<2> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<3> | 4822 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<3>.Q | refcnt<3> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<4> | 4823 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<4>.Q | refcnt<4> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<5> | 4824 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<5>.Q | refcnt<5> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<6> | 4825 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<6>.Q | refcnt<6> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<7> | 4826 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<7>.Q | refcnt<7> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | EXP1_.EXP | 5007 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | EXP1_.EXP | EXP1_ | 4 | 0 | MC_EXPORT
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | cas2_PIN_BUF_ | 5022 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | Pfbk_Created_cas2 | 0 | 5 | II_IMUX
+OUTPUT_NODE_TYPE | 1 | 9 | MC_SI_D1
+SIGNAL | NODE | cas2_OBUF.D1 | 4881 | ? | 0 | 4096 | cas2_OBUF | NULL | NULL | cas2_OBUF.SI | 1 | 9 | MC_SI_D1
+SPPTERM | 0 | IV_ZERO
+OUTPUT_NODE_TYPE | 2 | 9 | MC_SI_D2
+SIGNAL | NODE | cas2_OBUF.D2 | 4882 | ? | 0 | 4096 | cas2_OBUF | NULL | NULL | cas2_OBUF.SI | 2 | 9 | MC_SI_D2
+SPPTERM | 1 | IV_TRUE | EXP1_.EXP
+SPPTERM | 2 | IV_TRUE | iocnt<2> | IV_TRUE | cas2_PIN_BUF_
+OUTPUT_NODE_TYPE | 7 | 9 | MC_SI_EXPORT
+SIGNAL | NODE | cas2_OBUF.EXP | 4993 | ? | 0 | 0 | cas2_OBUF | NULL | NULL | cas2_OBUF.SI | 7 | 9 | MC_SI_EXPORT
+SPPTERM | 8 | IV_FALSE | counter<0> | IV_TRUE | counter<1> | IV_TRUE | counter<2> | IV_FALSE | refcnt<0> | IV_FALSE | refcnt<1> | IV_FALSE | refcnt<2> | IV_FALSE | refcnt<3> | IV_TRUE | refcnt<4>
+SPPTERM | 8 | IV_FALSE | counter<0> | IV_TRUE | counter<1> | IV_TRUE | counter<2> | IV_FALSE | refcnt<0> | IV_FALSE | refcnt<1> | IV_FALSE | refcnt<2> | IV_FALSE | refcnt<3> | IV_TRUE | refcnt<5>
+SPPTERM | 8 | IV_FALSE | counter<0> | IV_TRUE | counter<1> | IV_TRUE | counter<2> | IV_FALSE | refcnt<0> | IV_FALSE | refcnt<1> | IV_FALSE | refcnt<2> | IV_FALSE | refcnt<3> | IV_TRUE | refcnt<6>
+SPPTERM | 8 | IV_FALSE | counter<0> | IV_TRUE | counter<1> | IV_TRUE | counter<2> | IV_FALSE | refcnt<0> | IV_FALSE | refcnt<1> | IV_FALSE | refcnt<2> | IV_FALSE | refcnt<3> | IV_TRUE | refcnt<7>
+
+SRFF_INSTANCE | cas2_OBUF.REG | cas2_OBUF | 0 | 2 | 1
+INPUT_NODE_TYPE | 0 | 8 | SRFF_D
+NODE | cas2_OBUF.D | 4880 | ? | 0 | 0 | cas2_OBUF | NULL | NULL | cas2_OBUF.XOR | 0 | 7 | ALU_F
+INPUT_NODE_TYPE | 1 | 8 | SRFF_C
+NODE | FCLK-IO_0 | 4780 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | clk_IBUF | 7 | 5 | II_FCLKINV
+OUTPUT_NODE_TYPE | 0 | 8 | SRFF_Q
+NODE | cas2_OBUF.Q | 4883 | ? | 0 | 0 | cas2_OBUF | NULL | NULL | cas2_OBUF.REG | 0 | 8 | SRFF_Q
+
+MACROCELL_INSTANCE | PrldHigh+OptxMapped+OeInv | cas3_OBUF | cpumodule_COPY_0_COPY_0 | 2290090496 | 19 | 3
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | phi0_PIN_BUF_ | 5032 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | Pfbk_Created_phi0 | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | iocnt<2> | 4816 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | iocnt<2>.Q | iocnt<2> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | iocnt<0> | 4817 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | iocnt<0>.Q | iocnt<0> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<0> | 4813 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<0>.Q | counter<0> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<1> | 4814 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<1>.Q | counter<1> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<2> | 4815 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<2>.Q | counter<2> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | cas3_PIN_BUF_ | 5023 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | Pfbk_Created_cas3 | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | iocnt<1> | 4818 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | iocnt<1>.Q | iocnt<1> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<0> | 4819 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<0>.Q | refcnt<0> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<1> | 4820 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<1>.Q | refcnt<1> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<2> | 4821 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<2>.Q | refcnt<2> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<3> | 4822 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<3>.Q | refcnt<3> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<4> | 4823 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<4>.Q | refcnt<4> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<5> | 4824 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<5>.Q | refcnt<5> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<6> | 4825 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<6>.Q | refcnt<6> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<7> | 4826 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<7>.Q | refcnt<7> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | EXP2_.EXP | 5010 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | EXP2_.EXP | EXP2_ | 4 | 0 | MC_EXPORT
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | rom_PIN_BUF_ | 5018 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | Pfbk_Created_rom | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | FCLK-IO_0 | 4780 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | clk_IBUF | 7 | 5 | II_FCLKINV
+OUTPUT_NODE_TYPE | 0 | 0 | MC_Q
+NODE | cas3_OBUF$Q | 4791 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | cas3_OBUF.Q | cas3_OBUF | 0 | 0 | MC_Q
+OUTPUT_NODE_TYPE | 1 | 0 | MC_UIM
+NODE | cas3_OBUF | 4792 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | cas3_OBUF.Q | cas3_OBUF | 1 | 0 | MC_UIM
+OUTPUT_NODE_TYPE | 4 | 0 | MC_EXPORT
+NODE | cas3_OBUF.EXP | 5011 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | cas3_OBUF.EXP | cas3_OBUF | 4 | 0 | MC_EXPORT
+
+SIGNAL_INSTANCE | cas3_OBUF.SI | cas3_OBUF | 0 | 18 | 3
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | phi0_PIN_BUF_ | 5032 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | Pfbk_Created_phi0 | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | iocnt<2> | 4816 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | iocnt<2>.Q | iocnt<2> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | iocnt<0> | 4817 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | iocnt<0>.Q | iocnt<0> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<0> | 4813 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<0>.Q | counter<0> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<1> | 4814 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<1>.Q | counter<1> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<2> | 4815 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<2>.Q | counter<2> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | cas3_PIN_BUF_ | 5023 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | Pfbk_Created_cas3 | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | iocnt<1> | 4818 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | iocnt<1>.Q | iocnt<1> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<0> | 4819 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<0>.Q | refcnt<0> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<1> | 4820 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<1>.Q | refcnt<1> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<2> | 4821 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<2>.Q | refcnt<2> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<3> | 4822 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<3>.Q | refcnt<3> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<4> | 4823 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<4>.Q | refcnt<4> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<5> | 4824 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<5>.Q | refcnt<5> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<6> | 4825 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<6>.Q | refcnt<6> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<7> | 4826 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<7>.Q | refcnt<7> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | EXP2_.EXP | 5010 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | EXP2_.EXP | EXP2_ | 4 | 0 | MC_EXPORT
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | rom_PIN_BUF_ | 5018 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | Pfbk_Created_rom | 0 | 5 | II_IMUX
+OUTPUT_NODE_TYPE | 1 | 9 | MC_SI_D1
+SIGNAL | NODE | cas3_OBUF.D1 | 4885 | ? | 0 | 4096 | cas3_OBUF | NULL | NULL | cas3_OBUF.SI | 1 | 9 | MC_SI_D1
+SPPTERM | 0 | IV_ZERO
+OUTPUT_NODE_TYPE | 2 | 9 | MC_SI_D2
+SIGNAL | NODE | cas3_OBUF.D2 | 4886 | ? | 0 | 4096 | cas3_OBUF | NULL | NULL | cas3_OBUF.SI | 2 | 9 | MC_SI_D2
+SPPTERM | 1 | IV_TRUE | EXP2_.EXP
+SPPTERM | 2 | IV_TRUE | iocnt<2> | IV_TRUE | cas3_PIN_BUF_
+OUTPUT_NODE_TYPE | 7 | 9 | MC_SI_EXPORT
+SIGNAL | NODE | cas3_OBUF.EXP | 4996 | ? | 0 | 0 | cas3_OBUF | NULL | NULL | cas3_OBUF.SI | 7 | 9 | MC_SI_EXPORT
+SPPTERM | 3 | IV_FALSE | counter<0> | IV_TRUE | counter<1> | IV_FALSE | counter<2>
+SPPTERM | 3 | IV_TRUE | iocnt<2> | IV_FALSE | iocnt<0> | IV_TRUE | phi0_PIN_BUF_
+SPPTERM | 3 | IV_FALSE | iocnt<2> | IV_TRUE | iocnt<0> | IV_TRUE | phi0_PIN_BUF_
+SPPTERM | 14 | IV_FALSE | counter<0> | IV_TRUE | counter<1> | IV_FALSE | iocnt<2> | IV_FALSE | iocnt<0> | IV_FALSE | iocnt<1> | IV_FALSE | refcnt<0> | IV_FALSE | refcnt<1> | IV_FALSE | refcnt<2> | IV_FALSE | refcnt<3> | IV_FALSE | refcnt<4> | IV_FALSE | refcnt<5> | IV_FALSE | refcnt<6> | IV_FALSE | refcnt<7> | IV_TRUE | rom_PIN_BUF_
+
+SRFF_INSTANCE | cas3_OBUF.REG | cas3_OBUF | 0 | 2 | 1
+INPUT_NODE_TYPE | 0 | 8 | SRFF_D
+NODE | cas3_OBUF.D | 4884 | ? | 0 | 0 | cas3_OBUF | NULL | NULL | cas3_OBUF.XOR | 0 | 7 | ALU_F
+INPUT_NODE_TYPE | 1 | 8 | SRFF_C
+NODE | FCLK-IO_0 | 4780 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | clk_IBUF | 7 | 5 | II_FCLKINV
+OUTPUT_NODE_TYPE | 0 | 8 | SRFF_Q
+NODE | cas3_OBUF.Q | 4887 | ? | 0 | 0 | cas3_OBUF | NULL | NULL | cas3_OBUF.REG | 0 | 8 | SRFF_Q
+
+MACROCELL_INSTANCE | PrldHigh+Tff+OptxMapped+OeInv | io0_OBUF | cpumodule_COPY_0_COPY_0 | 2290094592 | 11 | 2
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<0> | 4813 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<0>.Q | counter<0> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<1> | 4814 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<1>.Q | counter<1> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<2> | 4815 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<2>.Q | counter<2> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | iocnt<2> | 4816 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | iocnt<2>.Q | iocnt<2> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | iocnt<0> | 4817 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | iocnt<0>.Q | iocnt<0> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | iocnt<1> | 4818 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | iocnt<1>.Q | iocnt<1> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | a12_11_1_IBUF | 4773 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | a12_11_1_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | a12_11_0_IBUF | 4774 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | a12_11_0_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | a10_IBUF | 4779 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | a10_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | FCLK-IO_0 | 4780 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | clk_IBUF | 7 | 5 | II_FCLKINV
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | io0_PIN_BUF_ | 5024 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | Pfbk_Created_io0 | 0 | 5 | II_IMUX
+OUTPUT_NODE_TYPE | 0 | 0 | MC_Q
+NODE | io0_OBUF$Q | 4793 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | io0_OBUF.Q | io0_OBUF | 0 | 0 | MC_Q
+OUTPUT_NODE_TYPE | 1 | 0 | MC_UIM
+NODE | io0_OBUF | 4794 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | io0_OBUF.Q | io0_OBUF | 1 | 0 | MC_UIM
+
+SIGNAL_INSTANCE | io0_OBUF.SI | io0_OBUF | 0 | 10 | 2
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<0> | 4813 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<0>.Q | counter<0> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<1> | 4814 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<1>.Q | counter<1> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<2> | 4815 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<2>.Q | counter<2> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | iocnt<2> | 4816 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | iocnt<2>.Q | iocnt<2> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | iocnt<0> | 4817 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | iocnt<0>.Q | iocnt<0> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | iocnt<1> | 4818 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | iocnt<1>.Q | iocnt<1> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | a12_11_1_IBUF | 4773 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | a12_11_1_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | a12_11_0_IBUF | 4774 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | a12_11_0_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | a10_IBUF | 4779 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | a10_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | io0_PIN_BUF_ | 5024 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | Pfbk_Created_io0 | 0 | 5 | II_IMUX
+OUTPUT_NODE_TYPE | 1 | 9 | MC_SI_D1
+SIGNAL | NODE | io0_OBUF.D1 | 4889 | ? | 0 | 4096 | io0_OBUF | NULL | NULL | io0_OBUF.SI | 1 | 9 | MC_SI_D1
+SPPTERM | 0 | IV_ZERO
+OUTPUT_NODE_TYPE | 2 | 9 | MC_SI_D2
+SIGNAL | NODE | io0_OBUF.D2 | 4890 | ? | 0 | 4096 | io0_OBUF | NULL | NULL | io0_OBUF.SI | 2 | 9 | MC_SI_D2
+SPPTERM | 7 | IV_FALSE | counter<0> | IV_TRUE | counter<1> | IV_TRUE | counter<2> | IV_TRUE | iocnt<2> | IV_TRUE | iocnt<0> | IV_FALSE | iocnt<1> | IV_FALSE | io0_PIN_BUF_
+SPPTERM | 10 | IV_FALSE | a12_11_1_IBUF | IV_FALSE | a12_11_0_IBUF | IV_FALSE | a10_IBUF | IV_FALSE | counter<0> | IV_TRUE | counter<1> | IV_TRUE | counter<2> | IV_FALSE | iocnt<2> | IV_TRUE | iocnt<0> | IV_FALSE | iocnt<1> | IV_TRUE | io0_PIN_BUF_
+
+SRFF_INSTANCE | io0_OBUF.REG | io0_OBUF | 0 | 2 | 1
+INPUT_NODE_TYPE | 0 | 8 | SRFF_D
+NODE | io0_OBUF.D | 4888 | ? | 0 | 0 | io0_OBUF | NULL | NULL | io0_OBUF.XOR | 0 | 7 | ALU_F
+INPUT_NODE_TYPE | 1 | 8 | SRFF_C
+NODE | FCLK-IO_0 | 4780 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | clk_IBUF | 7 | 5 | II_FCLKINV
+OUTPUT_NODE_TYPE | 0 | 8 | SRFF_Q
+NODE | io0_OBUF.Q | 4891 | ? | 0 | 0 | io0_OBUF | NULL | NULL | io0_OBUF.REG | 0 | 8 | SRFF_Q
+
+MACROCELL_INSTANCE | PrldHigh+Tff+OptxMapped+OeInv | io1_OBUF | cpumodule_COPY_0_COPY_0 | 2290094592 | 11 | 2
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<0> | 4813 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<0>.Q | counter<0> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<1> | 4814 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<1>.Q | counter<1> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<2> | 4815 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<2>.Q | counter<2> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | iocnt<2> | 4816 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | iocnt<2>.Q | iocnt<2> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | iocnt<0> | 4817 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | iocnt<0>.Q | iocnt<0> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | iocnt<1> | 4818 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | iocnt<1>.Q | iocnt<1> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | a12_11_1_IBUF | 4773 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | a12_11_1_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | a12_11_0_IBUF | 4774 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | a12_11_0_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | a10_IBUF | 4779 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | a10_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | FCLK-IO_0 | 4780 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | clk_IBUF | 7 | 5 | II_FCLKINV
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | io1_PIN_BUF_ | 5025 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | Pfbk_Created_io1 | 0 | 5 | II_IMUX
+OUTPUT_NODE_TYPE | 0 | 0 | MC_Q
+NODE | io1_OBUF$Q | 4795 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | io1_OBUF.Q | io1_OBUF | 0 | 0 | MC_Q
+OUTPUT_NODE_TYPE | 1 | 0 | MC_UIM
+NODE | io1_OBUF | 4796 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | io1_OBUF.Q | io1_OBUF | 1 | 0 | MC_UIM
+
+SIGNAL_INSTANCE | io1_OBUF.SI | io1_OBUF | 0 | 10 | 2
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<0> | 4813 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<0>.Q | counter<0> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<1> | 4814 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<1>.Q | counter<1> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<2> | 4815 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<2>.Q | counter<2> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | iocnt<2> | 4816 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | iocnt<2>.Q | iocnt<2> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | iocnt<0> | 4817 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | iocnt<0>.Q | iocnt<0> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | iocnt<1> | 4818 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | iocnt<1>.Q | iocnt<1> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | a12_11_1_IBUF | 4773 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | a12_11_1_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | a12_11_0_IBUF | 4774 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | a12_11_0_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | a10_IBUF | 4779 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | a10_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | io1_PIN_BUF_ | 5025 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | Pfbk_Created_io1 | 0 | 5 | II_IMUX
+OUTPUT_NODE_TYPE | 1 | 9 | MC_SI_D1
+SIGNAL | NODE | io1_OBUF.D1 | 4893 | ? | 0 | 4096 | io1_OBUF | NULL | NULL | io1_OBUF.SI | 1 | 9 | MC_SI_D1
+SPPTERM | 0 | IV_ZERO
+OUTPUT_NODE_TYPE | 2 | 9 | MC_SI_D2
+SIGNAL | NODE | io1_OBUF.D2 | 4894 | ? | 0 | 4096 | io1_OBUF | NULL | NULL | io1_OBUF.SI | 2 | 9 | MC_SI_D2
+SPPTERM | 7 | IV_FALSE | counter<0> | IV_TRUE | counter<1> | IV_TRUE | counter<2> | IV_TRUE | iocnt<2> | IV_TRUE | iocnt<0> | IV_FALSE | iocnt<1> | IV_FALSE | io1_PIN_BUF_
+SPPTERM | 10 | IV_FALSE | a12_11_1_IBUF | IV_FALSE | a12_11_0_IBUF | IV_TRUE | a10_IBUF | IV_FALSE | counter<0> | IV_TRUE | counter<1> | IV_TRUE | counter<2> | IV_FALSE | iocnt<2> | IV_TRUE | iocnt<0> | IV_FALSE | iocnt<1> | IV_TRUE | io1_PIN_BUF_
+
+SRFF_INSTANCE | io1_OBUF.REG | io1_OBUF | 0 | 2 | 1
+INPUT_NODE_TYPE | 0 | 8 | SRFF_D
+NODE | io1_OBUF.D | 4892 | ? | 0 | 0 | io1_OBUF | NULL | NULL | io1_OBUF.XOR | 0 | 7 | ALU_F
+INPUT_NODE_TYPE | 1 | 8 | SRFF_C
+NODE | FCLK-IO_0 | 4780 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | clk_IBUF | 7 | 5 | II_FCLKINV
+OUTPUT_NODE_TYPE | 0 | 8 | SRFF_Q
+NODE | io1_OBUF.Q | 4895 | ? | 0 | 0 | io1_OBUF | NULL | NULL | io1_OBUF.REG | 0 | 8 | SRFF_Q
+
+MACROCELL_INSTANCE | PrldHigh+Tff+OptxMapped+OeInv | io2_OBUF | cpumodule_COPY_0_COPY_0 | 2290094592 | 11 | 2
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<0> | 4813 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<0>.Q | counter<0> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<1> | 4814 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<1>.Q | counter<1> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<2> | 4815 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<2>.Q | counter<2> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | iocnt<2> | 4816 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | iocnt<2>.Q | iocnt<2> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | iocnt<0> | 4817 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | iocnt<0>.Q | iocnt<0> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | iocnt<1> | 4818 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | iocnt<1>.Q | iocnt<1> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | a12_11_1_IBUF | 4773 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | a12_11_1_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | a12_11_0_IBUF | 4774 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | a12_11_0_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | a10_IBUF | 4779 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | a10_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | FCLK-IO_0 | 4780 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | clk_IBUF | 7 | 5 | II_FCLKINV
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | io2_PIN_BUF_ | 5026 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | Pfbk_Created_io2 | 0 | 5 | II_IMUX
+OUTPUT_NODE_TYPE | 0 | 0 | MC_Q
+NODE | io2_OBUF$Q | 4797 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | io2_OBUF.Q | io2_OBUF | 0 | 0 | MC_Q
+OUTPUT_NODE_TYPE | 1 | 0 | MC_UIM
+NODE | io2_OBUF | 4798 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | io2_OBUF.Q | io2_OBUF | 1 | 0 | MC_UIM
+
+SIGNAL_INSTANCE | io2_OBUF.SI | io2_OBUF | 0 | 10 | 2
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<0> | 4813 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<0>.Q | counter<0> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<1> | 4814 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<1>.Q | counter<1> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<2> | 4815 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<2>.Q | counter<2> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | iocnt<2> | 4816 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | iocnt<2>.Q | iocnt<2> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | iocnt<0> | 4817 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | iocnt<0>.Q | iocnt<0> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | iocnt<1> | 4818 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | iocnt<1>.Q | iocnt<1> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | a12_11_1_IBUF | 4773 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | a12_11_1_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | a12_11_0_IBUF | 4774 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | a12_11_0_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | a10_IBUF | 4779 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | a10_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | io2_PIN_BUF_ | 5026 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | Pfbk_Created_io2 | 0 | 5 | II_IMUX
+OUTPUT_NODE_TYPE | 1 | 9 | MC_SI_D1
+SIGNAL | NODE | io2_OBUF.D1 | 4897 | ? | 0 | 4096 | io2_OBUF | NULL | NULL | io2_OBUF.SI | 1 | 9 | MC_SI_D1
+SPPTERM | 0 | IV_ZERO
+OUTPUT_NODE_TYPE | 2 | 9 | MC_SI_D2
+SIGNAL | NODE | io2_OBUF.D2 | 4898 | ? | 0 | 4096 | io2_OBUF | NULL | NULL | io2_OBUF.SI | 2 | 9 | MC_SI_D2
+SPPTERM | 7 | IV_FALSE | counter<0> | IV_TRUE | counter<1> | IV_TRUE | counter<2> | IV_TRUE | iocnt<2> | IV_TRUE | iocnt<0> | IV_FALSE | iocnt<1> | IV_FALSE | io2_PIN_BUF_
+SPPTERM | 10 | IV_FALSE | a12_11_1_IBUF | IV_TRUE | a12_11_0_IBUF | IV_FALSE | a10_IBUF | IV_FALSE | counter<0> | IV_TRUE | counter<1> | IV_TRUE | counter<2> | IV_FALSE | iocnt<2> | IV_TRUE | iocnt<0> | IV_FALSE | iocnt<1> | IV_TRUE | io2_PIN_BUF_
+
+SRFF_INSTANCE | io2_OBUF.REG | io2_OBUF | 0 | 2 | 1
+INPUT_NODE_TYPE | 0 | 8 | SRFF_D
+NODE | io2_OBUF.D | 4896 | ? | 0 | 0 | io2_OBUF | NULL | NULL | io2_OBUF.XOR | 0 | 7 | ALU_F
+INPUT_NODE_TYPE | 1 | 8 | SRFF_C
+NODE | FCLK-IO_0 | 4780 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | clk_IBUF | 7 | 5 | II_FCLKINV
+OUTPUT_NODE_TYPE | 0 | 8 | SRFF_Q
+NODE | io2_OBUF.Q | 4899 | ? | 0 | 0 | io2_OBUF | NULL | NULL | io2_OBUF.REG | 0 | 8 | SRFF_Q
+
+MACROCELL_INSTANCE | PrldHigh+Tff+OptxMapped+OeInv | io3_OBUF | cpumodule_COPY_0_COPY_0 | 2290094592 | 11 | 2
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<0> | 4813 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<0>.Q | counter<0> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<1> | 4814 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<1>.Q | counter<1> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<2> | 4815 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<2>.Q | counter<2> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | iocnt<2> | 4816 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | iocnt<2>.Q | iocnt<2> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | iocnt<0> | 4817 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | iocnt<0>.Q | iocnt<0> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | iocnt<1> | 4818 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | iocnt<1>.Q | iocnt<1> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | a12_11_1_IBUF | 4773 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | a12_11_1_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | a12_11_0_IBUF | 4774 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | a12_11_0_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | a10_IBUF | 4779 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | a10_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | FCLK-IO_0 | 4780 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | clk_IBUF | 7 | 5 | II_FCLKINV
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | io3_PIN_BUF_ | 5027 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | Pfbk_Created_io3 | 0 | 5 | II_IMUX
+OUTPUT_NODE_TYPE | 0 | 0 | MC_Q
+NODE | io3_OBUF$Q | 4799 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | io3_OBUF.Q | io3_OBUF | 0 | 0 | MC_Q
+OUTPUT_NODE_TYPE | 1 | 0 | MC_UIM
+NODE | io3_OBUF | 4800 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | io3_OBUF.Q | io3_OBUF | 1 | 0 | MC_UIM
+
+SIGNAL_INSTANCE | io3_OBUF.SI | io3_OBUF | 0 | 10 | 2
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<0> | 4813 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<0>.Q | counter<0> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<1> | 4814 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<1>.Q | counter<1> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<2> | 4815 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<2>.Q | counter<2> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | iocnt<2> | 4816 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | iocnt<2>.Q | iocnt<2> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | iocnt<0> | 4817 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | iocnt<0>.Q | iocnt<0> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | iocnt<1> | 4818 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | iocnt<1>.Q | iocnt<1> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | a12_11_1_IBUF | 4773 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | a12_11_1_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | a12_11_0_IBUF | 4774 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | a12_11_0_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | a10_IBUF | 4779 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | a10_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | io3_PIN_BUF_ | 5027 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | Pfbk_Created_io3 | 0 | 5 | II_IMUX
+OUTPUT_NODE_TYPE | 1 | 9 | MC_SI_D1
+SIGNAL | NODE | io3_OBUF.D1 | 4901 | ? | 0 | 4096 | io3_OBUF | NULL | NULL | io3_OBUF.SI | 1 | 9 | MC_SI_D1
+SPPTERM | 0 | IV_ZERO
+OUTPUT_NODE_TYPE | 2 | 9 | MC_SI_D2
+SIGNAL | NODE | io3_OBUF.D2 | 4902 | ? | 0 | 4096 | io3_OBUF | NULL | NULL | io3_OBUF.SI | 2 | 9 | MC_SI_D2
+SPPTERM | 7 | IV_FALSE | counter<0> | IV_TRUE | counter<1> | IV_TRUE | counter<2> | IV_TRUE | iocnt<2> | IV_TRUE | iocnt<0> | IV_FALSE | iocnt<1> | IV_FALSE | io3_PIN_BUF_
+SPPTERM | 10 | IV_FALSE | a12_11_1_IBUF | IV_TRUE | a12_11_0_IBUF | IV_TRUE | a10_IBUF | IV_FALSE | counter<0> | IV_TRUE | counter<1> | IV_TRUE | counter<2> | IV_FALSE | iocnt<2> | IV_TRUE | iocnt<0> | IV_FALSE | iocnt<1> | IV_TRUE | io3_PIN_BUF_
+
+SRFF_INSTANCE | io3_OBUF.REG | io3_OBUF | 0 | 2 | 1
+INPUT_NODE_TYPE | 0 | 8 | SRFF_D
+NODE | io3_OBUF.D | 4900 | ? | 0 | 0 | io3_OBUF | NULL | NULL | io3_OBUF.XOR | 0 | 7 | ALU_F
+INPUT_NODE_TYPE | 1 | 8 | SRFF_C
+NODE | FCLK-IO_0 | 4780 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | clk_IBUF | 7 | 5 | II_FCLKINV
+OUTPUT_NODE_TYPE | 0 | 8 | SRFF_Q
+NODE | io3_OBUF.Q | 4903 | ? | 0 | 0 | io3_OBUF | NULL | NULL | io3_OBUF.REG | 0 | 8 | SRFF_Q
+
+MACROCELL_INSTANCE | PrldHigh+Tff+OptxMapped+OeInv | io4_OBUF | cpumodule_COPY_0_COPY_0 | 2290094592 | 11 | 2
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<0> | 4813 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<0>.Q | counter<0> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<1> | 4814 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<1>.Q | counter<1> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<2> | 4815 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<2>.Q | counter<2> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | iocnt<2> | 4816 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | iocnt<2>.Q | iocnt<2> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | iocnt<0> | 4817 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | iocnt<0>.Q | iocnt<0> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | iocnt<1> | 4818 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | iocnt<1>.Q | iocnt<1> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | a12_11_1_IBUF | 4773 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | a12_11_1_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | a12_11_0_IBUF | 4774 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | a12_11_0_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | a10_IBUF | 4779 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | a10_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | FCLK-IO_0 | 4780 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | clk_IBUF | 7 | 5 | II_FCLKINV
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | io4_PIN_BUF_ | 5028 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | Pfbk_Created_io4 | 0 | 5 | II_IMUX
+OUTPUT_NODE_TYPE | 0 | 0 | MC_Q
+NODE | io4_OBUF$Q | 4801 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | io4_OBUF.Q | io4_OBUF | 0 | 0 | MC_Q
+OUTPUT_NODE_TYPE | 1 | 0 | MC_UIM
+NODE | io4_OBUF | 4802 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | io4_OBUF.Q | io4_OBUF | 1 | 0 | MC_UIM
+
+SIGNAL_INSTANCE | io4_OBUF.SI | io4_OBUF | 0 | 10 | 2
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<0> | 4813 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<0>.Q | counter<0> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<1> | 4814 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<1>.Q | counter<1> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<2> | 4815 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<2>.Q | counter<2> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | iocnt<2> | 4816 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | iocnt<2>.Q | iocnt<2> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | iocnt<0> | 4817 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | iocnt<0>.Q | iocnt<0> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | iocnt<1> | 4818 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | iocnt<1>.Q | iocnt<1> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | a12_11_1_IBUF | 4773 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | a12_11_1_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | a12_11_0_IBUF | 4774 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | a12_11_0_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | a10_IBUF | 4779 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | a10_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | io4_PIN_BUF_ | 5028 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | Pfbk_Created_io4 | 0 | 5 | II_IMUX
+OUTPUT_NODE_TYPE | 1 | 9 | MC_SI_D1
+SIGNAL | NODE | io4_OBUF.D1 | 4905 | ? | 0 | 4096 | io4_OBUF | NULL | NULL | io4_OBUF.SI | 1 | 9 | MC_SI_D1
+SPPTERM | 0 | IV_ZERO
+OUTPUT_NODE_TYPE | 2 | 9 | MC_SI_D2
+SIGNAL | NODE | io4_OBUF.D2 | 4906 | ? | 0 | 4096 | io4_OBUF | NULL | NULL | io4_OBUF.SI | 2 | 9 | MC_SI_D2
+SPPTERM | 7 | IV_FALSE | counter<0> | IV_TRUE | counter<1> | IV_TRUE | counter<2> | IV_TRUE | iocnt<2> | IV_TRUE | iocnt<0> | IV_FALSE | iocnt<1> | IV_FALSE | io4_PIN_BUF_
+SPPTERM | 10 | IV_TRUE | a12_11_1_IBUF | IV_FALSE | a12_11_0_IBUF | IV_FALSE | a10_IBUF | IV_FALSE | counter<0> | IV_TRUE | counter<1> | IV_TRUE | counter<2> | IV_FALSE | iocnt<2> | IV_TRUE | iocnt<0> | IV_FALSE | iocnt<1> | IV_TRUE | io4_PIN_BUF_
+
+SRFF_INSTANCE | io4_OBUF.REG | io4_OBUF | 0 | 2 | 1
+INPUT_NODE_TYPE | 0 | 8 | SRFF_D
+NODE | io4_OBUF.D | 4904 | ? | 0 | 0 | io4_OBUF | NULL | NULL | io4_OBUF.XOR | 0 | 7 | ALU_F
+INPUT_NODE_TYPE | 1 | 8 | SRFF_C
+NODE | FCLK-IO_0 | 4780 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | clk_IBUF | 7 | 5 | II_FCLKINV
+OUTPUT_NODE_TYPE | 0 | 8 | SRFF_Q
+NODE | io4_OBUF.Q | 4907 | ? | 0 | 0 | io4_OBUF | NULL | NULL | io4_OBUF.REG | 0 | 8 | SRFF_Q
+
+MACROCELL_INSTANCE | PrldHigh+Tff+OptxMapped+OeInv | io5_OBUF | cpumodule_COPY_0_COPY_0 | 2290094592 | 11 | 2
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<0> | 4813 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<0>.Q | counter<0> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<1> | 4814 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<1>.Q | counter<1> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<2> | 4815 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<2>.Q | counter<2> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | iocnt<2> | 4816 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | iocnt<2>.Q | iocnt<2> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | iocnt<0> | 4817 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | iocnt<0>.Q | iocnt<0> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | iocnt<1> | 4818 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | iocnt<1>.Q | iocnt<1> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | a12_11_1_IBUF | 4773 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | a12_11_1_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | a12_11_0_IBUF | 4774 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | a12_11_0_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | a10_IBUF | 4779 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | a10_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | FCLK-IO_0 | 4780 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | clk_IBUF | 7 | 5 | II_FCLKINV
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | io5_PIN_BUF_ | 5029 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | Pfbk_Created_io5 | 0 | 5 | II_IMUX
+OUTPUT_NODE_TYPE | 0 | 0 | MC_Q
+NODE | io5_OBUF$Q | 4803 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | io5_OBUF.Q | io5_OBUF | 0 | 0 | MC_Q
+OUTPUT_NODE_TYPE | 1 | 0 | MC_UIM
+NODE | io5_OBUF | 4804 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | io5_OBUF.Q | io5_OBUF | 1 | 0 | MC_UIM
+
+SIGNAL_INSTANCE | io5_OBUF.SI | io5_OBUF | 0 | 10 | 2
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<0> | 4813 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<0>.Q | counter<0> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<1> | 4814 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<1>.Q | counter<1> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<2> | 4815 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<2>.Q | counter<2> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | iocnt<2> | 4816 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | iocnt<2>.Q | iocnt<2> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | iocnt<0> | 4817 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | iocnt<0>.Q | iocnt<0> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | iocnt<1> | 4818 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | iocnt<1>.Q | iocnt<1> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | a12_11_1_IBUF | 4773 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | a12_11_1_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | a12_11_0_IBUF | 4774 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | a12_11_0_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | a10_IBUF | 4779 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | a10_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | io5_PIN_BUF_ | 5029 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | Pfbk_Created_io5 | 0 | 5 | II_IMUX
+OUTPUT_NODE_TYPE | 1 | 9 | MC_SI_D1
+SIGNAL | NODE | io5_OBUF.D1 | 4909 | ? | 0 | 4096 | io5_OBUF | NULL | NULL | io5_OBUF.SI | 1 | 9 | MC_SI_D1
+SPPTERM | 0 | IV_ZERO
+OUTPUT_NODE_TYPE | 2 | 9 | MC_SI_D2
+SIGNAL | NODE | io5_OBUF.D2 | 4910 | ? | 0 | 4096 | io5_OBUF | NULL | NULL | io5_OBUF.SI | 2 | 9 | MC_SI_D2
+SPPTERM | 7 | IV_FALSE | counter<0> | IV_TRUE | counter<1> | IV_TRUE | counter<2> | IV_TRUE | iocnt<2> | IV_TRUE | iocnt<0> | IV_FALSE | iocnt<1> | IV_FALSE | io5_PIN_BUF_
+SPPTERM | 10 | IV_TRUE | a12_11_1_IBUF | IV_FALSE | a12_11_0_IBUF | IV_TRUE | a10_IBUF | IV_FALSE | counter<0> | IV_TRUE | counter<1> | IV_TRUE | counter<2> | IV_FALSE | iocnt<2> | IV_TRUE | iocnt<0> | IV_FALSE | iocnt<1> | IV_TRUE | io5_PIN_BUF_
+
+SRFF_INSTANCE | io5_OBUF.REG | io5_OBUF | 0 | 2 | 1
+INPUT_NODE_TYPE | 0 | 8 | SRFF_D
+NODE | io5_OBUF.D | 4908 | ? | 0 | 0 | io5_OBUF | NULL | NULL | io5_OBUF.XOR | 0 | 7 | ALU_F
+INPUT_NODE_TYPE | 1 | 8 | SRFF_C
+NODE | FCLK-IO_0 | 4780 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | clk_IBUF | 7 | 5 | II_FCLKINV
+OUTPUT_NODE_TYPE | 0 | 8 | SRFF_Q
+NODE | io5_OBUF.Q | 4911 | ? | 0 | 0 | io5_OBUF | NULL | NULL | io5_OBUF.REG | 0 | 8 | SRFF_Q
+
+MACROCELL_INSTANCE | PrldHigh+Tff+OptxMapped+OeInv | io6_OBUF | cpumodule_COPY_0_COPY_0 | 2290094592 | 11 | 2
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<0> | 4813 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<0>.Q | counter<0> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<1> | 4814 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<1>.Q | counter<1> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<2> | 4815 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<2>.Q | counter<2> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | iocnt<2> | 4816 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | iocnt<2>.Q | iocnt<2> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | iocnt<0> | 4817 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | iocnt<0>.Q | iocnt<0> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | iocnt<1> | 4818 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | iocnt<1>.Q | iocnt<1> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | a12_11_1_IBUF | 4773 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | a12_11_1_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | a12_11_0_IBUF | 4774 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | a12_11_0_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | a10_IBUF | 4779 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | a10_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | FCLK-IO_0 | 4780 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | clk_IBUF | 7 | 5 | II_FCLKINV
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | io6_PIN_BUF_ | 5030 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | Pfbk_Created_io6 | 0 | 5 | II_IMUX
+OUTPUT_NODE_TYPE | 0 | 0 | MC_Q
+NODE | io6_OBUF$Q | 4805 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | io6_OBUF.Q | io6_OBUF | 0 | 0 | MC_Q
+OUTPUT_NODE_TYPE | 1 | 0 | MC_UIM
+NODE | io6_OBUF | 4806 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | io6_OBUF.Q | io6_OBUF | 1 | 0 | MC_UIM
+
+SIGNAL_INSTANCE | io6_OBUF.SI | io6_OBUF | 0 | 10 | 2
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<0> | 4813 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<0>.Q | counter<0> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<1> | 4814 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<1>.Q | counter<1> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<2> | 4815 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<2>.Q | counter<2> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | iocnt<2> | 4816 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | iocnt<2>.Q | iocnt<2> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | iocnt<0> | 4817 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | iocnt<0>.Q | iocnt<0> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | iocnt<1> | 4818 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | iocnt<1>.Q | iocnt<1> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | a12_11_1_IBUF | 4773 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | a12_11_1_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | a12_11_0_IBUF | 4774 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | a12_11_0_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | a10_IBUF | 4779 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | a10_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | io6_PIN_BUF_ | 5030 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | Pfbk_Created_io6 | 0 | 5 | II_IMUX
+OUTPUT_NODE_TYPE | 1 | 9 | MC_SI_D1
+SIGNAL | NODE | io6_OBUF.D1 | 4913 | ? | 0 | 4096 | io6_OBUF | NULL | NULL | io6_OBUF.SI | 1 | 9 | MC_SI_D1
+SPPTERM | 0 | IV_ZERO
+OUTPUT_NODE_TYPE | 2 | 9 | MC_SI_D2
+SIGNAL | NODE | io6_OBUF.D2 | 4914 | ? | 0 | 4096 | io6_OBUF | NULL | NULL | io6_OBUF.SI | 2 | 9 | MC_SI_D2
+SPPTERM | 7 | IV_FALSE | counter<0> | IV_TRUE | counter<1> | IV_TRUE | counter<2> | IV_TRUE | iocnt<2> | IV_TRUE | iocnt<0> | IV_FALSE | iocnt<1> | IV_FALSE | io6_PIN_BUF_
+SPPTERM | 10 | IV_TRUE | a12_11_1_IBUF | IV_TRUE | a12_11_0_IBUF | IV_FALSE | a10_IBUF | IV_FALSE | counter<0> | IV_TRUE | counter<1> | IV_TRUE | counter<2> | IV_FALSE | iocnt<2> | IV_TRUE | iocnt<0> | IV_FALSE | iocnt<1> | IV_TRUE | io6_PIN_BUF_
+
+SRFF_INSTANCE | io6_OBUF.REG | io6_OBUF | 0 | 2 | 1
+INPUT_NODE_TYPE | 0 | 8 | SRFF_D
+NODE | io6_OBUF.D | 4912 | ? | 0 | 0 | io6_OBUF | NULL | NULL | io6_OBUF.XOR | 0 | 7 | ALU_F
+INPUT_NODE_TYPE | 1 | 8 | SRFF_C
+NODE | FCLK-IO_0 | 4780 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | clk_IBUF | 7 | 5 | II_FCLKINV
+OUTPUT_NODE_TYPE | 0 | 8 | SRFF_Q
+NODE | io6_OBUF.Q | 4915 | ? | 0 | 0 | io6_OBUF | NULL | NULL | io6_OBUF.REG | 0 | 8 | SRFF_Q
+
+MACROCELL_INSTANCE | PrldHigh+Tff+OptxMapped+OeInv | io7_OBUF | cpumodule_COPY_0_COPY_0 | 2290094592 | 11 | 2
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<0> | 4813 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<0>.Q | counter<0> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<1> | 4814 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<1>.Q | counter<1> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<2> | 4815 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<2>.Q | counter<2> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | iocnt<2> | 4816 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | iocnt<2>.Q | iocnt<2> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | iocnt<0> | 4817 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | iocnt<0>.Q | iocnt<0> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | iocnt<1> | 4818 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | iocnt<1>.Q | iocnt<1> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | a12_11_1_IBUF | 4773 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | a12_11_1_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | a12_11_0_IBUF | 4774 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | a12_11_0_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | a10_IBUF | 4779 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | a10_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | FCLK-IO_0 | 4780 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | clk_IBUF | 7 | 5 | II_FCLKINV
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | io7_PIN_BUF_ | 5031 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | Pfbk_Created_io7 | 0 | 5 | II_IMUX
+OUTPUT_NODE_TYPE | 0 | 0 | MC_Q
+NODE | io7_OBUF$Q | 4807 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | io7_OBUF.Q | io7_OBUF | 0 | 0 | MC_Q
+OUTPUT_NODE_TYPE | 1 | 0 | MC_UIM
+NODE | io7_OBUF | 4808 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | io7_OBUF.Q | io7_OBUF | 1 | 0 | MC_UIM
+
+SIGNAL_INSTANCE | io7_OBUF.SI | io7_OBUF | 0 | 10 | 2
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<0> | 4813 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<0>.Q | counter<0> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<1> | 4814 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<1>.Q | counter<1> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<2> | 4815 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<2>.Q | counter<2> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | iocnt<2> | 4816 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | iocnt<2>.Q | iocnt<2> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | iocnt<0> | 4817 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | iocnt<0>.Q | iocnt<0> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | iocnt<1> | 4818 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | iocnt<1>.Q | iocnt<1> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | a12_11_1_IBUF | 4773 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | a12_11_1_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | a12_11_0_IBUF | 4774 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | a12_11_0_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | a10_IBUF | 4779 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | a10_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | io7_PIN_BUF_ | 5031 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | Pfbk_Created_io7 | 0 | 5 | II_IMUX
+OUTPUT_NODE_TYPE | 1 | 9 | MC_SI_D1
+SIGNAL | NODE | io7_OBUF.D1 | 4917 | ? | 0 | 4096 | io7_OBUF | NULL | NULL | io7_OBUF.SI | 1 | 9 | MC_SI_D1
+SPPTERM | 0 | IV_ZERO
+OUTPUT_NODE_TYPE | 2 | 9 | MC_SI_D2
+SIGNAL | NODE | io7_OBUF.D2 | 4918 | ? | 0 | 4096 | io7_OBUF | NULL | NULL | io7_OBUF.SI | 2 | 9 | MC_SI_D2
+SPPTERM | 7 | IV_FALSE | counter<0> | IV_TRUE | counter<1> | IV_TRUE | counter<2> | IV_TRUE | iocnt<2> | IV_TRUE | iocnt<0> | IV_FALSE | iocnt<1> | IV_FALSE | io7_PIN_BUF_
+SPPTERM | 10 | IV_TRUE | a12_11_1_IBUF | IV_TRUE | a12_11_0_IBUF | IV_TRUE | a10_IBUF | IV_FALSE | counter<0> | IV_TRUE | counter<1> | IV_TRUE | counter<2> | IV_FALSE | iocnt<2> | IV_TRUE | iocnt<0> | IV_FALSE | iocnt<1> | IV_TRUE | io7_PIN_BUF_
+
+SRFF_INSTANCE | io7_OBUF.REG | io7_OBUF | 0 | 2 | 1
+INPUT_NODE_TYPE | 0 | 8 | SRFF_D
+NODE | io7_OBUF.D | 4916 | ? | 0 | 0 | io7_OBUF | NULL | NULL | io7_OBUF.XOR | 0 | 7 | ALU_F
+INPUT_NODE_TYPE | 1 | 8 | SRFF_C
+NODE | FCLK-IO_0 | 4780 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | clk_IBUF | 7 | 5 | II_FCLKINV
+OUTPUT_NODE_TYPE | 0 | 8 | SRFF_Q
+NODE | io7_OBUF.Q | 4919 | ? | 0 | 0 | io7_OBUF | NULL | NULL | io7_OBUF.REG | 0 | 8 | SRFF_Q
+
+MACROCELL_INSTANCE | PrldHigh+OptxMapped+OeInv | phi0_OBUF | cpumodule_COPY_0_COPY_0 | 2290090496 | 13 | 3
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | iocnt<1> | 4818 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | iocnt<1>.Q | iocnt<1> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<0> | 4813 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<0>.Q | counter<0> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<1> | 4814 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<1>.Q | counter<1> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<1> | 4820 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<1>.Q | refcnt<1> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<2> | 4821 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<2>.Q | refcnt<2> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<3> | 4822 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<3>.Q | refcnt<3> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<4> | 4823 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<4>.Q | refcnt<4> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<5> | 4824 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<5>.Q | refcnt<5> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<6> | 4825 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<6>.Q | refcnt<6> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<7> | 4826 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<7>.Q | refcnt<7> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | cas3_OBUF.EXP | 5011 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | cas3_OBUF.EXP | cas3_OBUF | 4 | 0 | MC_EXPORT
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | phi0_PIN_BUF_ | 5032 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | Pfbk_Created_phi0 | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | FCLK-IO_0 | 4780 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | clk_IBUF | 7 | 5 | II_FCLKINV
+OUTPUT_NODE_TYPE | 0 | 0 | MC_Q
+NODE | phi0_OBUF$Q | 4809 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | phi0_OBUF.Q | phi0_OBUF | 0 | 0 | MC_Q
+OUTPUT_NODE_TYPE | 1 | 0 | MC_UIM
+NODE | phi0_OBUF | 4810 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | phi0_OBUF.Q | phi0_OBUF | 1 | 0 | MC_UIM
+OUTPUT_NODE_TYPE | 4 | 0 | MC_EXPORT
+NODE | phi0_OBUF.EXP | 5012 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | phi0_OBUF.EXP | phi0_OBUF | 4 | 0 | MC_EXPORT
+
+SIGNAL_INSTANCE | phi0_OBUF.SI | phi0_OBUF | 0 | 12 | 3
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | iocnt<1> | 4818 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | iocnt<1>.Q | iocnt<1> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<0> | 4813 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<0>.Q | counter<0> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<1> | 4814 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<1>.Q | counter<1> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<1> | 4820 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<1>.Q | refcnt<1> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<2> | 4821 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<2>.Q | refcnt<2> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<3> | 4822 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<3>.Q | refcnt<3> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<4> | 4823 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<4>.Q | refcnt<4> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<5> | 4824 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<5>.Q | refcnt<5> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<6> | 4825 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<6>.Q | refcnt<6> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<7> | 4826 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<7>.Q | refcnt<7> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | cas3_OBUF.EXP | 5011 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | cas3_OBUF.EXP | cas3_OBUF | 4 | 0 | MC_EXPORT
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | phi0_PIN_BUF_ | 5032 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | Pfbk_Created_phi0 | 0 | 5 | II_IMUX
+OUTPUT_NODE_TYPE | 1 | 9 | MC_SI_D1
+SIGNAL | NODE | phi0_OBUF.D1 | 4921 | ? | 0 | 4096 | phi0_OBUF | NULL | NULL | phi0_OBUF.SI | 1 | 9 | MC_SI_D1
+SPPTERM | 0 | IV_ZERO
+OUTPUT_NODE_TYPE | 2 | 9 | MC_SI_D2
+SIGNAL | NODE | phi0_OBUF.D2 | 4922 | ? | 0 | 4096 | phi0_OBUF | NULL | NULL | phi0_OBUF.SI | 2 | 9 | MC_SI_D2
+SPPTERM | 1 | IV_TRUE | cas3_OBUF.EXP
+SPPTERM | 2 | IV_TRUE | counter<0> | IV_TRUE | phi0_PIN_BUF_
+SPPTERM | 2 | IV_FALSE | counter<1> | IV_TRUE | phi0_PIN_BUF_
+SPPTERM | 2 | IV_TRUE | iocnt<1> | IV_TRUE | phi0_PIN_BUF_
+OUTPUT_NODE_TYPE | 7 | 9 | MC_SI_EXPORT
+SIGNAL | NODE | phi0_OBUF.EXP | 4997 | ? | 0 | 0 | phi0_OBUF | NULL | NULL | phi0_OBUF.SI | 7 | 9 | MC_SI_EXPORT
+SPPTERM | 1 | IV_TRUE | counter<0>
+SPPTERM | 7 | IV_FALSE | refcnt<1> | IV_FALSE | refcnt<2> | IV_FALSE | refcnt<3> | IV_FALSE | refcnt<4> | IV_FALSE | refcnt<5> | IV_FALSE | refcnt<6> | IV_FALSE | refcnt<7>
+
+SRFF_INSTANCE | phi0_OBUF.REG | phi0_OBUF | 0 | 2 | 1
+INPUT_NODE_TYPE | 0 | 8 | SRFF_D
+NODE | phi0_OBUF.D | 4920 | ? | 0 | 0 | phi0_OBUF | NULL | NULL | phi0_OBUF.XOR | 0 | 7 | ALU_F
+INPUT_NODE_TYPE | 1 | 8 | SRFF_C
+NODE | FCLK-IO_0 | 4780 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | clk_IBUF | 7 | 5 | II_FCLKINV
+OUTPUT_NODE_TYPE | 0 | 8 | SRFF_Q
+NODE | phi0_OBUF.Q | 4923 | ? | 0 | 0 | phi0_OBUF | NULL | NULL | phi0_OBUF.REG | 0 | 8 | SRFF_Q
+
+MACROCELL_INSTANCE | Inv+PrldHigh+OptxMapped+OeInv | ras_OBUF | cpumodule_COPY_0_COPY_0 | 2290090752 | 15 | 3
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<0> | 4813 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<0>.Q | counter<0> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | $OpTx$FX_DC$50.UIM | 4845 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | $OpTx$FX_DC$50.Q | $OpTx$FX_DC$50 | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<1> | 4814 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<1>.Q | counter<1> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<2> | 4815 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<2>.Q | counter<2> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<0> | 4819 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<0>.Q | refcnt<0> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<1> | 4820 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<1>.Q | refcnt<1> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<2> | 4821 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<2>.Q | refcnt<2> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<3> | 4822 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<3>.Q | refcnt<3> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<4> | 4823 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<4>.Q | refcnt<4> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<5> | 4824 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<5>.Q | refcnt<5> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<6> | 4825 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<6>.Q | refcnt<6> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<7> | 4826 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<7>.Q | refcnt<7> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | FCLK-IO_0 | 4780 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | clk_IBUF | 7 | 5 | II_FCLKINV
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | iocnt<1>.EXP | 5014 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | iocnt<1>.EXP | iocnt<1> | 4 | 0 | MC_EXPORT
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | ras_PIN_BUF_ | 5033 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | Pfbk_Created_ras | 0 | 5 | II_IMUX
+OUTPUT_NODE_TYPE | 0 | 0 | MC_Q
+NODE | ras_OBUF$Q | 4811 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | ras_OBUF.Q | ras_OBUF | 0 | 0 | MC_Q
+OUTPUT_NODE_TYPE | 1 | 0 | MC_UIM
+NODE | ras_OBUF | 4812 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | ras_OBUF.Q | ras_OBUF | 1 | 0 | MC_UIM
+OUTPUT_NODE_TYPE | 4 | 0 | MC_EXPORT
+NODE | ras_OBUF.EXP | 5015 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | ras_OBUF.EXP | ras_OBUF | 4 | 0 | MC_EXPORT
+
+SIGNAL_INSTANCE | ras_OBUF.SI | ras_OBUF | 0 | 14 | 3
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<0> | 4813 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<0>.Q | counter<0> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | $OpTx$FX_DC$50.UIM | 4845 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | $OpTx$FX_DC$50.Q | $OpTx$FX_DC$50 | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<1> | 4814 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<1>.Q | counter<1> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<2> | 4815 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<2>.Q | counter<2> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<0> | 4819 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<0>.Q | refcnt<0> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<1> | 4820 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<1>.Q | refcnt<1> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<2> | 4821 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<2>.Q | refcnt<2> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<3> | 4822 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<3>.Q | refcnt<3> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<4> | 4823 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<4>.Q | refcnt<4> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<5> | 4824 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<5>.Q | refcnt<5> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<6> | 4825 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<6>.Q | refcnt<6> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<7> | 4826 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<7>.Q | refcnt<7> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | iocnt<1>.EXP | 5014 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | iocnt<1>.EXP | iocnt<1> | 4 | 0 | MC_EXPORT
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | ras_PIN_BUF_ | 5033 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | Pfbk_Created_ras | 0 | 5 | II_IMUX
+OUTPUT_NODE_TYPE | 1 | 9 | MC_SI_D1
+SIGNAL | NODE | ras_OBUF.D1 | 4925 | ? | 0 | 4096 | ras_OBUF | NULL | NULL | ras_OBUF.SI | 1 | 9 | MC_SI_D1
+SPPTERM | 0 | IV_ZERO
+OUTPUT_NODE_TYPE | 2 | 9 | MC_SI_D2
+SIGNAL | NODE | ras_OBUF.D2 | 4926 | ? | 0 | 4096 | ras_OBUF | NULL | NULL | ras_OBUF.SI | 2 | 9 | MC_SI_D2
+SPPTERM | 1 | IV_TRUE | iocnt<1>.EXP
+SPPTERM | 3 | IV_FALSE | counter<0> | IV_FALSE | $OpTx$FX_DC$50.UIM | IV_FALSE | ras_PIN_BUF_
+SPPTERM | 3 | IV_TRUE | counter<1> | IV_FALSE | $OpTx$FX_DC$50.UIM | IV_FALSE | ras_PIN_BUF_
+SPPTERM | 4 | IV_TRUE | counter<0> | IV_FALSE | counter<1> | IV_FALSE | counter<2> | IV_FALSE | $OpTx$FX_DC$50.UIM
+SPPTERM | 10 | IV_FALSE | counter<0> | IV_FALSE | refcnt<0> | IV_FALSE | refcnt<1> | IV_FALSE | refcnt<2> | IV_FALSE | refcnt<3> | IV_FALSE | refcnt<4> | IV_FALSE | refcnt<5> | IV_FALSE | refcnt<6> | IV_FALSE | refcnt<7> | IV_FALSE | ras_PIN_BUF_
+OUTPUT_NODE_TYPE | 7 | 9 | MC_SI_EXPORT
+SIGNAL | NODE | ras_OBUF.EXP | 5000 | ? | 0 | 0 | ras_OBUF | NULL | NULL | ras_OBUF.SI | 7 | 9 | MC_SI_EXPORT
+SPPTERM | 10 | IV_FALSE | counter<0> | IV_TRUE | counter<1> | IV_TRUE | counter<2> | IV_FALSE | refcnt<0> | IV_FALSE | refcnt<1> | IV_FALSE | refcnt<2> | IV_FALSE | refcnt<3> | IV_FALSE | refcnt<4> | IV_FALSE | refcnt<5> | IV_FALSE | refcnt<6>
+
+SRFF_INSTANCE | ras_OBUF.REG | ras_OBUF | 0 | 2 | 1
+INPUT_NODE_TYPE | 0 | 8 | SRFF_D
+NODE | ras_OBUF.D | 4924 | ? | 0 | 0 | ras_OBUF | NULL | NULL | ras_OBUF.XOR | 0 | 7 | ALU_F
+INPUT_NODE_TYPE | 1 | 8 | SRFF_C
+NODE | FCLK-IO_0 | 4780 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | clk_IBUF | 7 | 5 | II_FCLKINV
+OUTPUT_NODE_TYPE | 0 | 8 | SRFF_Q
+NODE | ras_OBUF.Q | 4927 | ? | 0 | 0 | ras_OBUF | NULL | NULL | ras_OBUF.REG | 0 | 8 | SRFF_Q
+
+MACROCELL_INSTANCE | Inv+PrldLow+Tff+OptxMapped | counter<0> | cpumodule_COPY_0_COPY_0 | 2155877632 | 4 | 1
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<0> | 4813 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<0>.Q | counter<0> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<1> | 4814 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<1>.Q | counter<1> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<2> | 4815 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<2>.Q | counter<2> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | FCLK-IO_0 | 4780 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | clk_IBUF | 7 | 5 | II_FCLKINV
+OUTPUT_NODE_TYPE | 1 | 0 | MC_UIM
+NODE | counter<0> | 4813 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<0>.Q | counter<0> | 1 | 0 | MC_UIM
+
+SIGNAL_INSTANCE | counter<0>.SI | counter<0> | 0 | 3 | 2
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<0> | 4813 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<0>.Q | counter<0> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<1> | 4814 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<1>.Q | counter<1> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<2> | 4815 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<2>.Q | counter<2> | 1 | 0 | MC_UIM
+OUTPUT_NODE_TYPE | 1 | 9 | MC_SI_D1
+SIGNAL | NODE | counter<0>.D1 | 4929 | ? | 0 | 4096 | counter<0> | NULL | NULL | counter<0>.SI | 1 | 9 | MC_SI_D1
+SPPTERM | 0 | IV_ZERO
+OUTPUT_NODE_TYPE | 2 | 9 | MC_SI_D2
+SIGNAL | NODE | counter<0>.D2 | 4930 | ? | 0 | 4096 | counter<0> | NULL | NULL | counter<0>.SI | 2 | 9 | MC_SI_D2
+SPPTERM | 3 | IV_FALSE | counter<0> | IV_TRUE | counter<1> | IV_TRUE | counter<2>
+
+SRFF_INSTANCE | counter<0>.REG | counter<0> | 0 | 2 | 1
+INPUT_NODE_TYPE | 0 | 8 | SRFF_D
+NODE | counter<0>.D | 4928 | ? | 0 | 0 | counter<0> | NULL | NULL | counter<0>.XOR | 0 | 7 | ALU_F
+INPUT_NODE_TYPE | 1 | 8 | SRFF_C
+NODE | FCLK-IO_0 | 4780 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | clk_IBUF | 7 | 5 | II_FCLKINV
+OUTPUT_NODE_TYPE | 0 | 8 | SRFF_Q
+NODE | counter<0>.Q | 4931 | ? | 0 | 0 | counter<0> | NULL | NULL | counter<0>.REG | 0 | 8 | SRFF_Q
+
+MACROCELL_INSTANCE | PrldLow+OptxMapped | counter<1> | cpumodule_COPY_0_COPY_0 | 2155873280 | 4 | 1
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<0> | 4813 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<0>.Q | counter<0> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<1> | 4814 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<1>.Q | counter<1> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<2> | 4815 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<2>.Q | counter<2> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | FCLK-IO_0 | 4780 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | clk_IBUF | 7 | 5 | II_FCLKINV
+OUTPUT_NODE_TYPE | 1 | 0 | MC_UIM
+NODE | counter<1> | 4814 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<1>.Q | counter<1> | 1 | 0 | MC_UIM
+
+SIGNAL_INSTANCE | counter<1>.SI | counter<1> | 0 | 3 | 2
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<0> | 4813 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<0>.Q | counter<0> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<1> | 4814 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<1>.Q | counter<1> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<2> | 4815 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<2>.Q | counter<2> | 1 | 0 | MC_UIM
+OUTPUT_NODE_TYPE | 1 | 9 | MC_SI_D1
+SIGNAL | NODE | counter<1>.D1 | 4933 | ? | 0 | 4096 | counter<1> | NULL | NULL | counter<1>.SI | 1 | 9 | MC_SI_D1
+SPPTERM | 0 | IV_ZERO
+OUTPUT_NODE_TYPE | 2 | 9 | MC_SI_D2
+SIGNAL | NODE | counter<1>.D2 | 4934 | ? | 0 | 4096 | counter<1> | NULL | NULL | counter<1>.SI | 2 | 9 | MC_SI_D2
+SPPTERM | 2 | IV_TRUE | counter<0> | IV_FALSE | counter<1>
+SPPTERM | 3 | IV_FALSE | counter<0> | IV_TRUE | counter<1> | IV_FALSE | counter<2>
+
+SRFF_INSTANCE | counter<1>.REG | counter<1> | 0 | 2 | 1
+INPUT_NODE_TYPE | 0 | 8 | SRFF_D
+NODE | counter<1>.D | 4932 | ? | 0 | 0 | counter<1> | NULL | NULL | counter<1>.XOR | 0 | 7 | ALU_F
+INPUT_NODE_TYPE | 1 | 8 | SRFF_C
+NODE | FCLK-IO_0 | 4780 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | clk_IBUF | 7 | 5 | II_FCLKINV
+OUTPUT_NODE_TYPE | 0 | 8 | SRFF_Q
+NODE | counter<1>.Q | 4935 | ? | 0 | 0 | counter<1> | NULL | NULL | counter<1>.REG | 0 | 8 | SRFF_Q
+
+MACROCELL_INSTANCE | PrldLow+OptxMapped | counter<2> | cpumodule_COPY_0_COPY_0 | 2155873280 | 4 | 1
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<1> | 4814 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<1>.Q | counter<1> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<2> | 4815 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<2>.Q | counter<2> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<0> | 4813 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<0>.Q | counter<0> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | FCLK-IO_0 | 4780 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | clk_IBUF | 7 | 5 | II_FCLKINV
+OUTPUT_NODE_TYPE | 1 | 0 | MC_UIM
+NODE | counter<2> | 4815 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<2>.Q | counter<2> | 1 | 0 | MC_UIM
+
+SIGNAL_INSTANCE | counter<2>.SI | counter<2> | 0 | 3 | 2
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<1> | 4814 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<1>.Q | counter<1> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<2> | 4815 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<2>.Q | counter<2> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<0> | 4813 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<0>.Q | counter<0> | 1 | 0 | MC_UIM
+OUTPUT_NODE_TYPE | 1 | 9 | MC_SI_D1
+SIGNAL | NODE | counter<2>.D1 | 4937 | ? | 0 | 4096 | counter<2> | NULL | NULL | counter<2>.SI | 1 | 9 | MC_SI_D1
+SPPTERM | 0 | IV_ZERO
+OUTPUT_NODE_TYPE | 2 | 9 | MC_SI_D2
+SIGNAL | NODE | counter<2>.D2 | 4938 | ? | 0 | 4096 | counter<2> | NULL | NULL | counter<2>.SI | 2 | 9 | MC_SI_D2
+SPPTERM | 2 | IV_FALSE | counter<1> | IV_TRUE | counter<2>
+SPPTERM | 3 | IV_TRUE | counter<0> | IV_TRUE | counter<1> | IV_FALSE | counter<2>
+
+SRFF_INSTANCE | counter<2>.REG | counter<2> | 0 | 2 | 1
+INPUT_NODE_TYPE | 0 | 8 | SRFF_D
+NODE | counter<2>.D | 4936 | ? | 0 | 0 | counter<2> | NULL | NULL | counter<2>.XOR | 0 | 7 | ALU_F
+INPUT_NODE_TYPE | 1 | 8 | SRFF_C
+NODE | FCLK-IO_0 | 4780 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | clk_IBUF | 7 | 5 | II_FCLKINV
+OUTPUT_NODE_TYPE | 0 | 8 | SRFF_Q
+NODE | counter<2>.Q | 4939 | ? | 0 | 0 | counter<2> | NULL | NULL | counter<2>.REG | 0 | 8 | SRFF_Q
+
+MACROCELL_INSTANCE | PrldLow+Tff+OptxMapped | iocnt<2> | cpumodule_COPY_0_COPY_0 | 2155877376 | 7 | 1
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<0> | 4813 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<0>.Q | counter<0> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<1> | 4814 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<1>.Q | counter<1> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<2> | 4815 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<2>.Q | counter<2> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | iocnt<0> | 4817 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | iocnt<0>.Q | iocnt<0> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | iocnt<1> | 4818 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | iocnt<1>.Q | iocnt<1> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | iocnt<2> | 4816 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | iocnt<2>.Q | iocnt<2> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | FCLK-IO_0 | 4780 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | clk_IBUF | 7 | 5 | II_FCLKINV
+OUTPUT_NODE_TYPE | 1 | 0 | MC_UIM
+NODE | iocnt<2> | 4816 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | iocnt<2>.Q | iocnt<2> | 1 | 0 | MC_UIM
+
+SIGNAL_INSTANCE | iocnt<2>.SI | iocnt<2> | 0 | 6 | 2
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<0> | 4813 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<0>.Q | counter<0> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<1> | 4814 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<1>.Q | counter<1> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<2> | 4815 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<2>.Q | counter<2> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | iocnt<0> | 4817 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | iocnt<0>.Q | iocnt<0> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | iocnt<1> | 4818 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | iocnt<1>.Q | iocnt<1> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | iocnt<2> | 4816 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | iocnt<2>.Q | iocnt<2> | 1 | 0 | MC_UIM
+OUTPUT_NODE_TYPE | 1 | 9 | MC_SI_D1
+SIGNAL | NODE | iocnt<2>.D1 | 4941 | ? | 0 | 4096 | iocnt<2> | NULL | NULL | iocnt<2>.SI | 1 | 9 | MC_SI_D1
+SPPTERM | 0 | IV_ZERO
+OUTPUT_NODE_TYPE | 2 | 9 | MC_SI_D2
+SIGNAL | NODE | iocnt<2>.D2 | 4942 | ? | 0 | 4096 | iocnt<2> | NULL | NULL | iocnt<2>.SI | 2 | 9 | MC_SI_D2
+SPPTERM | 5 | IV_FALSE | counter<0> | IV_TRUE | counter<1> | IV_TRUE | counter<2> | IV_TRUE | iocnt<2> | IV_TRUE | iocnt<0>
+SPPTERM | 5 | IV_FALSE | counter<0> | IV_TRUE | counter<1> | IV_TRUE | counter<2> | IV_TRUE | iocnt<0> | IV_TRUE | iocnt<1>
+
+SRFF_INSTANCE | iocnt<2>.REG | iocnt<2> | 0 | 2 | 1
+INPUT_NODE_TYPE | 0 | 8 | SRFF_D
+NODE | iocnt<2>.D | 4940 | ? | 0 | 0 | iocnt<2> | NULL | NULL | iocnt<2>.XOR | 0 | 7 | ALU_F
+INPUT_NODE_TYPE | 1 | 8 | SRFF_C
+NODE | FCLK-IO_0 | 4780 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | clk_IBUF | 7 | 5 | II_FCLKINV
+OUTPUT_NODE_TYPE | 0 | 8 | SRFF_Q
+NODE | iocnt<2>.Q | 4943 | ? | 0 | 0 | iocnt<2> | NULL | NULL | iocnt<2>.REG | 0 | 8 | SRFF_Q
+
+MACROCELL_INSTANCE | PrldLow+Tff+OptxMapped | iocnt<0> | cpumodule_COPY_0_COPY_0 | 2155877376 | 20 | 1
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | bank_7_IBUF | 4765 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | bank_7_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | bank_6_IBUF | 4766 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | bank_6_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | bank_5_IBUF | 4767 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | bank_5_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | bank_4_IBUF | 4768 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | bank_4_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | bank_3_IBUF | 4769 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | bank_3_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | bank_2_IBUF | 4770 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | bank_2_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | bank_1_IBUF | 4771 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | bank_1_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | bank_0_IBUF | 4772 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | bank_0_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | vda_IBUF | 4775 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | vda_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | a15_13_2_IBUF | 4776 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | a15_13_2_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | a15_13_1_IBUF | 4777 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | a15_13_1_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | a15_13_0_IBUF | 4778 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | a15_13_0_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<0> | 4813 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<0>.Q | counter<0> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<1> | 4814 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<1>.Q | counter<1> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<2> | 4815 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<2>.Q | counter<2> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | iocnt<2> | 4816 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | iocnt<2>.Q | iocnt<2> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | iocnt<0> | 4817 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | iocnt<0>.Q | iocnt<0> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | iocnt<1> | 4818 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | iocnt<1>.Q | iocnt<1> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | vpa_IBUF | 4827 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | vpa_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | FCLK-IO_0 | 4780 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | clk_IBUF | 7 | 5 | II_FCLKINV
+OUTPUT_NODE_TYPE | 1 | 0 | MC_UIM
+NODE | iocnt<0> | 4817 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | iocnt<0>.Q | iocnt<0> | 1 | 0 | MC_UIM
+
+SIGNAL_INSTANCE | iocnt<0>.SI | iocnt<0> | 0 | 19 | 2
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | bank_7_IBUF | 4765 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | bank_7_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | bank_6_IBUF | 4766 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | bank_6_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | bank_5_IBUF | 4767 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | bank_5_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | bank_4_IBUF | 4768 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | bank_4_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | bank_3_IBUF | 4769 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | bank_3_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | bank_2_IBUF | 4770 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | bank_2_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | bank_1_IBUF | 4771 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | bank_1_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | bank_0_IBUF | 4772 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | bank_0_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | vda_IBUF | 4775 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | vda_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | a15_13_2_IBUF | 4776 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | a15_13_2_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | a15_13_1_IBUF | 4777 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | a15_13_1_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | a15_13_0_IBUF | 4778 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | a15_13_0_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<0> | 4813 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<0>.Q | counter<0> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<1> | 4814 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<1>.Q | counter<1> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<2> | 4815 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<2>.Q | counter<2> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | iocnt<2> | 4816 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | iocnt<2>.Q | iocnt<2> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | iocnt<0> | 4817 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | iocnt<0>.Q | iocnt<0> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | iocnt<1> | 4818 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | iocnt<1>.Q | iocnt<1> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | vpa_IBUF | 4827 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | vpa_IBUF | 0 | 5 | II_IMUX
+OUTPUT_NODE_TYPE | 1 | 9 | MC_SI_D1
+SIGNAL | NODE | iocnt<0>.D1 | 4945 | ? | 0 | 4096 | iocnt<0> | NULL | NULL | iocnt<0>.SI | 1 | 9 | MC_SI_D1
+SPPTERM | 0 | IV_ZERO
+OUTPUT_NODE_TYPE | 2 | 9 | MC_SI_D2
+SIGNAL | NODE | iocnt<0>.D2 | 4946 | ? | 0 | 4096 | iocnt<0> | NULL | NULL | iocnt<0>.SI | 2 | 9 | MC_SI_D2
+SPPTERM | 4 | IV_FALSE | counter<0> | IV_TRUE | counter<1> | IV_TRUE | counter<2> | IV_TRUE | iocnt<2>
+SPPTERM | 4 | IV_FALSE | counter<0> | IV_TRUE | counter<1> | IV_TRUE | counter<2> | IV_TRUE | iocnt<0>
+SPPTERM | 4 | IV_FALSE | counter<0> | IV_TRUE | counter<1> | IV_TRUE | counter<2> | IV_TRUE | iocnt<1>
+SPPTERM | 19 | IV_TRUE | bank_7_IBUF | IV_TRUE | bank_6_IBUF | IV_TRUE | bank_5_IBUF | IV_TRUE | bank_4_IBUF | IV_TRUE | bank_3_IBUF | IV_TRUE | bank_2_IBUF | IV_TRUE | bank_1_IBUF | IV_TRUE | bank_0_IBUF | IV_TRUE | vda_IBUF | IV_TRUE | a15_13_2_IBUF | IV_TRUE | a15_13_1_IBUF | IV_TRUE | a15_13_0_IBUF | IV_TRUE | counter<0> | IV_FALSE | counter<1> | IV_FALSE | counter<2> | IV_FALSE | iocnt<2> | IV_FALSE | iocnt<0> | IV_FALSE | iocnt<1> | IV_FALSE | vpa_IBUF
+
+SRFF_INSTANCE | iocnt<0>.REG | iocnt<0> | 0 | 2 | 1
+INPUT_NODE_TYPE | 0 | 8 | SRFF_D
+NODE | iocnt<0>.D | 4944 | ? | 0 | 0 | iocnt<0> | NULL | NULL | iocnt<0>.XOR | 0 | 7 | ALU_F
+INPUT_NODE_TYPE | 1 | 8 | SRFF_C
+NODE | FCLK-IO_0 | 4780 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | clk_IBUF | 7 | 5 | II_FCLKINV
+OUTPUT_NODE_TYPE | 0 | 8 | SRFF_Q
+NODE | iocnt<0>.Q | 4947 | ? | 0 | 0 | iocnt<0> | NULL | NULL | iocnt<0>.REG | 0 | 8 | SRFF_Q
+
+MACROCELL_INSTANCE | PrldLow+Tff+OptxMapped | iocnt<1> | cpumodule_COPY_0_COPY_0 | 2155877376 | 16 | 2
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<0> | 4813 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<0>.Q | counter<0> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<1> | 4814 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<1>.Q | counter<1> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<2> | 4815 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<2>.Q | counter<2> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | iocnt<2> | 4816 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | iocnt<2>.Q | iocnt<2> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | iocnt<0> | 4817 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | iocnt<0>.Q | iocnt<0> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | iocnt<1> | 4818 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | iocnt<1>.Q | iocnt<1> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | FCLK-IO_0 | 4780 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | clk_IBUF | 7 | 5 | II_FCLKINV
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<0> | 4819 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<0>.Q | refcnt<0> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<1> | 4820 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<1>.Q | refcnt<1> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<2> | 4821 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<2>.Q | refcnt<2> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<3> | 4822 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<3>.Q | refcnt<3> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<4> | 4823 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<4>.Q | refcnt<4> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<5> | 4824 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<5>.Q | refcnt<5> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<6> | 4825 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<6>.Q | refcnt<6> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<7> | 4826 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<7>.Q | refcnt<7> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | ras_PIN_BUF_ | 5033 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | Pfbk_Created_ras | 0 | 5 | II_IMUX
+OUTPUT_NODE_TYPE | 1 | 0 | MC_UIM
+NODE | iocnt<1> | 4818 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | iocnt<1>.Q | iocnt<1> | 1 | 0 | MC_UIM
+OUTPUT_NODE_TYPE | 4 | 0 | MC_EXPORT
+NODE | iocnt<1>.EXP | 5014 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | iocnt<1>.EXP | iocnt<1> | 4 | 0 | MC_EXPORT
+
+SIGNAL_INSTANCE | iocnt<1>.SI | iocnt<1> | 0 | 15 | 3
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<0> | 4813 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<0>.Q | counter<0> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<1> | 4814 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<1>.Q | counter<1> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<2> | 4815 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<2>.Q | counter<2> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | iocnt<2> | 4816 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | iocnt<2>.Q | iocnt<2> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | iocnt<0> | 4817 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | iocnt<0>.Q | iocnt<0> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | iocnt<1> | 4818 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | iocnt<1>.Q | iocnt<1> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<0> | 4819 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<0>.Q | refcnt<0> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<1> | 4820 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<1>.Q | refcnt<1> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<2> | 4821 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<2>.Q | refcnt<2> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<3> | 4822 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<3>.Q | refcnt<3> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<4> | 4823 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<4>.Q | refcnt<4> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<5> | 4824 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<5>.Q | refcnt<5> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<6> | 4825 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<6>.Q | refcnt<6> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<7> | 4826 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<7>.Q | refcnt<7> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | ras_PIN_BUF_ | 5033 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | Pfbk_Created_ras | 0 | 5 | II_IMUX
+OUTPUT_NODE_TYPE | 1 | 9 | MC_SI_D1
+SIGNAL | NODE | iocnt<1>.D1 | 4949 | ? | 0 | 4096 | iocnt<1> | NULL | NULL | iocnt<1>.SI | 1 | 9 | MC_SI_D1
+SPPTERM | 0 | IV_ZERO
+OUTPUT_NODE_TYPE | 2 | 9 | MC_SI_D2
+SIGNAL | NODE | iocnt<1>.D2 | 4950 | ? | 0 | 4096 | iocnt<1> | NULL | NULL | iocnt<1>.SI | 2 | 9 | MC_SI_D2
+SPPTERM | 5 | IV_FALSE | counter<0> | IV_TRUE | counter<1> | IV_TRUE | counter<2> | IV_FALSE | iocnt<2> | IV_TRUE | iocnt<0>
+SPPTERM | 5 | IV_FALSE | counter<0> | IV_TRUE | counter<1> | IV_TRUE | counter<2> | IV_TRUE | iocnt<0> | IV_TRUE | iocnt<1>
+OUTPUT_NODE_TYPE | 7 | 9 | MC_SI_EXPORT
+SIGNAL | NODE | iocnt<1>.EXP | 4999 | ? | 0 | 0 | iocnt<1> | NULL | NULL | iocnt<1>.SI | 7 | 9 | MC_SI_EXPORT
+SPPTERM | 10 | IV_TRUE | counter<1> | IV_FALSE | refcnt<0> | IV_FALSE | refcnt<1> | IV_FALSE | refcnt<2> | IV_FALSE | refcnt<3> | IV_FALSE | refcnt<4> | IV_FALSE | refcnt<5> | IV_FALSE | refcnt<6> | IV_FALSE | refcnt<7> | IV_FALSE | ras_PIN_BUF_
+SPPTERM | 11 | IV_TRUE | counter<0> | IV_FALSE | counter<1> | IV_FALSE | counter<2> | IV_FALSE | refcnt<0> | IV_FALSE | refcnt<1> | IV_FALSE | refcnt<2> | IV_FALSE | refcnt<3> | IV_FALSE | refcnt<4> | IV_FALSE | refcnt<5> | IV_FALSE | refcnt<6> | IV_FALSE | refcnt<7>
+
+SRFF_INSTANCE | iocnt<1>.REG | iocnt<1> | 0 | 2 | 1
+INPUT_NODE_TYPE | 0 | 8 | SRFF_D
+NODE | iocnt<1>.D | 4948 | ? | 0 | 0 | iocnt<1> | NULL | NULL | iocnt<1>.XOR | 0 | 7 | ALU_F
+INPUT_NODE_TYPE | 1 | 8 | SRFF_C
+NODE | FCLK-IO_0 | 4780 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | clk_IBUF | 7 | 5 | II_FCLKINV
+OUTPUT_NODE_TYPE | 0 | 8 | SRFF_Q
+NODE | iocnt<1>.Q | 4951 | ? | 0 | 0 | iocnt<1> | NULL | NULL | iocnt<1>.REG | 0 | 8 | SRFF_Q
+
+MACROCELL_INSTANCE | PrldLow+Tff+OptxMapped | refcnt<0> | cpumodule_COPY_0_COPY_0 | 2155877376 | 4 | 1
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<0> | 4813 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<0>.Q | counter<0> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<1> | 4814 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<1>.Q | counter<1> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<2> | 4815 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<2>.Q | counter<2> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | FCLK-IO_0 | 4780 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | clk_IBUF | 7 | 5 | II_FCLKINV
+OUTPUT_NODE_TYPE | 1 | 0 | MC_UIM
+NODE | refcnt<0> | 4819 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<0>.Q | refcnt<0> | 1 | 0 | MC_UIM
+
+SIGNAL_INSTANCE | refcnt<0>.SI | refcnt<0> | 0 | 3 | 2
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<0> | 4813 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<0>.Q | counter<0> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<1> | 4814 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<1>.Q | counter<1> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<2> | 4815 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<2>.Q | counter<2> | 1 | 0 | MC_UIM
+OUTPUT_NODE_TYPE | 1 | 9 | MC_SI_D1
+SIGNAL | NODE | refcnt<0>.D1 | 4953 | ? | 0 | 0 | refcnt<0> | NULL | NULL | refcnt<0>.SI | 1 | 9 | MC_SI_D1
+SPPTERM | 0 | IV_ZERO
+OUTPUT_NODE_TYPE | 2 | 9 | MC_SI_D2
+SIGNAL | NODE | refcnt<0>.D2 | 4954 | ? | 0 | 4096 | refcnt<0> | NULL | NULL | refcnt<0>.SI | 2 | 9 | MC_SI_D2
+SPPTERM | 3 | IV_FALSE | counter<0> | IV_TRUE | counter<1> | IV_TRUE | counter<2>
+
+SRFF_INSTANCE | refcnt<0>.REG | refcnt<0> | 0 | 2 | 1
+INPUT_NODE_TYPE | 0 | 8 | SRFF_D
+NODE | refcnt<0>.D | 4952 | ? | 0 | 0 | refcnt<0> | NULL | NULL | refcnt<0>.XOR | 0 | 7 | ALU_F
+INPUT_NODE_TYPE | 1 | 8 | SRFF_C
+NODE | FCLK-IO_0 | 4780 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | clk_IBUF | 7 | 5 | II_FCLKINV
+OUTPUT_NODE_TYPE | 0 | 8 | SRFF_Q
+NODE | refcnt<0>.Q | 4955 | ? | 0 | 0 | refcnt<0> | NULL | NULL | refcnt<0>.REG | 0 | 8 | SRFF_Q
+
+MACROCELL_INSTANCE | Inv+PrldLow+Tff+OptxMapped | refcnt<1> | cpumodule_COPY_0_COPY_0 | 2155877632 | 18 | 2
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<0> | 4819 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<0>.Q | refcnt<0> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<1> | 4814 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<1>.Q | counter<1> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<2> | 4815 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<2>.Q | counter<2> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | iocnt<2> | 4816 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | iocnt<2>.Q | iocnt<2> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | iocnt<0> | 4817 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | iocnt<0>.Q | iocnt<0> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | phi1_PIN_BUF_ | 5019 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | Pfbk_Created_phi1 | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<0> | 4813 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<0>.Q | counter<0> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | iocnt<1> | 4818 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | iocnt<1>.Q | iocnt<1> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<1> | 4820 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<1>.Q | refcnt<1> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<2> | 4821 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<2>.Q | refcnt<2> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | FCLK-IO_0 | 4780 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | clk_IBUF | 7 | 5 | II_FCLKINV
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<3> | 4822 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<3>.Q | refcnt<3> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<4> | 4823 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<4>.Q | refcnt<4> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<5> | 4824 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<5>.Q | refcnt<5> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<6> | 4825 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<6>.Q | refcnt<6> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<7> | 4826 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<7>.Q | refcnt<7> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | phi0_OBUF.EXP | 5012 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | phi0_OBUF.EXP | phi0_OBUF | 4 | 0 | MC_EXPORT
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | rom_PIN_BUF_ | 5018 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | Pfbk_Created_rom | 0 | 5 | II_IMUX
+OUTPUT_NODE_TYPE | 1 | 0 | MC_UIM
+NODE | refcnt<1> | 4820 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<1>.Q | refcnt<1> | 1 | 0 | MC_UIM
+OUTPUT_NODE_TYPE | 4 | 0 | MC_EXPORT
+NODE | refcnt<1>.EXP | 5013 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<1>.EXP | refcnt<1> | 4 | 0 | MC_EXPORT
+
+SIGNAL_INSTANCE | refcnt<1>.SI | refcnt<1> | 0 | 17 | 3
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<0> | 4819 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<0>.Q | refcnt<0> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<1> | 4814 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<1>.Q | counter<1> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<2> | 4815 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<2>.Q | counter<2> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | iocnt<2> | 4816 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | iocnt<2>.Q | iocnt<2> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | iocnt<0> | 4817 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | iocnt<0>.Q | iocnt<0> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | phi1_PIN_BUF_ | 5019 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | Pfbk_Created_phi1 | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<0> | 4813 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<0>.Q | counter<0> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | iocnt<1> | 4818 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | iocnt<1>.Q | iocnt<1> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<1> | 4820 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<1>.Q | refcnt<1> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<2> | 4821 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<2>.Q | refcnt<2> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<3> | 4822 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<3>.Q | refcnt<3> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<4> | 4823 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<4>.Q | refcnt<4> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<5> | 4824 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<5>.Q | refcnt<5> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<6> | 4825 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<6>.Q | refcnt<6> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<7> | 4826 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<7>.Q | refcnt<7> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | phi0_OBUF.EXP | 5012 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | phi0_OBUF.EXP | phi0_OBUF | 4 | 0 | MC_EXPORT
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | rom_PIN_BUF_ | 5018 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | Pfbk_Created_rom | 0 | 5 | II_IMUX
+OUTPUT_NODE_TYPE | 1 | 9 | MC_SI_D1
+SIGNAL | NODE | refcnt<1>.D1 | 4957 | ? | 0 | 4096 | refcnt<1> | NULL | NULL | refcnt<1>.SI | 1 | 9 | MC_SI_D1
+SPPTERM | 0 | IV_ZERO
+OUTPUT_NODE_TYPE | 2 | 9 | MC_SI_D2
+SIGNAL | NODE | refcnt<1>.D2 | 4958 | ? | 0 | 4096 | refcnt<1> | NULL | NULL | refcnt<1>.SI | 2 | 9 | MC_SI_D2
+SPPTERM | 1 | IV_FALSE | counter<1>
+SPPTERM | 1 | IV_FALSE | counter<2>
+SPPTERM | 1 | IV_TRUE | refcnt<0>
+SPPTERM | 1 | IV_TRUE | phi0_OBUF.EXP
+OUTPUT_NODE_TYPE | 7 | 9 | MC_SI_EXPORT
+SIGNAL | NODE | refcnt<1>.EXP | 4998 | ? | 0 | 0 | refcnt<1> | NULL | NULL | refcnt<1>.SI | 7 | 9 | MC_SI_EXPORT
+SPPTERM | 3 | IV_TRUE | iocnt<2> | IV_FALSE | iocnt<0> | IV_FALSE | phi1_PIN_BUF_
+SPPTERM | 14 | IV_FALSE | counter<0> | IV_TRUE | counter<1> | IV_FALSE | iocnt<2> | IV_FALSE | iocnt<0> | IV_FALSE | iocnt<1> | IV_FALSE | refcnt<0> | IV_FALSE | refcnt<1> | IV_FALSE | refcnt<2> | IV_FALSE | refcnt<3> | IV_FALSE | refcnt<4> | IV_FALSE | refcnt<5> | IV_FALSE | refcnt<6> | IV_FALSE | refcnt<7> | IV_TRUE | rom_PIN_BUF_
+
+SRFF_INSTANCE | refcnt<1>.REG | refcnt<1> | 0 | 2 | 1
+INPUT_NODE_TYPE | 0 | 8 | SRFF_D
+NODE | refcnt<1>.D | 4956 | ? | 0 | 0 | refcnt<1> | NULL | NULL | refcnt<1>.XOR | 0 | 7 | ALU_F
+INPUT_NODE_TYPE | 1 | 8 | SRFF_C
+NODE | FCLK-IO_0 | 4780 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | clk_IBUF | 7 | 5 | II_FCLKINV
+OUTPUT_NODE_TYPE | 0 | 8 | SRFF_Q
+NODE | refcnt<1>.Q | 4959 | ? | 0 | 0 | refcnt<1> | NULL | NULL | refcnt<1>.REG | 0 | 8 | SRFF_Q
+
+MACROCELL_INSTANCE | PrldHigh+Tff+OptxMapped | refcnt<2> | cpumodule_COPY_0_COPY_0 | 2155876864 | 6 | 1
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<0> | 4813 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<0>.Q | counter<0> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<1> | 4814 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<1>.Q | counter<1> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<2> | 4815 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<2>.Q | counter<2> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<0> | 4819 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<0>.Q | refcnt<0> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<1> | 4820 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<1>.Q | refcnt<1> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | FCLK-IO_0 | 4780 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | clk_IBUF | 7 | 5 | II_FCLKINV
+OUTPUT_NODE_TYPE | 1 | 0 | MC_UIM
+NODE | refcnt<2> | 4821 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<2>.Q | refcnt<2> | 1 | 0 | MC_UIM
+
+SIGNAL_INSTANCE | refcnt<2>.SI | refcnt<2> | 0 | 5 | 2
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<0> | 4813 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<0>.Q | counter<0> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<1> | 4814 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<1>.Q | counter<1> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<2> | 4815 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<2>.Q | counter<2> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<0> | 4819 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<0>.Q | refcnt<0> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<1> | 4820 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<1>.Q | refcnt<1> | 1 | 0 | MC_UIM
+OUTPUT_NODE_TYPE | 1 | 9 | MC_SI_D1
+SIGNAL | NODE | refcnt<2>.D1 | 4961 | ? | 0 | 4096 | refcnt<2> | NULL | NULL | refcnt<2>.SI | 1 | 9 | MC_SI_D1
+SPPTERM | 0 | IV_ZERO
+OUTPUT_NODE_TYPE | 2 | 9 | MC_SI_D2
+SIGNAL | NODE | refcnt<2>.D2 | 4962 | ? | 0 | 4096 | refcnt<2> | NULL | NULL | refcnt<2>.SI | 2 | 9 | MC_SI_D2
+SPPTERM | 5 | IV_FALSE | counter<0> | IV_TRUE | counter<1> | IV_TRUE | counter<2> | IV_FALSE | refcnt<0> | IV_FALSE | refcnt<1>
+
+SRFF_INSTANCE | refcnt<2>.REG | refcnt<2> | 0 | 2 | 1
+INPUT_NODE_TYPE | 0 | 8 | SRFF_D
+NODE | refcnt<2>.D | 4960 | ? | 0 | 0 | refcnt<2> | NULL | NULL | refcnt<2>.XOR | 0 | 7 | ALU_F
+INPUT_NODE_TYPE | 1 | 8 | SRFF_C
+NODE | FCLK-IO_0 | 4780 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | clk_IBUF | 7 | 5 | II_FCLKINV
+OUTPUT_NODE_TYPE | 0 | 8 | SRFF_Q
+NODE | refcnt<2>.Q | 4963 | ? | 0 | 0 | refcnt<2> | NULL | NULL | refcnt<2>.REG | 0 | 8 | SRFF_Q
+
+MACROCELL_INSTANCE | PrldLow+Tff+OptxMapped | refcnt<3> | cpumodule_COPY_0_COPY_0 | 2155877376 | 9 | 2
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<0> | 4813 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<0>.Q | counter<0> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<1> | 4814 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<1>.Q | counter<1> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<2> | 4815 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<2>.Q | counter<2> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<0> | 4819 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<0>.Q | refcnt<0> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<1> | 4820 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<1>.Q | refcnt<1> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<2> | 4821 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<2>.Q | refcnt<2> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | FCLK-IO_0 | 4780 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | clk_IBUF | 7 | 5 | II_FCLKINV
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | a12_11_0_IBUF | 4774 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | a12_11_0_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | cas1_PIN_BUF_ | 5021 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | Pfbk_Created_cas1 | 0 | 5 | II_IMUX
+OUTPUT_NODE_TYPE | 1 | 0 | MC_UIM
+NODE | refcnt<3> | 4822 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<3>.Q | refcnt<3> | 1 | 0 | MC_UIM
+OUTPUT_NODE_TYPE | 4 | 0 | MC_EXPORT
+NODE | refcnt<3>.EXP | 5004 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<3>.EXP | refcnt<3> | 4 | 0 | MC_EXPORT
+
+SIGNAL_INSTANCE | refcnt<3>.SI | refcnt<3> | 0 | 8 | 3
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<0> | 4813 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<0>.Q | counter<0> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<1> | 4814 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<1>.Q | counter<1> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<2> | 4815 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<2>.Q | counter<2> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<0> | 4819 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<0>.Q | refcnt<0> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<1> | 4820 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<1>.Q | refcnt<1> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<2> | 4821 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<2>.Q | refcnt<2> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | a12_11_0_IBUF | 4774 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | a12_11_0_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | cas1_PIN_BUF_ | 5021 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | Pfbk_Created_cas1 | 0 | 5 | II_IMUX
+OUTPUT_NODE_TYPE | 1 | 9 | MC_SI_D1
+SIGNAL | NODE | refcnt<3>.D1 | 4965 | ? | 0 | 4096 | refcnt<3> | NULL | NULL | refcnt<3>.SI | 1 | 9 | MC_SI_D1
+SPPTERM | 0 | IV_ZERO
+OUTPUT_NODE_TYPE | 2 | 9 | MC_SI_D2
+SIGNAL | NODE | refcnt<3>.D2 | 4966 | ? | 0 | 4096 | refcnt<3> | NULL | NULL | refcnt<3>.SI | 2 | 9 | MC_SI_D2
+SPPTERM | 6 | IV_FALSE | counter<0> | IV_TRUE | counter<1> | IV_TRUE | counter<2> | IV_FALSE | refcnt<0> | IV_FALSE | refcnt<1> | IV_FALSE | refcnt<2>
+OUTPUT_NODE_TYPE | 7 | 9 | MC_SI_EXPORT
+SIGNAL | NODE | refcnt<3>.EXP | 4989 | ? | 0 | 0 | refcnt<3> | NULL | NULL | refcnt<3>.SI | 7 | 9 | MC_SI_EXPORT
+SPPTERM | 2 | IV_FALSE | a12_11_0_IBUF | IV_TRUE | cas1_PIN_BUF_
+SPPTERM | 2 | IV_TRUE | counter<0> | IV_TRUE | cas1_PIN_BUF_
+SPPTERM | 2 | IV_FALSE | counter<2> | IV_TRUE | cas1_PIN_BUF_
+SPPTERM | 3 | IV_FALSE | counter<0> | IV_TRUE | counter<1> | IV_TRUE | counter<2>
+
+SRFF_INSTANCE | refcnt<3>.REG | refcnt<3> | 0 | 2 | 1
+INPUT_NODE_TYPE | 0 | 8 | SRFF_D
+NODE | refcnt<3>.D | 4964 | ? | 0 | 0 | refcnt<3> | NULL | NULL | refcnt<3>.XOR | 0 | 7 | ALU_F
+INPUT_NODE_TYPE | 1 | 8 | SRFF_C
+NODE | FCLK-IO_0 | 4780 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | clk_IBUF | 7 | 5 | II_FCLKINV
+OUTPUT_NODE_TYPE | 0 | 8 | SRFF_Q
+NODE | refcnt<3>.Q | 4967 | ? | 0 | 0 | refcnt<3> | NULL | NULL | refcnt<3>.REG | 0 | 8 | SRFF_Q
+
+MACROCELL_INSTANCE | PrldLow+Tff+OptxMapped | refcnt<4> | cpumodule_COPY_0_COPY_0 | 2155877376 | 16 | 2
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<0> | 4813 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<0>.Q | counter<0> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<2> | 4815 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<2>.Q | counter<2> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | vda_IBUF | 4775 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | vda_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | vpa_IBUF | 4827 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | vpa_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<1> | 4814 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<1>.Q | counter<1> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<0> | 4819 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<0>.Q | refcnt<0> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<1> | 4820 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<1>.Q | refcnt<1> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<2> | 4821 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<2>.Q | refcnt<2> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<3> | 4822 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<3>.Q | refcnt<3> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<4> | 4823 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<4>.Q | refcnt<4> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | FCLK-IO_0 | 4780 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | clk_IBUF | 7 | 5 | II_FCLKINV
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<5> | 4824 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<5>.Q | refcnt<5> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<6> | 4825 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<6>.Q | refcnt<6> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<7> | 4826 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<7>.Q | refcnt<7> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | cas2_OBUF.EXP | 5008 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | cas2_OBUF.EXP | cas2_OBUF | 4 | 0 | MC_EXPORT
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | cas3_PIN_BUF_ | 5023 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | Pfbk_Created_cas3 | 0 | 5 | II_IMUX
+OUTPUT_NODE_TYPE | 1 | 0 | MC_UIM
+NODE | refcnt<4> | 4823 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<4>.Q | refcnt<4> | 1 | 0 | MC_UIM
+OUTPUT_NODE_TYPE | 4 | 0 | MC_EXPORT
+NODE | refcnt<4>.EXP | 5009 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<4>.EXP | refcnt<4> | 4 | 0 | MC_EXPORT
+
+SIGNAL_INSTANCE | refcnt<4>.SI | refcnt<4> | 0 | 15 | 3
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<0> | 4813 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<0>.Q | counter<0> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<2> | 4815 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<2>.Q | counter<2> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | vda_IBUF | 4775 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | vda_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | vpa_IBUF | 4827 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | vpa_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<1> | 4814 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<1>.Q | counter<1> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<0> | 4819 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<0>.Q | refcnt<0> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<1> | 4820 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<1>.Q | refcnt<1> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<2> | 4821 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<2>.Q | refcnt<2> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<3> | 4822 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<3>.Q | refcnt<3> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<4> | 4823 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<4>.Q | refcnt<4> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<5> | 4824 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<5>.Q | refcnt<5> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<6> | 4825 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<6>.Q | refcnt<6> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<7> | 4826 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<7>.Q | refcnt<7> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | cas2_OBUF.EXP | 5008 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | cas2_OBUF.EXP | cas2_OBUF | 4 | 0 | MC_EXPORT
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | cas3_PIN_BUF_ | 5023 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | Pfbk_Created_cas3 | 0 | 5 | II_IMUX
+OUTPUT_NODE_TYPE | 1 | 9 | MC_SI_D1
+SIGNAL | NODE | refcnt<4>.D1 | 4969 | ? | 0 | 4096 | refcnt<4> | NULL | NULL | refcnt<4>.SI | 1 | 9 | MC_SI_D1
+SPPTERM | 0 | IV_ZERO
+OUTPUT_NODE_TYPE | 2 | 9 | MC_SI_D2
+SIGNAL | NODE | refcnt<4>.D2 | 4970 | ? | 0 | 4096 | refcnt<4> | NULL | NULL | refcnt<4>.SI | 2 | 9 | MC_SI_D2
+SPPTERM | 1 | IV_TRUE | cas2_OBUF.EXP
+OUTPUT_NODE_TYPE | 7 | 9 | MC_SI_EXPORT
+SIGNAL | NODE | refcnt<4>.EXP | 4994 | ? | 0 | 0 | refcnt<4> | NULL | NULL | refcnt<4>.SI | 7 | 9 | MC_SI_EXPORT
+SPPTERM | 2 | IV_TRUE | counter<0> | IV_TRUE | cas3_PIN_BUF_
+SPPTERM | 2 | IV_FALSE | counter<2> | IV_TRUE | cas3_PIN_BUF_
+SPPTERM | 3 | IV_FALSE | vda_IBUF | IV_FALSE | vpa_IBUF | IV_TRUE | cas3_PIN_BUF_
+SPPTERM | 3 | IV_FALSE | counter<0> | IV_TRUE | counter<1> | IV_TRUE | counter<2>
+SPPTERM | 9 | IV_FALSE | refcnt<0> | IV_FALSE | refcnt<1> | IV_FALSE | refcnt<2> | IV_FALSE | refcnt<3> | IV_FALSE | refcnt<4> | IV_FALSE | refcnt<5> | IV_FALSE | refcnt<6> | IV_FALSE | refcnt<7> | IV_TRUE | cas3_PIN_BUF_
+
+SRFF_INSTANCE | refcnt<4>.REG | refcnt<4> | 0 | 2 | 1
+INPUT_NODE_TYPE | 0 | 8 | SRFF_D
+NODE | refcnt<4>.D | 4968 | ? | 0 | 0 | refcnt<4> | NULL | NULL | refcnt<4>.XOR | 0 | 7 | ALU_F
+INPUT_NODE_TYPE | 1 | 8 | SRFF_C
+NODE | FCLK-IO_0 | 4780 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | clk_IBUF | 7 | 5 | II_FCLKINV
+OUTPUT_NODE_TYPE | 0 | 8 | SRFF_Q
+NODE | refcnt<4>.Q | 4971 | ? | 0 | 0 | refcnt<4> | NULL | NULL | refcnt<4>.REG | 0 | 8 | SRFF_Q
+
+MACROCELL_INSTANCE | PrldLow+Tff+OptxMapped | refcnt<5> | cpumodule_COPY_0_COPY_0 | 2155877376 | 15 | 2
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<0> | 4813 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<0>.Q | counter<0> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<1> | 4814 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<1>.Q | counter<1> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<2> | 4815 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<2>.Q | counter<2> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<0> | 4819 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<0>.Q | refcnt<0> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<1> | 4820 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<1>.Q | refcnt<1> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<2> | 4821 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<2>.Q | refcnt<2> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<3> | 4822 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<3>.Q | refcnt<3> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<4> | 4823 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<4>.Q | refcnt<4> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<6> | 4825 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<6>.Q | refcnt<6> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<7> | 4826 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<7>.Q | refcnt<7> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<5> | 4824 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<5>.Q | refcnt<5> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | FCLK-IO_0 | 4780 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | clk_IBUF | 7 | 5 | II_FCLKINV
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | vda_IBUF | 4775 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | vda_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | vpa_IBUF | 4827 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | vpa_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | cas1_PIN_BUF_ | 5021 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | Pfbk_Created_cas1 | 0 | 5 | II_IMUX
+OUTPUT_NODE_TYPE | 1 | 0 | MC_UIM
+NODE | refcnt<5> | 4824 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<5>.Q | refcnt<5> | 1 | 0 | MC_UIM
+OUTPUT_NODE_TYPE | 4 | 0 | MC_EXPORT
+NODE | refcnt<5>.EXP | 5005 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<5>.EXP | refcnt<5> | 4 | 0 | MC_EXPORT
+
+SIGNAL_INSTANCE | refcnt<5>.SI | refcnt<5> | 0 | 14 | 3
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<0> | 4813 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<0>.Q | counter<0> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<1> | 4814 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<1>.Q | counter<1> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<2> | 4815 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<2>.Q | counter<2> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<0> | 4819 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<0>.Q | refcnt<0> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<1> | 4820 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<1>.Q | refcnt<1> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<2> | 4821 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<2>.Q | refcnt<2> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<3> | 4822 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<3>.Q | refcnt<3> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<4> | 4823 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<4>.Q | refcnt<4> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<6> | 4825 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<6>.Q | refcnt<6> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<7> | 4826 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<7>.Q | refcnt<7> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<5> | 4824 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<5>.Q | refcnt<5> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | vda_IBUF | 4775 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | vda_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | vpa_IBUF | 4827 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | vpa_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | cas1_PIN_BUF_ | 5021 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | Pfbk_Created_cas1 | 0 | 5 | II_IMUX
+OUTPUT_NODE_TYPE | 1 | 9 | MC_SI_D1
+SIGNAL | NODE | refcnt<5>.D1 | 4973 | ? | 0 | 4096 | refcnt<5> | NULL | NULL | refcnt<5>.SI | 1 | 9 | MC_SI_D1
+SPPTERM | 0 | IV_ZERO
+OUTPUT_NODE_TYPE | 2 | 9 | MC_SI_D2
+SIGNAL | NODE | refcnt<5>.D2 | 4974 | ? | 0 | 4096 | refcnt<5> | NULL | NULL | refcnt<5>.SI | 2 | 9 | MC_SI_D2
+SPPTERM | 9 | IV_FALSE | counter<0> | IV_TRUE | counter<1> | IV_TRUE | counter<2> | IV_FALSE | refcnt<0> | IV_FALSE | refcnt<1> | IV_FALSE | refcnt<2> | IV_FALSE | refcnt<3> | IV_FALSE | refcnt<4> | IV_TRUE | refcnt<5>
+SPPTERM | 9 | IV_FALSE | counter<0> | IV_TRUE | counter<1> | IV_TRUE | counter<2> | IV_FALSE | refcnt<0> | IV_FALSE | refcnt<1> | IV_FALSE | refcnt<2> | IV_FALSE | refcnt<3> | IV_FALSE | refcnt<4> | IV_TRUE | refcnt<6>
+SPPTERM | 9 | IV_FALSE | counter<0> | IV_TRUE | counter<1> | IV_TRUE | counter<2> | IV_FALSE | refcnt<0> | IV_FALSE | refcnt<1> | IV_FALSE | refcnt<2> | IV_FALSE | refcnt<3> | IV_FALSE | refcnt<4> | IV_TRUE | refcnt<7>
+OUTPUT_NODE_TYPE | 7 | 9 | MC_SI_EXPORT
+SIGNAL | NODE | refcnt<5>.EXP | 4990 | ? | 0 | 0 | refcnt<5> | NULL | NULL | refcnt<5>.SI | 7 | 9 | MC_SI_EXPORT
+SPPTERM | 3 | IV_FALSE | vda_IBUF | IV_FALSE | vpa_IBUF | IV_TRUE | cas1_PIN_BUF_
+SPPTERM | 9 | IV_FALSE | refcnt<0> | IV_FALSE | refcnt<1> | IV_FALSE | refcnt<2> | IV_FALSE | refcnt<3> | IV_FALSE | refcnt<4> | IV_FALSE | refcnt<5> | IV_FALSE | refcnt<6> | IV_FALSE | refcnt<7> | IV_TRUE | cas1_PIN_BUF_
+
+SRFF_INSTANCE | refcnt<5>.REG | refcnt<5> | 0 | 2 | 1
+INPUT_NODE_TYPE | 0 | 8 | SRFF_D
+NODE | refcnt<5>.D | 4972 | ? | 0 | 0 | refcnt<5> | NULL | NULL | refcnt<5>.XOR | 0 | 7 | ALU_F
+INPUT_NODE_TYPE | 1 | 8 | SRFF_C
+NODE | FCLK-IO_0 | 4780 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | clk_IBUF | 7 | 5 | II_FCLKINV
+OUTPUT_NODE_TYPE | 0 | 8 | SRFF_Q
+NODE | refcnt<5>.Q | 4975 | ? | 0 | 0 | refcnt<5> | NULL | NULL | refcnt<5>.REG | 0 | 8 | SRFF_Q
+
+MACROCELL_INSTANCE | PrldLow+Tff+OptxMapped | refcnt<6> | cpumodule_COPY_0_COPY_0 | 2155877376 | 16 | 2
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<0> | 4813 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<0>.Q | counter<0> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<1> | 4814 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<1>.Q | counter<1> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<2> | 4815 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<2>.Q | counter<2> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<0> | 4819 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<0>.Q | refcnt<0> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<1> | 4820 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<1>.Q | refcnt<1> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<2> | 4821 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<2>.Q | refcnt<2> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<3> | 4822 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<3>.Q | refcnt<3> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<4> | 4823 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<4>.Q | refcnt<4> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<5> | 4824 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<5>.Q | refcnt<5> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<7> | 4826 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<7>.Q | refcnt<7> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<6> | 4825 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<6>.Q | refcnt<6> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | FCLK-IO_0 | 4780 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | clk_IBUF | 7 | 5 | II_FCLKINV
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | a12_11_1_IBUF | 4773 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | a12_11_1_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | a12_11_0_IBUF | 4774 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | a12_11_0_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | iocnt<2> | 4816 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | iocnt<2>.Q | iocnt<2> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | cas0_PIN_BUF_ | 5020 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | Pfbk_Created_cas0 | 0 | 5 | II_IMUX
+OUTPUT_NODE_TYPE | 1 | 0 | MC_UIM
+NODE | refcnt<6> | 4825 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<6>.Q | refcnt<6> | 1 | 0 | MC_UIM
+OUTPUT_NODE_TYPE | 4 | 0 | MC_EXPORT
+NODE | refcnt<6>.EXP | 5003 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<6>.EXP | refcnt<6> | 4 | 0 | MC_EXPORT
+
+SIGNAL_INSTANCE | refcnt<6>.SI | refcnt<6> | 0 | 15 | 3
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<0> | 4813 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<0>.Q | counter<0> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<1> | 4814 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<1>.Q | counter<1> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<2> | 4815 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<2>.Q | counter<2> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<0> | 4819 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<0>.Q | refcnt<0> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<1> | 4820 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<1>.Q | refcnt<1> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<2> | 4821 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<2>.Q | refcnt<2> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<3> | 4822 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<3>.Q | refcnt<3> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<4> | 4823 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<4>.Q | refcnt<4> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<5> | 4824 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<5>.Q | refcnt<5> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<7> | 4826 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<7>.Q | refcnt<7> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<6> | 4825 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<6>.Q | refcnt<6> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | a12_11_1_IBUF | 4773 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | a12_11_1_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | a12_11_0_IBUF | 4774 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | a12_11_0_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | iocnt<2> | 4816 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | iocnt<2>.Q | iocnt<2> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | cas0_PIN_BUF_ | 5020 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | Pfbk_Created_cas0 | 0 | 5 | II_IMUX
+OUTPUT_NODE_TYPE | 1 | 9 | MC_SI_D1
+SIGNAL | NODE | refcnt<6>.D1 | 4977 | ? | 0 | 4096 | refcnt<6> | NULL | NULL | refcnt<6>.SI | 1 | 9 | MC_SI_D1
+SPPTERM | 0 | IV_ZERO
+OUTPUT_NODE_TYPE | 2 | 9 | MC_SI_D2
+SIGNAL | NODE | refcnt<6>.D2 | 4978 | ? | 0 | 4096 | refcnt<6> | NULL | NULL | refcnt<6>.SI | 2 | 9 | MC_SI_D2
+SPPTERM | 10 | IV_FALSE | counter<0> | IV_TRUE | counter<1> | IV_TRUE | counter<2> | IV_FALSE | refcnt<0> | IV_FALSE | refcnt<1> | IV_FALSE | refcnt<2> | IV_FALSE | refcnt<3> | IV_FALSE | refcnt<4> | IV_FALSE | refcnt<5> | IV_TRUE | refcnt<6>
+SPPTERM | 10 | IV_FALSE | counter<0> | IV_TRUE | counter<1> | IV_TRUE | counter<2> | IV_FALSE | refcnt<0> | IV_FALSE | refcnt<1> | IV_FALSE | refcnt<2> | IV_FALSE | refcnt<3> | IV_FALSE | refcnt<4> | IV_FALSE | refcnt<5> | IV_TRUE | refcnt<7>
+OUTPUT_NODE_TYPE | 7 | 9 | MC_SI_EXPORT
+SIGNAL | NODE | refcnt<6>.EXP | 4988 | ? | 0 | 0 | refcnt<6> | NULL | NULL | refcnt<6>.SI | 7 | 9 | MC_SI_EXPORT
+SPPTERM | 3 | IV_TRUE | a12_11_1_IBUF | IV_TRUE | counter<2> | IV_TRUE | cas0_PIN_BUF_
+SPPTERM | 3 | IV_TRUE | a12_11_0_IBUF | IV_TRUE | counter<2> | IV_TRUE | cas0_PIN_BUF_
+SPPTERM | 3 | IV_TRUE | counter<2> | IV_TRUE | iocnt<2> | IV_TRUE | cas0_PIN_BUF_
+
+SRFF_INSTANCE | refcnt<6>.REG | refcnt<6> | 0 | 2 | 1
+INPUT_NODE_TYPE | 0 | 8 | SRFF_D
+NODE | refcnt<6>.D | 4976 | ? | 0 | 0 | refcnt<6> | NULL | NULL | refcnt<6>.XOR | 0 | 7 | ALU_F
+INPUT_NODE_TYPE | 1 | 8 | SRFF_C
+NODE | FCLK-IO_0 | 4780 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | clk_IBUF | 7 | 5 | II_FCLKINV
+OUTPUT_NODE_TYPE | 0 | 8 | SRFF_Q
+NODE | refcnt<6>.Q | 4979 | ? | 0 | 0 | refcnt<6> | NULL | NULL | refcnt<6>.REG | 0 | 8 | SRFF_Q
+
+MACROCELL_INSTANCE | PrldLow+Tff+OptxMapped | refcnt<7> | cpumodule_COPY_0_COPY_0 | 2155877376 | 17 | 2
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | cas0_PIN_BUF_ | 5020 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | Pfbk_Created_cas0 | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<2> | 4815 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<2>.Q | counter<2> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | iocnt<0> | 4817 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | iocnt<0>.Q | iocnt<0> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | iocnt<1> | 4818 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | iocnt<1>.Q | iocnt<1> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | vda_IBUF | 4775 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | vda_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | vpa_IBUF | 4827 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | vpa_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<0> | 4819 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<0>.Q | refcnt<0> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<1> | 4820 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<1>.Q | refcnt<1> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<2> | 4821 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<2>.Q | refcnt<2> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | FCLK-IO_0 | 4780 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | clk_IBUF | 7 | 5 | II_FCLKINV
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<3> | 4822 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<3>.Q | refcnt<3> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<4> | 4823 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<4>.Q | refcnt<4> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<5> | 4824 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<5>.Q | refcnt<5> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<6> | 4825 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<6>.Q | refcnt<6> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<7> | 4826 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<7>.Q | refcnt<7> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | ras_OBUF.EXP | 5015 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | ras_OBUF.EXP | ras_OBUF | 4 | 0 | MC_EXPORT
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | rom_PIN_BUF_ | 5018 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | Pfbk_Created_rom | 0 | 5 | II_IMUX
+OUTPUT_NODE_TYPE | 1 | 0 | MC_UIM
+NODE | refcnt<7> | 4826 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<7>.Q | refcnt<7> | 1 | 0 | MC_UIM
+OUTPUT_NODE_TYPE | 4 | 0 | MC_EXPORT
+NODE | refcnt<7>.EXP | 5016 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<7>.EXP | refcnt<7> | 4 | 0 | MC_EXPORT
+
+SIGNAL_INSTANCE | refcnt<7>.SI | refcnt<7> | 0 | 16 | 3
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | cas0_PIN_BUF_ | 5020 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | Pfbk_Created_cas0 | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<2> | 4815 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<2>.Q | counter<2> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | iocnt<0> | 4817 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | iocnt<0>.Q | iocnt<0> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | iocnt<1> | 4818 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | iocnt<1>.Q | iocnt<1> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | vda_IBUF | 4775 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | vda_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | vpa_IBUF | 4827 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | vpa_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<0> | 4819 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<0>.Q | refcnt<0> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<1> | 4820 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<1>.Q | refcnt<1> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<2> | 4821 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<2>.Q | refcnt<2> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<3> | 4822 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<3>.Q | refcnt<3> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<4> | 4823 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<4>.Q | refcnt<4> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<5> | 4824 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<5>.Q | refcnt<5> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<6> | 4825 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<6>.Q | refcnt<6> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<7> | 4826 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<7>.Q | refcnt<7> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | ras_OBUF.EXP | 5015 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | ras_OBUF.EXP | ras_OBUF | 4 | 0 | MC_EXPORT
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | rom_PIN_BUF_ | 5018 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | Pfbk_Created_rom | 0 | 5 | II_IMUX
+OUTPUT_NODE_TYPE | 1 | 9 | MC_SI_D1
+SIGNAL | NODE | refcnt<7>.D1 | 4981 | ? | 0 | 4096 | refcnt<7> | NULL | NULL | refcnt<7>.SI | 1 | 9 | MC_SI_D1
+SPPTERM | 0 | IV_ZERO
+OUTPUT_NODE_TYPE | 2 | 9 | MC_SI_D2
+SIGNAL | NODE | refcnt<7>.D2 | 4982 | ? | 0 | 4096 | refcnt<7> | NULL | NULL | refcnt<7>.SI | 2 | 9 | MC_SI_D2
+SPPTERM | 1 | IV_TRUE | ras_OBUF.EXP
+OUTPUT_NODE_TYPE | 7 | 9 | MC_SI_EXPORT
+SIGNAL | NODE | refcnt<7>.EXP | 5001 | ? | 0 | 0 | refcnt<7> | NULL | NULL | refcnt<7>.SI | 7 | 9 | MC_SI_EXPORT
+SPPTERM | 3 | IV_TRUE | counter<2> | IV_TRUE | iocnt<0> | IV_TRUE | cas0_PIN_BUF_
+SPPTERM | 3 | IV_TRUE | counter<2> | IV_TRUE | iocnt<1> | IV_TRUE | cas0_PIN_BUF_
+SPPTERM | 3 | IV_TRUE | counter<2> | IV_FALSE | rom_PIN_BUF_ | IV_TRUE | cas0_PIN_BUF_
+SPPTERM | 4 | IV_FALSE | vda_IBUF | IV_TRUE | counter<2> | IV_FALSE | vpa_IBUF | IV_TRUE | cas0_PIN_BUF_
+SPPTERM | 10 | IV_TRUE | counter<2> | IV_FALSE | refcnt<0> | IV_FALSE | refcnt<1> | IV_FALSE | refcnt<2> | IV_FALSE | refcnt<3> | IV_FALSE | refcnt<4> | IV_FALSE | refcnt<5> | IV_FALSE | refcnt<6> | IV_FALSE | refcnt<7> | IV_TRUE | cas0_PIN_BUF_
+
+SRFF_INSTANCE | refcnt<7>.REG | refcnt<7> | 0 | 2 | 1
+INPUT_NODE_TYPE | 0 | 8 | SRFF_D
+NODE | refcnt<7>.D | 4980 | ? | 0 | 0 | refcnt<7> | NULL | NULL | refcnt<7>.XOR | 0 | 7 | ALU_F
+INPUT_NODE_TYPE | 1 | 8 | SRFF_C
+NODE | FCLK-IO_0 | 4780 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | clk_IBUF | 7 | 5 | II_FCLKINV
+OUTPUT_NODE_TYPE | 0 | 8 | SRFF_Q
+NODE | refcnt<7>.Q | 4983 | ? | 0 | 0 | refcnt<7> | NULL | NULL | refcnt<7>.REG | 0 | 8 | SRFF_Q
+
+OUTPUT_INSTANCE | 0 | rom | cpumodule_COPY_0_COPY_0 | 3 | 1 | 1
+INPUT_NODE_TYPE | 0 | 6 | OI_IN
+NODE | rom_OBUF$Q | 4781 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | rom_OBUF.Q | rom_OBUF | 0 | 0 | MC_Q
+OUTPUT_NODE_TYPE | 0 | 6 | OI_OUT
+NODE | rom | 4829 | PO | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | rom | 0 | 6 | OI_OUT
+
+OUTPUT_INSTANCE | 0 | phi1 | cpumodule_COPY_0_COPY_0 | 3 | 1 | 1
+INPUT_NODE_TYPE | 0 | 6 | OI_IN
+NODE | phi1_OBUF$Q | 4783 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | phi1_OBUF.Q | phi1_OBUF | 0 | 0 | MC_Q
+OUTPUT_NODE_TYPE | 0 | 6 | OI_OUT
+NODE | phi1 | 4830 | PO | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | phi1 | 0 | 6 | OI_OUT
+
+OUTPUT_INSTANCE | 0 | cas0 | cpumodule_COPY_0_COPY_0 | 3 | 1 | 1
+INPUT_NODE_TYPE | 0 | 6 | OI_IN
+NODE | cas0_OBUF$Q | 4785 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | cas0_OBUF.Q | cas0_OBUF | 0 | 0 | MC_Q
+OUTPUT_NODE_TYPE | 0 | 6 | OI_OUT
+NODE | cas0 | 4831 | PO | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | cas0 | 0 | 6 | OI_OUT
+
+OUTPUT_INSTANCE | 0 | cas1 | cpumodule_COPY_0_COPY_0 | 3 | 1 | 1
+INPUT_NODE_TYPE | 0 | 6 | OI_IN
+NODE | cas1_OBUF$Q | 4787 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | cas1_OBUF.Q | cas1_OBUF | 0 | 0 | MC_Q
+OUTPUT_NODE_TYPE | 0 | 6 | OI_OUT
+NODE | cas1 | 4832 | PO | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | cas1 | 0 | 6 | OI_OUT
+
+OUTPUT_INSTANCE | 0 | cas2 | cpumodule_COPY_0_COPY_0 | 3 | 1 | 1
+INPUT_NODE_TYPE | 0 | 6 | OI_IN
+NODE | cas2_OBUF$Q | 4789 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | cas2_OBUF.Q | cas2_OBUF | 0 | 0 | MC_Q
+OUTPUT_NODE_TYPE | 0 | 6 | OI_OUT
+NODE | cas2 | 4833 | PO | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | cas2 | 0 | 6 | OI_OUT
+
+OUTPUT_INSTANCE | 0 | cas3 | cpumodule_COPY_0_COPY_0 | 3 | 1 | 1
+INPUT_NODE_TYPE | 0 | 6 | OI_IN
+NODE | cas3_OBUF$Q | 4791 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | cas3_OBUF.Q | cas3_OBUF | 0 | 0 | MC_Q
+OUTPUT_NODE_TYPE | 0 | 6 | OI_OUT
+NODE | cas3 | 4834 | PO | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | cas3 | 0 | 6 | OI_OUT
+
+OUTPUT_INSTANCE | 0 | io0 | cpumodule_COPY_0_COPY_0 | 3 | 1 | 1
+INPUT_NODE_TYPE | 0 | 6 | OI_IN
+NODE | io0_OBUF$Q | 4793 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | io0_OBUF.Q | io0_OBUF | 0 | 0 | MC_Q
+OUTPUT_NODE_TYPE | 0 | 6 | OI_OUT
+NODE | io0 | 4835 | PO | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | io0 | 0 | 6 | OI_OUT
+
+OUTPUT_INSTANCE | 0 | io1 | cpumodule_COPY_0_COPY_0 | 3 | 1 | 1
+INPUT_NODE_TYPE | 0 | 6 | OI_IN
+NODE | io1_OBUF$Q | 4795 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | io1_OBUF.Q | io1_OBUF | 0 | 0 | MC_Q
+OUTPUT_NODE_TYPE | 0 | 6 | OI_OUT
+NODE | io1 | 4836 | PO | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | io1 | 0 | 6 | OI_OUT
+
+OUTPUT_INSTANCE | 0 | io2 | cpumodule_COPY_0_COPY_0 | 3 | 1 | 1
+INPUT_NODE_TYPE | 0 | 6 | OI_IN
+NODE | io2_OBUF$Q | 4797 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | io2_OBUF.Q | io2_OBUF | 0 | 0 | MC_Q
+OUTPUT_NODE_TYPE | 0 | 6 | OI_OUT
+NODE | io2 | 4837 | PO | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | io2 | 0 | 6 | OI_OUT
+
+OUTPUT_INSTANCE | 0 | io3 | cpumodule_COPY_0_COPY_0 | 3 | 1 | 1
+INPUT_NODE_TYPE | 0 | 6 | OI_IN
+NODE | io3_OBUF$Q | 4799 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | io3_OBUF.Q | io3_OBUF | 0 | 0 | MC_Q
+OUTPUT_NODE_TYPE | 0 | 6 | OI_OUT
+NODE | io3 | 4838 | PO | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | io3 | 0 | 6 | OI_OUT
+
+OUTPUT_INSTANCE | 0 | io4 | cpumodule_COPY_0_COPY_0 | 3 | 1 | 1
+INPUT_NODE_TYPE | 0 | 6 | OI_IN
+NODE | io4_OBUF$Q | 4801 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | io4_OBUF.Q | io4_OBUF | 0 | 0 | MC_Q
+OUTPUT_NODE_TYPE | 0 | 6 | OI_OUT
+NODE | io4 | 4839 | PO | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | io4 | 0 | 6 | OI_OUT
+
+OUTPUT_INSTANCE | 0 | io5 | cpumodule_COPY_0_COPY_0 | 3 | 1 | 1
+INPUT_NODE_TYPE | 0 | 6 | OI_IN
+NODE | io5_OBUF$Q | 4803 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | io5_OBUF.Q | io5_OBUF | 0 | 0 | MC_Q
+OUTPUT_NODE_TYPE | 0 | 6 | OI_OUT
+NODE | io5 | 4840 | PO | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | io5 | 0 | 6 | OI_OUT
+
+OUTPUT_INSTANCE | 0 | io6 | cpumodule_COPY_0_COPY_0 | 3 | 1 | 1
+INPUT_NODE_TYPE | 0 | 6 | OI_IN
+NODE | io6_OBUF$Q | 4805 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | io6_OBUF.Q | io6_OBUF | 0 | 0 | MC_Q
+OUTPUT_NODE_TYPE | 0 | 6 | OI_OUT
+NODE | io6 | 4841 | PO | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | io6 | 0 | 6 | OI_OUT
+
+OUTPUT_INSTANCE | 0 | io7 | cpumodule_COPY_0_COPY_0 | 3 | 1 | 1
+INPUT_NODE_TYPE | 0 | 6 | OI_IN
+NODE | io7_OBUF$Q | 4807 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | io7_OBUF.Q | io7_OBUF | 0 | 0 | MC_Q
+OUTPUT_NODE_TYPE | 0 | 6 | OI_OUT
+NODE | io7 | 4842 | PO | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | io7 | 0 | 6 | OI_OUT
+
+OUTPUT_INSTANCE | 0 | phi0 | cpumodule_COPY_0_COPY_0 | 3 | 1 | 1
+INPUT_NODE_TYPE | 0 | 6 | OI_IN
+NODE | phi0_OBUF$Q | 4809 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | phi0_OBUF.Q | phi0_OBUF | 0 | 0 | MC_Q
+OUTPUT_NODE_TYPE | 0 | 6 | OI_OUT
+NODE | phi0 | 4843 | PO | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | phi0 | 0 | 6 | OI_OUT
+
+OUTPUT_INSTANCE | 0 | ras | cpumodule_COPY_0_COPY_0 | 3 | 1 | 1
+INPUT_NODE_TYPE | 0 | 6 | OI_IN
+NODE | ras_OBUF$Q | 4811 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | ras_OBUF.Q | ras_OBUF | 0 | 0 | MC_Q
+OUTPUT_NODE_TYPE | 0 | 6 | OI_OUT
+NODE | ras | 4844 | PO | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | ras | 0 | 6 | OI_OUT
+
+MACROCELL_INSTANCE | SoftPfbk | $OpTx$FX_DC$50 | cpumodule_COPY_0_COPY_0 | 2181038080 | 15 | 1
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | vda_IBUF | 4775 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | vda_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | vpa_IBUF | 4827 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | vpa_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | bank_7_IBUF | 4765 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | bank_7_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | bank_6_IBUF | 4766 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | bank_6_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | bank_5_IBUF | 4767 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | bank_5_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | bank_4_IBUF | 4768 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | bank_4_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | bank_3_IBUF | 4769 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | bank_3_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | bank_2_IBUF | 4770 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | bank_2_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | bank_1_IBUF | 4771 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | bank_1_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | bank_0_IBUF | 4772 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | bank_0_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | a15_13_2_IBUF | 4776 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | a15_13_2_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | a15_13_1_IBUF | 4777 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | a15_13_1_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | a15_13_0_IBUF | 4778 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | a15_13_0_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | rw_IBUF | 4828 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | rw_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | ras_PIN_BUF_ | 5033 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | Pfbk_Created_ras | 0 | 5 | II_IMUX
+OUTPUT_NODE_TYPE | 1 | 0 | MC_UIM
+NODE | $OpTx$FX_DC$50.UIM | 4845 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | $OpTx$FX_DC$50.Q | $OpTx$FX_DC$50 | 1 | 0 | MC_UIM
+
+SIGNAL_INSTANCE | $OpTx$FX_DC$50.SI | $OpTx$FX_DC$50 | 0 | 15 | 2
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | vda_IBUF | 4775 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | vda_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | vpa_IBUF | 4827 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | vpa_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | bank_7_IBUF | 4765 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | bank_7_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | bank_6_IBUF | 4766 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | bank_6_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | bank_5_IBUF | 4767 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | bank_5_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | bank_4_IBUF | 4768 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | bank_4_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | bank_3_IBUF | 4769 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | bank_3_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | bank_2_IBUF | 4770 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | bank_2_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | bank_1_IBUF | 4771 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | bank_1_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | bank_0_IBUF | 4772 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | bank_0_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | a15_13_2_IBUF | 4776 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | a15_13_2_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | a15_13_1_IBUF | 4777 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | a15_13_1_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | a15_13_0_IBUF | 4778 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | a15_13_0_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | rw_IBUF | 4828 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | rw_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | ras_PIN_BUF_ | 5033 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | Pfbk_Created_ras | 0 | 5 | II_IMUX
+OUTPUT_NODE_TYPE | 1 | 9 | MC_SI_D1
+SIGNAL | NODE | $OpTx$FX_DC$50.D1 | 4985 | ? | 0 | 4096 | $OpTx$FX_DC$50 | NULL | NULL | $OpTx$FX_DC$50.SI | 1 | 9 | MC_SI_D1
+SPPTERM | 0 | IV_ZERO
+OUTPUT_NODE_TYPE | 2 | 9 | MC_SI_D2
+SIGNAL | NODE | $OpTx$FX_DC$50.D2 | 4986 | ? | 0 | 4096 | $OpTx$FX_DC$50 | NULL | NULL | $OpTx$FX_DC$50.SI | 2 | 9 | MC_SI_D2
+SPPTERM | 3 | IV_FALSE | vda_IBUF | IV_FALSE | vpa_IBUF | IV_TRUE | ras_PIN_BUF_
+SPPTERM | 12 | IV_TRUE | bank_7_IBUF | IV_TRUE | bank_6_IBUF | IV_TRUE | bank_5_IBUF | IV_TRUE | bank_4_IBUF | IV_TRUE | bank_3_IBUF | IV_TRUE | bank_2_IBUF | IV_TRUE | bank_1_IBUF | IV_TRUE | bank_0_IBUF | IV_TRUE | a15_13_2_IBUF | IV_TRUE | a15_13_1_IBUF | IV_TRUE | a15_13_0_IBUF | IV_TRUE | ras_PIN_BUF_
+SPPTERM | 13 | IV_FALSE | bank_7_IBUF | IV_FALSE | bank_6_IBUF | IV_FALSE | bank_5_IBUF | IV_FALSE | bank_4_IBUF | IV_FALSE | bank_3_IBUF | IV_FALSE | bank_2_IBUF | IV_FALSE | bank_1_IBUF | IV_FALSE | bank_0_IBUF | IV_TRUE | a15_13_2_IBUF | IV_TRUE | a15_13_1_IBUF | IV_TRUE | a15_13_0_IBUF | IV_TRUE | rw_IBUF | IV_TRUE | ras_PIN_BUF_
+
+SRFF_INSTANCE | $OpTx$FX_DC$50.REG | $OpTx$FX_DC$50 | 0 | 1 | 1
+INPUT_NODE_TYPE | 0 | 8 | SRFF_D
+NODE | $OpTx$FX_DC$50.D | 4984 | ? | 0 | 0 | $OpTx$FX_DC$50 | NULL | NULL | $OpTx$FX_DC$50.XOR | 0 | 7 | ALU_F
+OUTPUT_NODE_TYPE | 0 | 8 | SRFF_Q
+NODE | $OpTx$FX_DC$50.Q | 4987 | ? | 0 | 0 | $OpTx$FX_DC$50 | NULL | NULL | $OpTx$FX_DC$50.REG | 0 | 8 | SRFF_Q
+
+MACROCELL_INSTANCE | NULL | EXP0_ | cpumodule_COPY_0_COPY_0 | 2147483648 | 14 | 1
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<0> | 4813 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<0>.Q | counter<0> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<2> | 4815 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<2>.Q | counter<2> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | vda_IBUF | 4775 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | vda_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | vpa_IBUF | 4827 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | vpa_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<1> | 4814 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<1>.Q | counter<1> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<0> | 4819 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<0>.Q | refcnt<0> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<1> | 4820 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<1>.Q | refcnt<1> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<2> | 4821 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<2>.Q | refcnt<2> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<3> | 4822 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<3>.Q | refcnt<3> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<4> | 4823 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<4>.Q | refcnt<4> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<5> | 4824 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<5>.Q | refcnt<5> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<6> | 4825 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<6>.Q | refcnt<6> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<7> | 4826 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<7>.Q | refcnt<7> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | cas2_PIN_BUF_ | 5022 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | Pfbk_Created_cas2 | 0 | 5 | II_IMUX
+OUTPUT_NODE_TYPE | 4 | 0 | MC_EXPORT
+NODE | EXP0_.EXP | 5006 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | EXP0_.EXP | EXP0_ | 4 | 0 | MC_EXPORT
+
+SIGNAL_INSTANCE | EXP0_.SI | EXP0_ | 0 | 14 | 1
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<0> | 4813 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<0>.Q | counter<0> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<2> | 4815 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<2>.Q | counter<2> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | vda_IBUF | 4775 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | vda_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | vpa_IBUF | 4827 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | vpa_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<1> | 4814 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<1>.Q | counter<1> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<0> | 4819 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<0>.Q | refcnt<0> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<1> | 4820 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<1>.Q | refcnt<1> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<2> | 4821 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<2>.Q | refcnt<2> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<3> | 4822 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<3>.Q | refcnt<3> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<4> | 4823 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<4>.Q | refcnt<4> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<5> | 4824 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<5>.Q | refcnt<5> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<6> | 4825 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<6>.Q | refcnt<6> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<7> | 4826 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<7>.Q | refcnt<7> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | cas2_PIN_BUF_ | 5022 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | Pfbk_Created_cas2 | 0 | 5 | II_IMUX
+OUTPUT_NODE_TYPE | 7 | 9 | MC_SI_EXPORT
+SIGNAL | NODE | EXP0_.EXP | 4991 | ? | 0 | 0 | EXP0_ | NULL | NULL | EXP0_.SI | 7 | 9 | MC_SI_EXPORT
+SPPTERM | 2 | IV_TRUE | counter<0> | IV_TRUE | cas2_PIN_BUF_
+SPPTERM | 2 | IV_FALSE | counter<2> | IV_TRUE | cas2_PIN_BUF_
+SPPTERM | 3 | IV_FALSE | vda_IBUF | IV_FALSE | vpa_IBUF | IV_TRUE | cas2_PIN_BUF_
+SPPTERM | 3 | IV_FALSE | counter<0> | IV_TRUE | counter<1> | IV_TRUE | counter<2>
+SPPTERM | 9 | IV_FALSE | refcnt<0> | IV_FALSE | refcnt<1> | IV_FALSE | refcnt<2> | IV_FALSE | refcnt<3> | IV_FALSE | refcnt<4> | IV_FALSE | refcnt<5> | IV_FALSE | refcnt<6> | IV_FALSE | refcnt<7> | IV_TRUE | cas2_PIN_BUF_
+
+MACROCELL_INSTANCE | NULL | EXP1_ | cpumodule_COPY_0_COPY_0 | 2147483648 | 7 | 1
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | a12_11_1_IBUF | 4773 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | a12_11_1_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | a12_11_0_IBUF | 4774 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | a12_11_0_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | cas2_PIN_BUF_ | 5022 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | Pfbk_Created_cas2 | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | iocnt<0> | 4817 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | iocnt<0>.Q | iocnt<0> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | iocnt<1> | 4818 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | iocnt<1>.Q | iocnt<1> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | EXP0_.EXP | 5006 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | EXP0_.EXP | EXP0_ | 4 | 0 | MC_EXPORT
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | rom_PIN_BUF_ | 5018 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | Pfbk_Created_rom | 0 | 5 | II_IMUX
+OUTPUT_NODE_TYPE | 4 | 0 | MC_EXPORT
+NODE | EXP1_.EXP | 5007 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | EXP1_.EXP | EXP1_ | 4 | 0 | MC_EXPORT
+
+SIGNAL_INSTANCE | EXP1_.SI | EXP1_ | 0 | 7 | 1
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | a12_11_1_IBUF | 4773 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | a12_11_1_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | a12_11_0_IBUF | 4774 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | a12_11_0_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | cas2_PIN_BUF_ | 5022 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | Pfbk_Created_cas2 | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | iocnt<0> | 4817 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | iocnt<0>.Q | iocnt<0> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | iocnt<1> | 4818 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | iocnt<1>.Q | iocnt<1> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | EXP0_.EXP | 5006 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | EXP0_.EXP | EXP0_ | 4 | 0 | MC_EXPORT
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | rom_PIN_BUF_ | 5018 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | Pfbk_Created_rom | 0 | 5 | II_IMUX
+OUTPUT_NODE_TYPE | 7 | 9 | MC_SI_EXPORT
+SIGNAL | NODE | EXP1_.EXP | 4992 | ? | 0 | 0 | EXP1_ | NULL | NULL | EXP1_.SI | 7 | 9 | MC_SI_EXPORT
+SPPTERM | 1 | IV_TRUE | EXP0_.EXP
+SPPTERM | 2 | IV_FALSE | a12_11_1_IBUF | IV_TRUE | cas2_PIN_BUF_
+SPPTERM | 2 | IV_TRUE | a12_11_0_IBUF | IV_TRUE | cas2_PIN_BUF_
+SPPTERM | 2 | IV_TRUE | iocnt<0> | IV_TRUE | cas2_PIN_BUF_
+SPPTERM | 2 | IV_TRUE | iocnt<1> | IV_TRUE | cas2_PIN_BUF_
+SPPTERM | 2 | IV_FALSE | rom_PIN_BUF_ | IV_TRUE | cas2_PIN_BUF_
+
+MACROCELL_INSTANCE | NULL | EXP2_ | cpumodule_COPY_0_COPY_0 | 2147483648 | 7 | 1
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | a12_11_1_IBUF | 4773 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | a12_11_1_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | a12_11_0_IBUF | 4774 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | a12_11_0_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | cas3_PIN_BUF_ | 5023 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | Pfbk_Created_cas3 | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | iocnt<0> | 4817 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | iocnt<0>.Q | iocnt<0> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | iocnt<1> | 4818 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | iocnt<1>.Q | iocnt<1> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<4>.EXP | 5009 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<4>.EXP | refcnt<4> | 4 | 0 | MC_EXPORT
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | rom_PIN_BUF_ | 5018 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | Pfbk_Created_rom | 0 | 5 | II_IMUX
+OUTPUT_NODE_TYPE | 4 | 0 | MC_EXPORT
+NODE | EXP2_.EXP | 5010 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | EXP2_.EXP | EXP2_ | 4 | 0 | MC_EXPORT
+
+SIGNAL_INSTANCE | EXP2_.SI | EXP2_ | 0 | 7 | 1
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | a12_11_1_IBUF | 4773 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | a12_11_1_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | a12_11_0_IBUF | 4774 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | a12_11_0_IBUF | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | cas3_PIN_BUF_ | 5023 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | Pfbk_Created_cas3 | 0 | 5 | II_IMUX
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | iocnt<0> | 4817 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | iocnt<0>.Q | iocnt<0> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | iocnt<1> | 4818 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | iocnt<1>.Q | iocnt<1> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<4>.EXP | 5009 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<4>.EXP | refcnt<4> | 4 | 0 | MC_EXPORT
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | rom_PIN_BUF_ | 5018 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | Pfbk_Created_rom | 0 | 5 | II_IMUX
+OUTPUT_NODE_TYPE | 7 | 9 | MC_SI_EXPORT
+SIGNAL | NODE | EXP2_.EXP | 4995 | ? | 0 | 0 | EXP2_ | NULL | NULL | EXP2_.SI | 7 | 9 | MC_SI_EXPORT
+SPPTERM | 1 | IV_TRUE | refcnt<4>.EXP
+SPPTERM | 2 | IV_FALSE | a12_11_1_IBUF | IV_TRUE | cas3_PIN_BUF_
+SPPTERM | 2 | IV_FALSE | a12_11_0_IBUF | IV_TRUE | cas3_PIN_BUF_
+SPPTERM | 2 | IV_TRUE | iocnt<0> | IV_TRUE | cas3_PIN_BUF_
+SPPTERM | 2 | IV_TRUE | iocnt<1> | IV_TRUE | cas3_PIN_BUF_
+SPPTERM | 2 | IV_FALSE | rom_PIN_BUF_ | IV_TRUE | cas3_PIN_BUF_
+
+MACROCELL_INSTANCE | NULL | EXP3_ | cpumodule_COPY_0_COPY_0 | 2147483648 | 8 | 1
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<0> | 4813 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<0>.Q | counter<0> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<2> | 4815 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<2>.Q | counter<2> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<3> | 4822 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<3>.Q | refcnt<3> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<4> | 4823 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<4>.Q | refcnt<4> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<5> | 4824 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<5>.Q | refcnt<5> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<6> | 4825 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<6>.Q | refcnt<6> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<7> | 4826 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<7>.Q | refcnt<7> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<7>.EXP | 5016 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<7>.EXP | refcnt<7> | 4 | 0 | MC_EXPORT
+OUTPUT_NODE_TYPE | 4 | 0 | MC_EXPORT
+NODE | EXP3_.EXP | 5017 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | EXP3_.EXP | EXP3_ | 4 | 0 | MC_EXPORT
+
+SIGNAL_INSTANCE | EXP3_.SI | EXP3_ | 0 | 8 | 1
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<0> | 4813 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<0>.Q | counter<0> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | counter<2> | 4815 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | counter<2>.Q | counter<2> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<3> | 4822 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<3>.Q | refcnt<3> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<4> | 4823 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<4>.Q | refcnt<4> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<5> | 4824 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<5>.Q | refcnt<5> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<6> | 4825 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<6>.Q | refcnt<6> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<7> | 4826 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<7>.Q | refcnt<7> | 1 | 0 | MC_UIM
+INPUT_NODE_TYPE | 1 | 100 | NOTYPE
+NODE | refcnt<7>.EXP | 5016 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | refcnt<7>.EXP | refcnt<7> | 4 | 0 | MC_EXPORT
+OUTPUT_NODE_TYPE | 7 | 9 | MC_SI_EXPORT
+SIGNAL | NODE | EXP3_.EXP | 5002 | ? | 0 | 0 | EXP3_ | NULL | NULL | EXP3_.SI | 7 | 9 | MC_SI_EXPORT
+SPPTERM | 1 | IV_TRUE | refcnt<7>.EXP
+SPPTERM | 3 | IV_FALSE | counter<0> | IV_FALSE | counter<2> | IV_TRUE | refcnt<3>
+SPPTERM | 3 | IV_FALSE | counter<0> | IV_FALSE | counter<2> | IV_TRUE | refcnt<4>
+SPPTERM | 3 | IV_FALSE | counter<0> | IV_FALSE | counter<2> | IV_TRUE | refcnt<5>
+SPPTERM | 3 | IV_FALSE | counter<0> | IV_FALSE | counter<2> | IV_TRUE | refcnt<6>
+SPPTERM | 3 | IV_FALSE | counter<0> | IV_FALSE | counter<2> | IV_TRUE | refcnt<7>
+
+INPUT_INSTANCE | 0 | 0 | NULL | Pfbk_Created_rom | cpumodule_COPY_0_COPY_0 | 0 | 1 | 1
+INPUT_NODE_TYPE | 0 | 5 | II_IN
+NODE | rom | 4829 | PO | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | rom | 0 | 6 | OI_OUT
+OUTPUT_NODE_TYPE | 0 | 5 | II_IMUX
+NODE | rom_PIN_BUF_ | 5018 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | Pfbk_Created_rom | 0 | 5 | II_IMUX
+
+INPUT_INSTANCE | 0 | 0 | NULL | Pfbk_Created_phi1 | cpumodule_COPY_0_COPY_0 | 0 | 1 | 1
+INPUT_NODE_TYPE | 0 | 5 | II_IN
+NODE | phi1 | 4830 | PO | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | phi1 | 0 | 6 | OI_OUT
+OUTPUT_NODE_TYPE | 0 | 5 | II_IMUX
+NODE | phi1_PIN_BUF_ | 5019 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | Pfbk_Created_phi1 | 0 | 5 | II_IMUX
+
+INPUT_INSTANCE | 0 | 0 | NULL | Pfbk_Created_cas0 | cpumodule_COPY_0_COPY_0 | 0 | 1 | 1
+INPUT_NODE_TYPE | 0 | 5 | II_IN
+NODE | cas0 | 4831 | PO | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | cas0 | 0 | 6 | OI_OUT
+OUTPUT_NODE_TYPE | 0 | 5 | II_IMUX
+NODE | cas0_PIN_BUF_ | 5020 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | Pfbk_Created_cas0 | 0 | 5 | II_IMUX
+
+INPUT_INSTANCE | 0 | 0 | NULL | Pfbk_Created_cas1 | cpumodule_COPY_0_COPY_0 | 0 | 1 | 1
+INPUT_NODE_TYPE | 0 | 5 | II_IN
+NODE | cas1 | 4832 | PO | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | cas1 | 0 | 6 | OI_OUT
+OUTPUT_NODE_TYPE | 0 | 5 | II_IMUX
+NODE | cas1_PIN_BUF_ | 5021 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | Pfbk_Created_cas1 | 0 | 5 | II_IMUX
+
+INPUT_INSTANCE | 0 | 0 | NULL | Pfbk_Created_cas2 | cpumodule_COPY_0_COPY_0 | 0 | 1 | 1
+INPUT_NODE_TYPE | 0 | 5 | II_IN
+NODE | cas2 | 4833 | PO | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | cas2 | 0 | 6 | OI_OUT
+OUTPUT_NODE_TYPE | 0 | 5 | II_IMUX
+NODE | cas2_PIN_BUF_ | 5022 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | Pfbk_Created_cas2 | 0 | 5 | II_IMUX
+
+INPUT_INSTANCE | 0 | 0 | NULL | Pfbk_Created_cas3 | cpumodule_COPY_0_COPY_0 | 0 | 1 | 1
+INPUT_NODE_TYPE | 0 | 5 | II_IN
+NODE | cas3 | 4834 | PO | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | cas3 | 0 | 6 | OI_OUT
+OUTPUT_NODE_TYPE | 0 | 5 | II_IMUX
+NODE | cas3_PIN_BUF_ | 5023 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | Pfbk_Created_cas3 | 0 | 5 | II_IMUX
+
+INPUT_INSTANCE | 0 | 0 | NULL | Pfbk_Created_io0 | cpumodule_COPY_0_COPY_0 | 0 | 1 | 1
+INPUT_NODE_TYPE | 0 | 5 | II_IN
+NODE | io0 | 4835 | PO | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | io0 | 0 | 6 | OI_OUT
+OUTPUT_NODE_TYPE | 0 | 5 | II_IMUX
+NODE | io0_PIN_BUF_ | 5024 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | Pfbk_Created_io0 | 0 | 5 | II_IMUX
+
+INPUT_INSTANCE | 0 | 0 | NULL | Pfbk_Created_io1 | cpumodule_COPY_0_COPY_0 | 0 | 1 | 1
+INPUT_NODE_TYPE | 0 | 5 | II_IN
+NODE | io1 | 4836 | PO | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | io1 | 0 | 6 | OI_OUT
+OUTPUT_NODE_TYPE | 0 | 5 | II_IMUX
+NODE | io1_PIN_BUF_ | 5025 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | Pfbk_Created_io1 | 0 | 5 | II_IMUX
+
+INPUT_INSTANCE | 0 | 0 | NULL | Pfbk_Created_io2 | cpumodule_COPY_0_COPY_0 | 0 | 1 | 1
+INPUT_NODE_TYPE | 0 | 5 | II_IN
+NODE | io2 | 4837 | PO | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | io2 | 0 | 6 | OI_OUT
+OUTPUT_NODE_TYPE | 0 | 5 | II_IMUX
+NODE | io2_PIN_BUF_ | 5026 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | Pfbk_Created_io2 | 0 | 5 | II_IMUX
+
+INPUT_INSTANCE | 0 | 0 | NULL | Pfbk_Created_io3 | cpumodule_COPY_0_COPY_0 | 0 | 1 | 1
+INPUT_NODE_TYPE | 0 | 5 | II_IN
+NODE | io3 | 4838 | PO | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | io3 | 0 | 6 | OI_OUT
+OUTPUT_NODE_TYPE | 0 | 5 | II_IMUX
+NODE | io3_PIN_BUF_ | 5027 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | Pfbk_Created_io3 | 0 | 5 | II_IMUX
+
+INPUT_INSTANCE | 0 | 0 | NULL | Pfbk_Created_io4 | cpumodule_COPY_0_COPY_0 | 0 | 1 | 1
+INPUT_NODE_TYPE | 0 | 5 | II_IN
+NODE | io4 | 4839 | PO | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | io4 | 0 | 6 | OI_OUT
+OUTPUT_NODE_TYPE | 0 | 5 | II_IMUX
+NODE | io4_PIN_BUF_ | 5028 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | Pfbk_Created_io4 | 0 | 5 | II_IMUX
+
+INPUT_INSTANCE | 0 | 0 | NULL | Pfbk_Created_io5 | cpumodule_COPY_0_COPY_0 | 0 | 1 | 1
+INPUT_NODE_TYPE | 0 | 5 | II_IN
+NODE | io5 | 4840 | PO | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | io5 | 0 | 6 | OI_OUT
+OUTPUT_NODE_TYPE | 0 | 5 | II_IMUX
+NODE | io5_PIN_BUF_ | 5029 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | Pfbk_Created_io5 | 0 | 5 | II_IMUX
+
+INPUT_INSTANCE | 0 | 0 | NULL | Pfbk_Created_io6 | cpumodule_COPY_0_COPY_0 | 0 | 1 | 1
+INPUT_NODE_TYPE | 0 | 5 | II_IN
+NODE | io6 | 4841 | PO | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | io6 | 0 | 6 | OI_OUT
+OUTPUT_NODE_TYPE | 0 | 5 | II_IMUX
+NODE | io6_PIN_BUF_ | 5030 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | Pfbk_Created_io6 | 0 | 5 | II_IMUX
+
+INPUT_INSTANCE | 0 | 0 | NULL | Pfbk_Created_io7 | cpumodule_COPY_0_COPY_0 | 0 | 1 | 1
+INPUT_NODE_TYPE | 0 | 5 | II_IN
+NODE | io7 | 4842 | PO | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | io7 | 0 | 6 | OI_OUT
+OUTPUT_NODE_TYPE | 0 | 5 | II_IMUX
+NODE | io7_PIN_BUF_ | 5031 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | Pfbk_Created_io7 | 0 | 5 | II_IMUX
+
+INPUT_INSTANCE | 0 | 0 | NULL | Pfbk_Created_phi0 | cpumodule_COPY_0_COPY_0 | 0 | 1 | 1
+INPUT_NODE_TYPE | 0 | 5 | II_IN
+NODE | phi0 | 4843 | PO | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | phi0 | 0 | 6 | OI_OUT
+OUTPUT_NODE_TYPE | 0 | 5 | II_IMUX
+NODE | phi0_PIN_BUF_ | 5032 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | Pfbk_Created_phi0 | 0 | 5 | II_IMUX
+
+INPUT_INSTANCE | 0 | 0 | NULL | Pfbk_Created_ras | cpumodule_COPY_0_COPY_0 | 0 | 1 | 1
+INPUT_NODE_TYPE | 0 | 5 | II_IN
+NODE | ras | 4844 | PO | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | ras | 0 | 6 | OI_OUT
+OUTPUT_NODE_TYPE | 0 | 5 | II_IMUX
+NODE | ras_PIN_BUF_ | 5033 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL | Pfbk_Created_ras | 0 | 5 | II_IMUX
+
+FB_INSTANCE | FOOBAR1_ | cpumodule_COPY_0_COPY_0 | 0 | 0 | 0
+FBPIN | 1 | cas0_OBUF | 1 | Pfbk_Created_cas0 | 1 | cas0 | 1 | 2 | 49152
+FBPIN | 2 | refcnt<6> | 1 | a15_13_2_IBUF | 1 | NULL | 0 | 3 | 49152
+FBPIN | 3 | refcnt<3> | 1 | clk_IBUF | 1 | NULL | 0 | 5 | 57344
+FBPIN | 4 | cas1_OBUF | 1 | Pfbk_Created_cas1 | 1 | cas1 | 1 | 4 | 49152
+FBPIN | 5 | refcnt<5> | 1 | bank_6_IBUF | 1 | NULL | 0 | 6 | 57344
+FBPIN | 6 | EXP0_ | 1 | a10_IBUF | 1 | NULL | 0 | 8 | 49152
+FBPIN | 7 | EXP1_ | 1 | bank_7_IBUF | 1 | NULL | 0 | 7 | 57344
+FBPIN | 8 | cas2_OBUF | 1 | Pfbk_Created_cas2 | 1 | cas2 | 1 | 9 | 49152
+FBPIN | 9 | refcnt<4> | 1 | a12_11_1_IBUF | 1 | NULL | 0 | 11 | 49152
+FBPIN | 10 | EXP2_ | 1 | vda_IBUF | 1 | NULL | 0 | 12 | 49152
+FBPIN | 11 | cas3_OBUF | 1 | Pfbk_Created_cas3 | 1 | cas3 | 1 | 13 | 49152
+FBPIN | 12 | phi0_OBUF | 1 | Pfbk_Created_phi0 | 1 | phi0 | 1 | 14 | 49152
+FBPIN | 13 | refcnt<1> | 1 | bank_3_IBUF | 1 | NULL | 0 | 18 | 49152
+FBPIN | 14 | phi1_OBUF | 1 | Pfbk_Created_phi1 | 1 | phi1 | 1 | 19 | 49152
+FBPIN | 15 | iocnt<1> | 1 | a15_13_1_IBUF | 1 | NULL | 0 | 20 | 49152
+FBPIN | 16 | ras_OBUF | 1 | Pfbk_Created_ras | 1 | ras | 1 | 22 | 49152
+FBPIN | 17 | refcnt<7> | 1 | rw_IBUF | 1 | NULL | 0 | 24 | 49152
+FBPIN | 18 | EXP3_ | 1 | NULL | 0 | NULL | 0
+
+FB_INSTANCE | FOOBAR2_ | cpumodule_COPY_0_COPY_0 | 0 | 0 | 0
+FBPIN | 1 | io7_OBUF | 1 | Pfbk_Created_io7 | 1 | io7 | 1 | 1 | 49152
+FBPIN | 2 | NULL | 0 | a15_13_0_IBUF | 1 | NULL | 0 | 44 | 49152
+FBPIN | 3 | refcnt<2> | 1 | bank_1_IBUF | 1 | NULL | 0 | 42 | 53248
+FBPIN | 4 | io0_OBUF | 1 | Pfbk_Created_io0 | 1 | io0 | 1 | 43 | 49152
+FBPIN | 5 | refcnt<0> | 1 | bank_2_IBUF | 1 | NULL | 0 | 40 | 53248
+FBPIN | 6 | counter<0> | 1 | bank_5_IBUF | 1 | NULL | 0 | 39 | 51200
+FBPIN | 7 | io1_OBUF | 1 | Pfbk_Created_io1 | 1 | io1 | 1 | 38 | 49152
+FBPIN | 8 | io2_OBUF | 1 | Pfbk_Created_io2 | 1 | io2 | 1 | 37 | 49152
+FBPIN | 9 | iocnt<2> | 1 | a12_11_0_IBUF | 1 | NULL | 0 | 36 | 49152
+FBPIN | 10 | io3_OBUF | 1 | Pfbk_Created_io3 | 1 | io3 | 1 | 35 | 49152
+FBPIN | 11 | counter<2> | 1 | vpa_IBUF | 1 | NULL | 0 | 34 | 49152
+FBPIN | 12 | io4_OBUF | 1 | Pfbk_Created_io4 | 1 | io4 | 1 | 33 | 49152
+FBPIN | 13 | counter<1> | 1 | bank_4_IBUF | 1 | NULL | 0 | 29 | 49152
+FBPIN | 14 | io5_OBUF | 1 | Pfbk_Created_io5 | 1 | io5 | 1 | 28 | 49152
+FBPIN | 15 | $OpTx$FX_DC$50 | 1 | bank_0_IBUF | 1 | NULL | 0 | 27 | 49152
+FBPIN | 16 | io6_OBUF | 1 | Pfbk_Created_io6 | 1 | io6 | 1 | 26 | 49152
+FBPIN | 17 | rom_OBUF | 1 | Pfbk_Created_rom | 1 | rom | 1 | 25 | 49152
+FBPIN | 18 | iocnt<0> | 1 | NULL | 0 | NULL | 0
+
+FB_INSTANCE | INPUTPINS_FOOBAR3_ | cpumodule_COPY_0_COPY_0 | 0 | 0 | 0
+
+BUSINFO | A12_11<1:0> | 2 | 0 | 0 | a12_11<0> | 1 | a12_11<1> | 0
+BUSINFO | A15_13<2:0> | 3 | 0 | 0 | a15_13<0> | 2 | a15_13<1> | 1 | a15_13<2> | 0
+BUSINFO | BANK<7:0> | 8 | 0 | 0 | bank<0> | 7 | bank<1> | 6 | bank<2> | 5 | bank<3> | 4 | bank<4> | 3 | bank<5> | 2 | bank<6> | 1 | bank<7> | 0
+
+FB_ORDER_OF_INPUTS | FOOBAR1_ | 0 | cas2 | 9 | 1 | a12_11<1> | 11 | 2 | a12_11<0> | 36 | 3 | counter<0> | NULL | 4 | counter<1> | NULL
+FB_ORDER_OF_INPUTS | FOOBAR1_ | 5 | vda | 12 | 6 | counter<2> | NULL | 7 | vpa | 34 | 8 | refcnt<0> | NULL | 9 | cas3 | 13
+FB_ORDER_OF_INPUTS | FOOBAR1_ | 10 | refcnt<1> | NULL | 11 | refcnt<2> | NULL | 12 | refcnt<3> | NULL | 13 | phi0 | 14 | 14 | refcnt<4> | NULL
+FB_ORDER_OF_INPUTS | FOOBAR1_ | 15 | refcnt<5> | NULL | 16 | refcnt<7> | NULL | 17 | refcnt<6> | NULL | 18 | iocnt<2> | NULL | 19 | iocnt<0> | NULL
+FB_ORDER_OF_INPUTS | FOOBAR1_ | 20 | cas1 | 4 | 21 | phi1 | 19 | 22 | iocnt<1> | NULL | 23 | $OpTx$FX_DC$50.UIM | NULL | 28 | cas0 | 2
+FB_ORDER_OF_INPUTS | FOOBAR1_ | 29 | ras | 22 | 31 | rom | 25
+
+FB_IMUX_INDEX | FOOBAR1_ | 36 | 37 | 38 | 999 | 999 | 41 | 999 | 43 | 999 | 45 | 999 | 999 | 999 | 49 | 999 | 999 | 999 | 999 | 999 | 999 | 56 | 57 | 999 | 999 | -1 | -1 | -1 | -1 | 64 | 65 | -1 | 67 | -1 | -1 | -1 | -1
+
+
+FB_ORDER_OF_INPUTS | FOOBAR2_ | 0 | counter<0> | NULL | 1 | a12_11<1> | 11 | 2 | a12_11<0> | 36 | 3 | io3 | 35 | 4 | a10 | 8
+FB_ORDER_OF_INPUTS | FOOBAR2_ | 5 | vda | 12 | 6 | io2 | 37 | 7 | vpa | 34 | 8 | bank<7> | 7 | 9 | counter<1> | NULL
+FB_ORDER_OF_INPUTS | FOOBAR2_ | 10 | io1 | 38 | 11 | io4 | 33 | 12 | bank<6> | 6 | 13 | counter<2> | NULL | 14 | bank<5> | 39
+FB_ORDER_OF_INPUTS | FOOBAR2_ | 15 | bank<4> | 29 | 16 | iocnt<2> | NULL | 17 | bank<3> | 18 | 18 | bank<2> | 40 | 19 | io5 | 28
+FB_ORDER_OF_INPUTS | FOOBAR2_ | 20 | iocnt<0> | NULL | 21 | iocnt<1> | NULL | 22 | bank<1> | 42 | 23 | bank<0> | 27 | 24 | a15_13<2> | 3
+FB_ORDER_OF_INPUTS | FOOBAR2_ | 25 | a15_13<1> | 20 | 26 | io0 | 43 | 27 | io6 | 26 | 28 | refcnt<0> | NULL | 29 | ras | 22
+FB_ORDER_OF_INPUTS | FOOBAR2_ | 30 | a15_13<0> | 44 | 31 | rom | 25 | 32 | io7 | 1 | 33 | rw | 24 | 34 | refcnt<1> | NULL
+
+FB_IMUX_INDEX | FOOBAR2_ | 999 | 37 | 38 | 39 | 40 | 41 | 42 | 43 | 44 | 999 | 46 | 47 | 48 | 999 | 50 | 51 | 999 | 53 | 54 | 55 | 999 | 999 | 58 | 59 | 60 | 61 | 62 | 63 | 999 | 65 | 66 | 67 | 68 | 69 | 999 | -1
+
+
+GLOBAL_FCLK | FCLK-IO_0 | 0 | 0
