@@ -1,0 +1,58 @@
+WDC Object Viewer  EVALCOPY Jan 19 2006 12:36:01
+
+Module: farsbrk
+
+section CODE     org=$0 size=$50
+section UDATA    org=$0 size=$4
+
+UDATA : 000000 : REL :       : GDrvpt : _~_far_heap_top
+ CODE : 000000 : REL :       : GDrvpt : _~farsbrk
+      : 000000 : UND :       : Gdrvpt : _~far_heap_start
+      : 000000 : UND :       : Gdrvpt : _~far_heap_end
+
+  20    0 : section : #1 : CODE
+  22    0 : 1 data bytes:
+              AD 
+  24    1 : expr: 2 :| off 4:0 |
+  2D    3 : 1 data bytes:
+              0D 
+  2F    4 : expr: 2 :| off 4:2 |
+  38    6 : 3 data bytes:
+              D0 0C AD 
+  3C    9 : expr: 2 :| sym 2 |
+  42    B : 1 data bytes:
+              8D 
+  44    C : expr: 2 :| off 4:0 |
+  4D    E : 1 data bytes:
+              AD 
+  4F    F : expr: 2 :| sym 2 | #2 | ADD |
+  5B   11 : 1 data bytes:
+              8D 
+  5D   12 : expr: 2 :| off 4:2 |
+  66   14 : 2 data bytes:
+              38 AD 
+  69   16 : expr: 2 :| sym 3 |
+  6F   18 : 1 data bytes:
+              ED 
+  71   19 : expr: 2 :| off 4:0 |
+  7A   1B : 2 data bytes:
+              AA AD 
+  7D   1D : expr: 2 :| sym 3 | #2 | ADD |
+  89   1F : 1 data bytes:
+              ED 
+  8B   20 : expr: 2 :| off 4:2 |
+  94   22 : 20 data bytes:
+              C3 05 90 07 D0 0D 8A C3 03 B0 08 A0 FF FF A2 FF 
+              FF 80 13 AD 
+  A9   36 : expr: 2 :| off 4:0 |
+  B2   38 : 2 data bytes:
+              A8 AE 
+  B5   3A : expr: 2 :| off 4:2 |
+  BE   3C : 4 data bytes:
+              18 63 03 8D 
+  C3   40 : expr: 2 :| off 4:0 |
+  CC   42 : 4 data bytes:
+              8A 63 05 8D 
+  D1   46 : expr: 2 :| off 4:2 |
+  DA   48 : 8 data bytes:
+              A3 01 83 05 68 68 98 60 

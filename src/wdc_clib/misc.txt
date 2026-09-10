@@ -1,0 +1,315 @@
+WDC Object Viewer  EVALCOPY Jan 19 2006 12:36:01
+
+Module: _ctype
+
+section DATA     org=$0 size=$101
+
+ DATA : 000000 : REL :       : GDrvpt : _~_ctype
+
+  1F    0 : section : #3 : DATA
+  21    0 : 129 data bytes:
+              00 20 20 20 20 20 20 20 20 20 30 30 30 30 30 20 
+              20 20 20 20 20 20 20 20 20 20 20 20 20 20 20 20 
+              20 90 40 40 40 40 40 40 40 40 40 40 40 40 40 40 
+              40 0C 0C 0C 0C 0C 0C 0C 0C 0C 0C 40 40 40 40 40 
+              40 40 09 09 09 09 09 09 01 01 01 01 01 01 01 01 
+              01 01 01 01 01 01 01 01 01 01 01 01 40 40 40 40 
+              40 40 0A 0A 0A 0A 0A 0A 02 02 02 02 02 02 02 02 
+              02 02 02 02 02 02 02 02 02 02 02 02 40 40 40 40 
+              20 
+  A3   81 : space : 128
+  A6  101 : section : #1 : CODE
+
+Module: isalnum
+
+section CODE     org=$0 size=$23
+
+ CODE : 000000 : REL :       : GDrvpt : _~isalnum
+      : 000000 : UND :       : Gdrvpt : _~_ctype
+
+  E3    0 : 2 debug bytes
+  E8    0 : 9 data bytes:
+              3B 38 E9 04 00 1B 0B 5B A9 
+  F2    9 : expr: 2 :| sym 1 | #1 | ADD |
+  FE    B : 24 data bytes:
+              18 65 07 85 01 B2 01 29 07 00 A8 A5 05 85 07 2B 
+              3B 18 69 06 00 1B 98 60 
+
+Module: isalpha
+
+section CODE     org=$0 size=$23
+
+ CODE : 000000 : REL :       : GDrvpt : _~isalpha
+      : 000000 : UND :       : Gdrvpt : _~_ctype
+
+ 15F    0 : 2 debug bytes
+ 164    0 : 9 data bytes:
+              3B 38 E9 04 00 1B 0B 5B A9 
+ 16E    9 : expr: 2 :| sym 1 | #1 | ADD |
+ 17A    B : 24 data bytes:
+              18 65 07 85 01 B2 01 29 03 00 A8 A5 05 85 07 2B 
+              3B 18 69 06 00 1B 98 60 
+
+Module: isascii
+
+section CODE     org=$0 size=$23
+
+ CODE : 000000 : REL :       : GDrvpt : _~isascii
+
+ 1DB    0 : 2 debug bytes
+ 1E0    0 : 35 data bytes:
+              3B 38 E9 04 00 1B 0B 5B 64 01 A5 07 29 80 00 D0 
+              02 E6 01 A5 01 A8 A5 05 85 07 2B 3B 18 69 06 00 
+              1B 98 60 
+
+Module: iscntrl
+
+section CODE     org=$0 size=$23
+
+ CODE : 000000 : REL :       : GDrvpt : _~iscntrl
+      : 000000 : UND :       : Gdrvpt : _~_ctype
+
+ 240    0 : 2 debug bytes
+ 245    0 : 9 data bytes:
+              3B 38 E9 04 00 1B 0B 5B A9 
+ 24F    9 : expr: 2 :| sym 1 | #1 | ADD |
+ 25B    B : 24 data bytes:
+              18 65 07 85 01 B2 01 29 20 00 A8 A5 05 85 07 2B 
+              3B 18 69 06 00 1B 98 60 
+
+Module: isdigit
+
+section CODE     org=$0 size=$23
+
+ CODE : 000000 : REL :       : GDrvpt : _~isdigit
+      : 000000 : UND :       : Gdrvpt : _~_ctype
+
+ 2BC    0 : 2 debug bytes
+ 2C1    0 : 9 data bytes:
+              3B 38 E9 04 00 1B 0B 5B A9 
+ 2CB    9 : expr: 2 :| sym 1 | #1 | ADD |
+ 2D7    B : 24 data bytes:
+              18 65 07 85 01 B2 01 29 04 00 A8 A5 05 85 07 2B 
+              3B 18 69 06 00 1B 98 60 
+
+Module: isgraph
+
+section CODE     org=$0 size=$23
+
+ CODE : 000000 : REL :       : GDrvpt : _~isgraph
+      : 000000 : UND :       : Gdrvpt : _~_ctype
+
+ 338    0 : 2 debug bytes
+ 33D    0 : 9 data bytes:
+              3B 38 E9 04 00 1B 0B 5B A9 
+ 347    9 : expr: 2 :| sym 1 | #1 | ADD |
+ 353    B : 24 data bytes:
+              18 65 07 85 01 B2 01 29 47 00 A8 A5 05 85 07 2B 
+              3B 18 69 06 00 1B 98 60 
+
+Module: islower
+
+section CODE     org=$0 size=$23
+
+ CODE : 000000 : REL :       : GDrvpt : _~islower
+      : 000000 : UND :       : Gdrvpt : _~_ctype
+
+ 3B4    0 : 2 debug bytes
+ 3B9    0 : 9 data bytes:
+              3B 38 E9 04 00 1B 0B 5B A9 
+ 3C3    9 : expr: 2 :| sym 1 | #1 | ADD |
+ 3CF    B : 24 data bytes:
+              18 65 07 85 01 B2 01 29 02 00 A8 A5 05 85 07 2B 
+              3B 18 69 06 00 1B 98 60 
+
+Module: isprint
+
+section CODE     org=$0 size=$23
+
+ CODE : 000000 : REL :       : GDrvpt : _~isprint
+      : 000000 : UND :       : Gdrvpt : _~_ctype
+
+ 430    0 : 2 debug bytes
+ 435    0 : 9 data bytes:
+              3B 38 E9 04 00 1B 0B 5B A9 
+ 43F    9 : expr: 2 :| sym 1 | #1 | ADD |
+ 44B    B : 24 data bytes:
+              18 65 07 85 01 B2 01 29 C7 00 A8 A5 05 85 07 2B 
+              3B 18 69 06 00 1B 98 60 
+
+Module: ispunct
+
+section CODE     org=$0 size=$23
+
+ CODE : 000000 : REL :       : GDrvpt : _~ispunct
+      : 000000 : UND :       : Gdrvpt : _~_ctype
+
+ 4AC    0 : 2 debug bytes
+ 4B1    0 : 9 data bytes:
+              3B 38 E9 04 00 1B 0B 5B A9 
+ 4BB    9 : expr: 2 :| sym 1 | #1 | ADD |
+ 4C7    B : 24 data bytes:
+              18 65 07 85 01 B2 01 29 40 00 A8 A5 05 85 07 2B 
+              3B 18 69 06 00 1B 98 60 
+
+Module: isspace
+
+section CODE     org=$0 size=$23
+
+ CODE : 000000 : REL :       : GDrvpt : _~isspace
+      : 000000 : UND :       : Gdrvpt : _~_ctype
+
+ 528    0 : 2 debug bytes
+ 52D    0 : 9 data bytes:
+              3B 38 E9 04 00 1B 0B 5B A9 
+ 537    9 : expr: 2 :| sym 1 | #1 | ADD |
+ 543    B : 24 data bytes:
+              18 65 07 85 01 B2 01 29 10 00 A8 A5 05 85 07 2B 
+              3B 18 69 06 00 1B 98 60 
+
+Module: isupper
+
+section CODE     org=$0 size=$23
+
+ CODE : 000000 : REL :       : GDrvpt : _~isupper
+      : 000000 : UND :       : Gdrvpt : _~_ctype
+
+ 5A4    0 : 2 debug bytes
+ 5A9    0 : 9 data bytes:
+              3B 38 E9 04 00 1B 0B 5B A9 
+ 5B3    9 : expr: 2 :| sym 1 | #1 | ADD |
+ 5BF    B : 24 data bytes:
+              18 65 07 85 01 B2 01 29 01 00 A8 A5 05 85 07 2B 
+              3B 18 69 06 00 1B 98 60 
+
+Module: isxdigit
+
+section CODE     org=$0 size=$23
+
+ CODE : 000000 : REL :       : GDrvpt : _~isxdigit
+      : 000000 : UND :       : Gdrvpt : _~_ctype
+
+ 621    0 : 2 debug bytes
+ 626    0 : 9 data bytes:
+              3B 38 E9 04 00 1B 0B 5B A9 
+ 630    9 : expr: 2 :| sym 1 | #1 | ADD |
+ 63C    B : 24 data bytes:
+              18 65 07 85 01 B2 01 29 08 00 A8 A5 05 85 07 2B 
+              3B 18 69 06 00 1B 98 60 
+
+Module: localeconv
+
+section CODE     org=$0 size=$F
+section DATA     org=$0 size=$3B
+
+ CODE : 000000 : REL :       : GDrvpt : _~localeconv
+      : 000000 : UND :       : Gdrvpt : _BEG_DATA
+
+ 6A1    0 : 2 debug bytes
+ 6A6    0 : 1 data bytes:
+              A9 
+ 6A8    1 : expr: 2 :| off 3:0 |
+ 6B1    3 : 3 data bytes:
+              85 01 A9 
+ 6B5    6 : expr: 2 :| sym 1 | #16 | SHR |
+ 6C1    8 : 7 data bytes:
+              85 03 A6 03 A5 01 60 
+ 6C9    F : section : #3 : DATA
+ 6CB    0 : expr: 4 :| off 3:48 |
+ 6D4    4 : expr: 4 :| off 3:50 |
+ 6DD    8 : expr: 4 :| off 3:51 |
+ 6E6    C : expr: 4 :| off 3:52 |
+ 6EF   10 : expr: 4 :| off 3:53 |
+ 6F8   14 : expr: 4 :| off 3:54 |
+ 701   18 : expr: 4 :| off 3:55 |
+ 70A   1C : expr: 4 :| off 3:56 |
+ 713   20 : expr: 4 :| off 3:57 |
+ 71C   24 : expr: 4 :| off 3:58 |
+ 725   28 : 8 data bytes:
+              FF FF FF FF FF FF FF FF 
+ 72E   30 : section : #1 : CODE
+ 730    F : section : #3 : DATA
+ 732   30 : 11 data bytes:
+              2E 00 00 00 00 00 00 00 00 00 00 
+ 73E   3B : section : #1 : CODE
+
+Module: setlocale
+
+section CODE     org=$0 size=$43
+section DATA     org=$0 size=$5
+
+ CODE : 000000 : REL :       : GDrvpt : _~setlocale
+      : 000000 : UND :       : Gdrvpt : _~strcmp
+
+ 798    0 : 2 debug bytes
+ 79D    0 : 9 data bytes:
+              3B 38 E9 00 00 1B 0B 5B F4 
+ 7A7    9 : expr: 2 :| off 3:0 | #16 | SHR |
+ 7B6    B : 1 data bytes:
+              F4 
+ 7B8    C : expr: 2 :| off 3:0 |
+ 7C1    E : 5 data bytes:
+              D4 07 D4 05 20 
+ 7C7   13 : expr: 2 :| sym 1 |
+ 7CD   15 : 4 data bytes:
+              AA F0 10 F4 
+ 7D2   19 : expr: 2 :| off 3:2 | #16 | SHR |
+ 7E1   1B : 1 data bytes:
+              F4 
+ 7E3   1C : expr: 2 :| off 3:2 |
+ 7EC   1E : 5 data bytes:
+              D4 07 D4 05 20 
+ 7F2   23 : expr: 2 :| sym 1 |
+ 7F8   25 : 4 data bytes:
+              AA D0 15 A9 
+ 7FD   29 : expr: 2 :| off 3:3 | #16 | SHR |
+ 80C   2B : 2 data bytes:
+              AA A9 
+ 80F   2D : expr: 2 :| off 3:3 |
+ 818   2F : 20 data bytes:
+              A8 A5 01 85 07 2B 3B 18 69 06 00 1B 98 60 A9 00 
+              00 AA 80 EC 
+ 82D   43 : section : #3 : DATA
+ 82F    0 : 5 data bytes:
+              43 00 00 43 00 
+ 835    5 : section : #1 : CODE
+
+Module: _assert
+
+section CODE     org=$0 size=$3A
+section DATA     org=$0 size=$2A
+
+ CODE : 000000 : REL :       : GDrvpt : _~_assert
+      : 000000 : UND :       : Gdrvpt : _~_iob
+      : 000000 : UND :       : Gdrvpt : _BEG_DATA
+      : 000000 : UND :       : Gdrvpt : _~fprintf
+      : 000000 : UND :       : Gdrvpt : _~abort
+
+ 88B    0 : 2 debug bytes
+ 890    0 : 19 data bytes:
+              3B 38 E9 04 00 1B 0B 5B D4 0D D4 0B D4 0F D4 09 
+              D4 07 F4 
+ 8A4   13 : expr: 2 :| off 3:0 | #16 | SHR |
+ 8B3   15 : 1 data bytes:
+              F4 
+ 8B5   16 : expr: 2 :| off 3:0 |
+ 8BE   18 : 1 data bytes:
+              A9 
+ 8C0   19 : expr: 2 :| sym 1 | #40 | ADD |
+ 8CC   1B : 3 data bytes:
+              85 01 A9 
+ 8D0   1E : expr: 2 :| sym 2 | #16 | SHR |
+ 8DC   20 : 9 data bytes:
+              85 03 48 D4 01 F4 14 00 20 
+ 8E6   29 : expr: 2 :| sym 3 |
+ 8EC   2B : 1 data bytes:
+              20 
+ 8EE   2C : expr: 2 :| sym 4 |
+ 8F4   2E : 12 data bytes:
+              A5 05 85 0F 2B 3B 18 69 0E 00 1B 60 
+ 901   3A : section : #3 : DATA
+ 903    0 : 42 data bytes:
+              41 73 73 65 72 74 28 25 73 29 20 66 61 69 6C 65 
+              64 20 61 74 20 6C 69 6E 65 20 25 75 20 69 6E 20 
+              66 69 6C 65 20 25 73 2E 0A 00 
+ 92E   2A : section : #1 : CODE

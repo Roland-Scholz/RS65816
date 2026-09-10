@@ -1,0 +1,438 @@
+WDC Object Viewer  EVALCOPY Jan 19 2006 12:36:01
+
+Module: memchr
+
+section CODE     org=$0 size=$39
+
+ CODE : 000000 : REL :       : GDrvpt : _~memchr
+
+  1F    0 : 14 data bytes:
+              3B 0B 5B A5 09 F0 15 A5 07 A0 00 00 E2 20 
+  2E    E : 1 debug bytes
+  32    E : 16 data bytes:
+              A6 09 D7 03 F0 10 C8 D0 02 E6 05 CA D0 F4 C2 20 
+  43   1E : 1 debug bytes
+  47   1E : 8 data bytes:
+              A2 00 00 8A 80 0B C2 20 
+  50   26 : 1 debug bytes
+  54   26 : 19 data bytes:
+              18 98 A6 05 65 03 D0 01 E8 A4 01 84 09 2B 7A 7A 
+              7A 7A 60 
+
+Module: memcmp
+
+section CODE     org=$0 size=$36
+
+ CODE : 000000 : REL :       : GDrvpt : _~memcmp
+
+  A2    0 : 13 data bytes:
+              3B 0B 5B A6 0B F0 21 A0 00 00 98 E2 20 
+  B0    D : 1 debug bytes
+  B4    D : 29 data bytes:
+              B7 03 D7 07 D0 0C C8 D0 04 E6 05 E6 09 CA D0 F0 
+              80 09 A2 01 00 D7 07 B0 02 CA CA C2 20 
+  D2   2A : 1 debug bytes
+  D6   2A : 12 data bytes:
+              8A A6 01 86 0B 2B FA FA FA FA FA 60 
+
+Module: memcpy
+
+section CODE     org=$0 size=$2B
+
+ CODE : 000000 : REL :       : GDrvpt : _~memcpy
+
+ 11D    0 : 12 data bytes:
+              3B 0B 5B A6 0B F0 13 A0 00 00 E2 20 
+ 12A    C : 1 debug bytes
+ 12E    C : 16 data bytes:
+              B7 07 97 03 C8 D0 04 E6 09 E6 05 CA D0 F2 C2 20 
+ 13F   1C : 1 debug bytes
+ 143   1C : 15 data bytes:
+              A5 03 A6 05 A4 01 84 0B 2B 7A 7A 7A 7A 7A 60 
+
+Module: memmove
+
+section CODE     org=$0 size=$5C
+
+ CODE : 000000 : REL :       : GDrvpt : _~memmove
+
+ 18E    0 : 40 data bytes:
+              3B 0B 5B A5 05 48 A5 03 48 A6 0B F0 40 A0 00 00 
+              A5 03 C5 07 D0 0A A5 05 C5 09 F0 31 A5 03 C5 07 
+              A5 05 E5 09 B0 12 E2 20 
+ 1B7   28 : 1 debug bytes
+ 1BB   28 : 20 data bytes:
+              B7 07 97 03 C8 D0 04 E6 09 E6 05 CA D0 F2 80 15 
+              A4 0B E2 20 
+ 1D0   3C : 1 debug bytes
+ 1D4   3C : 19 data bytes:
+              C0 00 00 D0 04 C6 05 C6 09 88 B7 07 97 03 CA D0 
+              EF C2 20 
+ 1E8   4F : 1 debug bytes
+ 1EC   4F : 13 data bytes:
+              68 FA A4 01 84 0B 2B 7A 7A 7A 7A 7A 60 
+
+Module: memset
+
+section CODE     org=$0 size=$28
+
+ CODE : 000000 : REL :       : GDrvpt : _~memset
+
+ 235    0 : 14 data bytes:
+              3B 0B 5B A6 09 F0 11 A5 07 A0 00 00 E2 20 
+ 244    E : 1 debug bytes
+ 248    E : 12 data bytes:
+              97 03 C8 D0 02 E6 05 CA D0 F6 C2 20 
+ 255   1A : 1 debug bytes
+ 259   1A : 14 data bytes:
+              A5 03 A6 05 A4 01 84 09 2B 7A 7A 7A 7A 60 
+
+Module: strcat
+
+section CODE     org=$0 size=$47
+
+ CODE : 000000 : REL :       : GDrvpt : _~strcat
+
+ 2A2    0 : 14 data bytes:
+              3B 0B 5B A5 05 48 A5 03 48 A0 00 00 E2 20 
+ 2B1    E : 1 debug bytes
+ 2B5    E : 13 data bytes:
+              B7 03 F0 07 C8 D0 F9 E6 05 80 F5 C2 20 
+ 2C3   1B : 1 debug bytes
+ 2C7   1B : 15 data bytes:
+              18 98 65 03 85 03 90 02 E6 05 A0 00 00 E2 20 
+ 2D7   2A : 1 debug bytes
+ 2DB   2A : 17 data bytes:
+              B7 07 97 03 F0 09 C8 D0 F7 E6 05 E6 09 80 F1 C2 
+              20 
+ 2ED   3B : 1 debug bytes
+ 2F1   3B : 12 data bytes:
+              68 FA A4 01 84 09 2B 7A 7A 7A 7A 60 
+
+Module: strchr
+
+section CODE     org=$0 size=$2D
+
+ CODE : 000000 : REL :       : GDrvpt : _~strchr
+
+ 338    0 : 8 data bytes:
+              3B 0B 5B A0 FF FF E2 20 
+ 341    8 : 1 debug bytes
+ 345    8 : 11 data bytes:
+              C8 B7 03 F0 18 C5 07 D0 F7 C2 20 
+ 351   13 : 1 debug bytes
+ 355   13 : 20 data bytes:
+              18 98 A6 05 65 03 90 01 E8 A4 01 84 07 2B 7A 7A 
+              7A 60 C2 20 
+ 36A   27 : 1 debug bytes
+ 36E   27 : 6 data bytes:
+              A9 00 00 AA 80 EF 
+
+Module: strcmp
+
+section CODE     org=$0 size=$31
+
+ CODE : 000000 : REL :       : GDrvpt : _~strcmp
+
+ 3AF    0 : 11 data bytes:
+              3B 0B 5B A0 00 00 98 BB E8 E2 20 
+ 3BB    B : 1 debug bytes
+ 3BF    B : 27 data bytes:
+              B7 03 F0 0D D7 07 D0 09 C8 D0 F5 E6 05 E6 09 80 
+              EF D7 07 F0 03 B0 02 CA CA C2 20 
+ 3DB   26 : 1 debug bytes
+ 3DF   26 : 11 data bytes:
+              8A A4 01 84 09 2B 7A 7A 7A 7A 60 
+
+Module: strcoll
+
+section CODE     org=$0 size=$30
+
+ CODE : 000000 : REL :       : GDrvpt : _~strcoll
+
+ 426    0 : 9 data bytes:
+              3B 0B 5B A0 00 00 98 E2 20 
+ 430    9 : 1 debug bytes
+ 434    9 : 19 data bytes:
+              B7 03 F0 0D D7 07 D0 09 C8 D0 F5 E6 05 E6 09 80 
+              EF C2 20 
+ 448   1C : 1 debug bytes
+ 44C   1C : 20 data bytes:
+              85 03 B7 07 29 FF 00 38 E5 03 A6 01 86 09 2B FA 
+              FA FA FA 60 
+
+Module: strcpy
+
+section CODE     org=$0 size=$21
+
+ CODE : 000000 : REL :       : GDrvpt : _~strcpy
+
+ 49C    0 : 8 data bytes:
+              3B 0B 5B A0 00 00 E2 20 
+ 4A5    8 : 1 debug bytes
+ 4A9    8 : 11 data bytes:
+              B7 07 97 03 F0 03 C8 80 F7 C2 20 
+ 4B5   13 : 1 debug bytes
+ 4B9   13 : 14 data bytes:
+              A5 03 A6 05 A4 01 84 09 2B 7A 7A 7A 7A 60 
+
+Module: strcspn
+
+section CODE     org=$0 size=$36
+
+ CODE : 000000 : REL :       : GDrvpt : _~strcspn
+
+ 503    0 : 8 data bytes:
+              3B 0B 5B A2 00 00 E2 20 
+ 50C    8 : 1 debug bytes
+ 510    8 : 35 data bytes:
+              48 80 0B E8 E6 03 D0 06 E6 04 D0 02 E6 05 A7 03 
+              83 01 F0 0C A0 00 00 B7 07 F0 E8 C8 C3 01 D0 F7 
+              68 C2 20 
+ 534   2B : 1 debug bytes
+ 538   2B : 11 data bytes:
+              8A A4 01 84 09 2B 7A 7A 7A 7A 60 
+
+Module: strdup
+
+section CODE     org=$0 size=$3F
+
+ CODE : 000000 : REL :       : GDrvpt : _~strdup
+      : 000000 : UND :       : Gdrvpt : _~malloc
+
+ 57F    0 : 11 data bytes:
+              3B 0B DA DA 5B A0 00 00 BB E2 20 
+ 58B    B : 1 debug bytes
+ 58F    B : 9 data bytes:
+              B7 07 F0 03 C8 80 F9 C2 20 
+ 599   14 : 1 debug bytes
+ 59D   14 : 3 data bytes:
+              DA 5A 20 
+ 5A1   17 : expr: 2 :| sym 1 |
+ 5A7   19 : 8 data bytes:
+              84 03 85 01 05 03 E2 20 
+ 5B0   21 : 1 debug bytes
+ 5B4   21 : 16 data bytes:
+              F0 0C A0 00 00 B7 07 97 01 F0 03 C8 80 F7 C2 20 
+ 5C5   31 : 1 debug bytes
+ 5C9   31 : 14 data bytes:
+              A6 03 A5 01 A4 05 84 09 7A 7A 2B 7A 7A 60 
+
+Module: strlen
+
+section CODE     org=$0 size=$1A
+
+ CODE : 000000 : REL :       : GDrvpt : _~strlen
+
+ 61E    0 : 8 data bytes:
+              3B 0B 5B A0 00 00 E2 20 
+ 627    8 : 1 debug bytes
+ 62B    8 : 9 data bytes:
+              B7 03 F0 03 C8 80 F9 C2 20 
+ 635   11 : 1 debug bytes
+ 639   11 : 9 data bytes:
+              A6 01 86 05 2B FA FA 98 60 
+
+Module: strncat
+
+section CODE     org=$0 size=$46
+
+ CODE : 000000 : REL :       : GDrvpt : _~strncat
+
+ 67E    0 : 41 data bytes:
+              3B 0B 5B D4 05 D4 03 A0 00 00 B7 03 29 FF 00 F0 
+              05 C8 D0 F6 00 00 18 98 65 03 85 03 90 02 E6 05 
+              A0 FF FF A6 0B F0 10 E2 20 
+ 6A8   29 : 1 debug bytes
+ 6AC   29 : 16 data bytes:
+              C8 B7 07 97 03 F0 07 CA D0 F6 C8 8A 97 03 C2 20 
+ 6BD   39 : 1 debug bytes
+ 6C1   39 : 13 data bytes:
+              68 FA A4 01 84 0B 2B 7A 7A 7A 7A 7A 60 
+
+Module: strncmp
+
+section CODE     org=$0 size=$35
+
+ CODE : 000000 : REL :       : GDrvpt : _~strncmp
+
+ 70B    0 : 14 data bytes:
+              3B 0B 5B A6 0B F0 20 A9 00 00 A8 88 E2 20 
+ 71A    E : 1 debug bytes
+ 71E    E : 27 data bytes:
+              C8 B7 03 F0 09 D7 07 D0 05 CA D0 F4 B7 07 A2 01 
+              00 D7 07 F0 03 B0 02 CA CA C2 20 
+ 73A   29 : 1 debug bytes
+ 73E   29 : 12 data bytes:
+              8A A4 01 84 0B 2B 7A 7A 7A 7A 7A 60 
+
+Module: strncpy
+
+section CODE     org=$0 size=$2F
+
+ CODE : 000000 : REL :       : GDrvpt : _~strncpy
+
+ 787    0 : 5 data bytes:
+              3B 0B 5B E2 20 
+ 78D    5 : 1 debug bytes
+ 791    5 : 27 data bytes:
+              A6 0B F0 15 A0 FF FF C8 B7 07 97 03 CA F0 0A C9 
+              00 D0 F4 C8 97 03 CA D0 FA C2 20 
+ 7AD   20 : 1 debug bytes
+ 7B1   20 : 15 data bytes:
+              A6 05 A5 03 A4 01 84 0B 2B 7A 7A 7A 7A 7A 60 
+
+Module: strpbrk
+
+section CODE     org=$0 size=$3D
+
+ CODE : 000000 : REL :       : GDrvpt : _~strpbrk
+
+ 7FD    0 : 6 data bytes:
+              3B 0B 5B 48 E2 20 
+ 804    6 : 1 debug bytes
+ 808    6 : 32 data bytes:
+              80 0A E6 03 D0 06 E6 04 D0 02 E6 05 A7 03 83 01 
+              F0 1D A0 00 00 B7 07 F0 E9 C8 C3 01 D0 F7 C2 20 
+ 829   26 : 1 debug bytes
+ 82D   26 : 17 data bytes:
+              A6 05 A5 03 7A A4 01 84 09 2B 7A 7A 7A 7A 60 C2 
+              20 
+ 83F   37 : 1 debug bytes
+ 843   37 : 6 data bytes:
+              A2 00 00 8A 80 ED 
+
+Module: strrchr
+
+section CODE     org=$0 size=$3C
+
+ CODE : 000000 : REL :       : GDrvpt : _~strrchr
+
+ 886    0 : 8 data bytes:
+              3B 0B 5B A0 00 00 E2 20 
+ 88F    8 : 1 debug bytes
+ 893    8 : 23 data bytes:
+              B7 03 F0 05 C8 D0 F9 00 00 A5 07 D7 03 F0 0E BB 
+              F0 03 88 80 F6 C2 20 
+ 8AB   1F : 1 debug bytes
+ 8AF   1F : 8 data bytes:
+              A2 00 00 8A 80 0E C2 20 
+ 8B8   27 : 1 debug bytes
+ 8BC   27 : 21 data bytes:
+              18 98 65 03 A8 A5 05 69 00 00 AA 98 A4 01 84 07 
+              2B 7A 7A 7A 60 
+
+Module: strspn
+
+section CODE     org=$0 size=$2D
+
+ CODE : 000000 : REL :       : GDrvpt : _~strspn
+
+ 90D    0 : 8 data bytes:
+              3B 0B 5B A2 00 00 E2 20 
+ 916    8 : 1 debug bytes
+ 91A    8 : 26 data bytes:
+              48 80 0D A0 00 00 B7 07 F0 0D C8 C3 01 D0 F7 E8 
+              9B B7 03 83 01 D0 EC 68 C2 20 
+ 935   22 : 1 debug bytes
+ 939   22 : 11 data bytes:
+              8A A4 01 84 09 2B 7A 7A 7A 7A 60 
+
+Module: strstr
+
+section CODE     org=$0 size=$53
+
+ CODE : 000000 : REL :       : GDrvpt : _~strstr
+
+ 97F    0 : 8 data bytes:
+              3B 0B 5B A0 00 00 E2 20 
+ 988    8 : 1 debug bytes
+ 98C    8 : 17 data bytes:
+              A7 07 F0 37 B7 03 F0 2B C7 07 F0 03 C8 80 F5 C2 
+              20 
+ 99E   19 : 1 debug bytes
+ 9A2   19 : 15 data bytes:
+              18 98 65 03 85 03 90 02 E6 05 A0 00 00 E2 20 
+ 9B2   28 : 1 debug bytes
+ 9B6   28 : 29 data bytes:
+              B7 07 F0 17 D7 03 F0 08 A0 00 00 B7 07 C8 80 D4 
+              C8 80 ED 64 03 64 04 64 05 64 06 C2 20 
+ 9D4   45 : 1 debug bytes
+ 9D8   45 : 14 data bytes:
+              A6 05 A5 03 A4 01 84 09 2B 7A 7A 7A 7A 60 
+
+Module: strtok
+
+section CODE     org=$0 size=$77
+section UDATA    org=$0 size=$4
+
+ CODE : 000000 : REL :       : GDrvpt : _~strtok
+      : 000000 : UND :       : Gdrvpt : _~strspn
+      : 000000 : UND :       : Gdrvpt : _~strpbrk
+
+ A21    0 : section : #1 : CODE
+ A23    0 : 10 data bytes:
+              3B 0B 5B A5 03 05 05 D0 1C AD 
+ A2E    A : expr: 2 :| off 4:0 |
+ A37    C : 3 data bytes:
+              85 03 0D 
+ A3B    F : expr: 2 :| off 4:2 |
+ A44   11 : 3 data bytes:
+              F0 0C AD 
+ A48   14 : expr: 2 :| off 4:2 |
+ A51   16 : 24 data bytes:
+              85 05 A7 03 29 FF 00 D0 06 A2 00 00 8A 80 48 D4 
+              09 D4 07 D4 05 D4 03 20 
+ A6A   2E : expr: 2 :| sym 1 |
+ A70   30 : 25 data bytes:
+              18 65 03 85 03 90 02 E6 05 A7 03 29 FF 00 F0 DF 
+              D4 09 D4 07 D4 05 D4 03 20 
+ A8A   49 : expr: 2 :| sym 2 |
+ A90   4B : 11 data bytes:
+              85 07 8A 05 07 F0 0F 86 09 E2 20 
+ A9C   56 : 1 debug bytes
+ AA0   56 : 6 data bytes:
+              A9 00 87 07 C2 20 
+ AA7   5C : 1 debug bytes
+ AAB   5C : 8 data bytes:
+              E6 07 D0 01 E8 A5 07 8D 
+ AB4   64 : expr: 2 :| off 4:0 |
+ ABD   66 : 1 data bytes:
+              8E 
+ ABF   67 : expr: 2 :| off 4:2 |
+ AC8   69 : 14 data bytes:
+              A6 05 A5 03 A4 01 84 09 2B 7A 7A 7A 7A 60 
+
+Module: strxfrm
+
+section CODE     org=$0 size=$28
+
+ CODE : 000000 : REL :       : GDrvpt : _~strxfrm
+      : 000000 : UND :       : Gdrvpt : _~strncpy
+      : 000000 : UND :       : Gdrvpt : _~strlen
+
+ B35    0 : 20 data bytes:
+              3B 0B 5B A5 03 05 05 F0 0D D4 0B D4 09 D4 07 D4 
+              05 D4 03 20 
+ B4A   14 : expr: 2 :| sym 1 |
+ B50   16 : 5 data bytes:
+              D4 09 D4 07 20 
+ B56   1B : expr: 2 :| sym 2 |
+ B5C   1D : 11 data bytes:
+              A4 01 84 0B 2B 7A 7A 7A 7A 7A 60 
+
+Module: swapmem
+
+section CODE     org=$0 size=$30
+
+ CODE : 000000 : REL :       : GDrvpt : _~swapmem
+
+ BBD    0 : 12 data bytes:
+              3B 0B 5B A5 0B F0 1C A0 00 00 E2 20 
+ BCA    C : 1 debug bytes
+ BCE    C : 25 data bytes:
+              B7 03 AA B7 07 97 03 8A 97 07 C6 0B F0 09 C8 D0 
+              EF E6 03 E6 07 80 E9 C2 20 
+ BE8   25 : 1 debug bytes
+ BEC   25 : 11 data bytes:
+              A5 01 85 0B 2B FA FA FA FA FA 60 

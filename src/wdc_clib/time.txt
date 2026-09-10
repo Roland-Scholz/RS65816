@@ -1,0 +1,333 @@
+WDC Object Viewer  EVALCOPY Jan 19 2006 12:36:01
+
+Module: asctime
+
+section CODE     org=$0 size=$8B
+section DATA     org=$0 size=$6A
+section UDATA    org=$0 size=$1A
+
+ CODE : 000000 : REL :       : GDrvpt : _~asctime
+      : 000000 : UND :       : Gdrvpt : _BEG_DATA
+      : 000000 : UND :       : Gdrvpt : _~sprintf
+
+  20    0 : 2 debug bytes
+  25    0 : 47 data bytes:
+              3B 38 E9 10 00 1B 0B 5B 18 A9 6C 07 A0 0A 00 77 
+              13 48 A7 13 48 A0 02 00 B7 13 48 C8 C8 B7 13 48 
+              C8 C8 B7 13 48 C8 C8 B7 13 0A 0A 85 05 18 69 
+  55   2F : expr: 2 :| off 3:28 |
+  5E   31 : 5 data bytes:
+              85 09 85 01 A9 
+  64   36 : expr: 2 :| sym 1 | #16 | SHR |
+  70   38 : 16 data bytes:
+              85 03 48 D4 01 A0 0C 00 B7 13 0A 0A 85 09 18 69 
+  81   48 : expr: 2 :| off 3:0 |
+  8A   4A : 5 data bytes:
+              85 0D 85 05 A9 
+  90   4F : expr: 2 :| sym 1 | #16 | SHR |
+  9C   51 : 6 data bytes:
+              85 07 48 D4 05 F4 
+  A3   57 : expr: 2 :| off 3:76 | #16 | SHR |
+  B2   59 : 1 data bytes:
+              F4 
+  B4   5A : expr: 2 :| off 3:76 |
+  BD   5C : 1 data bytes:
+              A9 
+  BF   5D : expr: 2 :| off 4:0 |
+  C8   5F : 3 data bytes:
+              85 09 A9 
+  CC   62 : expr: 2 :| sym 1 | #16 | SHR |
+  D8   64 : 9 data bytes:
+              85 0B 48 D4 09 F4 1C 00 20 
+  E2   6D : expr: 2 :| sym 2 |
+  E8   6F : 1 data bytes:
+              A9 
+  EA   70 : expr: 2 :| off 4:0 |
+  F3   72 : 3 data bytes:
+              85 01 A9 
+  F7   75 : expr: 2 :| sym 1 | #16 | SHR |
+ 103   77 : 20 data bytes:
+              85 03 A6 03 A5 01 A8 A5 11 85 15 2B 3B 18 69 14 
+              00 1B 98 60 
+ 118   8B : section : #3 : DATA
+ 11A    0 : 28 data bytes:
+              53 75 6E 00 4D 6F 6E 00 54 75 65 00 57 65 64 00 
+              54 68 75 00 46 72 69 00 53 61 74 00 
+ 137   1C : section : #1 : CODE
+ 139   8B : section : #3 : DATA
+ 13B   1C : 48 data bytes:
+              4A 61 6E 00 46 65 62 00 4D 61 72 00 41 70 72 00 
+              4D 61 79 00 4A 75 6E 00 4A 75 6C 00 41 75 67 00 
+              53 65 70 00 4F 63 74 00 4E 6F 76 00 44 65 63 00 
+ 16C   4C : section : #1 : CODE
+ 16E   8B : section : #1 : CODE
+ 170   8B : section : #3 : DATA
+ 172   4C : 30 data bytes:
+              25 73 20 25 73 20 25 32 64 20 25 30 32 64 3A 25 
+              30 32 64 3A 25 30 32 64 20 25 34 64 0A 00 
+ 191   6A : section : #1 : CODE
+
+Module: clock
+
+section CODE     org=$0 size=$5
+
+ CODE : 000000 : REL :       : GDrvpt : _~clock
+
+ 1FB    0 : 2 debug bytes
+ 200    0 : 5 data bytes:
+              A9 FF FF AA 60 
+
+Module: ctime
+
+section CODE     org=$0 size=$2E
+
+ CODE : 000000 : REL :       : GDrvpt : _~ctime
+      : 000000 : UND :       : Gdrvpt : _~localtime
+      : 000000 : UND :       : Gdrvpt : _~asctime
+
+ 23E    0 : 2 debug bytes
+ 243    0 : 13 data bytes:
+              3B 38 E9 08 00 1B 0B 5B D4 0D D4 0B 20 
+ 251    D : expr: 2 :| sym 1 |
+ 257    F : 7 data bytes:
+              85 01 86 03 DA 48 20 
+ 25F   16 : expr: 2 :| sym 2 |
+ 265   18 : 22 data bytes:
+              85 05 86 07 A6 07 A5 05 A8 A5 09 85 0D 2B 3B 18 
+              69 0C 00 1B 98 60 
+
+Module: difftime
+
+section CODE     org=$0 size=$33
+
+ CODE : 000000 : REL :       : GDrvpt : _~difftime
+      : 000000 : UND :       : Gdrvpt : _~~dflt
+
+ 2D3    0 : 2 debug bytes
+ 2D8    0 : 25 data bytes:
+              3B 38 E9 04 00 1B 0B 5B 38 A5 07 E5 0B 85 01 A5 
+              09 E5 0D 85 03 48 D4 01 20 
+ 2F2   19 : expr: 2 :| sym 1 |
+ 2F8   1B : 24 data bytes:
+              68 85 0F 68 85 11 68 85 13 68 85 15 A5 05 85 0D 
+              2B 3B 18 69 0C 00 1B 60 
+
+Module: gmtime
+
+section CODE     org=$0 size=$80
+section DATA     org=$0 size=$3
+
+ CODE : 000000 : REL :       : GDrvpt : _~gmtime
+      : 000000 : UND :       : Gdrvpt : _~getenv
+      : 000000 : UND :       : Gdrvpt : _~atoi
+      : 000000 : UND :       : Gdrvpt : _~~lmul
+      : 000000 : UND :       : Gdrvpt : _~localtime
+
+ 358    0 : 2 debug bytes
+ 35D    0 : 9 data bytes:
+              3B 38 E9 0E 00 1B 0B 5B F4 
+ 367    9 : expr: 2 :| off 3:0 | #16 | SHR |
+ 376    B : 1 data bytes:
+              F4 
+ 378    C : expr: 2 :| off 3:0 |
+ 381    E : 1 data bytes:
+              20 
+ 383    F : expr: 2 :| sym 1 |
+ 389   11 : 42 data bytes:
+              85 05 86 07 05 07 D0 12 A9 00 00 AA A8 A5 0F 85 
+              13 2B 3B 18 69 12 00 1B 98 60 A9 03 00 18 65 05 
+              85 01 A5 07 85 03 48 D4 01 20 
+ 3B4   3B : expr: 2 :| sym 2 |
+ 3BA   3D : 25 data bytes:
+              85 09 A0 00 00 A5 09 10 01 88 85 01 84 03 F4 00 
+              00 F4 10 0E D4 03 D4 01 20 
+ 3D4   56 : expr: 2 :| sym 3 |
+ 3DA   58 : 28 data bytes:
+              85 01 86 03 18 67 11 85 0B A5 03 A0 02 00 77 11 
+              85 0D F4 00 00 18 7B 69 0B 00 48 20 
+ 3F7   74 : expr: 2 :| sym 4 |
+ 3FD   76 : 10 data bytes:
+              85 01 86 03 A6 03 A5 01 80 9D 
+ 408   80 : section : #3 : DATA
+ 40A    0 : 3 data bytes:
+              54 5A 00 
+ 40E    3 : section : #1 : CODE
+
+Module: localtime
+
+section CODE     org=$0 size=$1B1
+section DATA     org=$0 size=$18
+section UDATA    org=$0 size=$14
+
+ CODE : 000000 : REL :       : GDrvpt : _~localtime
+      : 000000 : UND :       : Gdrvpt : _~~lmod
+      : 000000 : UND :       : Gdrvpt : _~~ldiv
+      : 000000 : UND :       : Gdrvpt : _~~lasl
+      : 000000 : UND :       : Gdrvpt : _BEG_DATA
+
+ 487    0 : 2 debug bytes
+ 48C    0 : 30 data bytes:
+              3B 38 E9 16 00 1B 0B 5B A7 19 85 0D A0 02 00 B7 
+              19 85 0F F4 00 00 F4 3C 00 D4 0F D4 0D 20 
+ 4AB   1E : expr: 2 :| sym 1 |
+ 4B1   20 : 5 data bytes:
+              85 01 86 03 8D 
+ 4B7   25 : expr: 2 :| off 4:0 |
+ 4C0   27 : 11 data bytes:
+              F4 00 00 F4 3C 00 D4 0F D4 0D 20 
+ 4CC   32 : expr: 2 :| sym 2 |
+ 4D2   34 : 15 data bytes:
+              85 0D 86 0F F4 00 00 F4 3C 00 D4 0F D4 0D 20 
+ 4E2   43 : expr: 2 :| sym 1 |
+ 4E8   45 : 5 data bytes:
+              85 01 86 03 8D 
+ 4EE   4A : expr: 2 :| off 4:2 |
+ 4F7   4C : 11 data bytes:
+              F4 00 00 F4 3C 00 D4 0F D4 0D 20 
+ 503   57 : expr: 2 :| sym 2 |
+ 509   59 : 15 data bytes:
+              85 0D 86 0F F4 00 00 F4 18 00 D4 0F D4 0D 20 
+ 519   68 : expr: 2 :| sym 1 |
+ 51F   6A : 5 data bytes:
+              85 01 86 03 8D 
+ 525   6F : expr: 2 :| off 4:4 |
+ 52E   71 : 11 data bytes:
+              F4 00 00 F4 18 00 D4 0F D4 0D 20 
+ 53A   7C : expr: 2 :| sym 2 |
+ 540   7E : 30 data bytes:
+              85 0D 86 0F A9 04 00 18 65 0D 85 01 A9 00 00 65 
+              0F 85 03 F4 00 00 F4 07 00 D4 03 D4 01 20 
+ 55F   9C : expr: 2 :| sym 1 |
+ 565   9E : 5 data bytes:
+              85 01 86 03 8D 
+ 56B   A3 : expr: 2 :| off 4:12 |
+ 574   A5 : 11 data bytes:
+              F4 00 00 F4 B5 05 D4 0F D4 0D 20 
+ 580   B0 : expr: 2 :| sym 2 |
+ 586   B2 : 12 data bytes:
+              85 05 86 07 D4 07 D4 05 A9 02 00 20 
+ 593   BE : expr: 2 :| sym 3 |
+ 599   C0 : 22 data bytes:
+              85 01 86 03 A9 46 00 18 65 01 85 09 A9 00 00 65 
+              03 85 0B A5 09 8D 
+ 5B0   D6 : expr: 2 :| off 4:10 |
+ 5B9   D8 : 11 data bytes:
+              F4 00 00 F4 B5 05 D4 0F D4 0D 20 
+ 5C5   E3 : expr: 2 :| sym 1 |
+ 5CB   E5 : 17 data bytes:
+              85 0D 86 0F 80 38 A9 6D 01 85 11 A9 00 00 85 13 
+              AD 
+ 5DD   F6 : expr: 2 :| off 4:10 |
+ 5E6   F8 : 41 data bytes:
+              29 03 00 D0 06 E6 11 D0 02 E6 13 38 A5 0D E5 11 
+              A5 0F E5 13 70 03 49 00 80 10 16 38 A5 0D E5 11 
+              85 0D A5 0F E5 13 85 0F EE 
+ 610  121 : expr: 2 :| off 4:10 |
+ 619  123 : 9 data bytes:
+              A5 0D 05 0F D0 C2 A5 0D 8D 
+ 623  12C : expr: 2 :| off 4:14 |
+ 62C  12E : 19 data bytes:
+              E6 0D D0 02 E6 0F 64 15 A5 15 0A 85 01 A0 00 00 
+              A6 01 BD 
+ 640  141 : expr: 2 :| off 3:0 |
+ 649  143 : 15 data bytes:
+              10 01 88 85 11 84 13 A5 15 C9 01 00 D0 0E AD 
+ 659  152 : expr: 2 :| off 4:10 |
+ 662  154 : 58 data bytes:
+              29 03 00 D0 06 E6 11 D0 02 E6 13 38 A5 11 E5 0D 
+              A5 13 E5 0F 70 03 49 00 80 30 1C 38 A5 0D E5 11 
+              85 0D A5 0F E5 13 85 0F E6 15 38 A5 15 E9 0C 00 
+              70 03 49 00 80 10 AB A5 15 8D 
+ 69D  18E : expr: 2 :| off 4:8 |
+ 6A6  190 : 3 data bytes:
+              A5 0D 8D 
+ 6AA  193 : expr: 2 :| off 4:6 |
+ 6B3  195 : 1 data bytes:
+              A9 
+ 6B5  196 : expr: 2 :| off 4:0 |
+ 6BE  198 : 3 data bytes:
+              85 01 A9 
+ 6C2  19B : expr: 2 :| sym 4 | #16 | SHR |
+ 6CE  19D : 20 data bytes:
+              85 03 A6 03 A5 01 A8 A5 17 85 1B 2B 3B 18 69 1A 
+              00 1B 98 60 
+ 6E3  1B1 : section : #1 : CODE
+ 6E5  1B1 : section : #3 : DATA
+ 6E7    0 : 24 data bytes:
+              1F 00 1C 00 1F 00 1E 00 1F 00 1E 00 1F 00 1F 00 
+              1E 00 1F 00 1E 00 1F 00 
+ 700   18 : section : #1 : CODE
+
+Module: mktime
+
+section CODE     org=$0 size=$1F7
+section DATA     org=$0 size=$18
+
+ CODE : 000000 : REL :       : GDrvpt : _~mktime
+      : 000000 : UND :       : Gdrvpt : _~~mul
+      : 000000 : UND :       : Gdrvpt : _~~lmul
+      : 000000 : UND :       : Gdrvpt : _~~div
+      : 000000 : UND :       : Gdrvpt : _~localtime
+      : 000000 : UND :       : Gdrvpt : _~~fmov
+
+ 781    0 : 2 debug bytes
+ 786    0 : 91 data bytes:
+              3B 38 E9 14 00 1B 0B 5B A7 17 30 28 A0 02 00 B7 
+              17 30 21 C8 C8 B7 17 30 1B C8 C8 B7 17 30 15 C8 
+              C8 B7 17 30 0F 38 C8 C8 B7 17 E9 46 00 70 03 49 
+              00 80 30 12 A9 FF FF AA A8 A5 15 85 19 2B 3B 18 
+              69 18 00 1B 98 60 A0 00 00 A7 17 10 01 88 85 11 
+              84 13 A0 02 00 B7 17 A2 3C 00 20 
+ 7E2   5B : expr: 2 :| sym 1 |
+ 7E8   5D : 57 data bytes:
+              85 01 A0 00 00 A5 01 10 01 88 85 01 84 03 A5 01 
+              18 65 11 85 11 A5 03 65 13 85 13 A0 00 00 5A A0 
+              04 00 B7 17 7A 2A 6A 10 01 88 85 01 84 03 F4 00 
+              00 F4 10 0E D4 03 D4 01 20 
+ 822   96 : expr: 2 :| sym 2 |
+ 828   98 : 49 data bytes:
+              85 01 86 03 18 65 11 85 11 A5 03 65 13 85 13 18 
+              A9 FF FF A0 06 00 77 17 85 01 A0 00 00 A5 01 10 
+              01 88 85 01 84 03 F4 01 00 F4 80 51 D4 03 D4 01 
+              20 
+ 85A   C9 : expr: 2 :| sym 2 |
+ 860   CB : 30 data bytes:
+              85 01 86 03 18 65 11 85 11 A5 03 65 13 85 13 64 
+              05 64 0B 80 24 A5 05 0A 85 01 18 A6 01 BD 
+ 87F   E9 : expr: 2 :| off 3:0 |
+ 888   EB : 63 data bytes:
+              65 0B 85 0B A5 05 C9 01 00 D0 0C A0 0A 00 B7 17 
+              29 03 00 D0 02 E6 0B E6 05 38 A5 05 A0 08 00 F7 
+              17 70 03 49 00 80 10 CD A0 00 00 A5 0B 10 01 88 
+              85 01 84 03 F4 01 00 F4 80 51 D4 03 D4 01 20 
+ 8C8  12A : expr: 2 :| sym 2 |
+ 8CE  12C : 30 data bytes:
+              85 01 86 03 18 65 11 85 11 A5 03 65 13 85 13 18 
+              A9 BA FF A0 0A 00 77 17 85 0D A2 04 00 20 
+ 8ED  14A : expr: 2 :| sym 3 |
+ 8F3  14C : 25 data bytes:
+              85 0F A0 00 00 A5 0F 10 01 88 85 01 84 03 F4 86 
+              07 F4 80 1F D4 03 D4 01 20 
+ 90D  165 : expr: 2 :| sym 2 |
+ 913  167 : 90 data bytes:
+              85 01 86 03 18 65 11 85 11 A5 03 65 13 85 13 A5 
+              0F 0A 0A 85 01 18 69 46 00 85 07 85 05 64 09 80 
+              13 A9 6D 01 18 65 09 85 09 A5 05 29 03 00 D0 02 
+              E6 09 E6 05 38 A5 05 A0 0A 00 F7 17 70 03 49 00 
+              80 10 DE A0 00 00 A5 09 10 01 88 85 01 84 03 F4 
+              01 00 F4 80 51 D4 03 D4 01 20 
+ 96E  1C1 : expr: 2 :| sym 2 |
+ 974  1C3 : 25 data bytes:
+              85 01 86 03 18 65 11 85 11 A5 03 65 13 85 13 F4 
+              00 00 18 7B 69 11 00 48 20 
+ 98E  1DC : expr: 2 :| sym 4 |
+ 994  1DE : 16 data bytes:
+              85 01 86 03 D4 03 D4 01 D4 19 D4 17 A9 14 00 20 
+ 9A5  1EE : expr: 2 :| sym 5 |
+ 9AB  1F0 : 7 data bytes:
+              A6 13 A5 11 82 41 FE 
+ 9B3  1F7 : section : #3 : DATA
+ 9B5    0 : 24 data bytes:
+              1F 00 1C 00 1F 00 1E 00 1F 00 1E 00 1F 00 1F 00 
+              1E 00 1F 00 1E 00 1F 00 
+ 9CE   18 : section : #1 : CODE
