@@ -1,4 +1,4 @@
-  Mon Sep 14 2026 18:41                                                                                                    Page 1
+  Tue Sep 15 2026 17:44                                                                                                    Page 1
 
 
                                                ***************************************
@@ -59,7 +59,7 @@
     49                        ;const char *ansi_red = "\033[31m";
     50                        	data
     51                        	xdef	_~ansi_red
-  Mon Sep 14 2026 18:41                                                                                                    Page 2
+  Tue Sep 15 2026 17:44                                                                                                    Page 2
 
 
     52                        _~ansi_red:
@@ -120,7 +120,7 @@
    100                        ;};
    101 00:005B:              	ends
    102                        ;
-  Mon Sep 14 2026 18:41                                                                                                    Page 3
+  Tue Sep 15 2026 17:44                                                                                                    Page 3
 
 
    103                        ;#asm
@@ -181,7 +181,7 @@
    158                        _~debug:
    159                        	longa	on
    160                        	longi	on
-  Mon Sep 14 2026 18:41                                                                                                    Page 4
+  Tue Sep 15 2026 17:44                                                                                                    Page 4
 
 
    161 00:0018: 3B           	tsc
@@ -242,7 +242,7 @@
    216                        	code
    217                        	xdef	_~unlink
    218                        	func
-  Mon Sep 14 2026 18:41                                                                                                    Page 5
+  Tue Sep 15 2026 17:44                                                                                                    Page 5
 
 
    219                        _~unlink:
@@ -303,7 +303,7 @@
    269                        L20001:
    270 00:00A4: AD xx xx     	lda	|_~debug_char
    271 00:00A7: 85 01        	sta	<R0
-  Mon Sep 14 2026 18:41                                                                                                    Page 6
+  Tue Sep 15 2026 17:44                                                                                                    Page 6
 
 
    272 00:00A9: AD xx xx     	lda	|_~debug_char+2
@@ -364,7 +364,7 @@
    327 00:00EC: xx xx        	dw	L10006-1
    328 00:00EE: xx xx        	dw	L10007-1
    329                        L10005:
-  Mon Sep 14 2026 18:41                                                                                                    Page 7
+  Tue Sep 15 2026 17:44                                                                                                    Page 7
 
 
    330 00:00F0: AD xx xx     	lda	|_~ansi_yellow
@@ -425,7 +425,7 @@
    385 00:014A: E6 05        	inc	<L19+p_1
    386 00:014C: D0 02        	bne	L10008
    387 00:014E: E6 07        	inc	<L19+p_1+2
-  Mon Sep 14 2026 18:41                                                                                                    Page 8
+  Tue Sep 15 2026 17:44                                                                                                    Page 8
 
 
    388                        L10008:
@@ -486,7 +486,7 @@
    443 00:0195: A8           	tay
    444 00:0196: A5 05        	lda	<L26+1
    445 00:0198: 85 0D        	sta	<L26+1+8
-  Mon Sep 14 2026 18:41                                                                                                    Page 9
+  Tue Sep 15 2026 17:44                                                                                                    Page 9
 
 
    446 00:019A: 2B           	pld
@@ -547,7 +547,7 @@
    501 00:01C8: D4 03        	pei	<L32+_name_0
    502 00:01CA: F4 xx xx     	pea	#^L12
    503 00:01CD: F4 xx xx     	pea	#<L12
-  Mon Sep 14 2026 18:41                                                                                                    Page 10
+  Tue Sep 15 2026 17:44                                                                                                    Page 10
 
 
    504 00:01D0: F4 0C 00     	pea	#12
@@ -608,7 +608,7 @@
    553 00:020C: 98           	tya
    554 00:020D: 60           	rts
    555             00000000   L36	equ	0
-  Mon Sep 14 2026 18:41                                                                                                    Page 11
+  Tue Sep 15 2026 17:44                                                                                                    Page 11
 
 
    556             00000001   L37	equ	1
@@ -669,7 +669,7 @@
        00:00BA: 6B 20 63 61 
        00:00BE: 6C 6C 65 64 
        00:00C2: 20 66 64 
-  Mon Sep 14 2026 18:41                                                                                                    Page 12
+  Tue Sep 15 2026 17:44                                                                                                    Page 12
 
 
    607 00:00C5: 3A 25 64 2C  	db	$3A,$25,$64,$2C,$20,$6F,$66,$66,$73,$65,$74,$3A,$25,$64,$2C
@@ -730,7 +730,7 @@
    657                        ;	vPortGetHeapStats(&pxHeapStats);
    658             00000000   pxHeapStats_1	set	0
    659 00:0259: F4 00 00     	pea	#0
-  Mon Sep 14 2026 18:41                                                                                                    Page 13
+  Tue Sep 15 2026 17:44                                                                                                    Page 13
 
 
    660 00:025C: 18           	clc
@@ -791,7 +791,7 @@
    715 00:02D5: F4 xx xx     	pea	#^L43+204
    716 00:02D8: F4 xx xx     	pea	#<L43+204
    717 00:02DB: F4 0A 00     	pea	#10
-  Mon Sep 14 2026 18:41                                                                                                    Page 14
+  Tue Sep 15 2026 17:44                                                                                                    Page 14
 
 
    718 00:02DE: 20 xx xx     	jsr	_~printf
@@ -852,7 +852,7 @@
        00:017A: 73 52 65 6D 
        00:017E: 61 69 6E 69 
        00:0182: 6E 67 3A 
-  Mon Sep 14 2026 18:41                                                                                                    Page 15
+  Tue Sep 15 2026 17:44                                                                                                    Page 15
 
 
    743 00:0185: 25 70 0A 00  	db	$25,$70,$0A,$00,$78,$4E,$75,$6D,$62,$65,$72,$4F,$66,$53,$75
@@ -885,402 +885,429 @@
    757                        	longi	on
    758 00:02E9: 3B           	tsc
    759 00:02EA: 38           	sec
-   760 00:02EB: E9 00 00     	sbc	#L51
+   760 00:02EB: E9 05 00     	sbc	#L51
    761 00:02EE: 1B           	tcs
    762 00:02EF: 0B           	phd
    763 00:02F0: 5B           	tcd
    764             00000003   pvParameters_0	set	3
-   765                        ;	for(;;)
-   766                        L10016:
-   767                        ;		printf("shellTask...\n");
-   768 00:02F1: F4 xx xx     	pea	#^L50
-   769 00:02F4: F4 xx xx     	pea	#<L50
-   770 00:02F7: F4 06 00     	pea	#6
-   771 00:02FA: 20 xx xx     	jsr	_~printf
-   772 00:02FD: 80 F2        	bra	L10016
-   773                        ;}
-   774             00000000   L51	equ	0
-   775             00000001   L52	equ	1
-   776                        	ends
-   777                        	efunc
-   778                        	data
-   779                        L50:
-   780 00:01C9: 73 68 65 6C  	db	$73,$68,$65,$6C,$6C,$54,$61,$73,$6B,$2E,$2E,$2E,$0A,$00
-       00:01CD: 6C 54 61 73 
-       00:01D1: 6B 2E 2E 2E 
-       00:01D5: 0A 00 
-   781 00:01D7:              	ends
-   782                        ;
-   783                        ;int main (int argc, char ** argv) {
-   784                        	code
-  Mon Sep 14 2026 18:41                                                                                                    Page 16
+   765                        ;	char c = ' ';
+   766                        ;	
+   767                        ;	for(;;) {
+   768             00000000   c_1	set	0
+   769 00:02F1: E2 20        	sep	#$20
+   770                        	longa	off
+   771 00:02F3: A9 20        	lda	#$20
+   772 00:02F5: 85 05        	sta	<L52+c_1
+   773 00:02F7: C2 20        	rep	#$20
+   774                        	longa	on
+   775                        L10016:
+   776                        ;		*debug_char = c;
+   777 00:02F9: AD xx xx     	lda	|_~debug_char
+   778 00:02FC: 85 01        	sta	<R0
+   779 00:02FE: AD xx xx     	lda	|_~debug_char+2
+   780 00:0301: 85 03        	sta	<R0+2
+   781 00:0303: E2 20        	sep	#$20
+   782                        	longa	off
+   783 00:0305: A5 05        	lda	<L52+c_1
+   784 00:0307: 87 01        	sta	[<R0]
+   785                        ;		c++;
+   786 00:0309: E6 05        	inc	<L52+c_1
+   787                        ;		if (c > 126) c = ' ';
+  Tue Sep 15 2026 17:44                                                                                                    Page 16
 
 
-   785                        	xdef	_~main
-   786                        	func
-   787                        _~main:
-   788                        	longa	on
-   789                        	longi	on
-   790 00:02FF: 3B           	tsc
-   791 00:0300: 38           	sec
-   792 00:0301: E9 20 00     	sbc	#L54
-   793 00:0304: 1B           	tcs
-   794 00:0305: 0B           	phd
-   795 00:0306: 5B           	tcd
-   796             00000003   argc_0	set	3
-   797             00000005   argv_0	set	5
-   798                        ;	
-   799                        ;	BaseType_t rc;
-   800                        ;	HeapRegion_t reg;
-   801                        ;	HeapRegion_t *pxHeapReg;
-   802                        ;	char *p;
-   803                        ;	int i;
-   804                        ;
-   805                        ;	pxHeapReg = (HeapRegion_t *)pvPortMallocStack(sizeof(reg) * 100);
-   806             00000000   rc_1	set	0
-   807             00000002   reg_1	set	2
-   808             0000000A   pxHeapReg_1	set	10
-   809             0000000E   p_1	set	14
-   810             00000012   i_1	set	18
-   811 00:0307: F4 20 03     	pea	#<$320
-   812 00:030A: 20 xx xx     	jsr	_~pvPortMallocStack
-   813 00:030D: 85 17        	sta	<L55+pxHeapReg_1
-   814 00:030F: 86 19        	stx	<L55+pxHeapReg_1+2
-   815                        ;	printf("pxHeapReg:%p %u\n", pxHeapReg, sizeof(reg) * 100);
-   816 00:0311: F4 20 03     	pea	#<$320
-   817 00:0314: D4 19        	pei	<L55+pxHeapReg_1+2
-   818 00:0316: D4 17        	pei	<L55+pxHeapReg_1
-   819 00:0318: F4 xx xx     	pea	#^L53
-   820 00:031B: F4 xx xx     	pea	#<L53
-   821 00:031E: F4 0C 00     	pea	#12
-   822 00:0321: 20 xx xx     	jsr	_~printf
+   788 00:030B: A9 7E        	lda	#$7e
+   789 00:030D: C5 05        	cmp	<L52+c_1
+   790 00:030F: C2 20        	rep	#$20
+   791                        	longa	on
+   792 00:0311: B0 E6        	bcs	L10016
+   793 00:0313: E2 20        	sep	#$20
+   794                        	longa	off
+   795 00:0315: A9 20        	lda	#$20
+   796 00:0317: 85 05        	sta	<L52+c_1
+   797 00:0319: C2 20        	rep	#$20
+   798                        	longa	on
+   799                        ;	}
+   800 00:031B: 80 DC        	bra	L10016
+   801                        ;		
+   802                        ;}
+   803             00000005   L51	equ	5
+   804             00000005   L52	equ	5
+   805                        	ends
+   806                        	efunc
+   807                        ;
+   808                        ;int main (int argc, char ** argv) {
+   809                        	code
+   810                        	xdef	_~main
+   811                        	func
+   812                        _~main:
+   813                        	longa	on
+   814                        	longi	on
+   815 00:031D: 3B           	tsc
+   816 00:031E: 38           	sec
+   817 00:031F: E9 20 00     	sbc	#L54
+   818 00:0322: 1B           	tcs
+   819 00:0323: 0B           	phd
+   820 00:0324: 5B           	tcd
+   821             00000003   argc_0	set	3
+   822             00000005   argv_0	set	5
    823                        ;	
-   824                        ;	reg.xSizeInBytes = 0x010000;
-   825 00:0324: A9 00 00     	lda	#$0
-   826 00:0327: 85 13        	sta	<L55+reg_1+4
-   827 00:0329: 1A           	ina
-   828 00:032A: 85 15        	sta	<L55+reg_1+6
-   829                        ;	
-   830                        ;	for(i = 0; i < 99; i++) {
-   831 00:032C: 64 1F        	stz	<L55+i_1
-   832                        L10019:
-   833                        ;		reg.pucStartAddress = (char *)((i+2) * 0x010000U);
-   834 00:032E: A9 02 00     	lda	#$2
-   835 00:0331: 18           	clc
-   836 00:0332: 65 1F        	adc	<L55+i_1
-   837 00:0334: 85 05        	sta	<R1
-   838 00:0336: A0 00 00     	ldy	#$0
-   839 00:0339: A5 05        	lda	<R1
-   840 00:033B: 10 01        	bpl	L56
-   841 00:033D: 88           	dey
-   842                        L56:
-  Mon Sep 14 2026 18:41                                                                                                    Page 17
+   824                        ;	BaseType_t rc;
+   825                        ;	HeapRegion_t reg;
+   826                        ;	HeapRegion_t *pxHeapReg;
+   827                        ;	char *p;
+   828                        ;	int i;
+   829                        ;
+   830                        ;	pxHeapReg = (HeapRegion_t *)pvPortMallocStack(sizeof(reg) * 100);
+   831             00000000   rc_1	set	0
+   832             00000002   reg_1	set	2
+   833             0000000A   pxHeapReg_1	set	10
+   834             0000000E   p_1	set	14
+   835             00000012   i_1	set	18
+   836 00:0325: F4 20 03     	pea	#<$320
+   837 00:0328: 20 xx xx     	jsr	_~pvPortMallocStack
+   838 00:032B: 85 17        	sta	<L55+pxHeapReg_1
+   839 00:032D: 86 19        	stx	<L55+pxHeapReg_1+2
+   840                        ;	printf("pxHeapReg:%p %u\n", pxHeapReg, sizeof(reg) * 100);
+   841 00:032F: F4 20 03     	pea	#<$320
+   842 00:0332: D4 19        	pei	<L55+pxHeapReg_1+2
+   843 00:0334: D4 17        	pei	<L55+pxHeapReg_1
+   844 00:0336: F4 xx xx     	pea	#^L50
+   845 00:0339: F4 xx xx     	pea	#<L50
+  Tue Sep 15 2026 17:44                                                                                                    Page 17
 
 
-   843 00:033E: 85 05        	sta	<R1
-   844 00:0340: 84 07        	sty	<R1+2
-   845 00:0342: D4 07        	pei	<R1+2
-   846 00:0344: D4 05        	pei	<R1
-   847 00:0346: A9 10 00     	lda	#$10
-   848                        	xref	_~~lasl
-   849 00:0349: 20 xx xx     	jsr	_~~lasl
-   850 00:034C: 86 03        	stx	<R0+2
-   851 00:034E: 85 0F        	sta	<L55+reg_1
-   852 00:0350: A5 03        	lda	<R0+2
-   853 00:0352: 85 11        	sta	<L55+reg_1+2
-   854                        ;		pxHeapReg[i] = reg;
-   855 00:0354: 18           	clc
-   856 00:0355: 7B           	tdc
-   857 00:0356: 69 0F 00     	adc	#<L55+reg_1
-   858 00:0359: 85 01        	sta	<R0
-   859 00:035B: A9 00 00     	lda	#$0
-   860 00:035E: 48           	pha
-   861 00:035F: D4 01        	pei	<R0
-   862 00:0361: A8           	tay
-   863 00:0362: A5 1F        	lda	<L55+i_1
-   864 00:0364: 10 01        	bpl	L57
-   865 00:0366: 88           	dey
-   866                        L57:
-   867 00:0367: 85 05        	sta	<R1
-   868 00:0369: 84 07        	sty	<R1+2
-   869 00:036B: D4 07        	pei	<R1+2
-   870 00:036D: D4 05        	pei	<R1
-   871 00:036F: A9 03 00     	lda	#$3
-   872                        	xref	_~~lasl
-   873 00:0372: 20 xx xx     	jsr	_~~lasl
-   874 00:0375: 85 01        	sta	<R0
-   875 00:0377: 86 03        	stx	<R0+2
-   876 00:0379: A5 17        	lda	<L55+pxHeapReg_1
-   877 00:037B: 18           	clc
-   878 00:037C: 65 01        	adc	<R0
-   879 00:037E: 85 09        	sta	<R2
-   880 00:0380: A5 19        	lda	<L55+pxHeapReg_1+2
-   881 00:0382: 65 03        	adc	<R0+2
-   882 00:0384: 48           	pha
-   883 00:0385: D4 09        	pei	<R2
-   884 00:0387: A9 08 00     	lda	#$8
-   885                        	xref	_~~fmov
-   886 00:038A: 20 xx xx     	jsr	_~~fmov
-   887                        ;		
-   888                        ;	}
-   889 00:038D: E6 1F        	inc	<L55+i_1
-   890 00:038F: 38           	sec
-   891 00:0390: A5 1F        	lda	<L55+i_1
-   892 00:0392: E9 63 00     	sbc	#<$63
-   893 00:0395: 70 03        	bvs	L58
-   894 00:0397: 49 00 80     	eor	#$8000
-   895                        L58:
-   896 00:039A: 10 92        	bpl	L10019
-   897                        ;	reg.pucStartAddress = NULL;
-   898 00:039C: 64 0F        	stz	<L55+reg_1
-   899 00:039E: 64 11        	stz	<L55+reg_1+2
-   900                        ;	reg.xSizeInBytes = 0;
-  Mon Sep 14 2026 18:41                                                                                                    Page 18
+   846 00:033C: F4 0C 00     	pea	#12
+   847 00:033F: 20 xx xx     	jsr	_~printf
+   848                        ;	
+   849                        ;	reg.xSizeInBytes = 0x010000;
+   850 00:0342: A9 00 00     	lda	#$0
+   851 00:0345: 85 13        	sta	<L55+reg_1+4
+   852 00:0347: 1A           	ina
+   853 00:0348: 85 15        	sta	<L55+reg_1+6
+   854                        ;	
+   855                        ;	for(i = 0; i < 99; i++) {
+   856 00:034A: 64 1F        	stz	<L55+i_1
+   857                        L10020:
+   858                        ;		reg.pucStartAddress = (char *)((i+2) * 0x010000U);
+   859 00:034C: A9 02 00     	lda	#$2
+   860 00:034F: 18           	clc
+   861 00:0350: 65 1F        	adc	<L55+i_1
+   862 00:0352: 85 05        	sta	<R1
+   863 00:0354: A0 00 00     	ldy	#$0
+   864 00:0357: A5 05        	lda	<R1
+   865 00:0359: 10 01        	bpl	L56
+   866 00:035B: 88           	dey
+   867                        L56:
+   868 00:035C: 85 05        	sta	<R1
+   869 00:035E: 84 07        	sty	<R1+2
+   870 00:0360: D4 07        	pei	<R1+2
+   871 00:0362: D4 05        	pei	<R1
+   872 00:0364: A9 10 00     	lda	#$10
+   873                        	xref	_~~lasl
+   874 00:0367: 20 xx xx     	jsr	_~~lasl
+   875 00:036A: 86 03        	stx	<R0+2
+   876 00:036C: 85 0F        	sta	<L55+reg_1
+   877 00:036E: A5 03        	lda	<R0+2
+   878 00:0370: 85 11        	sta	<L55+reg_1+2
+   879                        ;		pxHeapReg[i] = reg;
+   880 00:0372: 18           	clc
+   881 00:0373: 7B           	tdc
+   882 00:0374: 69 0F 00     	adc	#<L55+reg_1
+   883 00:0377: 85 01        	sta	<R0
+   884 00:0379: A9 00 00     	lda	#$0
+   885 00:037C: 48           	pha
+   886 00:037D: D4 01        	pei	<R0
+   887 00:037F: A8           	tay
+   888 00:0380: A5 1F        	lda	<L55+i_1
+   889 00:0382: 10 01        	bpl	L57
+   890 00:0384: 88           	dey
+   891                        L57:
+   892 00:0385: 85 05        	sta	<R1
+   893 00:0387: 84 07        	sty	<R1+2
+   894 00:0389: D4 07        	pei	<R1+2
+   895 00:038B: D4 05        	pei	<R1
+   896 00:038D: A9 03 00     	lda	#$3
+   897                        	xref	_~~lasl
+   898 00:0390: 20 xx xx     	jsr	_~~lasl
+   899 00:0393: 85 01        	sta	<R0
+   900 00:0395: 86 03        	stx	<R0+2
+   901 00:0397: A5 17        	lda	<L55+pxHeapReg_1
+   902 00:0399: 18           	clc
+   903 00:039A: 65 01        	adc	<R0
+  Tue Sep 15 2026 17:44                                                                                                    Page 18
 
 
-   901 00:03A0: 64 13        	stz	<L55+reg_1+4
-   902 00:03A2: 64 15        	stz	<L55+reg_1+6
-   903                        ;	pxHeapReg[i] = reg;
-   904 00:03A4: 18           	clc
-   905 00:03A5: 7B           	tdc
-   906 00:03A6: 69 0F 00     	adc	#<L55+reg_1
-   907 00:03A9: 85 01        	sta	<R0
-   908 00:03AB: A9 00 00     	lda	#$0
-   909 00:03AE: 48           	pha
-   910 00:03AF: D4 01        	pei	<R0
-   911 00:03B1: A8           	tay
-   912 00:03B2: A5 1F        	lda	<L55+i_1
-   913 00:03B4: 10 01        	bpl	L60
-   914 00:03B6: 88           	dey
-   915                        L60:
-   916 00:03B7: 85 05        	sta	<R1
-   917 00:03B9: 84 07        	sty	<R1+2
-   918 00:03BB: D4 07        	pei	<R1+2
-   919 00:03BD: D4 05        	pei	<R1
-   920 00:03BF: A9 03 00     	lda	#$3
-   921                        	xref	_~~lasl
-   922 00:03C2: 20 xx xx     	jsr	_~~lasl
-   923 00:03C5: 85 01        	sta	<R0
-   924 00:03C7: 86 03        	stx	<R0+2
-   925 00:03C9: A5 17        	lda	<L55+pxHeapReg_1
-   926 00:03CB: 18           	clc
-   927 00:03CC: 65 01        	adc	<R0
-   928 00:03CE: 85 09        	sta	<R2
-   929 00:03D0: A5 19        	lda	<L55+pxHeapReg_1+2
-   930 00:03D2: 65 03        	adc	<R0+2
-   931 00:03D4: 48           	pha
-   932 00:03D5: D4 09        	pei	<R2
-   933 00:03D7: A9 08 00     	lda	#$8
-   934                        	xref	_~~fmov
-   935 00:03DA: 20 xx xx     	jsr	_~~fmov
-   936                        ;
-   937                        ;	
-   938                        ;	printf("*** RTOS main \n");
-   939 00:03DD: F4 xx xx     	pea	#^L53+17
-   940 00:03E0: F4 xx xx     	pea	#<L53+17
-   941 00:03E3: F4 06 00     	pea	#6
-   942 00:03E6: 20 xx xx     	jsr	_~printf
-   943                        ;	printf("*** RTOS vPortHeapResetState \n");
-   944 00:03E9: F4 xx xx     	pea	#^L53+33
-   945 00:03EC: F4 xx xx     	pea	#<L53+33
-   946 00:03EF: F4 06 00     	pea	#6
-   947 00:03F2: 20 xx xx     	jsr	_~printf
-   948                        ;	vPortHeapResetState();
-   949 00:03F5: 20 xx xx     	jsr	_~vPortHeapResetState
-   950                        ;
-   951                        ;	printf("*** RTOS vPortDefineHeapRegions \n");
-   952 00:03F8: F4 xx xx     	pea	#^L53+64
-   953 00:03FB: F4 xx xx     	pea	#<L53+64
-   954 00:03FE: F4 06 00     	pea	#6
-   955 00:0401: 20 xx xx     	jsr	_~printf
-   956                        ;	vPortDefineHeapRegions( pxHeapReg );
-   957 00:0404: D4 19        	pei	<L55+pxHeapReg_1+2
-   958 00:0406: D4 17        	pei	<L55+pxHeapReg_1
-  Mon Sep 14 2026 18:41                                                                                                    Page 19
+   904 00:039C: 85 09        	sta	<R2
+   905 00:039E: A5 19        	lda	<L55+pxHeapReg_1+2
+   906 00:03A0: 65 03        	adc	<R0+2
+   907 00:03A2: 48           	pha
+   908 00:03A3: D4 09        	pei	<R2
+   909 00:03A5: A9 08 00     	lda	#$8
+   910                        	xref	_~~fmov
+   911 00:03A8: 20 xx xx     	jsr	_~~fmov
+   912                        ;		
+   913                        ;	}
+   914 00:03AB: E6 1F        	inc	<L55+i_1
+   915 00:03AD: 38           	sec
+   916 00:03AE: A5 1F        	lda	<L55+i_1
+   917 00:03B0: E9 63 00     	sbc	#<$63
+   918 00:03B3: 70 03        	bvs	L58
+   919 00:03B5: 49 00 80     	eor	#$8000
+   920                        L58:
+   921 00:03B8: 10 92        	bpl	L10020
+   922                        ;	reg.pucStartAddress = NULL;
+   923 00:03BA: 64 0F        	stz	<L55+reg_1
+   924 00:03BC: 64 11        	stz	<L55+reg_1+2
+   925                        ;	reg.xSizeInBytes = 0;
+   926 00:03BE: 64 13        	stz	<L55+reg_1+4
+   927 00:03C0: 64 15        	stz	<L55+reg_1+6
+   928                        ;	pxHeapReg[i] = reg;
+   929 00:03C2: 18           	clc
+   930 00:03C3: 7B           	tdc
+   931 00:03C4: 69 0F 00     	adc	#<L55+reg_1
+   932 00:03C7: 85 01        	sta	<R0
+   933 00:03C9: A9 00 00     	lda	#$0
+   934 00:03CC: 48           	pha
+   935 00:03CD: D4 01        	pei	<R0
+   936 00:03CF: A8           	tay
+   937 00:03D0: A5 1F        	lda	<L55+i_1
+   938 00:03D2: 10 01        	bpl	L60
+   939 00:03D4: 88           	dey
+   940                        L60:
+   941 00:03D5: 85 05        	sta	<R1
+   942 00:03D7: 84 07        	sty	<R1+2
+   943 00:03D9: D4 07        	pei	<R1+2
+   944 00:03DB: D4 05        	pei	<R1
+   945 00:03DD: A9 03 00     	lda	#$3
+   946                        	xref	_~~lasl
+   947 00:03E0: 20 xx xx     	jsr	_~~lasl
+   948 00:03E3: 85 01        	sta	<R0
+   949 00:03E5: 86 03        	stx	<R0+2
+   950 00:03E7: A5 17        	lda	<L55+pxHeapReg_1
+   951 00:03E9: 18           	clc
+   952 00:03EA: 65 01        	adc	<R0
+   953 00:03EC: 85 09        	sta	<R2
+   954 00:03EE: A5 19        	lda	<L55+pxHeapReg_1+2
+   955 00:03F0: 65 03        	adc	<R0+2
+   956 00:03F2: 48           	pha
+   957 00:03F3: D4 09        	pei	<R2
+   958 00:03F5: A9 08 00     	lda	#$8
+   959                        	xref	_~~fmov
+   960 00:03F8: 20 xx xx     	jsr	_~~fmov
+   961                        ;
+  Tue Sep 15 2026 17:44                                                                                                    Page 19
 
 
-   959 00:0408: 20 xx xx     	jsr	_~vPortDefineHeapRegions
-   960                        ;	
-   961                        ;	vPortFreeStack(pxHeapReg);
-   962 00:040B: D4 19        	pei	<L55+pxHeapReg_1+2
-   963 00:040D: D4 17        	pei	<L55+pxHeapReg_1
-   964 00:040F: 20 xx xx     	jsr	_~vPortFreeStack
-   965                        ;	
-   966                        ;	printHeapStats();
-   967 00:0412: 20 xx xx     	jsr	_~printHeapStats
-   968                        ;	
-   969                        ;	rc = xTaskCreate( shellTask, "SHELL", 512, NULL, 0, NULL);
-   970 00:0415: F4 00 00     	pea	#^$0
-   971 00:0418: F4 00 00     	pea	#<$0
-   972 00:041B: F4 00 00     	pea	#<$0
-   973 00:041E: F4 00 00     	pea	#^$0
-   974 00:0421: F4 00 00     	pea	#<$0
-   975 00:0424: F4 00 02     	pea	#<$200
-   976 00:0427: F4 xx xx     	pea	#^L53+98
-   977 00:042A: F4 xx xx     	pea	#<L53+98
-   978 00:042D: F4 xx xx     	pea	#<_~shellTask
-   979 00:0430: 20 xx xx     	jsr	_~xTaskCreate
-   980 00:0433: 85 0D        	sta	<L55+rc_1
-   981                        ;	printf("task create rc: %d\n", rc);
-   982 00:0435: 48           	pha
-   983 00:0436: F4 xx xx     	pea	#^L53+104
-   984 00:0439: F4 xx xx     	pea	#<L53+104
-   985 00:043C: F4 08 00     	pea	#8
-   986 00:043F: 20 xx xx     	jsr	_~printf
-   987                        ;	
-   988                        ;	
-   989                        ;	if (rc != pdPASS) {
-   990 00:0442: A5 0D        	lda	<L55+rc_1
-   991 00:0444: C9 01 00     	cmp	#<$1
-   992 00:0447: F0 1F        	beq	L10020
-   993                        ;		printf("shell could not be created rc: %d\n", rc);
-   994 00:0449: D4 0D        	pei	<L55+rc_1
-   995 00:044B: F4 xx xx     	pea	#^L53+124
-   996 00:044E: F4 xx xx     	pea	#<L53+124
-   997 00:0451: F4 08 00     	pea	#8
-   998 00:0454: 20 xx xx     	jsr	_~printf
-   999                        ;		return pdPASS;
-  1000 00:0457: A9 01 00     	lda	#$1
-  1001                        L62:
-  1002 00:045A: A8           	tay
-  1003 00:045B: A5 21        	lda	<L54+1
-  1004 00:045D: 85 27        	sta	<L54+1+6
-  1005 00:045F: 2B           	pld
-  1006 00:0460: 3B           	tsc
-  1007 00:0461: 18           	clc
-  1008 00:0462: 69 26 00     	adc	#L54+6
-  1009 00:0465: 1B           	tcs
-  1010 00:0466: 98           	tya
-  1011 00:0467: 60           	rts
-  1012                        ;	}
-  1013                        ;
-  1014                        ;	/* Start the scheduler so the tasks start executing. */
-  1015                        ;
-  1016                        ;	vTaskStartScheduler();
-  Mon Sep 14 2026 18:41                                                                                                    Page 20
+   962                        ;	
+   963                        ;	printf("*** RTOS main \n");
+   964 00:03FB: F4 xx xx     	pea	#^L50+17
+   965 00:03FE: F4 xx xx     	pea	#<L50+17
+   966 00:0401: F4 06 00     	pea	#6
+   967 00:0404: 20 xx xx     	jsr	_~printf
+   968                        ;	printf("*** RTOS vPortHeapResetState \n");
+   969 00:0407: F4 xx xx     	pea	#^L50+33
+   970 00:040A: F4 xx xx     	pea	#<L50+33
+   971 00:040D: F4 06 00     	pea	#6
+   972 00:0410: 20 xx xx     	jsr	_~printf
+   973                        ;	vPortHeapResetState();
+   974 00:0413: 20 xx xx     	jsr	_~vPortHeapResetState
+   975                        ;
+   976                        ;	printf("*** RTOS vPortDefineHeapRegions \n");
+   977 00:0416: F4 xx xx     	pea	#^L50+64
+   978 00:0419: F4 xx xx     	pea	#<L50+64
+   979 00:041C: F4 06 00     	pea	#6
+   980 00:041F: 20 xx xx     	jsr	_~printf
+   981                        ;	vPortDefineHeapRegions( pxHeapReg );
+   982 00:0422: D4 19        	pei	<L55+pxHeapReg_1+2
+   983 00:0424: D4 17        	pei	<L55+pxHeapReg_1
+   984 00:0426: 20 xx xx     	jsr	_~vPortDefineHeapRegions
+   985                        ;	
+   986                        ;	vPortFreeStack(pxHeapReg);
+   987 00:0429: D4 19        	pei	<L55+pxHeapReg_1+2
+   988 00:042B: D4 17        	pei	<L55+pxHeapReg_1
+   989 00:042D: 20 xx xx     	jsr	_~vPortFreeStack
+   990                        ;	
+   991                        ;	printHeapStats();
+   992 00:0430: 20 xx xx     	jsr	_~printHeapStats
+   993                        ;	
+   994                        ;	rc = xTaskCreate( shellTask, "SHELL", 512, NULL, 0, NULL);
+   995 00:0433: F4 00 00     	pea	#^$0
+   996 00:0436: F4 00 00     	pea	#<$0
+   997 00:0439: F4 00 00     	pea	#<$0
+   998 00:043C: F4 00 00     	pea	#^$0
+   999 00:043F: F4 00 00     	pea	#<$0
+  1000 00:0442: F4 00 02     	pea	#<$200
+  1001 00:0445: F4 xx xx     	pea	#^L50+98
+  1002 00:0448: F4 xx xx     	pea	#<L50+98
+  1003 00:044B: A9 xx xx     	lda	#<_~shellTask
+  1004 00:044E: 85 01        	sta	<R0
+  1005                        	xref	_BEG_DATA
+  1006 00:0450: A9 xx xx     	lda	#_BEG_DATA>>16
+  1007 00:0453: 48           	pha
+  1008 00:0454: D4 01        	pei	<R0
+  1009 00:0456: 20 xx xx     	jsr	_~xTaskCreate
+  1010 00:0459: 85 0D        	sta	<L55+rc_1
+  1011                        ;	printf("task create rc: %d\n", rc);
+  1012 00:045B: 48           	pha
+  1013 00:045C: F4 xx xx     	pea	#^L50+104
+  1014 00:045F: F4 xx xx     	pea	#<L50+104
+  1015 00:0462: F4 08 00     	pea	#8
+  1016 00:0465: 20 xx xx     	jsr	_~printf
+  1017                        ;	
+  1018                        ;	
+  1019                        ;	if (rc != pdPASS) {
+  Tue Sep 15 2026 17:44                                                                                                    Page 20
 
 
-  1017                        L10020:
-  1018 00:0468: 20 xx xx     	jsr	_~vTaskStartScheduler
-  1019                        ;
-  1020                        ;	/* If all is well then main() will never reach here as the scheduler will
-  1021                        ;	now be running the tasks. If main() does reach here then it is likely that
-  1022                        ;	there was insufficient heap memory available for the idle task to be created.
-  1023                        ;	Chapter 2 provides more information on heap memory management. */
-  1024                        ;	printf("Error starting RTOS scheduler\n");
-  1025 00:046B: F4 xx xx     	pea	#^L53+159
-  1026 00:046E: F4 xx xx     	pea	#<L53+159
-  1027 00:0471: F4 06 00     	pea	#6
-  1028 00:0474: 20 xx xx     	jsr	_~printf
-  1029                        ;
-  1030                        ;	return pdFAIL;
-  1031 00:0477: A9 00 00     	lda	#$0
-  1032 00:047A: 80 DE        	bra	L62
-  1033                        ;
-  1034                        ;
-  1035                        ;/*	
-  1036                        ;
-  1037                        ;	
-  1038                        ;	
-  1039                        ;	
-  1040                        ;
-  1041                        ;#asm
-  1042                        ;;	WDM 0
-  1043                        ;#endasm
-  1044                        ;	
-  1045                        ;	for (;;) {
-  1046                        ;		p = pvPortMalloc(0x2000);
-  1047                        ;		printf("%p\n", p);
-  1048                        ;		if (p == NULL) break;
-  1049                        ;	}
-  1050                        ;
-  1051                        ;	printHeapStats();
-  1052                        ;
-  1053                        ;
-  1054                        ;#asm
-  1055                        ;	WDM 8
-  1056                        ;#endasm
-  1057                        ;	for (;;) {}
-  1058                        ;*/	
-  1059                        ;}
-  1060             00000020   L54	equ	32
-  1061             0000000D   L55	equ	13
-  1062                        	ends
-  1063                        	efunc
-  1064                        	data
-  1065                        L53:
-  1066 00:01D7: 70 78 48 65  	db	$70,$78,$48,$65,$61,$70,$52,$65,$67,$3A,$25,$70,$20,$25,$75
-       00:01DB: 61 70 52 65 
-       00:01DF: 67 3A 25 70 
-       00:01E3: 20 25 75 
-  1067 00:01E6: 0A 00 2A 2A  	db	$0A,$00,$2A,$2A,$2A,$20,$52,$54,$4F,$53,$20,$6D,$61,$69,$6E
-       00:01EA: 2A 20 52 54 
-       00:01EE: 4F 53 20 6D 
-       00:01F2: 61 69 6E 
-  1068 00:01F5: 20 0A 00 2A  	db	$20,$0A,$00,$2A,$2A,$2A,$20,$52,$54,$4F,$53,$20,$76,$50,$6F
-  Mon Sep 14 2026 18:41                                                                                                    Page 21
+  1020 00:0468: A5 0D        	lda	<L55+rc_1
+  1021 00:046A: C9 01 00     	cmp	#<$1
+  1022 00:046D: F0 1F        	beq	L10021
+  1023                        ;		printf("shell could not be created rc: %d\n", rc);
+  1024 00:046F: D4 0D        	pei	<L55+rc_1
+  1025 00:0471: F4 xx xx     	pea	#^L50+124
+  1026 00:0474: F4 xx xx     	pea	#<L50+124
+  1027 00:0477: F4 08 00     	pea	#8
+  1028 00:047A: 20 xx xx     	jsr	_~printf
+  1029                        ;		return pdPASS;
+  1030 00:047D: A9 01 00     	lda	#$1
+  1031                        L62:
+  1032 00:0480: A8           	tay
+  1033 00:0481: A5 21        	lda	<L54+1
+  1034 00:0483: 85 27        	sta	<L54+1+6
+  1035 00:0485: 2B           	pld
+  1036 00:0486: 3B           	tsc
+  1037 00:0487: 18           	clc
+  1038 00:0488: 69 26 00     	adc	#L54+6
+  1039 00:048B: 1B           	tcs
+  1040 00:048C: 98           	tya
+  1041 00:048D: 60           	rts
+  1042                        ;	}
+  1043                        ;
+  1044                        ;	/* Start the scheduler so the tasks start executing. */
+  1045                        ;
+  1046                        ;	vTaskStartScheduler();
+  1047                        L10021:
+  1048 00:048E: 20 xx xx     	jsr	_~vTaskStartScheduler
+  1049                        ;
+  1050                        ;	/* If all is well then main() will never reach here as the scheduler will
+  1051                        ;	now be running the tasks. If main() does reach here then it is likely that
+  1052                        ;	there was insufficient heap memory available for the idle task to be created.
+  1053                        ;	Chapter 2 provides more information on heap memory management. */
+  1054                        ;	printf("Error starting RTOS scheduler\n");
+  1055 00:0491: F4 xx xx     	pea	#^L50+159
+  1056 00:0494: F4 xx xx     	pea	#<L50+159
+  1057 00:0497: F4 06 00     	pea	#6
+  1058 00:049A: 20 xx xx     	jsr	_~printf
+  1059                        ;
+  1060                        ;	return pdFAIL;
+  1061 00:049D: A9 00 00     	lda	#$0
+  1062 00:04A0: 80 DE        	bra	L62
+  1063                        ;
+  1064                        ;
+  1065                        ;/*	
+  1066                        ;
+  1067                        ;	
+  1068                        ;	
+  1069                        ;	
+  1070                        ;
+  1071                        ;#asm
+  1072                        ;;	WDM 0
+  1073                        ;#endasm
+  1074                        ;	
+  1075                        ;	for (;;) {
+  1076                        ;		p = pvPortMalloc(0x2000);
+  1077                        ;		printf("%p\n", p);
+  Tue Sep 15 2026 17:44                                                                                                    Page 21
 
 
-       00:01F9: 2A 2A 20 52 
-       00:01FD: 54 4F 53 20 
-       00:0201: 76 50 6F 
-  1069 00:0204: 72 74 48 65  	db	$72,$74,$48,$65,$61,$70,$52,$65,$73,$65,$74,$53,$74,$61,$74
-       00:0208: 61 70 52 65 
-       00:020C: 73 65 74 53 
-       00:0210: 74 61 74 
-  1070 00:0213: 65 20 0A 00  	db	$65,$20,$0A,$00,$2A,$2A,$2A,$20,$52,$54,$4F,$53,$20,$76,$50
-       00:0217: 2A 2A 2A 20 
-       00:021B: 52 54 4F 53 
-       00:021F: 20 76 50 
-  1071 00:0222: 6F 72 74 44  	db	$6F,$72,$74,$44,$65,$66,$69,$6E,$65,$48,$65,$61,$70,$52,$65
-       00:0226: 65 66 69 6E 
-       00:022A: 65 48 65 61 
-       00:022E: 70 52 65 
-  1072 00:0231: 67 69 6F 6E  	db	$67,$69,$6F,$6E,$73,$20,$0A,$00,$53,$48,$45,$4C,$4C,$00,$74
-       00:0235: 73 20 0A 00 
-       00:0239: 53 48 45 4C 
-       00:023D: 4C 00 74 
-  1073 00:0240: 61 73 6B 20  	db	$61,$73,$6B,$20,$63,$72,$65,$61,$74,$65,$20,$72,$63,$3A,$20
-       00:0244: 63 72 65 61 
-       00:0248: 74 65 20 72 
-       00:024C: 63 3A 20 
-  1074 00:024F: 25 64 0A 00  	db	$25,$64,$0A,$00,$73,$68,$65,$6C,$6C,$20,$63,$6F,$75,$6C,$64
-       00:0253: 73 68 65 6C 
-       00:0257: 6C 20 63 6F 
-       00:025B: 75 6C 64 
-  1075 00:025E: 20 6E 6F 74  	db	$20,$6E,$6F,$74,$20,$62,$65,$20,$63,$72,$65,$61,$74,$65,$64
-       00:0262: 20 62 65 20 
-       00:0266: 63 72 65 61 
-       00:026A: 74 65 64 
-  1076 00:026D: 20 72 63 3A  	db	$20,$72,$63,$3A,$20,$25,$64,$0A,$00,$45,$72,$72,$6F,$72,$20
-       00:0271: 20 25 64 0A 
-       00:0275: 00 45 72 72 
-       00:0279: 6F 72 20 
-  1077 00:027C: 73 74 61 72  	db	$73,$74,$61,$72,$74,$69,$6E,$67,$20,$52,$54,$4F,$53,$20,$73
-       00:0280: 74 69 6E 67 
-       00:0284: 20 52 54 4F 
-       00:0288: 53 20 73 
-  1078 00:028B: 63 68 65 64  	db	$63,$68,$65,$64,$75,$6C,$65,$72,$0A,$00
-       00:028F: 75 6C 65 72 
-       00:0293: 0A 00 
-  1079 00:0295:              	ends
+  1078                        ;		if (p == NULL) break;
+  1079                        ;	}
   1080                        ;
-  1081                        	xref	_~strlen
-  1082                        	xref	_~vTaskStartScheduler
-  1083                        	xref	_~xTaskCreate
-  1084                        	xref	_~vPortHeapResetState
-  1085                        	xref	_~vPortFreeStack
-  1086                        	xref	_~pvPortMallocStack
-  1087                        	xref	_~vPortGetHeapStats
-  1088                        	xref	_~vPortDefineHeapRegions
-  1089                        	xref	_~malloc
-  1090                        	xref	_~free
-  1091                        	xref	_~vsprintf
-  1092                        	xref	_~printf
+  1081                        ;	printHeapStats();
+  1082                        ;
+  1083                        ;
+  1084                        ;#asm
+  1085                        ;	WDM 8
+  1086                        ;#endasm
+  1087                        ;	for (;;) {}
+  1088                        ;*/	
+  1089                        ;}
+  1090             00000020   L54	equ	32
+  1091             0000000D   L55	equ	13
+  1092                        	ends
+  1093                        	efunc
+  1094                        	data
+  1095                        L50:
+  1096 00:01C9: 70 78 48 65  	db	$70,$78,$48,$65,$61,$70,$52,$65,$67,$3A,$25,$70,$20,$25,$75
+       00:01CD: 61 70 52 65 
+       00:01D1: 67 3A 25 70 
+       00:01D5: 20 25 75 
+  1097 00:01D8: 0A 00 2A 2A  	db	$0A,$00,$2A,$2A,$2A,$20,$52,$54,$4F,$53,$20,$6D,$61,$69,$6E
+       00:01DC: 2A 20 52 54 
+       00:01E0: 4F 53 20 6D 
+       00:01E4: 61 69 6E 
+  1098 00:01E7: 20 0A 00 2A  	db	$20,$0A,$00,$2A,$2A,$2A,$20,$52,$54,$4F,$53,$20,$76,$50,$6F
+       00:01EB: 2A 2A 20 52 
+       00:01EF: 54 4F 53 20 
+       00:01F3: 76 50 6F 
+  1099 00:01F6: 72 74 48 65  	db	$72,$74,$48,$65,$61,$70,$52,$65,$73,$65,$74,$53,$74,$61,$74
+       00:01FA: 61 70 52 65 
+       00:01FE: 73 65 74 53 
+       00:0202: 74 61 74 
+  1100 00:0205: 65 20 0A 00  	db	$65,$20,$0A,$00,$2A,$2A,$2A,$20,$52,$54,$4F,$53,$20,$76,$50
+       00:0209: 2A 2A 2A 20 
+       00:020D: 52 54 4F 53 
+       00:0211: 20 76 50 
+  1101 00:0214: 6F 72 74 44  	db	$6F,$72,$74,$44,$65,$66,$69,$6E,$65,$48,$65,$61,$70,$52,$65
+       00:0218: 65 66 69 6E 
+       00:021C: 65 48 65 61 
+       00:0220: 70 52 65 
+  1102 00:0223: 67 69 6F 6E  	db	$67,$69,$6F,$6E,$73,$20,$0A,$00,$53,$48,$45,$4C,$4C,$00,$74
+       00:0227: 73 20 0A 00 
+       00:022B: 53 48 45 4C 
+       00:022F: 4C 00 74 
+  1103 00:0232: 61 73 6B 20  	db	$61,$73,$6B,$20,$63,$72,$65,$61,$74,$65,$20,$72,$63,$3A,$20
+       00:0236: 63 72 65 61 
+       00:023A: 74 65 20 72 
+       00:023E: 63 3A 20 
+  1104 00:0241: 25 64 0A 00  	db	$25,$64,$0A,$00,$73,$68,$65,$6C,$6C,$20,$63,$6F,$75,$6C,$64
+       00:0245: 73 68 65 6C 
+       00:0249: 6C 20 63 6F 
+       00:024D: 75 6C 64 
+  1105 00:0250: 20 6E 6F 74  	db	$20,$6E,$6F,$74,$20,$62,$65,$20,$63,$72,$65,$61,$74,$65,$64
+       00:0254: 20 62 65 20 
+       00:0258: 63 72 65 61 
+       00:025C: 74 65 64 
+  Tue Sep 15 2026 17:44                                                                                                    Page 22
 
 
-  Mon Sep 14 2026 18:41                                                                                                    Page 22
+  1106 00:025F: 20 72 63 3A  	db	$20,$72,$63,$3A,$20,$25,$64,$0A,$00,$45,$72,$72,$6F,$72,$20
+       00:0263: 20 25 64 0A 
+       00:0267: 00 45 72 72 
+       00:026B: 6F 72 20 
+  1107 00:026E: 73 74 61 72  	db	$73,$74,$61,$72,$74,$69,$6E,$67,$20,$52,$54,$4F,$53,$20,$73
+       00:0272: 74 69 6E 67 
+       00:0276: 20 52 54 4F 
+       00:027A: 53 20 73 
+  1108 00:027D: 63 68 65 64  	db	$63,$68,$65,$64,$75,$6C,$65,$72,$0A,$00
+       00:0281: 75 6C 65 72 
+       00:0285: 0A 00 
+  1109 00:0287:              	ends
+  1110                        ;
+  1111                        	xref	_~strlen
+  1112                        	xref	_~vTaskStartScheduler
+  1113                        	xref	_~xTaskCreate
+  1114                        	xref	_~vPortHeapResetState
+  1115                        	xref	_~vPortFreeStack
+  1116                        	xref	_~pvPortMallocStack
+  1117                        	xref	_~vPortGetHeapStats
+  1118                        	xref	_~vPortDefineHeapRegions
+  1119                        	xref	_~malloc
+  1120                        	xref	_~free
+  1121                        	xref	_~vsprintf
+  1122                        	xref	_~printf
 
 
-      Lines assembled: 1092
+      Lines assembled: 1122
       Errors: 0

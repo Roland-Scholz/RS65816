@@ -220,7 +220,7 @@
  * FreeRTOS/source/timers.c source file must be included in the build if
  * configUSE_TIMERS is set to 1.  Default to 0 if left undefined.  See
  * https://www.freertos.org/RTOS-software-timer.html. */
-#define configUSE_TIMERS                1
+#define configUSE_TIMERS                0
 
 /* configTIMER_TASK_PRIORITY sets the priority used by the timer task.  Only
  * used if configUSE_TIMERS is set to 1.  The timer task is a standard FreeRTOS
@@ -273,7 +273,7 @@
  * memory in the build.  Set to 0 to exclude the ability to create statically
  * allocated objects from the build.  Defaults to 0 if left undefined.  See
  * https://www.freertos.org/Static_Vs_Dynamic_Memory_Allocation.html. */
-#define configSUPPORT_STATIC_ALLOCATION              1
+#define configSUPPORT_STATIC_ALLOCATION 0
 
 /* Set configSUPPORT_DYNAMIC_ALLOCATION to 1 to include FreeRTOS API functions
  * that create FreeRTOS objects (tasks, queues, etc.) using dynamically
@@ -281,7 +281,7 @@
  * dynamically allocated objects from the build.  Defaults to 1 if left
  * undefined.  See
  * https://www.freertos.org/Static_Vs_Dynamic_Memory_Allocation.html. */
-#define configSUPPORT_DYNAMIC_ALLOCATION             1
+#define configSUPPORT_DYNAMIC_ALLOCATION 1
 
 /* Sets the total size of the FreeRTOS heap, in bytes, when heap_1.c, heap_2.c
  * or heap_4.c are included in the build.  This value is defaulted to 4096 bytes

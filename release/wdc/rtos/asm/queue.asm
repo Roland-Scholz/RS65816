@@ -591,39 +591,13 @@ L3	equ	9
 ;                                             StaticQueue_t * pxStaticQueue,
 ;                                             const uint8_t ucQueueType )
 ;    {
-	code
-	xdef	_~xQueueGenericCreateStatic
-	func
-_~xQueueGenericCreateStatic:
-	longa	on
-	longi	on
-	tsc
-	sec
-	sbc	#L17
-	tcs
-	phd
-	tcd
-uxQueueLength_0	set	3
-uxItemSize_0	set	5
-pucQueueStorage_0	set	7
-pxStaticQueue_0	set	11
-ucQueueType_0	set	15
 ;        Queue_t * pxNewQueue = NULL;
 ;
 ;        traceENTER_xQueueGenericCreateStatic( uxQueueLength, uxItemSize, pucQueueStorage, pxStaticQueue, ucQueueType );
-pxNewQueue_1	set	0
-	stz	<L18+pxNewQueue_1
-	stz	<L18+pxNewQueue_1+2
 ;
 ;        /* The StaticQueue_t structure and the queue storage area must be
 ;         * supplied. */
 ;        configASSERT( pxStaticQueue );
-	lda	<L17+pxStaticQueue_0
-	ora	<L17+pxStaticQueue_0+2
-	bne	L10029
-L10033:
-	bra	L10033
-L10029:
 ;
 ;        if( ( uxQueueLength > ( UBaseType_t ) 0 ) &&
 ;            ( pxStaticQueue != NULL ) &&
@@ -633,24 +607,6 @@ L10029:
 ;            ( !( ( pucQueueStorage != NULL ) && ( uxItemSize == 0U ) ) ) &&
 ;            ( !( ( pucQueueStorage == NULL ) && ( uxItemSize != 0U ) ) ) )
 ;        {
-	lda	#$0
-	cmp	<L17+uxQueueLength_0
-	bcs	L10036
-	lda	<L17+pxStaticQueue_0
-	ora	<L17+pxStaticQueue_0+2
-	beq	L10036
-	lda	<L17+pucQueueStorage_0
-	ora	<L17+pucQueueStorage_0+2
-	beq	L22
-	lda	<L17+uxItemSize_0
-	beq	L10036
-L22:
-	lda	<L17+pucQueueStorage_0
-	ora	<L17+pucQueueStorage_0+2
-	bne	L25
-	lda	<L17+uxItemSize_0
-	bne	L10036
-L25:
 ;            #if ( configASSERT_DEFINED == 1 )
 ;            {
 ;                /* Sanity check that the size of the structure used to declare a
@@ -660,14 +616,6 @@ L25:
 ;
 ;                /* This assertion cannot be branch covered in unit tests */
 ;                configASSERT( xSize == sizeof( Queue_t ) ); /* LCOV_EXCL_BR_LINE */
-xSize_2	set	4
-	lda	#$3d
-	sta	<L18+xSize_2
-	cmp	#<$3d
-	beq	L10037
-L10041:
-	bra	L10041
-L10037:
 ;                ( void ) xSize;                             /* Prevent unused variable warning when configASSERT() is not defined. */
 ;            }
 ;            #endif /* configASSERT_DEFINED */
@@ -679,10 +627,6 @@ L10037:
 ;            /* More details at: https://github.com/FreeRTOS/FreeRTOS-Kernel/blob/main/MISRA.md#rule-113 */
 ;            /* coverity[misra_c_2012_rule_11_3_violation] */
 ;            pxNewQueue = ( Queue_t * ) pxStaticQueue;
-	lda	<L17+pxStaticQueue_0
-	sta	<L18+pxNewQueue_1
-	lda	<L17+pxStaticQueue_0+2
-	sta	<L18+pxNewQueue_1+2
 ;
 ;            #if ( configSUPPORT_DYNAMIC_ALLOCATION == 1 )
 ;            {
@@ -690,59 +634,21 @@ L10037:
 ;                 * note this queue was allocated statically in case the queue is
 ;                 * later deleted. */
 ;                pxNewQueue->ucStaticallyAllocated = pdTRUE;
-	sep	#$20
-	longa	off
-	lda	#$1
-	ldy	#$3c
-	sta	[<L18+pxNewQueue_1],Y
-	rep	#$20
-	longa	on
 ;            }
 ;            #endif /* configSUPPORT_DYNAMIC_ALLOCATION */
 ;
 ;            prvInitialiseNewQueue( uxQueueLength, uxItemSize, pucQueueStorage, ucQueueType, pxNewQueue );
-	pei	<L18+pxNewQueue_1+2
-	pei	<L18+pxNewQueue_1
-	pei	<L17+ucQueueType_0
-	pei	<L17+pucQueueStorage_0+2
-	pei	<L17+pucQueueStorage_0
-	pei	<L17+uxItemSize_0
-	pei	<L17+uxQueueLength_0
-	jsr	_~prvInitialiseNewQueue
 ;        }
 ;        else
-L10044:
+;        {
+;            configASSERT( pxNewQueue );
+;            mtCOVERAGE_TEST_MARKER();
+;        }
 ;
 ;        traceRETURN_xQueueGenericCreateStatic( pxNewQueue );
 ;
 ;        return pxNewQueue;
-	ldx	<L18+pxNewQueue_1+2
-	lda	<L18+pxNewQueue_1
-	tay
-	lda	<L17+1
-	sta	<L17+1+14
-	pld
-	tsc
-	clc
-	adc	#L17+14
-	tcs
-	tya
-	rts
-L10036:
-;        {
-;            configASSERT( pxNewQueue );
-	lda	<L18+pxNewQueue_1
-	ora	<L18+pxNewQueue_1+2
-	bne	L10044
-L10049:
-	bra	L10049
-;            mtCOVERAGE_TEST_MARKER();
-;        }
 ;    }
-L17	equ	6
-L18	equ	1
-	ends
-	efunc
 ;
 ;#endif /* configSUPPORT_STATIC_ALLOCATION */
 ;/*-----------------------------------------------------------*/
@@ -753,95 +659,34 @@ L18	equ	1
 ;                                              uint8_t ** ppucQueueStorage,
 ;                                              StaticQueue_t ** ppxStaticQueue )
 ;    {
-	code
-	xdef	_~xQueueGenericGetStaticBuffers
-	func
-_~xQueueGenericGetStaticBuffers:
-	longa	on
-	longi	on
-	tsc
-	sec
-	sbc	#L31
-	tcs
-	phd
-	tcd
-xQueue_0	set	3
-ppucQueueStorage_0	set	7
-ppxStaticQueue_0	set	11
 ;        BaseType_t xReturn;
 ;        Queue_t * const pxQueue = xQueue;
 ;
 ;        traceENTER_xQueueGenericGetStaticBuffers( xQueue, ppucQueueStorage, ppxStaticQueue );
-xReturn_1	set	0
-pxQueue_1	set	2
-	lda	<L31+xQueue_0
-	sta	<L32+pxQueue_1
-	lda	<L31+xQueue_0+2
-	sta	<L32+pxQueue_1+2
 ;
 ;        configASSERT( pxQueue );
-	lda	<L32+pxQueue_1
-	ora	<L32+pxQueue_1+2
-	bne	L10052
-L10056:
-	bra	L10056
-L10052:
 ;        configASSERT( ppxStaticQueue );
-	lda	<L31+ppxStaticQueue_0
-	ora	<L31+ppxStaticQueue_0+2
-	bne	L10059
-L10063:
-	bra	L10063
-L10059:
 ;
 ;        #if ( configSUPPORT_DYNAMIC_ALLOCATION == 1 )
 ;        {
 ;            /* Check if the queue was statically allocated. */
 ;            if( pxQueue->ucStaticallyAllocated == ( uint8_t ) pdTRUE )
 ;            {
-	sep	#$20
-	longa	off
-	ldy	#$3c
-	lda	[<L32+pxQueue_1],Y
-	cmp	#<$1
-	rep	#$20
-	longa	on
-	bne	L10066
 ;                if( ppucQueueStorage != NULL )
 ;                {
-	lda	<L31+ppucQueueStorage_0
-	ora	<L31+ppucQueueStorage_0+2
-	beq	L10067
 ;                    *ppucQueueStorage = ( uint8_t * ) pxQueue->pcHead;
-	lda	[<L32+pxQueue_1]
-	sta	[<L31+ppucQueueStorage_0]
-	ldy	#$2
-	lda	[<L32+pxQueue_1],Y
-	sta	[<L31+ppucQueueStorage_0],Y
 ;                }
 ;
 ;                /* MISRA Ref 11.3.1 [Misaligned access] */
 ;                /* More details at: https://github.com/FreeRTOS/FreeRTOS-Kernel/blob/main/MISRA.md#rule-113 */
 ;                /* coverity[misra_c_2012_rule_11_3_violation] */
 ;                *ppxStaticQueue = ( StaticQueue_t * ) pxQueue;
-L10067:
-	lda	<L32+pxQueue_1
-	sta	[<L31+ppxStaticQueue_0]
-	lda	<L32+pxQueue_1+2
-	ldy	#$2
-	sta	[<L31+ppxStaticQueue_0],Y
 ;                xReturn = pdTRUE;
-	lda	#$1
-	sta	<L32+xReturn_1
 ;            }
 ;            else
-	bra	L10068
-L10066:
 ;            {
 ;                xReturn = pdFALSE;
-	stz	<L32+xReturn_1
 ;            }
-L10068:
 ;        }
 ;        #else /* configSUPPORT_DYNAMIC_ALLOCATION */
 ;        {
@@ -859,22 +704,7 @@ L10068:
 ;        traceRETURN_xQueueGenericGetStaticBuffers( xReturn );
 ;
 ;        return xReturn;
-	lda	<L32+xReturn_1
-	tay
-	lda	<L31+1
-	sta	<L31+1+12
-	pld
-	tsc
-	clc
-	adc	#L31+12
-	tcs
-	tya
-	rts
 ;    }
-L31	equ	6
-L32	equ	1
-	ends
-	efunc
 ;
 ;#endif /* configSUPPORT_STATIC_ALLOCATION */
 ;/*-----------------------------------------------------------*/
@@ -893,7 +723,7 @@ _~xQueueGenericCreate:
 	longi	on
 	tsc
 	sec
-	sbc	#L38
+	sbc	#L17
 	tcs
 	phd
 	tcd
@@ -908,8 +738,8 @@ ucQueueType_0	set	7
 pxNewQueue_1	set	0
 xQueueSizeInBytes_1	set	4
 pucQueueStorage_1	set	6
-	stz	<L39+pxNewQueue_1
-	stz	<L39+pxNewQueue_1+2
+	stz	<L18+pxNewQueue_1
+	stz	<L18+pxNewQueue_1+2
 ;
 ;        if( ( uxQueueLength > ( UBaseType_t ) 0 ) &&
 ;            /* Check for multiplication overflow. */
@@ -921,13 +751,13 @@ pucQueueStorage_1	set	6
 ;            ( ( SIZE_MAX - sizeof( Queue_t ) ) >= ( size_t ) ( ( size_t ) uxQueueLength * ( size_t ) uxItemSize ) ) )
 ;        {
 	lda	#$0
-	cmp	<L38+uxQueueLength_0
+	cmp	<L17+uxQueueLength_0
 	bcc	*+5
-	brl	L10069
-	lda	<L38+uxItemSize_0
+	brl	L10029
+	lda	<L17+uxItemSize_0
 	sta	<R0
 	stz	<R0+2
-	lda	<L38+uxQueueLength_0
+	lda	<L17+uxQueueLength_0
 	sta	<R1
 	stz	<R1+2
 	pei	<R1+2
@@ -943,60 +773,60 @@ pucQueueStorage_1	set	6
 	sbc	<R0
 	lda	<R1+2
 	sbc	<R0+2
-	bvs	L41
+	bvs	L20
 	eor	#$8000
-L41:
-	bpl	L10069
-	lda	<L38+uxQueueLength_0
-	ldx	<L38+uxItemSize_0
+L20:
+	bpl	L10029
+	lda	<L17+uxQueueLength_0
+	ldx	<L17+uxItemSize_0
 	xref	_~~mul
 	jsr	_~~mul
 	sta	<R0
 	stz	<R0+2
 	sec
-	lda	#$ffc2
+	lda	#$ffc3
 	sbc	<R0
 	lda	#$0
 	sbc	<R0+2
-	bvs	L43
+	bvs	L22
 	eor	#$8000
-L43:
-	bpl	L10069
+L22:
+	bpl	L10029
 ;            /* Allocate enough space to hold the maximum number of items that
 ;             * can be in the queue at any time.  It is valid for uxItemSize to be
 ;             * zero in the case the queue is used as a semaphore. */
 ;            xQueueSizeInBytes = ( size_t ) ( ( size_t ) uxQueueLength * ( size_t ) uxItemSize );
-	lda	<L38+uxQueueLength_0
-	ldx	<L38+uxItemSize_0
+	lda	<L17+uxQueueLength_0
+	ldx	<L17+uxItemSize_0
 	xref	_~~mul
 	jsr	_~~mul
-	sta	<L39+xQueueSizeInBytes_1
+	sta	<L18+xQueueSizeInBytes_1
 	clc
-	adc	#$3d
+	adc	#$3c
 	pha
 	jsr	_~pvPortMalloc
-	sta	<L39+pxNewQueue_1
-	stx	<L39+pxNewQueue_1+2
+	sta	<L18+pxNewQueue_1
+	stx	<L18+pxNewQueue_1+2
 ;
 ;            if( pxNewQueue != NULL )
 ;            {
-	ora	<L39+pxNewQueue_1+2
-	beq	L10072
+	ora	<L18+pxNewQueue_1+2
+	beq	L10032
 ;                /* Jump past the queue structure to find the location of the queue
 ;                 * storage area. */
 ;                pucQueueStorage = ( uint8_t * ) pxNewQueue;
-	lda	<L39+pxNewQueue_1
-	sta	<L39+pucQueueStorage_1
-	lda	<L39+pxNewQueue_1+2
-	sta	<L39+pucQueueStorage_1+2
+	lda	<L18+pxNewQueue_1
+	sta	<L18+pucQueueStorage_1
+	lda	<L18+pxNewQueue_1+2
+	sta	<L18+pucQueueStorage_1+2
 ;                pucQueueStorage += sizeof( Queue_t );
-	lda	#$3d
+	lda	#$3c
 	clc
-	adc	<L39+pucQueueStorage_1
-	sta	<L39+pucQueueStorage_1
-	bcc	L46
-	inc	<L39+pucQueueStorage_1+2
-L46:
+	adc	<L18+pucQueueStorage_1
+	sta	<L18+pucQueueStorage_1
+	bcc	L25
+	inc	<L18+pucQueueStorage_1+2
+L25:
 ;
 ;                #if ( configSUPPORT_STATIC_ALLOCATION == 1 )
 ;                {
@@ -1004,41 +834,34 @@ L46:
 ;                     * note this task was created dynamically in case it is later
 ;                     * deleted. */
 ;                    pxNewQueue->ucStaticallyAllocated = pdFALSE;
-	sep	#$20
-	longa	off
-	lda	#$0
-	ldy	#$3c
-	sta	[<L39+pxNewQueue_1],Y
-	rep	#$20
-	longa	on
 ;                }
 ;                #endif /* configSUPPORT_STATIC_ALLOCATION */
 ;
 ;                prvInitialiseNewQueue( uxQueueLength, uxItemSize, pucQueueStorage, ucQueueType, pxNewQueue );
-	pei	<L39+pxNewQueue_1+2
-	pei	<L39+pxNewQueue_1
-	pei	<L38+ucQueueType_0
-	pei	<L39+pucQueueStorage_1+2
-	pei	<L39+pucQueueStorage_1
-	pei	<L38+uxItemSize_0
-	pei	<L38+uxQueueLength_0
+	pei	<L18+pxNewQueue_1+2
+	pei	<L18+pxNewQueue_1
+	pei	<L17+ucQueueType_0
+	pei	<L18+pucQueueStorage_1+2
+	pei	<L18+pucQueueStorage_1
+	pei	<L17+uxItemSize_0
+	pei	<L17+uxQueueLength_0
 	jsr	_~prvInitialiseNewQueue
 ;            }
 ;            else
-L10072:
+L10032:
 ;
 ;        traceRETURN_xQueueGenericCreate( pxNewQueue );
 ;
 ;        return pxNewQueue;
-	ldx	<L39+pxNewQueue_1+2
-	lda	<L39+pxNewQueue_1
+	ldx	<L18+pxNewQueue_1+2
+	lda	<L18+pxNewQueue_1
 	tay
-	lda	<L38+1
-	sta	<L38+1+6
+	lda	<L17+1
+	sta	<L17+1+6
 	pld
 	tsc
 	clc
-	adc	#L38+6
+	adc	#L17+6
 	tcs
 	tya
 	rts
@@ -1048,19 +871,19 @@ L10072:
 ;            }
 ;        }
 ;        else
-L10069:
+L10029:
 ;        {
 ;            configASSERT( pxNewQueue );
-	lda	<L39+pxNewQueue_1
-	ora	<L39+pxNewQueue_1+2
-	bne	L10072
-L10077:
-	bra	L10077
+	lda	<L18+pxNewQueue_1
+	ora	<L18+pxNewQueue_1+2
+	bne	L10032
+L10037:
+	bra	L10037
 ;            mtCOVERAGE_TEST_MARKER();
 ;        }
 ;    }
-L38	equ	18
-L39	equ	9
+L17	equ	18
+L18	equ	9
 	ends
 	efunc
 ;
@@ -1080,7 +903,7 @@ _~prvInitialiseNewQueue:
 	longi	on
 	tsc
 	sec
-	sbc	#L49
+	sbc	#L28
 	tcs
 	phd
 	tcd
@@ -1095,46 +918,46 @@ pxNewQueue_0	set	13
 ;
 ;    if( uxItemSize == ( UBaseType_t ) 0 )
 ;    {
-	lda	<L49+uxItemSize_0
-	bne	L10080
+	lda	<L28+uxItemSize_0
+	bne	L10040
 ;        /* No RAM was allocated for the queue storage area, but PC head cannot
 ;         * be set to NULL because NULL is used as a key to say the queue is used as
 ;         * a mutex.  Therefore just set pcHead to point to the queue as a benign
 ;         * value that is known to be within the memory map. */
 ;        pxNewQueue->pcHead = ( int8_t * ) pxNewQueue;
-	lda	<L49+pxNewQueue_0
-	sta	[<L49+pxNewQueue_0]
-	lda	<L49+pxNewQueue_0+2
+	lda	<L28+pxNewQueue_0
+	sta	[<L28+pxNewQueue_0]
+	lda	<L28+pxNewQueue_0+2
 	bra	L20001
 ;    }
 ;    else
-L10080:
+L10040:
 ;    {
 ;        /* Set the head to the start of the queue storage area. */
 ;        pxNewQueue->pcHead = ( int8_t * ) pucQueueStorage;
-	lda	<L49+pucQueueStorage_0
-	sta	[<L49+pxNewQueue_0]
-	lda	<L49+pucQueueStorage_0+2
+	lda	<L28+pucQueueStorage_0
+	sta	[<L28+pxNewQueue_0]
+	lda	<L28+pucQueueStorage_0+2
 L20001:
 	ldy	#$2
-	sta	[<L49+pxNewQueue_0],Y
+	sta	[<L28+pxNewQueue_0],Y
 ;    }
 ;
 ;    /* Initialise the queue members as described where the queue type is
 ;     * defined. */
 ;    pxNewQueue->uxLength = uxQueueLength;
-	lda	<L49+uxQueueLength_0
+	lda	<L28+uxQueueLength_0
 	ldy	#$36
-	sta	[<L49+pxNewQueue_0],Y
+	sta	[<L28+pxNewQueue_0],Y
 ;    pxNewQueue->uxItemSize = uxItemSize;
-	lda	<L49+uxItemSize_0
+	lda	<L28+uxItemSize_0
 	iny
 	iny
-	sta	[<L49+pxNewQueue_0],Y
+	sta	[<L28+pxNewQueue_0],Y
 ;    ( void ) xQueueGenericReset( pxNewQueue, pdTRUE );
 	pea	#<$1
-	pei	<L49+pxNewQueue_0+2
-	pei	<L49+pxNewQueue_0
+	pei	<L28+pxNewQueue_0+2
+	pei	<L28+pxNewQueue_0
 	jsr	_~xQueueGenericReset
 ;
 ;    #if ( configUSE_TRACE_FACILITY == 1 )
@@ -1151,16 +974,16 @@ L20001:
 ;
 ;    traceQUEUE_CREATE( pxNewQueue );
 ;}
-	lda	<L49+1
-	sta	<L49+1+14
+	lda	<L28+1
+	sta	<L28+1+14
 	pld
 	tsc
 	clc
-	adc	#L49+14
+	adc	#L28+14
 	tcs
 	rts
-L49	equ	4
-L50	equ	5
+L28	equ	4
+L29	equ	5
 	ends
 	efunc
 ;/*-----------------------------------------------------------*/
@@ -1176,16 +999,16 @@ _~prvInitialiseMutex:
 	longi	on
 	tsc
 	sec
-	sbc	#L53
+	sbc	#L32
 	tcs
 	phd
 	tcd
 pxNewQueue_0	set	3
 ;        if( pxNewQueue != NULL )
 ;        {
-	lda	<L53+pxNewQueue_0
-	ora	<L53+pxNewQueue_0+2
-	beq	L56
+	lda	<L32+pxNewQueue_0
+	ora	<L32+pxNewQueue_0+2
+	beq	L35
 ;            /* The queue create function will set all the queue structure members
 ;            * correctly for a generic queue, but this function is creating a
 ;            * mutex.  Overwrite those members that need to be set differently -
@@ -1193,19 +1016,19 @@ pxNewQueue_0	set	3
 ;            pxNewQueue->u.xSemaphore.xMutexHolder = NULL;
 	lda	#$0
 	ldy	#$8
-	sta	[<L53+pxNewQueue_0],Y
+	sta	[<L32+pxNewQueue_0],Y
 	iny
 	iny
-	sta	[<L53+pxNewQueue_0],Y
+	sta	[<L32+pxNewQueue_0],Y
 ;            pxNewQueue->uxQueueType = queueQUEUE_IS_MUTEX;
-	sta	[<L53+pxNewQueue_0]
+	sta	[<L32+pxNewQueue_0]
 	ldy	#$2
-	sta	[<L53+pxNewQueue_0],Y
+	sta	[<L32+pxNewQueue_0],Y
 ;
 ;            /* In case this is a recursive mutex. */
 ;            pxNewQueue->u.xSemaphore.uxRecursiveCallCount = 0;
 	ldy	#$c
-	sta	[<L53+pxNewQueue_0],Y
+	sta	[<L32+pxNewQueue_0],Y
 ;
 ;            traceCREATE_MUTEX( pxNewQueue );
 ;
@@ -1216,8 +1039,8 @@ pxNewQueue_0	set	3
 	pea	#<$0
 	pea	#^$0
 	pea	#<$0
-	pei	<L53+pxNewQueue_0+2
-	pei	<L53+pxNewQueue_0
+	pei	<L32+pxNewQueue_0+2
+	pei	<L32+pxNewQueue_0
 	jsr	_~xQueueGenericSend
 ;        }
 ;        else
@@ -1225,17 +1048,17 @@ pxNewQueue_0	set	3
 ;            traceCREATE_MUTEX_FAILED();
 ;        }
 ;    }
-L56:
-	lda	<L53+1
-	sta	<L53+1+4
+L35:
+	lda	<L32+1
+	sta	<L32+1+4
 	pld
 	tsc
 	clc
-	adc	#L53+4
+	adc	#L32+4
 	tcs
 	rts
-L53	equ	4
-L54	equ	5
+L32	equ	4
+L33	equ	5
 	ends
 	efunc
 ;
@@ -1254,7 +1077,7 @@ _~xQueueCreateMutex:
 	longi	on
 	tsc
 	sec
-	sbc	#L57
+	sbc	#L36
 	tcs
 	phd
 	tcd
@@ -1267,39 +1090,39 @@ xNewQueue_1	set	0
 uxMutexLength_1	set	4
 uxMutexSize_1	set	6
 	lda	#$1
-	sta	<L58+uxMutexLength_1
-	stz	<L58+uxMutexSize_1
+	sta	<L37+uxMutexLength_1
+	stz	<L37+uxMutexSize_1
 ;
 ;        xNewQueue = xQueueGenericCreate( uxMutexLength, uxMutexSize, ucQueueType );
-	pei	<L57+ucQueueType_0
+	pei	<L36+ucQueueType_0
 	pea	#<$0
 	pea	#<$1
 	jsr	_~xQueueGenericCreate
-	sta	<L58+xNewQueue_1
-	stx	<L58+xNewQueue_1+2
+	sta	<L37+xNewQueue_1
+	stx	<L37+xNewQueue_1+2
 ;        prvInitialiseMutex( ( Queue_t * ) xNewQueue );
-	pei	<L58+xNewQueue_1+2
-	pei	<L58+xNewQueue_1
+	pei	<L37+xNewQueue_1+2
+	pei	<L37+xNewQueue_1
 	jsr	_~prvInitialiseMutex
 ;
 ;        traceRETURN_xQueueCreateMutex( xNewQueue );
 ;
 ;        return xNewQueue;
-	ldx	<L58+xNewQueue_1+2
-	lda	<L58+xNewQueue_1
+	ldx	<L37+xNewQueue_1+2
+	lda	<L37+xNewQueue_1
 	tay
-	lda	<L57+1
-	sta	<L57+1+2
+	lda	<L36+1
+	sta	<L36+1+2
 	pld
 	tsc
 	clc
-	adc	#L57+2
+	adc	#L36+2
 	tcs
 	tya
 	rts
 ;    }
-L57	equ	8
-L58	equ	1
+L36	equ	8
+L37	equ	1
 	ends
 	efunc
 ;
@@ -1311,71 +1134,22 @@ L58	equ	1
 ;    QueueHandle_t xQueueCreateMutexStatic( const uint8_t ucQueueType,
 ;                                           StaticQueue_t * pxStaticQueue )
 ;    {
-	code
-	xdef	_~xQueueCreateMutexStatic
-	func
-_~xQueueCreateMutexStatic:
-	longa	on
-	longi	on
-	tsc
-	sec
-	sbc	#L60
-	tcs
-	phd
-	tcd
-ucQueueType_0	set	3
-pxStaticQueue_0	set	5
 ;        QueueHandle_t xNewQueue;
 ;        const UBaseType_t uxMutexLength = ( UBaseType_t ) 1, uxMutexSize = ( UBaseType_t ) 0;
 ;
 ;        traceENTER_xQueueCreateMutexStatic( ucQueueType, pxStaticQueue );
-xNewQueue_1	set	0
-uxMutexLength_1	set	4
-uxMutexSize_1	set	6
-	lda	#$1
-	sta	<L61+uxMutexLength_1
-	stz	<L61+uxMutexSize_1
 ;
 ;        /* Prevent compiler warnings about unused parameters if
 ;         * configUSE_TRACE_FACILITY does not equal 1. */
 ;        ( void ) ucQueueType;
 ;
 ;        xNewQueue = xQueueGenericCreateStatic( uxMutexLength, uxMutexSize, NULL, pxStaticQueue, ucQueueType );
-	pei	<L60+ucQueueType_0
-	pei	<L60+pxStaticQueue_0+2
-	pei	<L60+pxStaticQueue_0
-	pea	#^$0
-	pea	#<$0
-	pea	#<$0
-	pea	#<$1
-	jsr	_~xQueueGenericCreateStatic
-	sta	<L61+xNewQueue_1
-	stx	<L61+xNewQueue_1+2
 ;        prvInitialiseMutex( ( Queue_t * ) xNewQueue );
-	pei	<L61+xNewQueue_1+2
-	pei	<L61+xNewQueue_1
-	jsr	_~prvInitialiseMutex
 ;
 ;        traceRETURN_xQueueCreateMutexStatic( xNewQueue );
 ;
 ;        return xNewQueue;
-	ldx	<L61+xNewQueue_1+2
-	lda	<L61+xNewQueue_1
-	tay
-	lda	<L60+1
-	sta	<L60+1+6
-	pld
-	tsc
-	clc
-	adc	#L60+6
-	tcs
-	tya
-	rts
 ;    }
-L60	equ	8
-L61	equ	1
-	ends
-	efunc
 ;
 ;#endif /* configUSE_MUTEXES */
 ;/*-----------------------------------------------------------*/
@@ -1459,7 +1233,7 @@ _~xQueueGiveMutexRecursive:
 	longi	on
 	tsc
 	sec
-	sbc	#L63
+	sbc	#L39
 	tcs
 	phd
 	tcd
@@ -1470,18 +1244,18 @@ xMutex_0	set	3
 ;        traceENTER_xQueueGiveMutexRecursive( xMutex );
 xReturn_1	set	0
 pxMutex_1	set	2
-	lda	<L63+xMutex_0
-	sta	<L64+pxMutex_1
-	lda	<L63+xMutex_0+2
-	sta	<L64+pxMutex_1+2
+	lda	<L39+xMutex_0
+	sta	<L40+pxMutex_1
+	lda	<L39+xMutex_0+2
+	sta	<L40+pxMutex_1+2
 ;
 ;        configASSERT( pxMutex );
-	lda	<L64+pxMutex_1
-	ora	<L64+pxMutex_1+2
-	bne	L10084
-L10088:
-	bra	L10088
-L10084:
+	lda	<L40+pxMutex_1
+	ora	<L40+pxMutex_1+2
+	bne	L10044
+L10048:
+	bra	L10048
+L10044:
 ;
 ;        /* If this is the task that holds the mutex then xMutexHolder will not
 ;         * change outside of this task.  If this task does not hold the mutex then
@@ -1494,14 +1268,14 @@ L10084:
 	jsr	_~xTaskGetCurrentTaskHandle
 	stx	<R0+2
 	ldy	#$8
-	cmp	[<L64+pxMutex_1],Y
-	bne	L66
+	cmp	[<L40+pxMutex_1],Y
+	bne	L42
 	lda	<R0+2
 	iny
 	iny
-	cmp	[<L64+pxMutex_1],Y
-L66:
-	bne	L10091
+	cmp	[<L40+pxMutex_1],Y
+L42:
+	bne	L10051
 ;            traceGIVE_MUTEX_RECURSIVE( pxMutex );
 ;
 ;            /* uxRecursiveCallCount cannot be zero if xMutexHolder is equal to
@@ -1513,14 +1287,14 @@ L66:
 	clc
 	lda	#$ffff
 	ldy	#$c
-	adc	[<L64+pxMutex_1],Y
-	sta	[<L64+pxMutex_1],Y
+	adc	[<L40+pxMutex_1],Y
+	sta	[<L40+pxMutex_1],Y
 ;
 ;            /* Has the recursive call count unwound to 0? */
 ;            if( pxMutex->u.xSemaphore.uxRecursiveCallCount == ( UBaseType_t ) 0 )
 ;            {
-	lda	[<L64+pxMutex_1],Y
-	bne	L10093
+	lda	[<L40+pxMutex_1],Y
+	bne	L10053
 ;                /* Return the mutex.  This will automatically unblock any other
 ;                 * task that might be waiting to access the mutex. */
 ;                ( void ) xQueueGenericSend( pxMutex, NULL, queueMUTEX_GIVE_BLOCK_TIME, queueSEND_TO_BACK );
@@ -1529,50 +1303,50 @@ L66:
 	pea	#<$0
 	pea	#^$0
 	pea	#<$0
-	pei	<L64+pxMutex_1+2
-	pei	<L64+pxMutex_1
+	pei	<L40+pxMutex_1+2
+	pei	<L40+pxMutex_1
 	jsr	_~xQueueGenericSend
 ;            }
 ;            else
 ;            {
 ;                mtCOVERAGE_TEST_MARKER();
 ;            }
-L10093:
+L10053:
 ;
 ;            xReturn = pdPASS;
 	lda	#$1
-	sta	<L64+xReturn_1
+	sta	<L40+xReturn_1
 ;        }
 ;        else
-	bra	L10094
-L10091:
+	bra	L10054
+L10051:
 ;        {
 ;            /* The mutex cannot be given because the calling task is not the
 ;             * holder. */
 ;            xReturn = pdFAIL;
-	stz	<L64+xReturn_1
+	stz	<L40+xReturn_1
 ;
 ;            traceGIVE_MUTEX_RECURSIVE_FAILED( pxMutex );
 ;        }
-L10094:
+L10054:
 ;
 ;        traceRETURN_xQueueGiveMutexRecursive( xReturn );
 ;
 ;        return xReturn;
-	lda	<L64+xReturn_1
+	lda	<L40+xReturn_1
 	tay
-	lda	<L63+1
-	sta	<L63+1+4
+	lda	<L39+1
+	sta	<L39+1+4
 	pld
 	tsc
 	clc
-	adc	#L63+4
+	adc	#L39+4
 	tcs
 	tya
 	rts
 ;    }
-L63	equ	10
-L64	equ	5
+L39	equ	10
+L40	equ	5
 	ends
 	efunc
 ;
@@ -1592,7 +1366,7 @@ _~xQueueTakeMutexRecursive:
 	longi	on
 	tsc
 	sec
-	sbc	#L70
+	sbc	#L46
 	tcs
 	phd
 	tcd
@@ -1604,18 +1378,18 @@ xTicksToWait_0	set	7
 ;        traceENTER_xQueueTakeMutexRecursive( xMutex, xTicksToWait );
 xReturn_1	set	0
 pxMutex_1	set	2
-	lda	<L70+xMutex_0
-	sta	<L71+pxMutex_1
-	lda	<L70+xMutex_0+2
-	sta	<L71+pxMutex_1+2
+	lda	<L46+xMutex_0
+	sta	<L47+pxMutex_1
+	lda	<L46+xMutex_0+2
+	sta	<L47+pxMutex_1+2
 ;
 ;        configASSERT( pxMutex );
-	lda	<L71+pxMutex_1
-	ora	<L71+pxMutex_1+2
-	bne	L10095
-L10099:
-	bra	L10099
-L10095:
+	lda	<L47+pxMutex_1
+	ora	<L47+pxMutex_1+2
+	bne	L10055
+L10059:
+	bra	L10059
+L10055:
 ;
 ;        /* Comments regarding mutual exclusion as per those within
 ;         * xQueueGiveMutexRecursive(). */
@@ -1627,78 +1401,78 @@ L10095:
 	jsr	_~xTaskGetCurrentTaskHandle
 	stx	<R0+2
 	ldy	#$8
-	cmp	[<L71+pxMutex_1],Y
-	bne	L73
+	cmp	[<L47+pxMutex_1],Y
+	bne	L49
 	lda	<R0+2
 	iny
 	iny
-	cmp	[<L71+pxMutex_1],Y
-L73:
-	bne	L10102
+	cmp	[<L47+pxMutex_1],Y
+L49:
+	bne	L10062
 ;            ( pxMutex->u.xSemaphore.uxRecursiveCallCount )++;
 	ldy	#$c
-	lda	[<L71+pxMutex_1],Y
+	lda	[<L47+pxMutex_1],Y
 	ina
-	sta	[<L71+pxMutex_1],Y
+	sta	[<L47+pxMutex_1],Y
 ;
 ;            /* Check if an overflow occurred. */
 ;            configASSERT( pxMutex->u.xSemaphore.uxRecursiveCallCount );
-	lda	[<L71+pxMutex_1],Y
-	bne	L10103
-L10107:
-	bra	L10107
-L10103:
+	lda	[<L47+pxMutex_1],Y
+	bne	L10063
+L10067:
+	bra	L10067
+L10063:
 ;
 ;            xReturn = pdPASS;
 	lda	#$1
-	sta	<L71+xReturn_1
+	sta	<L47+xReturn_1
 ;        }
 ;        else
-L10110:
+L10070:
 ;
 ;        traceRETURN_xQueueTakeMutexRecursive( xReturn );
 ;
 ;        return xReturn;
-	lda	<L71+xReturn_1
+	lda	<L47+xReturn_1
 	tay
-	lda	<L70+1
-	sta	<L70+1+8
+	lda	<L46+1
+	sta	<L46+1+8
 	pld
 	tsc
 	clc
-	adc	#L70+8
+	adc	#L46+8
 	tcs
 	tya
 	rts
-L10102:
+L10062:
 ;        {
 ;            xReturn = xQueueSemaphoreTake( pxMutex, xTicksToWait );
-	pei	<L70+xTicksToWait_0+2
-	pei	<L70+xTicksToWait_0
-	pei	<L71+pxMutex_1+2
-	pei	<L71+pxMutex_1
+	pei	<L46+xTicksToWait_0+2
+	pei	<L46+xTicksToWait_0
+	pei	<L47+pxMutex_1+2
+	pei	<L47+pxMutex_1
 	jsr	_~xQueueSemaphoreTake
-	sta	<L71+xReturn_1
+	sta	<L47+xReturn_1
 ;
 ;            /* pdPASS will only be returned if the mutex was successfully
 ;             * obtained.  The calling task may have entered the Blocked state
 ;             * before reaching here. */
 ;            if( xReturn != pdFAIL )
 ;            {
-	lda	<L71+xReturn_1
-	beq	L10110
+	lda	<L47+xReturn_1
+	beq	L10070
 ;                ( pxMutex->u.xSemaphore.uxRecursiveCallCount )++;
 	ldy	#$c
-	lda	[<L71+pxMutex_1],Y
+	lda	[<L47+pxMutex_1],Y
 	ina
-	sta	[<L71+pxMutex_1],Y
+	sta	[<L47+pxMutex_1],Y
 ;
 ;                /* Check if an overflow occurred. */
 ;                configASSERT( pxMutex->u.xSemaphore.uxRecursiveCallCount );
-	lda	[<L71+pxMutex_1],Y
-	bne	L10110
-L10116:
-	bra	L10116
+	lda	[<L47+pxMutex_1],Y
+	bne	L10070
+L10076:
+	bra	L10076
 ;            }
 ;            else
 ;            {
@@ -1706,8 +1480,8 @@ L10116:
 ;            }
 ;        }
 ;    }
-L70	equ	10
-L71	equ	5
+L46	equ	10
+L47	equ	5
 	ends
 	efunc
 ;
@@ -1720,97 +1494,36 @@ L71	equ	5
 ;                                                       const UBaseType_t uxInitialCount,
 ;                                                       StaticQueue_t * pxStaticQueue )
 ;    {
-	code
-	xdef	_~xQueueCreateCountingSemaphoreStatic
-	func
-_~xQueueCreateCountingSemaphoreStatic:
-	longa	on
-	longi	on
-	tsc
-	sec
-	sbc	#L79
-	tcs
-	phd
-	tcd
-uxMaxCount_0	set	3
-uxInitialCount_0	set	5
-pxStaticQueue_0	set	7
 ;        QueueHandle_t xHandle = NULL;
 ;
 ;        traceENTER_xQueueCreateCountingSemaphoreStatic( uxMaxCount, uxInitialCount, pxStaticQueue );
-xHandle_1	set	0
-	stz	<L80+xHandle_1
-	stz	<L80+xHandle_1+2
 ;
 ;        if( ( uxMaxCount != 0U ) &&
 ;            ( uxInitialCount <= uxMaxCount ) )
 ;        {
-	lda	<L79+uxMaxCount_0
-	beq	L10120
-	lda	<L79+uxMaxCount_0
-	cmp	<L79+uxInitialCount_0
-	bcc	L10120
 ;            xHandle = xQueueGenericCreateStatic( uxMaxCount, queueSEMAPHORE_QUEUE_ITEM_LENGTH, NULL, pxStaticQueue, queueQUEUE_TYPE_COUNTING_SEMAPHORE );
-	pea	#<$2
-	pei	<L79+pxStaticQueue_0+2
-	pei	<L79+pxStaticQueue_0
-	pea	#^$0
-	pea	#<$0
-	pea	#<$0
-	pei	<L79+uxMaxCount_0
-	jsr	_~xQueueGenericCreateStatic
-	sta	<L80+xHandle_1
-	stx	<L80+xHandle_1+2
 ;
 ;            if( xHandle != NULL )
 ;            {
-	ora	<L80+xHandle_1+2
-	beq	L10123
 ;                ( ( Queue_t * ) xHandle )->uxMessagesWaiting = uxInitialCount;
-	lda	<L79+uxInitialCount_0
-	ldy	#$34
-	sta	[<L80+xHandle_1],Y
 ;
 ;                traceCREATE_COUNTING_SEMAPHORE();
 ;            }
 ;            else
-L10123:
-;
-;        traceRETURN_xQueueCreateCountingSemaphoreStatic( xHandle );
-;
-;        return xHandle;
-	ldx	<L80+xHandle_1+2
-	lda	<L80+xHandle_1
-	tay
-	lda	<L79+1
-	sta	<L79+1+8
-	pld
-	tsc
-	clc
-	adc	#L79+8
-	tcs
-	tya
-	rts
 ;            {
 ;                traceCREATE_COUNTING_SEMAPHORE_FAILED();
 ;            }
 ;        }
 ;        else
-L10120:
 ;        {
 ;            configASSERT( xHandle );
-	lda	<L80+xHandle_1
-	ora	<L80+xHandle_1+2
-	bne	L10123
-L10128:
-	bra	L10128
 ;            mtCOVERAGE_TEST_MARKER();
 ;        }
+;
+;        traceRETURN_xQueueCreateCountingSemaphoreStatic( xHandle );
+;
+;        return xHandle;
 ;    }
-L79	equ	4
-L80	equ	1
-	ends
-	efunc
 ;
 ;#endif /* ( ( configUSE_COUNTING_SEMAPHORES == 1 ) && ( configSUPPORT_DYNAMIC_ALLOCATION == 1 ) ) */
 ;/*-----------------------------------------------------------*/
@@ -1828,7 +1541,7 @@ _~xQueueCreateCountingSemaphore:
 	longi	on
 	tsc
 	sec
-	sbc	#L86
+	sbc	#L55
 	tcs
 	phd
 	tcd
@@ -1838,51 +1551,51 @@ uxInitialCount_0	set	5
 ;
 ;        traceENTER_xQueueCreateCountingSemaphore( uxMaxCount, uxInitialCount );
 xHandle_1	set	0
-	stz	<L87+xHandle_1
-	stz	<L87+xHandle_1+2
+	stz	<L56+xHandle_1
+	stz	<L56+xHandle_1+2
 ;
 ;        if( ( uxMaxCount != 0U ) &&
 ;            ( uxInitialCount <= uxMaxCount ) )
 ;        {
-	lda	<L86+uxMaxCount_0
-	beq	L10131
-	lda	<L86+uxMaxCount_0
-	cmp	<L86+uxInitialCount_0
-	bcc	L10131
+	lda	<L55+uxMaxCount_0
+	beq	L10080
+	lda	<L55+uxMaxCount_0
+	cmp	<L55+uxInitialCount_0
+	bcc	L10080
 ;            xHandle = xQueueGenericCreate( uxMaxCount, queueSEMAPHORE_QUEUE_ITEM_LENGTH, queueQUEUE_TYPE_COUNTING_SEMAPHORE );
 	pea	#<$2
 	pea	#<$0
-	pei	<L86+uxMaxCount_0
+	pei	<L55+uxMaxCount_0
 	jsr	_~xQueueGenericCreate
-	sta	<L87+xHandle_1
-	stx	<L87+xHandle_1+2
+	sta	<L56+xHandle_1
+	stx	<L56+xHandle_1+2
 ;
 ;            if( xHandle != NULL )
 ;            {
-	ora	<L87+xHandle_1+2
-	beq	L10134
+	ora	<L56+xHandle_1+2
+	beq	L10083
 ;                ( ( Queue_t * ) xHandle )->uxMessagesWaiting = uxInitialCount;
-	lda	<L86+uxInitialCount_0
+	lda	<L55+uxInitialCount_0
 	ldy	#$34
-	sta	[<L87+xHandle_1],Y
+	sta	[<L56+xHandle_1],Y
 ;
 ;                traceCREATE_COUNTING_SEMAPHORE();
 ;            }
 ;            else
-L10134:
+L10083:
 ;
 ;        traceRETURN_xQueueCreateCountingSemaphore( xHandle );
 ;
 ;        return xHandle;
-	ldx	<L87+xHandle_1+2
-	lda	<L87+xHandle_1
+	ldx	<L56+xHandle_1+2
+	lda	<L56+xHandle_1
 	tay
-	lda	<L86+1
-	sta	<L86+1+4
+	lda	<L55+1
+	sta	<L55+1+4
 	pld
 	tsc
 	clc
-	adc	#L86+4
+	adc	#L55+4
 	tcs
 	tya
 	rts
@@ -1891,19 +1604,19 @@ L10134:
 ;            }
 ;        }
 ;        else
-L10131:
+L10080:
 ;        {
 ;            configASSERT( xHandle );
-	lda	<L87+xHandle_1
-	ora	<L87+xHandle_1+2
-	bne	L10134
-L10139:
-	bra	L10139
+	lda	<L56+xHandle_1
+	ora	<L56+xHandle_1+2
+	bne	L10083
+L10088:
+	bra	L10088
 ;            mtCOVERAGE_TEST_MARKER();
 ;        }
 ;    }
-L86	equ	4
-L87	equ	1
+L55	equ	4
+L56	equ	1
 	ends
 	efunc
 ;
@@ -1923,7 +1636,7 @@ _~xQueueGenericSend:
 	longi	on
 	tsc
 	sec
-	sbc	#L93
+	sbc	#L62
 	tcs
 	phd
 	tcd
@@ -1940,78 +1653,78 @@ xEntryTimeSet_1	set	0
 xYieldRequired_1	set	2
 xTimeOut_1	set	4
 pxQueue_1	set	10
-	stz	<L94+xEntryTimeSet_1
-	lda	<L93+xQueue_0
-	sta	<L94+pxQueue_1
-	lda	<L93+xQueue_0+2
-	sta	<L94+pxQueue_1+2
+	stz	<L63+xEntryTimeSet_1
+	lda	<L62+xQueue_0
+	sta	<L63+pxQueue_1
+	lda	<L62+xQueue_0+2
+	sta	<L63+pxQueue_1+2
 ;
 ;    configASSERT( pxQueue );
-	lda	<L94+pxQueue_1
-	ora	<L94+pxQueue_1+2
-	bne	L10142
-L10146:
-	bra	L10146
-L10142:
+	lda	<L63+pxQueue_1
+	ora	<L63+pxQueue_1+2
+	bne	L10091
+L10095:
+	bra	L10095
+L10091:
 ;    configASSERT( !( ( pvItemToQueue == NULL ) && ( pxQueue->uxItemSize != ( UBaseType_t ) 0U ) ) );
-	lda	<L93+pvItemToQueue_0
-	ora	<L93+pvItemToQueue_0+2
-	bne	L10149
+	lda	<L62+pvItemToQueue_0
+	ora	<L62+pvItemToQueue_0+2
+	bne	L10098
 	ldy	#$38
-	lda	[<L94+pxQueue_1],Y
-	beq	L10149
-L10153:
-	bra	L10153
-L10149:
+	lda	[<L63+pxQueue_1],Y
+	beq	L10098
+L10102:
+	bra	L10102
+L10098:
 ;    configASSERT( !( ( xCopyPosition == queueOVERWRITE ) && ( pxQueue->uxLength != 1 ) ) );
-	lda	<L93+xCopyPosition_0
+	lda	<L62+xCopyPosition_0
 	cmp	#<$2
-	bne	L10156
+	bne	L10105
 	ldy	#$36
-	lda	[<L94+pxQueue_1],Y
+	lda	[<L63+pxQueue_1],Y
 	cmp	#<$1
-	beq	L10156
-L10160:
-	bra	L10160
-L10156:
+	beq	L10105
+L10109:
+	bra	L10109
+L10105:
 ;    #if ( ( INCLUDE_xTaskGetSchedulerState == 1 ) || ( configUSE_TIMERS == 1 ) )
 ;    {
 ;        configASSERT( !( ( xTaskGetSchedulerState() == taskSCHEDULER_SUSPENDED ) && ( xTicksToWait != 0 ) ) );
 	jsr	_~xTaskGetSchedulerState
 	tax
 	beq	*+5
-	brl	L10174
-	lda	<L93+xTicksToWait_0
-	ora	<L93+xTicksToWait_0+2
+	brl	L10123
+	lda	<L62+xTicksToWait_0
+	ora	<L62+xTicksToWait_0+2
 	bne	*+5
-	brl	L10174
-L10167:
-	bra	L10167
+	brl	L10123
+L10116:
+	bra	L10116
 ;    }
 ;    #endif
 ;
 ;    for( ; ; )
 ;    {
 ;        taskENTER_CRITICAL();
-L105:
+L74:
 	lda	#$0
-L107:
+L76:
 	tax
-	bne	L10177
+	bne	L10126
 ;                        if( xTaskRemoveFromEventList( &( pxQueue->xTasksWaitingToReceive ) ) != pdFALSE )
 ;                        {
 	lda	#$22
 	clc
-	adc	<L94+pxQueue_1
+	adc	<L63+pxQueue_1
 	sta	<R0
 	lda	#$0
-	adc	<L94+pxQueue_1+2
+	adc	<L63+pxQueue_1+2
 	pha
 	pei	<R0
 	jsr	_~xTaskRemoveFromEventList
 	tax
 L20003:
-	beq	L10184
+	beq	L10133
 ;                            /* The unblocked task has a priority higher than
 ;                             * our own so yield immediately.  Yes it is ok to do
 ;                             * this from within the critical section - the kernel
@@ -2020,20 +1733,20 @@ L20003:
 	jsr	_~vPortYield
 ;                        }
 ;                        else
-L10184:
+L10133:
 ;
 ;                traceRETURN_xQueueGenericSend( pdPASS );
 ;
 ;                return pdPASS;
 	lda	#$1
-L111:
+L80:
 	tay
-	lda	<L93+1
-	sta	<L93+1+14
+	lda	<L62+1
+	sta	<L62+1+14
 	pld
 	tsc
 	clc
-	adc	#L93+14
+	adc	#L62+14
 	tcs
 	tya
 	rts
@@ -2042,9 +1755,9 @@ L111:
 ;                        }
 ;                    }
 ;                    else if( xYieldRequired != pdFALSE )
-L10177:
+L10126:
 ;                    {
-	lda	<L94+xYieldRequired_1
+	lda	<L63+xYieldRequired_1
 	bra	L20003
 ;                        /* This path is a special case that will only get
 ;                         * executed if the task was holding multiple mutexes and
@@ -2062,13 +1775,13 @@ L10177:
 ;                taskEXIT_CRITICAL();
 ;            }
 ;            else
-L10176:
+L10125:
 ;            {
 ;                if( xTicksToWait == ( TickType_t ) 0 )
 ;                {
-	lda	<L93+xTicksToWait_0
-	ora	<L93+xTicksToWait_0+2
-	bne	L10186
+	lda	<L62+xTicksToWait_0
+	ora	<L62+xTicksToWait_0+2
+	bne	L10135
 ;                    /* The queue was full and no block time is specified (or
 ;                     * the block time has expired) so leave now. */
 ;                    taskEXIT_CRITICAL();
@@ -2081,25 +1794,25 @@ L10176:
 ;                    return errQUEUE_FULL;
 L20004:
 	lda	#$0
-	bra	L111
+	bra	L80
 ;                }
 ;                else if( xEntryTimeSet == pdFALSE )
-L10186:
+L10135:
 ;                {
-	lda	<L94+xEntryTimeSet_1
-	bne	L10193
+	lda	<L63+xEntryTimeSet_1
+	bne	L10142
 ;                    /* The queue was full and a block time was specified so
 ;                     * configure the timeout structure. */
 ;                    vTaskInternalSetTimeOutState( &xTimeOut );
 	pea	#0
 	clc
 	tdc
-	adc	#<L94+xTimeOut_1
+	adc	#<L63+xTimeOut_1
 	pha
 	jsr	_~vTaskInternalSetTimeOutState
 ;                    xEntryTimeSet = pdTRUE;
 	lda	#$1
-	sta	<L94+xEntryTimeSet_1
+	sta	<L63+xEntryTimeSet_1
 ;                }
 ;                else
 ;                {
@@ -2109,7 +1822,7 @@ L10186:
 ;            }
 ;        }
 ;        taskEXIT_CRITICAL();
-L10193:
+L10142:
 ;
 ;        /* Interrupts and other tasks can send to and receive from the queue
 ;         * now the critical section has been exited. */
@@ -2120,33 +1833,33 @@ L10193:
 	sep	#$20
 	longa	off
 	ldy	#$3a
-	lda	[<L94+pxQueue_1],Y
+	lda	[<L63+pxQueue_1],Y
 	cmp	#<$ffffffff
 	rep	#$20
 	longa	on
-	bne	L10198
+	bne	L10147
 	sep	#$20
 	longa	off
 	lda	#$0
-	sta	[<L94+pxQueue_1],Y
+	sta	[<L63+pxQueue_1],Y
 	rep	#$20
 	longa	on
-L10198:
+L10147:
 	sep	#$20
 	longa	off
 	ldy	#$3b
-	lda	[<L94+pxQueue_1],Y
+	lda	[<L63+pxQueue_1],Y
 	cmp	#<$ffffffff
 	rep	#$20
 	longa	on
-	bne	L10201
+	bne	L10150
 	sep	#$20
 	longa	off
 	lda	#$0
-	sta	[<L94+pxQueue_1],Y
+	sta	[<L63+pxQueue_1],Y
 	rep	#$20
 	longa	on
-L10201:
+L10150:
 ;
 ;        /* Update the timeout state to see if it has expired yet. */
 ;        if( xTaskCheckForTimeOut( &xTimeOut, &xTicksToWait ) == pdFALSE )
@@ -2154,33 +1867,33 @@ L10201:
 	pea	#0
 	clc
 	tdc
-	adc	#<L93+xTicksToWait_0
+	adc	#<L62+xTicksToWait_0
 	pha
 	pea	#0
 	clc
 	tdc
-	adc	#<L94+xTimeOut_1
+	adc	#<L63+xTimeOut_1
 	pha
 	jsr	_~xTaskCheckForTimeOut
 	tax
-	bne	L10203
+	bne	L10152
 ;            if( prvIsQueueFull( pxQueue ) != pdFALSE )
 ;            {
-	pei	<L94+pxQueue_1+2
-	pei	<L94+pxQueue_1
+	pei	<L63+pxQueue_1+2
+	pei	<L63+pxQueue_1
 	jsr	_~prvIsQueueFull
 	tax
-	beq	L10204
+	beq	L10153
 ;                traceBLOCKING_ON_QUEUE_SEND( pxQueue );
 ;                vTaskPlaceOnEventList( &( pxQueue->xTasksWaitingToSend ), xTicksToWait );
-	pei	<L93+xTicksToWait_0+2
-	pei	<L93+xTicksToWait_0
+	pei	<L62+xTicksToWait_0+2
+	pei	<L62+xTicksToWait_0
 	lda	#$10
 	clc
-	adc	<L94+pxQueue_1
+	adc	<L63+pxQueue_1
 	sta	<R0
 	lda	#$0
-	adc	<L94+pxQueue_1+2
+	adc	<L63+pxQueue_1+2
 	pha
 	pei	<R0
 	jsr	_~vTaskPlaceOnEventList
@@ -2191,8 +1904,8 @@ L10201:
 ;                 * scheduler is suspended the task will go onto the pending
 ;                 * ready list instead of the actual ready list. */
 ;                prvUnlockQueue( pxQueue );
-	pei	<L94+pxQueue_1+2
-	pei	<L94+pxQueue_1
+	pei	<L63+pxQueue_1+2
+	pei	<L63+pxQueue_1
 	jsr	_~prvUnlockQueue
 ;
 ;                /* Resuming the scheduler will move tasks from the pending
@@ -2204,13 +1917,13 @@ L10201:
 ;                {
 	jsr	_~xTaskResumeAll
 	tax
-	bne	L10174
+	bne	L10123
 ;                    taskYIELD_WITHIN_API();
 	jsr	_~vPortYield
 ;                }
 ;            }
 ;            else
-L10174:
+L10123:
 ;        {
 ;            /* Is there room on the queue now?  The running task must be the
 ;             * highest priority task wanting to access the queue.  If the head item
@@ -2219,16 +1932,16 @@ L10174:
 ;            if( ( pxQueue->uxMessagesWaiting < pxQueue->uxLength ) || ( xCopyPosition == queueOVERWRITE ) )
 ;            {
 	ldy	#$34
-	lda	[<L94+pxQueue_1],Y
+	lda	[<L63+pxQueue_1],Y
 	iny
 	iny
-	cmp	[<L94+pxQueue_1],Y
-	bcc	L102
-	lda	<L93+xCopyPosition_0
+	cmp	[<L63+pxQueue_1],Y
+	bcc	L71
+	lda	<L62+xCopyPosition_0
 	cmp	#<$2
 	beq	*+5
-	brl	L10176
-L102:
+	brl	L10125
+L71:
 ;                traceQUEUE_SEND( pxQueue );
 ;
 ;                #if ( configUSE_QUEUE_SETS == 1 )
@@ -2294,43 +2007,43 @@ L102:
 ;                #else /* configUSE_QUEUE_SETS */
 ;                {
 ;                    xYieldRequired = prvCopyDataToQueue( pxQueue, pvItemToQueue, xCopyPosition );
-	pei	<L93+xCopyPosition_0
-	pei	<L93+pvItemToQueue_0+2
-	pei	<L93+pvItemToQueue_0
-	pei	<L94+pxQueue_1+2
-	pei	<L94+pxQueue_1
+	pei	<L62+xCopyPosition_0
+	pei	<L62+pvItemToQueue_0+2
+	pei	<L62+pvItemToQueue_0
+	pei	<L63+pxQueue_1+2
+	pei	<L63+pxQueue_1
 	jsr	_~prvCopyDataToQueue
-	sta	<L94+xYieldRequired_1
+	sta	<L63+xYieldRequired_1
 ;
 ;                    /* If there was a task waiting for data to arrive on the
 ;                     * queue then unblock it now. */
 ;                    if( listLIST_IS_EMPTY( &( pxQueue->xTasksWaitingToReceive ) ) == pdFALSE )
 ;                    {
 	ldy	#$22
-	lda	[<L94+pxQueue_1],Y
+	lda	[<L63+pxQueue_1],Y
 	beq	*+5
-	brl	L105
+	brl	L74
 	lda	#$1
-	brl	L107
-L10204:
+	brl	L76
+L10153:
 ;            {
 ;                /* Try again. */
 ;                prvUnlockQueue( pxQueue );
-	pei	<L94+pxQueue_1+2
-	pei	<L94+pxQueue_1
+	pei	<L63+pxQueue_1+2
+	pei	<L63+pxQueue_1
 	jsr	_~prvUnlockQueue
 ;                ( void ) xTaskResumeAll();
 	jsr	_~xTaskResumeAll
 ;            }
 ;        }
 ;        else
-	bra	L10174
-L10203:
+	bra	L10123
+L10152:
 ;        {
 ;            /* The timeout has expired. */
 ;            prvUnlockQueue( pxQueue );
-	pei	<L94+pxQueue_1+2
-	pei	<L94+pxQueue_1
+	pei	<L63+pxQueue_1+2
+	pei	<L63+pxQueue_1
 	jsr	_~prvUnlockQueue
 ;            ( void ) xTaskResumeAll();
 	jsr	_~xTaskResumeAll
@@ -2343,8 +2056,8 @@ L10203:
 ;        }
 ;    }
 ;}
-L93	equ	18
-L94	equ	5
+L62	equ	18
+L63	equ	5
 	ends
 	efunc
 ;/*-----------------------------------------------------------*/
@@ -2362,7 +2075,7 @@ _~xQueueGenericSendFromISR:
 	longi	on
 	tsc
 	sec
-	sbc	#L119
+	sbc	#L88
 	tcs
 	phd
 	tcd
@@ -2378,38 +2091,38 @@ xCopyPosition_0	set	15
 xReturn_1	set	0
 uxSavedInterruptStatus_1	set	2
 pxQueue_1	set	4
-	lda	<L119+xQueue_0
-	sta	<L120+pxQueue_1
-	lda	<L119+xQueue_0+2
-	sta	<L120+pxQueue_1+2
+	lda	<L88+xQueue_0
+	sta	<L89+pxQueue_1
+	lda	<L88+xQueue_0+2
+	sta	<L89+pxQueue_1+2
 ;
 ;    configASSERT( ( pxQueue != NULL ) && !( ( pvItemToQueue == NULL ) && ( pxQueue->uxItemSize != ( UBaseType_t ) 0U ) ) );
-	lda	<L120+pxQueue_1
-	ora	<L120+pxQueue_1+2
-	beq	L10212
-	lda	<L119+pvItemToQueue_0
-	ora	<L119+pvItemToQueue_0+2
-	bne	L10208
+	lda	<L89+pxQueue_1
+	ora	<L89+pxQueue_1+2
+	beq	L10161
+	lda	<L88+pvItemToQueue_0
+	ora	<L88+pvItemToQueue_0+2
+	bne	L10157
 	ldy	#$38
-	lda	[<L120+pxQueue_1],Y
-	beq	L10208
-L10212:
-	bra	L10212
-L10208:
+	lda	[<L89+pxQueue_1],Y
+	beq	L10157
+L10161:
+	bra	L10161
+L10157:
 ;    configASSERT( ( pxQueue != NULL ) && !( ( xCopyPosition == queueOVERWRITE ) && ( pxQueue->uxLength != 1 ) ) );
-	lda	<L120+pxQueue_1
-	ora	<L120+pxQueue_1+2
-	beq	L10219
-	lda	<L119+xCopyPosition_0
+	lda	<L89+pxQueue_1
+	ora	<L89+pxQueue_1+2
+	beq	L10168
+	lda	<L88+xCopyPosition_0
 	cmp	#<$2
-	bne	L10215
+	bne	L10164
 	ldy	#$36
-	lda	[<L120+pxQueue_1],Y
+	lda	[<L89+pxQueue_1],Y
 	cmp	#<$1
-	beq	L10215
-L10219:
-	bra	L10219
-L10215:
+	beq	L10164
+L10168:
+	bra	L10168
+L10164:
 ;
 ;    /* RTOS ports that support interrupt nesting have the concept of a maximum
 ;     * system call (or maximum API call) interrupt priority.  Interrupts that are
@@ -2436,21 +2149,21 @@ L10215:
 ;    /* More details at: https://github.com/FreeRTOS/FreeRTOS-Kernel/blob/main/MISRA.md#dir-47 */
 ;    /* coverity[misra_c_2012_directive_4_7_violation] */
 ;    uxSavedInterruptStatus = ( UBaseType_t ) taskENTER_CRITICAL_FROM_ISR();
-	stz	<L120+uxSavedInterruptStatus_1
+	stz	<L89+uxSavedInterruptStatus_1
 ;    {
 ;        if( ( pxQueue->uxMessagesWaiting < pxQueue->uxLength ) || ( xCopyPosition == queueOVERWRITE ) )
 ;        {
 	ldy	#$34
-	lda	[<L120+pxQueue_1],Y
+	lda	[<L89+pxQueue_1],Y
 	iny
 	iny
-	cmp	[<L120+pxQueue_1],Y
-	bcc	L129
-	lda	<L119+xCopyPosition_0
+	cmp	[<L89+pxQueue_1],Y
+	bcc	L98
+	lda	<L88+xCopyPosition_0
 	cmp	#<$2
 	beq	*+5
-	brl	L10222
-L129:
+	brl	L10171
+L98:
 ;            const int8_t cTxLock = pxQueue->cTxLock;
 ;            const UBaseType_t uxPreviousMessagesWaiting = pxQueue->uxMessagesWaiting;
 ;
@@ -2460,13 +2173,13 @@ uxPreviousMessagesWaiting_2	set	9
 	sep	#$20
 	longa	off
 	ldy	#$3b
-	lda	[<L120+pxQueue_1],Y
-	sta	<L120+cTxLock_2
+	lda	[<L89+pxQueue_1],Y
+	sta	<L89+cTxLock_2
 	rep	#$20
 	longa	on
 	ldy	#$34
-	lda	[<L120+pxQueue_1],Y
-	sta	<L120+uxPreviousMessagesWaiting_2
+	lda	[<L89+pxQueue_1],Y
+	sta	<L89+uxPreviousMessagesWaiting_2
 ;
 ;            /* Semaphores use xQueueGiveFromISR(), so pxQueue will not be a
 ;             *  semaphore or mutex.  That means prvCopyDataToQueue() cannot result
@@ -2474,11 +2187,11 @@ uxPreviousMessagesWaiting_2	set	9
 ;             *  called here even though the disinherit function does not check if
 ;             *  the scheduler is suspended before accessing the ready lists. */
 ;            ( void ) prvCopyDataToQueue( pxQueue, pvItemToQueue, xCopyPosition );
-	pei	<L119+xCopyPosition_0
-	pei	<L119+pvItemToQueue_0+2
-	pei	<L119+pvItemToQueue_0
-	pei	<L120+pxQueue_1+2
-	pei	<L120+pxQueue_1
+	pei	<L88+xCopyPosition_0
+	pei	<L88+pvItemToQueue_0+2
+	pei	<L88+pvItemToQueue_0
+	pei	<L89+pxQueue_1+2
+	pei	<L89+pxQueue_1
 	jsr	_~prvCopyDataToQueue
 ;
 ;            /* The event list is not altered if the queue is locked.  This will
@@ -2487,11 +2200,11 @@ uxPreviousMessagesWaiting_2	set	9
 ;            {
 	sep	#$20
 	longa	off
-	lda	<L120+cTxLock_2
+	lda	<L89+cTxLock_2
 	cmp	#<$ffffffff
 	rep	#$20
 	longa	on
-	bne	L10233
+	bne	L10182
 ;                #if ( configUSE_QUEUE_SETS == 1 )
 ;                {
 ;                    if( pxQueue->pxQueueSetContainer != NULL )
@@ -2555,43 +2268,43 @@ uxPreviousMessagesWaiting_2	set	9
 ;                    if( listLIST_IS_EMPTY( &( pxQueue->xTasksWaitingToReceive ) ) == pdFALSE )
 ;                    {
 	ldy	#$22
-	lda	[<L120+pxQueue_1],Y
-	bne	L133
+	lda	[<L89+pxQueue_1],Y
+	bne	L102
 	lda	#$1
-	bra	L135
-L133:
+	bra	L104
+L102:
 	lda	#$0
-L135:
+L104:
 	tax
-	bne	L10230
+	bne	L10179
 ;                        if( xTaskRemoveFromEventList( &( pxQueue->xTasksWaitingToReceive ) ) != pdFALSE )
 ;                        {
 	lda	#$22
 	clc
-	adc	<L120+pxQueue_1
+	adc	<L89+pxQueue_1
 	sta	<R0
 	lda	#$0
-	adc	<L120+pxQueue_1+2
+	adc	<L89+pxQueue_1+2
 	pha
 	pei	<R0
 	jsr	_~xTaskRemoveFromEventList
 	tax
-	beq	L10230
+	beq	L10179
 ;                            /* The task waiting has a higher priority so record that a
 ;                             * context switch is required. */
 ;                            if( pxHigherPriorityTaskWoken != NULL )
 ;                            {
-	lda	<L119+pxHigherPriorityTaskWoken_0
-	ora	<L119+pxHigherPriorityTaskWoken_0+2
-	beq	L10230
+	lda	<L88+pxHigherPriorityTaskWoken_0
+	ora	<L88+pxHigherPriorityTaskWoken_0+2
+	beq	L10179
 ;                                *pxHigherPriorityTaskWoken = pdTRUE;
 	lda	#$1
-	sta	[<L119+pxHigherPriorityTaskWoken_0]
+	sta	[<L88+pxHigherPriorityTaskWoken_0]
 ;                            }
 ;                            else
 ;                    }
 ;                    else
-	bra	L10230
+	bra	L10179
 ;                            {
 ;                                mtCOVERAGE_TEST_MARKER();
 ;                            }
@@ -2614,72 +2327,72 @@ L135:
 ;                /* Increment the lock count so the task that unlocks the queue
 ;                 * knows that data was posted while it was locked. */
 ;                prvIncrementQueueTxLock( pxQueue, cTxLock );
-L10233:
+L10182:
 uxNumberOfTasks_3	set	11
 	jsr	_~uxTaskGetNumberOfTasks
-	sta	<L120+uxNumberOfTasks_3
-	lda	<L120+cTxLock_2
+	sta	<L89+uxNumberOfTasks_3
+	lda	<L89+cTxLock_2
 	and	#$ff
 	bit	#$80
-	beq	L139
+	beq	L108
 	ora	#$ff00
-L139:
-	cmp	<L120+uxNumberOfTasks_3
-	bcs	L10230
+L108:
+	cmp	<L89+uxNumberOfTasks_3
+	bcs	L10179
 	sep	#$20
 	longa	off
-	lda	<L120+cTxLock_2
+	lda	<L89+cTxLock_2
 	cmp	#<$7f
 	rep	#$20
 	longa	on
-	bne	L10235
-L10239:
-	bra	L10239
-L10235:
+	bne	L10184
+L10188:
+	bra	L10188
+L10184:
 	sep	#$20
 	longa	off
-	lda	<L120+cTxLock_2
+	lda	<L89+cTxLock_2
 	ina
 	ldy	#$3b
-	sta	[<L120+pxQueue_1],Y
+	sta	[<L89+pxQueue_1],Y
 	rep	#$20
 	longa	on
 ;            }
-L10230:
+L10179:
 ;
 ;            xReturn = pdPASS;
 	lda	#$1
-	sta	<L120+xReturn_1
+	sta	<L89+xReturn_1
 ;        }
 ;        else
-	bra	L10242
-L10222:
+	bra	L10191
+L10171:
 ;        {
 ;            traceQUEUE_SEND_FROM_ISR_FAILED( pxQueue );
 ;            xReturn = errQUEUE_FULL;
-	stz	<L120+xReturn_1
+	stz	<L89+xReturn_1
 ;        }
-L10242:
+L10191:
 ;    }
 ;    taskEXIT_CRITICAL_FROM_ISR( uxSavedInterruptStatus );
 ;
 ;    traceRETURN_xQueueGenericSendFromISR( xReturn );
 ;
 ;    return xReturn;
-	lda	<L120+xReturn_1
+	lda	<L89+xReturn_1
 	tay
-	lda	<L119+1
-	sta	<L119+1+14
+	lda	<L88+1
+	sta	<L88+1+14
 	pld
 	tsc
 	clc
-	adc	#L119+14
+	adc	#L88+14
 	tcs
 	tya
 	rts
 ;}
-L119	equ	17
-L120	equ	5
+L88	equ	17
+L89	equ	5
 	ends
 	efunc
 ;/*-----------------------------------------------------------*/
@@ -2695,7 +2408,7 @@ _~xQueueGiveFromISR:
 	longi	on
 	tsc
 	sec
-	sbc	#L143
+	sbc	#L112
 	tcs
 	phd
 	tcd
@@ -2709,10 +2422,10 @@ pxHigherPriorityTaskWoken_0	set	7
 xReturn_1	set	0
 uxSavedInterruptStatus_1	set	2
 pxQueue_1	set	4
-	lda	<L143+xQueue_0
-	sta	<L144+pxQueue_1
-	lda	<L143+xQueue_0+2
-	sta	<L144+pxQueue_1+2
+	lda	<L112+xQueue_0
+	sta	<L113+pxQueue_1
+	lda	<L112+xQueue_0+2
+	sta	<L113+pxQueue_1+2
 ;
 ;    /* Similar to xQueueGenericSendFromISR() but used with semaphores where the
 ;     * item size is 0.  Don't directly wake a task that was blocked on a queue
@@ -2723,36 +2436,36 @@ pxQueue_1	set	4
 ;    /* xQueueGenericSendFromISR() should be used instead of xQueueGiveFromISR()
 ;     * if the item size is not 0. */
 ;    configASSERT( ( pxQueue != NULL ) && ( pxQueue->uxItemSize == 0 ) );
-	lda	<L144+pxQueue_1
-	ora	<L144+pxQueue_1+2
-	beq	L10247
+	lda	<L113+pxQueue_1
+	ora	<L113+pxQueue_1+2
+	beq	L10196
 	ldy	#$38
-	lda	[<L144+pxQueue_1],Y
-	beq	L10243
-L10247:
-	bra	L10247
-L10243:
+	lda	[<L113+pxQueue_1],Y
+	beq	L10192
+L10196:
+	bra	L10196
+L10192:
 ;
 ;    /* Normally a mutex would not be given from an interrupt, especially if
 ;     * there is a mutex holder, as priority inheritance makes no sense for an
 ;     * interrupt, only tasks. */
 ;    configASSERT( ( pxQueue != NULL ) && !( ( pxQueue->uxQueueType == queueQUEUE_IS_MUTEX ) && ( pxQueue->u.xSemaphore.xMutexHolder != NULL ) ) );
-	lda	<L144+pxQueue_1
-	ora	<L144+pxQueue_1+2
-	beq	L10254
-	lda	[<L144+pxQueue_1]
+	lda	<L113+pxQueue_1
+	ora	<L113+pxQueue_1+2
+	beq	L10203
+	lda	[<L113+pxQueue_1]
 	ldy	#$2
-	ora	[<L144+pxQueue_1],Y
-	bne	L10250
+	ora	[<L113+pxQueue_1],Y
+	bne	L10199
 	ldy	#$8
-	lda	[<L144+pxQueue_1],Y
+	lda	[<L113+pxQueue_1],Y
 	iny
 	iny
-	ora	[<L144+pxQueue_1],Y
-	beq	L10250
-L10254:
-	bra	L10254
-L10250:
+	ora	[<L113+pxQueue_1],Y
+	beq	L10199
+L10203:
+	bra	L10203
+L10199:
 ;
 ;    /* RTOS ports that support interrupt nesting have the concept of a maximum
 ;     * system call (or maximum API call) interrupt priority.  Interrupts that are
@@ -2774,7 +2487,7 @@ L10250:
 ;    /* More details at: https://github.com/FreeRTOS/FreeRTOS-Kernel/blob/main/MISRA.md#dir-47 */
 ;    /* coverity[misra_c_2012_directive_4_7_violation] */
 ;    uxSavedInterruptStatus = ( UBaseType_t ) taskENTER_CRITICAL_FROM_ISR();
-	stz	<L144+uxSavedInterruptStatus_1
+	stz	<L113+uxSavedInterruptStatus_1
 ;    {
 ;        const UBaseType_t uxMessagesWaiting = pxQueue->uxMessagesWaiting;
 ;
@@ -2784,14 +2497,14 @@ L10250:
 ;        if( uxMessagesWaiting < pxQueue->uxLength )
 uxMessagesWaiting_2	set	8
 	ldy	#$34
-	lda	[<L144+pxQueue_1],Y
-	sta	<L144+uxMessagesWaiting_2
+	lda	[<L113+pxQueue_1],Y
+	sta	<L113+uxMessagesWaiting_2
 ;        {
 	iny
 	iny
-	cmp	[<L144+pxQueue_1],Y
+	cmp	[<L113+pxQueue_1],Y
 	bcc	*+5
-	brl	L10257
+	brl	L10206
 ;            const int8_t cTxLock = pxQueue->cTxLock;
 ;
 ;            traceQUEUE_SEND_FROM_ISR( pxQueue );
@@ -2799,8 +2512,8 @@ cTxLock_3	set	10
 	sep	#$20
 	longa	off
 	ldy	#$3b
-	lda	[<L144+pxQueue_1],Y
-	sta	<L144+cTxLock_3
+	lda	[<L113+pxQueue_1],Y
+	sta	<L113+cTxLock_3
 	rep	#$20
 	longa	on
 ;
@@ -2811,10 +2524,10 @@ cTxLock_3	set	10
 ;             * priority disinheritance is needed.  Simply increase the count of
 ;             * messages (semaphores) available. */
 ;            pxQueue->uxMessagesWaiting = ( UBaseType_t ) ( uxMessagesWaiting + ( UBaseType_t ) 1 );
-	lda	<L144+uxMessagesWaiting_2
+	lda	<L113+uxMessagesWaiting_2
 	ina
 	ldy	#$34
-	sta	[<L144+pxQueue_1],Y
+	sta	[<L113+pxQueue_1],Y
 ;
 ;            /* The event list is not altered if the queue is locked.  This will
 ;             * be done when the queue is unlocked later. */
@@ -2822,11 +2535,11 @@ cTxLock_3	set	10
 ;            {
 	sep	#$20
 	longa	off
-	lda	<L144+cTxLock_3
+	lda	<L113+cTxLock_3
 	cmp	#<$ffffffff
 	rep	#$20
 	longa	on
-	bne	L10268
+	bne	L10217
 ;                #if ( configUSE_QUEUE_SETS == 1 )
 ;                {
 ;                    if( pxQueue->pxQueueSetContainer != NULL )
@@ -2883,43 +2596,43 @@ cTxLock_3	set	10
 ;                    if( listLIST_IS_EMPTY( &( pxQueue->xTasksWaitingToReceive ) ) == pdFALSE )
 ;                    {
 	ldy	#$22
-	lda	[<L144+pxQueue_1],Y
-	bne	L154
+	lda	[<L113+pxQueue_1],Y
+	bne	L123
 	lda	#$1
-	bra	L156
-L154:
+	bra	L125
+L123:
 	lda	#$0
-L156:
+L125:
 	tax
-	bne	L10265
+	bne	L10214
 ;                        if( xTaskRemoveFromEventList( &( pxQueue->xTasksWaitingToReceive ) ) != pdFALSE )
 ;                        {
 	lda	#$22
 	clc
-	adc	<L144+pxQueue_1
+	adc	<L113+pxQueue_1
 	sta	<R0
 	lda	#$0
-	adc	<L144+pxQueue_1+2
+	adc	<L113+pxQueue_1+2
 	pha
 	pei	<R0
 	jsr	_~xTaskRemoveFromEventList
 	tax
-	beq	L10265
+	beq	L10214
 ;                            /* The task waiting has a higher priority so record that a
 ;                             * context switch is required. */
 ;                            if( pxHigherPriorityTaskWoken != NULL )
 ;                            {
-	lda	<L143+pxHigherPriorityTaskWoken_0
-	ora	<L143+pxHigherPriorityTaskWoken_0+2
-	beq	L10265
+	lda	<L112+pxHigherPriorityTaskWoken_0
+	ora	<L112+pxHigherPriorityTaskWoken_0+2
+	beq	L10214
 ;                                *pxHigherPriorityTaskWoken = pdTRUE;
 	lda	#$1
-	sta	[<L143+pxHigherPriorityTaskWoken_0]
+	sta	[<L112+pxHigherPriorityTaskWoken_0]
 ;                            }
 ;                            else
 ;                    }
 ;                    else
-	bra	L10265
+	bra	L10214
 ;                            {
 ;                                mtCOVERAGE_TEST_MARKER();
 ;                            }
@@ -2939,72 +2652,72 @@ L156:
 ;                /* Increment the lock count so the task that unlocks the queue
 ;                 * knows that data was posted while it was locked. */
 ;                prvIncrementQueueTxLock( pxQueue, cTxLock );
-L10268:
+L10217:
 uxNumberOfTasks_4	set	11
 	jsr	_~uxTaskGetNumberOfTasks
-	sta	<L144+uxNumberOfTasks_4
-	lda	<L144+cTxLock_3
+	sta	<L113+uxNumberOfTasks_4
+	lda	<L113+cTxLock_3
 	and	#$ff
 	bit	#$80
-	beq	L160
+	beq	L129
 	ora	#$ff00
-L160:
-	cmp	<L144+uxNumberOfTasks_4
-	bcs	L10265
+L129:
+	cmp	<L113+uxNumberOfTasks_4
+	bcs	L10214
 	sep	#$20
 	longa	off
-	lda	<L144+cTxLock_3
+	lda	<L113+cTxLock_3
 	cmp	#<$7f
 	rep	#$20
 	longa	on
-	bne	L10270
-L10274:
-	bra	L10274
-L10270:
+	bne	L10219
+L10223:
+	bra	L10223
+L10219:
 	sep	#$20
 	longa	off
-	lda	<L144+cTxLock_3
+	lda	<L113+cTxLock_3
 	ina
 	ldy	#$3b
-	sta	[<L144+pxQueue_1],Y
+	sta	[<L113+pxQueue_1],Y
 	rep	#$20
 	longa	on
 ;            }
-L10265:
+L10214:
 ;
 ;            xReturn = pdPASS;
 	lda	#$1
-	sta	<L144+xReturn_1
+	sta	<L113+xReturn_1
 ;        }
 ;        else
-	bra	L10277
-L10257:
+	bra	L10226
+L10206:
 ;        {
 ;            traceQUEUE_SEND_FROM_ISR_FAILED( pxQueue );
 ;            xReturn = errQUEUE_FULL;
-	stz	<L144+xReturn_1
+	stz	<L113+xReturn_1
 ;        }
-L10277:
+L10226:
 ;    }
 ;    taskEXIT_CRITICAL_FROM_ISR( uxSavedInterruptStatus );
 ;
 ;    traceRETURN_xQueueGiveFromISR( xReturn );
 ;
 ;    return xReturn;
-	lda	<L144+xReturn_1
+	lda	<L113+xReturn_1
 	tay
-	lda	<L143+1
-	sta	<L143+1+8
+	lda	<L112+1
+	sta	<L112+1+8
 	pld
 	tsc
 	clc
-	adc	#L143+8
+	adc	#L112+8
 	tcs
 	tya
 	rts
 ;}
-L143	equ	17
-L144	equ	5
+L112	equ	17
+L113	equ	5
 	ends
 	efunc
 ;/*-----------------------------------------------------------*/
@@ -3021,7 +2734,7 @@ _~xQueueReceive:
 	longi	on
 	tsc
 	sec
-	sbc	#L164
+	sbc	#L133
 	tcs
 	phd
 	tcd
@@ -3036,33 +2749,33 @@ xTicksToWait_0	set	11
 xEntryTimeSet_1	set	0
 xTimeOut_1	set	2
 pxQueue_1	set	8
-	stz	<L165+xEntryTimeSet_1
-	lda	<L164+xQueue_0
-	sta	<L165+pxQueue_1
-	lda	<L164+xQueue_0+2
-	sta	<L165+pxQueue_1+2
+	stz	<L134+xEntryTimeSet_1
+	lda	<L133+xQueue_0
+	sta	<L134+pxQueue_1
+	lda	<L133+xQueue_0+2
+	sta	<L134+pxQueue_1+2
 ;
 ;    /* Check the pointer is not NULL. */
 ;    configASSERT( ( pxQueue ) );
-	lda	<L165+pxQueue_1
-	ora	<L165+pxQueue_1+2
-	bne	L10278
-L10282:
-	bra	L10282
-L10278:
+	lda	<L134+pxQueue_1
+	ora	<L134+pxQueue_1+2
+	bne	L10227
+L10231:
+	bra	L10231
+L10227:
 ;
 ;    /* The buffer into which data is received can only be NULL if the data size
 ;     * is zero (so no data is copied into the buffer). */
 ;    configASSERT( !( ( ( pvBuffer ) == NULL ) && ( ( pxQueue )->uxItemSize != ( UBaseType_t ) 0U ) ) );
-	lda	<L164+pvBuffer_0
-	ora	<L164+pvBuffer_0+2
-	bne	L10285
+	lda	<L133+pvBuffer_0
+	ora	<L133+pvBuffer_0+2
+	bne	L10234
 	ldy	#$38
-	lda	[<L165+pxQueue_1],Y
-	beq	L10285
-L10289:
-	bra	L10289
-L10285:
+	lda	[<L134+pxQueue_1],Y
+	beq	L10234
+L10238:
+	bra	L10238
+L10234:
 ;
 ;    /* Cannot block if the scheduler is suspended. */
 ;    #if ( ( INCLUDE_xTaskGetSchedulerState == 1 ) || ( configUSE_TIMERS == 1 ) )
@@ -3071,48 +2784,48 @@ L10285:
 	jsr	_~xTaskGetSchedulerState
 	tax
 	beq	*+5
-	brl	L10303
-	lda	<L164+xTicksToWait_0
-	ora	<L164+xTicksToWait_0+2
+	brl	L10252
+	lda	<L133+xTicksToWait_0
+	ora	<L133+xTicksToWait_0+2
 	bne	*+5
-	brl	L10303
-L10296:
-	bra	L10296
+	brl	L10252
+L10245:
+	bra	L10245
 ;    }
 ;    #endif
 ;
 ;    for( ; ; )
 ;    {
 ;        taskENTER_CRITICAL();
-L172:
+L141:
 	lda	#$0
-L174:
+L143:
 	tax
-	bne	L10311
+	bne	L10260
 ;                    if( xTaskRemoveFromEventList( &( pxQueue->xTasksWaitingToSend ) ) != pdFALSE )
 ;                    {
 	lda	#$10
 	clc
-	adc	<L165+pxQueue_1
+	adc	<L134+pxQueue_1
 	sta	<R0
 	lda	#$0
-	adc	<L165+pxQueue_1+2
+	adc	<L134+pxQueue_1+2
 	pha
 	pei	<R0
 	jsr	_~xTaskRemoveFromEventList
 	tax
-	beq	L10311
+	beq	L10260
 ;                        queueYIELD_IF_USING_PREEMPTION();
 	jsr	_~vPortYield
 ;                    }
 ;                    else
-L10311:
+L10260:
 ;
 ;                traceRETURN_xQueueReceive( pdPASS );
 ;
 ;                return pdPASS;
 	lda	#$1
-	brl	L177
+	brl	L146
 ;                    {
 ;                        mtCOVERAGE_TEST_MARKER();
 ;                    }
@@ -3125,31 +2838,31 @@ L10311:
 ;                taskEXIT_CRITICAL();
 ;            }
 ;            else
-L10305:
+L10254:
 ;            {
 ;                if( xTicksToWait == ( TickType_t ) 0 )
 ;                {
-	lda	<L164+xTicksToWait_0
-	ora	<L164+xTicksToWait_0+2
+	lda	<L133+xTicksToWait_0
+	ora	<L133+xTicksToWait_0+2
 	bne	*+5
 	brl	L20006
 ;                }
 ;                else if( xEntryTimeSet == pdFALSE )
 ;                {
-	lda	<L165+xEntryTimeSet_1
-	bne	L10320
+	lda	<L134+xEntryTimeSet_1
+	bne	L10269
 ;                    /* The queue was empty and a block time was specified so
 ;                     * configure the timeout structure. */
 ;                    vTaskInternalSetTimeOutState( &xTimeOut );
 	pea	#0
 	clc
 	tdc
-	adc	#<L165+xTimeOut_1
+	adc	#<L134+xTimeOut_1
 	pha
 	jsr	_~vTaskInternalSetTimeOutState
 ;                    xEntryTimeSet = pdTRUE;
 	lda	#$1
-	sta	<L165+xEntryTimeSet_1
+	sta	<L134+xEntryTimeSet_1
 ;                }
 ;                else
 ;                {
@@ -3159,7 +2872,7 @@ L10305:
 ;            }
 ;        }
 ;        taskEXIT_CRITICAL();
-L10320:
+L10269:
 ;
 ;        /* Interrupts and other tasks can send to and receive from the queue
 ;         * now the critical section has been exited. */
@@ -3170,33 +2883,33 @@ L10320:
 	sep	#$20
 	longa	off
 	ldy	#$3a
-	lda	[<L165+pxQueue_1],Y
+	lda	[<L134+pxQueue_1],Y
 	cmp	#<$ffffffff
 	rep	#$20
 	longa	on
-	bne	L10325
+	bne	L10274
 	sep	#$20
 	longa	off
 	lda	#$0
-	sta	[<L165+pxQueue_1],Y
+	sta	[<L134+pxQueue_1],Y
 	rep	#$20
 	longa	on
-L10325:
+L10274:
 	sep	#$20
 	longa	off
 	ldy	#$3b
-	lda	[<L165+pxQueue_1],Y
+	lda	[<L134+pxQueue_1],Y
 	cmp	#<$ffffffff
 	rep	#$20
 	longa	on
-	bne	L10328
+	bne	L10277
 	sep	#$20
 	longa	off
 	lda	#$0
-	sta	[<L165+pxQueue_1],Y
+	sta	[<L134+pxQueue_1],Y
 	rep	#$20
 	longa	on
-L10328:
+L10277:
 ;
 ;        /* Update the timeout state to see if it has expired yet. */
 ;        if( xTaskCheckForTimeOut( &xTimeOut, &xTicksToWait ) == pdFALSE )
@@ -3204,63 +2917,63 @@ L10328:
 	pea	#0
 	clc
 	tdc
-	adc	#<L164+xTicksToWait_0
+	adc	#<L133+xTicksToWait_0
 	pha
 	pea	#0
 	clc
 	tdc
-	adc	#<L165+xTimeOut_1
+	adc	#<L134+xTimeOut_1
 	pha
 	jsr	_~xTaskCheckForTimeOut
 	tax
-	bne	L10330
+	bne	L10279
 ;            /* The timeout has not expired.  If the queue is still empty place
 ;             * the task on the list of tasks waiting to receive from the queue. */
 ;            if( prvIsQueueEmpty( pxQueue ) != pdFALSE )
 ;            {
-	pei	<L165+pxQueue_1+2
-	pei	<L165+pxQueue_1
+	pei	<L134+pxQueue_1+2
+	pei	<L134+pxQueue_1
 	jsr	_~prvIsQueueEmpty
 	tax
-	beq	L10331
+	beq	L10280
 ;                traceBLOCKING_ON_QUEUE_RECEIVE( pxQueue );
 ;                vTaskPlaceOnEventList( &( pxQueue->xTasksWaitingToReceive ), xTicksToWait );
-	pei	<L164+xTicksToWait_0+2
-	pei	<L164+xTicksToWait_0
+	pei	<L133+xTicksToWait_0+2
+	pei	<L133+xTicksToWait_0
 	lda	#$22
 	clc
-	adc	<L165+pxQueue_1
+	adc	<L134+pxQueue_1
 	sta	<R0
 	lda	#$0
-	adc	<L165+pxQueue_1+2
+	adc	<L134+pxQueue_1+2
 	pha
 	pei	<R0
 	jsr	_~vTaskPlaceOnEventList
 ;                prvUnlockQueue( pxQueue );
-	pei	<L165+pxQueue_1+2
-	pei	<L165+pxQueue_1
+	pei	<L134+pxQueue_1+2
+	pei	<L134+pxQueue_1
 	jsr	_~prvUnlockQueue
 ;
 ;                if( xTaskResumeAll() == pdFALSE )
 ;                {
 	jsr	_~xTaskResumeAll
 	tax
-	bne	L10303
+	bne	L10252
 ;                    taskYIELD_WITHIN_API();
 	jsr	_~vPortYield
 ;                }
 ;                else
-	bra	L10303
+	bra	L10252
 ;                {
 ;                    mtCOVERAGE_TEST_MARKER();
 ;                }
-L10331:
+L10280:
 ;            {
 ;                /* The queue contains data again.  Loop back to try and read the
 ;                 * data. */
 ;                prvUnlockQueue( pxQueue );
-	pei	<L165+pxQueue_1+2
-	pei	<L165+pxQueue_1
+	pei	<L134+pxQueue_1+2
+	pei	<L134+pxQueue_1
 	jsr	_~prvUnlockQueue
 ;                ( void ) xTaskResumeAll();
 	jsr	_~xTaskResumeAll
@@ -3269,7 +2982,7 @@ L10331:
 ;        else
 ;            }
 ;            else
-L10303:
+L10252:
 ;        {
 ;            const UBaseType_t uxMessagesWaiting = pxQueue->uxMessagesWaiting;
 ;
@@ -3278,27 +2991,27 @@ L10303:
 ;            if( uxMessagesWaiting > ( UBaseType_t ) 0 )
 uxMessagesWaiting_2	set	12
 	ldy	#$34
-	lda	[<L165+pxQueue_1],Y
-	sta	<L165+uxMessagesWaiting_2
+	lda	[<L134+pxQueue_1],Y
+	sta	<L134+uxMessagesWaiting_2
 ;            {
 	lda	#$0
-	cmp	<L165+uxMessagesWaiting_2
+	cmp	<L134+uxMessagesWaiting_2
 	bcc	*+5
-	brl	L10305
+	brl	L10254
 ;                /* Data available, remove one item. */
 ;                prvCopyDataFromQueue( pxQueue, pvBuffer );
-	pei	<L164+pvBuffer_0+2
-	pei	<L164+pvBuffer_0
-	pei	<L165+pxQueue_1+2
-	pei	<L165+pxQueue_1
+	pei	<L133+pvBuffer_0+2
+	pei	<L133+pvBuffer_0
+	pei	<L134+pxQueue_1+2
+	pei	<L134+pxQueue_1
 	jsr	_~prvCopyDataFromQueue
 ;                traceQUEUE_RECEIVE( pxQueue );
 ;                pxQueue->uxMessagesWaiting = ( UBaseType_t ) ( uxMessagesWaiting - ( UBaseType_t ) 1 );
 	lda	#$ffff
 	clc
-	adc	<L165+uxMessagesWaiting_2
+	adc	<L134+uxMessagesWaiting_2
 	ldy	#$34
-	sta	[<L165+pxQueue_1],Y
+	sta	[<L134+pxQueue_1],Y
 ;
 ;                /* There is now space in the queue, were any tasks waiting to
 ;                 * post to the queue?  If so, unblock the highest priority waiting
@@ -3306,29 +3019,29 @@ uxMessagesWaiting_2	set	12
 ;                if( listLIST_IS_EMPTY( &( pxQueue->xTasksWaitingToSend ) ) == pdFALSE )
 ;                {
 	ldy	#$10
-	lda	[<L165+pxQueue_1],Y
+	lda	[<L134+pxQueue_1],Y
 	beq	*+5
-	brl	L172
+	brl	L141
 	lda	#$1
-	brl	L174
-L10330:
+	brl	L143
+L10279:
 ;        {
 ;            /* Timed out.  If there is no data in the queue exit, otherwise loop
 ;             * back and attempt to read the data. */
 ;            prvUnlockQueue( pxQueue );
-	pei	<L165+pxQueue_1+2
-	pei	<L165+pxQueue_1
+	pei	<L134+pxQueue_1+2
+	pei	<L134+pxQueue_1
 	jsr	_~prvUnlockQueue
 ;            ( void ) xTaskResumeAll();
 	jsr	_~xTaskResumeAll
 ;
 ;            if( prvIsQueueEmpty( pxQueue ) != pdFALSE )
 ;            {
-	pei	<L165+pxQueue_1+2
-	pei	<L165+pxQueue_1
+	pei	<L134+pxQueue_1+2
+	pei	<L134+pxQueue_1
 	jsr	_~prvIsQueueEmpty
 	tax
-	beq	L10303
+	beq	L10252
 ;                traceQUEUE_RECEIVE_FAILED( pxQueue );
 ;                traceRETURN_xQueueReceive( errQUEUE_EMPTY );
 ;
@@ -3343,14 +3056,14 @@ L20006:
 ;
 ;                    return errQUEUE_EMPTY;
 	lda	#$0
-L177:
+L146:
 	tay
-	lda	<L164+1
-	sta	<L164+1+12
+	lda	<L133+1
+	sta	<L133+1+12
 	pld
 	tsc
 	clc
-	adc	#L164+12
+	adc	#L133+12
 	tcs
 	tya
 	rts
@@ -3362,8 +3075,8 @@ L177:
 ;        }
 ;    }
 ;}
-L164	equ	18
-L165	equ	5
+L133	equ	18
+L134	equ	5
 	ends
 	efunc
 ;/*-----------------------------------------------------------*/
@@ -3379,7 +3092,7 @@ _~xQueueSemaphoreTake:
 	longi	on
 	tsc
 	sec
-	sbc	#L186
+	sbc	#L155
 	tcs
 	phd
 	tcd
@@ -3398,31 +3111,31 @@ xEntryTimeSet_1	set	0
 xTimeOut_1	set	2
 pxQueue_1	set	8
 xInheritanceOccurred_1	set	12
-	stz	<L187+xEntryTimeSet_1
-	lda	<L186+xQueue_0
-	sta	<L187+pxQueue_1
-	lda	<L186+xQueue_0+2
-	sta	<L187+pxQueue_1+2
-	stz	<L187+xInheritanceOccurred_1
+	stz	<L156+xEntryTimeSet_1
+	lda	<L155+xQueue_0
+	sta	<L156+pxQueue_1
+	lda	<L155+xQueue_0+2
+	sta	<L156+pxQueue_1+2
+	stz	<L156+xInheritanceOccurred_1
 ;
 ;    /* Check the queue pointer is not NULL. */
 ;    configASSERT( ( pxQueue ) );
-	lda	<L187+pxQueue_1
-	ora	<L187+pxQueue_1+2
-	bne	L10337
-L10341:
-	bra	L10341
-L10337:
+	lda	<L156+pxQueue_1
+	ora	<L156+pxQueue_1+2
+	bne	L10286
+L10290:
+	bra	L10290
+L10286:
 ;
 ;    /* Check this really is a semaphore, in which case the item size will be
 ;     * 0. */
 ;    configASSERT( pxQueue->uxItemSize == 0 );
 	ldy	#$38
-	lda	[<L187+pxQueue_1],Y
-	beq	L10344
-L10348:
-	bra	L10348
-L10344:
+	lda	[<L156+pxQueue_1],Y
+	beq	L10293
+L10297:
+	bra	L10297
+L10293:
 ;
 ;    /* Cannot block if the scheduler is suspended. */
 ;    #if ( ( INCLUDE_xTaskGetSchedulerState == 1 ) || ( configUSE_TIMERS == 1 ) )
@@ -3431,48 +3144,48 @@ L10344:
 	jsr	_~xTaskGetSchedulerState
 	tax
 	beq	*+5
-	brl	L10362
-	lda	<L186+xTicksToWait_0
-	ora	<L186+xTicksToWait_0+2
+	brl	L10311
+	lda	<L155+xTicksToWait_0
+	ora	<L155+xTicksToWait_0+2
 	bne	*+5
-	brl	L10362
-L10355:
-	bra	L10355
+	brl	L10311
+L10304:
+	bra	L10304
 ;    }
 ;    #endif
 ;
 ;    for( ; ; )
 ;    {
 ;        taskENTER_CRITICAL();
-L194:
+L163:
 	lda	#$0
-L196:
+L165:
 	tax
-	bne	L10372
+	bne	L10321
 ;                    if( xTaskRemoveFromEventList( &( pxQueue->xTasksWaitingToSend ) ) != pdFALSE )
 ;                    {
 	lda	#$10
 	clc
-	adc	<L187+pxQueue_1
+	adc	<L156+pxQueue_1
 	sta	<R0
 	lda	#$0
-	adc	<L187+pxQueue_1+2
+	adc	<L156+pxQueue_1+2
 	pha
 	pei	<R0
 	jsr	_~xTaskRemoveFromEventList
 	tax
-	beq	L10372
+	beq	L10321
 ;                        queueYIELD_IF_USING_PREEMPTION();
 	jsr	_~vPortYield
 ;                    }
 ;                    else
-L10372:
+L10321:
 ;
 ;                traceRETURN_xQueueSemaphoreTake( pdPASS );
 ;
 ;                return pdPASS;
 	lda	#$1
-	brl	L199
+	brl	L168
 ;                    {
 ;                        mtCOVERAGE_TEST_MARKER();
 ;                    }
@@ -3485,31 +3198,31 @@ L10372:
 ;                taskEXIT_CRITICAL();
 ;            }
 ;            else
-L10364:
+L10313:
 ;            {
 ;                if( xTicksToWait == ( TickType_t ) 0 )
 ;                {
-	lda	<L186+xTicksToWait_0
-	ora	<L186+xTicksToWait_0+2
+	lda	<L155+xTicksToWait_0
+	ora	<L155+xTicksToWait_0+2
 	bne	*+5
 	brl	L20008
 ;                }
 ;                else if( xEntryTimeSet == pdFALSE )
 ;                {
-	lda	<L187+xEntryTimeSet_1
-	bne	L10381
+	lda	<L156+xEntryTimeSet_1
+	bne	L10330
 ;                    /* The semaphore count was 0 and a block time was specified
 ;                     * so configure the timeout structure ready to block. */
 ;                    vTaskInternalSetTimeOutState( &xTimeOut );
 	pea	#0
 	clc
 	tdc
-	adc	#<L187+xTimeOut_1
+	adc	#<L156+xTimeOut_1
 	pha
 	jsr	_~vTaskInternalSetTimeOutState
 ;                    xEntryTimeSet = pdTRUE;
 	lda	#$1
-	sta	<L187+xEntryTimeSet_1
+	sta	<L156+xEntryTimeSet_1
 ;                }
 ;                else
 ;                {
@@ -3519,7 +3232,7 @@ L10364:
 ;            }
 ;        }
 ;        taskEXIT_CRITICAL();
-L10381:
+L10330:
 ;
 ;        /* Interrupts and other tasks can give to and take from the semaphore
 ;         * now the critical section has been exited. */
@@ -3530,33 +3243,33 @@ L10381:
 	sep	#$20
 	longa	off
 	ldy	#$3a
-	lda	[<L187+pxQueue_1],Y
+	lda	[<L156+pxQueue_1],Y
 	cmp	#<$ffffffff
 	rep	#$20
 	longa	on
-	bne	L10386
+	bne	L10335
 	sep	#$20
 	longa	off
 	lda	#$0
-	sta	[<L187+pxQueue_1],Y
+	sta	[<L156+pxQueue_1],Y
 	rep	#$20
 	longa	on
-L10386:
+L10335:
 	sep	#$20
 	longa	off
 	ldy	#$3b
-	lda	[<L187+pxQueue_1],Y
+	lda	[<L156+pxQueue_1],Y
 	cmp	#<$ffffffff
 	rep	#$20
 	longa	on
-	bne	L10389
+	bne	L10338
 	sep	#$20
 	longa	off
 	lda	#$0
-	sta	[<L187+pxQueue_1],Y
+	sta	[<L156+pxQueue_1],Y
 	rep	#$20
 	longa	on
-L10389:
+L10338:
 ;
 ;        /* Update the timeout state to see if it has expired yet. */
 ;        if( xTaskCheckForTimeOut( &xTimeOut, &xTicksToWait ) == pdFALSE )
@@ -3564,50 +3277,50 @@ L10389:
 	pea	#0
 	clc
 	tdc
-	adc	#<L186+xTicksToWait_0
+	adc	#<L155+xTicksToWait_0
 	pha
 	pea	#0
 	clc
 	tdc
-	adc	#<L187+xTimeOut_1
+	adc	#<L156+xTimeOut_1
 	pha
 	jsr	_~xTaskCheckForTimeOut
 	tax
 	beq	*+5
-	brl	L10391
+	brl	L10340
 ;            /* A block time is specified and not expired.  If the semaphore
 ;             * count is 0 then enter the Blocked state to wait for a semaphore to
 ;             * become available.  As semaphores are implemented with queues the
 ;             * queue being empty is equivalent to the semaphore count being 0. */
 ;            if( prvIsQueueEmpty( pxQueue ) != pdFALSE )
 ;            {
-	pei	<L187+pxQueue_1+2
-	pei	<L187+pxQueue_1
+	pei	<L156+pxQueue_1+2
+	pei	<L156+pxQueue_1
 	jsr	_~prvIsQueueEmpty
 	tax
-	beq	L10392
+	beq	L10341
 ;                traceBLOCKING_ON_QUEUE_RECEIVE( pxQueue );
 ;
 ;                #if ( configUSE_MUTEXES == 1 )
 ;                {
 ;                    if( pxQueue->uxQueueType == queueQUEUE_IS_MUTEX )
 ;                    {
-	lda	[<L187+pxQueue_1]
+	lda	[<L156+pxQueue_1]
 	ldy	#$2
-	ora	[<L187+pxQueue_1],Y
-	bne	L10400
+	ora	[<L156+pxQueue_1],Y
+	bne	L10349
 ;                        taskENTER_CRITICAL();
 ;                        {
 ;                            xInheritanceOccurred = xTaskPriorityInherit( pxQueue->u.xSemaphore.xMutexHolder );
 	ldy	#$a
-	lda	[<L187+pxQueue_1],Y
+	lda	[<L156+pxQueue_1],Y
 	pha
 	dey
 	dey
-	lda	[<L187+pxQueue_1],Y
+	lda	[<L156+pxQueue_1],Y
 	pha
 	jsr	_~xTaskPriorityInherit
-	sta	<L187+xInheritanceOccurred_1
+	sta	<L156+xInheritanceOccurred_1
 ;                        }
 ;                        taskEXIT_CRITICAL();
 ;                    }
@@ -3615,47 +3328,47 @@ L10389:
 ;                    {
 ;                        mtCOVERAGE_TEST_MARKER();
 ;                    }
-L10400:
+L10349:
 ;                }
 ;                #endif /* if ( configUSE_MUTEXES == 1 ) */
 ;
 ;                vTaskPlaceOnEventList( &( pxQueue->xTasksWaitingToReceive ), xTicksToWait );
-	pei	<L186+xTicksToWait_0+2
-	pei	<L186+xTicksToWait_0
+	pei	<L155+xTicksToWait_0+2
+	pei	<L155+xTicksToWait_0
 	lda	#$22
 	clc
-	adc	<L187+pxQueue_1
+	adc	<L156+pxQueue_1
 	sta	<R0
 	lda	#$0
-	adc	<L187+pxQueue_1+2
+	adc	<L156+pxQueue_1+2
 	pha
 	pei	<R0
 	jsr	_~vTaskPlaceOnEventList
 ;                prvUnlockQueue( pxQueue );
-	pei	<L187+pxQueue_1+2
-	pei	<L187+pxQueue_1
+	pei	<L156+pxQueue_1+2
+	pei	<L156+pxQueue_1
 	jsr	_~prvUnlockQueue
 ;
 ;                if( xTaskResumeAll() == pdFALSE )
 ;                {
 	jsr	_~xTaskResumeAll
 	tax
-	bne	L10362
+	bne	L10311
 ;                    taskYIELD_WITHIN_API();
 	jsr	_~vPortYield
 ;                }
 ;                else
-	bra	L10362
+	bra	L10311
 ;                {
 ;                    mtCOVERAGE_TEST_MARKER();
 ;                }
-L10392:
+L10341:
 ;            {
 ;                /* There was no timeout and the semaphore count was not 0, so
 ;                 * attempt to take the semaphore again. */
 ;                prvUnlockQueue( pxQueue );
-	pei	<L187+pxQueue_1+2
-	pei	<L187+pxQueue_1
+	pei	<L156+pxQueue_1+2
+	pei	<L156+pxQueue_1
 	jsr	_~prvUnlockQueue
 ;                ( void ) xTaskResumeAll();
 	jsr	_~xTaskResumeAll
@@ -3664,7 +3377,7 @@ L10392:
 ;        else
 ;            }
 ;            else
-L10362:
+L10311:
 ;        {
 ;            /* Semaphores are queues with an item size of 0, and where the
 ;             * number of messages in the queue is the semaphore's count value. */
@@ -3675,13 +3388,13 @@ L10362:
 ;            if( uxSemaphoreCount > ( UBaseType_t ) 0 )
 uxSemaphoreCount_2	set	14
 	ldy	#$34
-	lda	[<L187+pxQueue_1],Y
-	sta	<L187+uxSemaphoreCount_2
+	lda	[<L156+pxQueue_1],Y
+	sta	<L156+uxSemaphoreCount_2
 ;            {
 	lda	#$0
-	cmp	<L187+uxSemaphoreCount_2
+	cmp	<L156+uxSemaphoreCount_2
 	bcc	*+5
-	brl	L10364
+	brl	L10313
 ;                traceQUEUE_RECEIVE( pxQueue );
 ;
 ;                /* Semaphores are queues with a data size of zero and where the
@@ -3689,34 +3402,34 @@ uxSemaphoreCount_2	set	14
 ;                pxQueue->uxMessagesWaiting = ( UBaseType_t ) ( uxSemaphoreCount - ( UBaseType_t ) 1 );
 	lda	#$ffff
 	clc
-	adc	<L187+uxSemaphoreCount_2
-	sta	[<L187+pxQueue_1],Y
+	adc	<L156+uxSemaphoreCount_2
+	sta	[<L156+pxQueue_1],Y
 ;
 ;                #if ( configUSE_MUTEXES == 1 )
 ;                {
 ;                    if( pxQueue->uxQueueType == queueQUEUE_IS_MUTEX )
 ;                    {
-	lda	[<L187+pxQueue_1]
+	lda	[<L156+pxQueue_1]
 	ldy	#$2
-	ora	[<L187+pxQueue_1],Y
-	bne	L10366
+	ora	[<L156+pxQueue_1],Y
+	bne	L10315
 ;                        /* Record the information required to implement
 ;                         * priority inheritance should it become necessary. */
 ;                        pxQueue->u.xSemaphore.xMutexHolder = pvTaskIncrementMutexHeldCount();
 	jsr	_~pvTaskIncrementMutexHeldCount
 	stx	<R0+2
 	ldy	#$8
-	sta	[<L187+pxQueue_1],Y
+	sta	[<L156+pxQueue_1],Y
 	lda	<R0+2
 	iny
 	iny
-	sta	[<L187+pxQueue_1],Y
+	sta	[<L156+pxQueue_1],Y
 ;                    }
 ;                    else
 ;                    {
 ;                        mtCOVERAGE_TEST_MARKER();
 ;                    }
-L10366:
+L10315:
 ;                }
 ;                #endif /* configUSE_MUTEXES */
 ;
@@ -3725,17 +3438,17 @@ L10366:
 ;                if( listLIST_IS_EMPTY( &( pxQueue->xTasksWaitingToSend ) ) == pdFALSE )
 ;                {
 	ldy	#$10
-	lda	[<L187+pxQueue_1],Y
+	lda	[<L156+pxQueue_1],Y
 	beq	*+5
-	brl	L194
+	brl	L163
 	lda	#$1
-	brl	L196
-L10391:
+	brl	L165
+L10340:
 ;        {
 ;            /* Timed out. */
 ;            prvUnlockQueue( pxQueue );
-	pei	<L187+pxQueue_1+2
-	pei	<L187+pxQueue_1
+	pei	<L156+pxQueue_1+2
+	pei	<L156+pxQueue_1
 	jsr	_~prvUnlockQueue
 ;            ( void ) xTaskResumeAll();
 	jsr	_~xTaskResumeAll
@@ -3746,11 +3459,11 @@ L10391:
 ;             * queue being empty is equivalent to the semaphore count being 0. */
 ;            if( prvIsQueueEmpty( pxQueue ) != pdFALSE )
 ;            {
-	pei	<L187+pxQueue_1+2
-	pei	<L187+pxQueue_1
+	pei	<L156+pxQueue_1+2
+	pei	<L156+pxQueue_1
 	jsr	_~prvIsQueueEmpty
 	tax
-	beq	L10362
+	beq	L10311
 ;                #if ( configUSE_MUTEXES == 1 )
 ;                {
 ;                    /* xInheritanceOccurred could only have be set if
@@ -3758,7 +3471,7 @@ L10391:
 ;                     * test the mutex type again to check it is actually a mutex. */
 ;                    if( xInheritanceOccurred != pdFALSE )
 ;                    {
-	lda	<L187+xInheritanceOccurred_1
+	lda	<L156+xInheritanceOccurred_1
 	beq	L20008
 ;                        taskENTER_CRITICAL();
 ;                        {
@@ -3771,10 +3484,10 @@ L10391:
 ;                             * task that is waiting for the same mutex. */
 ;                            uxHighestWaitingPriority = prvGetHighestPriorityOfWaitToReceiveList( pxQueue );
 uxHighestWaitingPriority_3	set	14
-	pei	<L187+pxQueue_1+2
-	pei	<L187+pxQueue_1
+	pei	<L156+pxQueue_1+2
+	pei	<L156+pxQueue_1
 	jsr	_~prvGetHighestPriorityOfWaitToReceiveList
-	sta	<L187+uxHighestWaitingPriority_3
+	sta	<L156+uxHighestWaitingPriority_3
 ;
 ;                            /* vTaskPriorityDisinheritAfterTimeout uses the uxHighestWaitingPriority
 ;                             * parameter to index pxReadyTasksLists when adding the task holding
@@ -3786,11 +3499,11 @@ uxHighestWaitingPriority_3	set	14
 ;                            vTaskPriorityDisinheritAfterTimeout( pxQueue->u.xSemaphore.xMutexHolder, uxHighestWaitingPriority );
 	pha
 	ldy	#$a
-	lda	[<L187+pxQueue_1],Y
+	lda	[<L156+pxQueue_1],Y
 	pha
 	dey
 	dey
-	lda	[<L187+pxQueue_1],Y
+	lda	[<L156+pxQueue_1],Y
 	pha
 	jsr	_~vTaskPriorityDisinheritAfterTimeout
 ;                        }
@@ -3813,14 +3526,14 @@ L20008:
 ;
 ;                    return errQUEUE_EMPTY;
 	lda	#$0
-L199:
+L168:
 	tay
-	lda	<L186+1
-	sta	<L186+1+8
+	lda	<L155+1
+	sta	<L155+1+8
 	pld
 	tsc
 	clc
-	adc	#L186+8
+	adc	#L155+8
 	tcs
 	tya
 	rts
@@ -3832,8 +3545,8 @@ L199:
 ;        }
 ;    }
 ;}
-L186	equ	20
-L187	equ	5
+L155	equ	20
+L156	equ	5
 	ends
 	efunc
 ;/*-----------------------------------------------------------*/
@@ -3850,7 +3563,7 @@ _~xQueuePeek:
 	longi	on
 	tsc
 	sec
-	sbc	#L210
+	sbc	#L179
 	tcs
 	phd
 	tcd
@@ -3867,27 +3580,27 @@ xEntryTimeSet_1	set	0
 xTimeOut_1	set	2
 pcOriginalReadPosition_1	set	8
 pxQueue_1	set	12
-	stz	<L211+xEntryTimeSet_1
-	lda	<L210+xQueue_0
-	sta	<L211+pxQueue_1
-	lda	<L210+xQueue_0+2
-	sta	<L211+pxQueue_1+2
+	stz	<L180+xEntryTimeSet_1
+	lda	<L179+xQueue_0
+	sta	<L180+pxQueue_1
+	lda	<L179+xQueue_0+2
+	sta	<L180+pxQueue_1+2
 ;
 ;    /* The buffer into which data is received can only be NULL if the data size
 ;     * is zero (so no data is copied into the buffer. */
 ;    configASSERT( ( pxQueue != NULL ) && !( ( ( pvBuffer ) == NULL ) && ( ( pxQueue )->uxItemSize != ( UBaseType_t ) 0U ) ) );
-	lda	<L211+pxQueue_1
-	ora	<L211+pxQueue_1+2
-	beq	L10417
-	lda	<L210+pvBuffer_0
-	ora	<L210+pvBuffer_0+2
-	bne	L10413
+	lda	<L180+pxQueue_1
+	ora	<L180+pxQueue_1+2
+	beq	L10366
+	lda	<L179+pvBuffer_0
+	ora	<L179+pvBuffer_0+2
+	bne	L10362
 	ldy	#$38
-	lda	[<L211+pxQueue_1],Y
-	beq	L10413
-L10417:
-	bra	L10417
-L10413:
+	lda	[<L180+pxQueue_1],Y
+	beq	L10362
+L10366:
+	bra	L10366
+L10362:
 ;
 ;    /* Cannot block if the scheduler is suspended. */
 ;    #if ( ( INCLUDE_xTaskGetSchedulerState == 1 ) || ( configUSE_TIMERS == 1 ) )
@@ -3896,49 +3609,49 @@ L10413:
 	jsr	_~xTaskGetSchedulerState
 	tax
 	beq	*+5
-	brl	L10431
-	lda	<L210+xTicksToWait_0
-	ora	<L210+xTicksToWait_0+2
+	brl	L10380
+	lda	<L179+xTicksToWait_0
+	ora	<L179+xTicksToWait_0+2
 	bne	*+5
-	brl	L10431
-L10424:
-	bra	L10424
+	brl	L10380
+L10373:
+	bra	L10373
 ;    }
 ;    #endif
 ;
 ;    for( ; ; )
 ;    {
 ;        taskENTER_CRITICAL();
-L219:
+L188:
 	lda	#$0
-L221:
+L190:
 	tax
-	bne	L10439
+	bne	L10388
 ;                    if( xTaskRemoveFromEventList( &( pxQueue->xTasksWaitingToReceive ) ) != pdFALSE )
 ;                    {
 	lda	#$22
 	clc
-	adc	<L211+pxQueue_1
+	adc	<L180+pxQueue_1
 	sta	<R0
 	lda	#$0
-	adc	<L211+pxQueue_1+2
+	adc	<L180+pxQueue_1+2
 	pha
 	pei	<R0
 	jsr	_~xTaskRemoveFromEventList
 	tax
-	beq	L10439
+	beq	L10388
 ;                        /* The task waiting has a higher priority than this task. */
 ;                        queueYIELD_IF_USING_PREEMPTION();
 	jsr	_~vPortYield
 ;                    }
 ;                    else
-L10439:
+L10388:
 ;
 ;                traceRETURN_xQueuePeek( pdPASS );
 ;
 ;                return pdPASS;
 	lda	#$1
-	brl	L224
+	brl	L193
 ;                    {
 ;                        mtCOVERAGE_TEST_MARKER();
 ;                    }
@@ -3951,19 +3664,19 @@ L10439:
 ;                taskEXIT_CRITICAL();
 ;            }
 ;            else
-L10433:
+L10382:
 ;            {
 ;                if( xTicksToWait == ( TickType_t ) 0 )
 ;                {
-	lda	<L210+xTicksToWait_0
-	ora	<L210+xTicksToWait_0+2
+	lda	<L179+xTicksToWait_0
+	ora	<L179+xTicksToWait_0+2
 	bne	*+5
 	brl	L20010
 ;                }
 ;                else if( xEntryTimeSet == pdFALSE )
 ;                {
-	lda	<L211+xEntryTimeSet_1
-	bne	L10448
+	lda	<L180+xEntryTimeSet_1
+	bne	L10397
 ;                    /* The queue was empty and a block time was specified so
 ;                     * configure the timeout structure ready to enter the blocked
 ;                     * state. */
@@ -3971,12 +3684,12 @@ L10433:
 	pea	#0
 	clc
 	tdc
-	adc	#<L211+xTimeOut_1
+	adc	#<L180+xTimeOut_1
 	pha
 	jsr	_~vTaskInternalSetTimeOutState
 ;                    xEntryTimeSet = pdTRUE;
 	lda	#$1
-	sta	<L211+xEntryTimeSet_1
+	sta	<L180+xEntryTimeSet_1
 ;                }
 ;                else
 ;                {
@@ -3986,7 +3699,7 @@ L10433:
 ;            }
 ;        }
 ;        taskEXIT_CRITICAL();
-L10448:
+L10397:
 ;
 ;        /* Interrupts and other tasks can send to and receive from the queue
 ;         * now that the critical section has been exited. */
@@ -3997,33 +3710,33 @@ L10448:
 	sep	#$20
 	longa	off
 	ldy	#$3a
-	lda	[<L211+pxQueue_1],Y
+	lda	[<L180+pxQueue_1],Y
 	cmp	#<$ffffffff
 	rep	#$20
 	longa	on
-	bne	L10453
+	bne	L10402
 	sep	#$20
 	longa	off
 	lda	#$0
-	sta	[<L211+pxQueue_1],Y
+	sta	[<L180+pxQueue_1],Y
 	rep	#$20
 	longa	on
-L10453:
+L10402:
 	sep	#$20
 	longa	off
 	ldy	#$3b
-	lda	[<L211+pxQueue_1],Y
+	lda	[<L180+pxQueue_1],Y
 	cmp	#<$ffffffff
 	rep	#$20
 	longa	on
-	bne	L10456
+	bne	L10405
 	sep	#$20
 	longa	off
 	lda	#$0
-	sta	[<L211+pxQueue_1],Y
+	sta	[<L180+pxQueue_1],Y
 	rep	#$20
 	longa	on
-L10456:
+L10405:
 ;
 ;        /* Update the timeout state to see if it has expired yet. */
 ;        if( xTaskCheckForTimeOut( &xTimeOut, &xTicksToWait ) == pdFALSE )
@@ -4031,64 +3744,64 @@ L10456:
 	pea	#0
 	clc
 	tdc
-	adc	#<L210+xTicksToWait_0
+	adc	#<L179+xTicksToWait_0
 	pha
 	pea	#0
 	clc
 	tdc
-	adc	#<L211+xTimeOut_1
+	adc	#<L180+xTimeOut_1
 	pha
 	jsr	_~xTaskCheckForTimeOut
 	tax
 	beq	*+5
-	brl	L10458
+	brl	L10407
 ;            /* Timeout has not expired yet, check to see if there is data in the
 ;            * queue now, and if not enter the Blocked state to wait for data. */
 ;            if( prvIsQueueEmpty( pxQueue ) != pdFALSE )
 ;            {
-	pei	<L211+pxQueue_1+2
-	pei	<L211+pxQueue_1
+	pei	<L180+pxQueue_1+2
+	pei	<L180+pxQueue_1
 	jsr	_~prvIsQueueEmpty
 	tax
-	beq	L10459
+	beq	L10408
 ;                traceBLOCKING_ON_QUEUE_PEEK( pxQueue );
 ;                vTaskPlaceOnEventList( &( pxQueue->xTasksWaitingToReceive ), xTicksToWait );
-	pei	<L210+xTicksToWait_0+2
-	pei	<L210+xTicksToWait_0
+	pei	<L179+xTicksToWait_0+2
+	pei	<L179+xTicksToWait_0
 	lda	#$22
 	clc
-	adc	<L211+pxQueue_1
+	adc	<L180+pxQueue_1
 	sta	<R0
 	lda	#$0
-	adc	<L211+pxQueue_1+2
+	adc	<L180+pxQueue_1+2
 	pha
 	pei	<R0
 	jsr	_~vTaskPlaceOnEventList
 ;                prvUnlockQueue( pxQueue );
-	pei	<L211+pxQueue_1+2
-	pei	<L211+pxQueue_1
+	pei	<L180+pxQueue_1+2
+	pei	<L180+pxQueue_1
 	jsr	_~prvUnlockQueue
 ;
 ;                if( xTaskResumeAll() == pdFALSE )
 ;                {
 	jsr	_~xTaskResumeAll
 	tax
-	bne	L10431
+	bne	L10380
 ;                    taskYIELD_WITHIN_API();
 	jsr	_~vPortYield
 ;                }
 ;                else
-	bra	L10431
+	bra	L10380
 ;                {
 ;                    mtCOVERAGE_TEST_MARKER();
 ;                }
-L10459:
+L10408:
 ;            {
 ;                /* There is data in the queue now, so don't enter the blocked
 ;                 * state, instead return to try and obtain the data. */
 ;                prvUnlockQueue( pxQueue );
-	pei	<L211+pxQueue_1+2
-	pei	<L211+pxQueue_1
+	pei	<L180+pxQueue_1+2
+	pei	<L180+pxQueue_1
 	jsr	_~prvUnlockQueue
 ;                ( void ) xTaskResumeAll();
 	jsr	_~xTaskResumeAll
@@ -4097,7 +3810,7 @@ L10459:
 ;        else
 ;            }
 ;            else
-L10431:
+L10380:
 ;        {
 ;            const UBaseType_t uxMessagesWaiting = pxQueue->uxMessagesWaiting;
 ;
@@ -4106,71 +3819,71 @@ L10431:
 ;            if( uxMessagesWaiting > ( UBaseType_t ) 0 )
 uxMessagesWaiting_2	set	16
 	ldy	#$34
-	lda	[<L211+pxQueue_1],Y
-	sta	<L211+uxMessagesWaiting_2
+	lda	[<L180+pxQueue_1],Y
+	sta	<L180+uxMessagesWaiting_2
 ;            {
 	lda	#$0
-	cmp	<L211+uxMessagesWaiting_2
+	cmp	<L180+uxMessagesWaiting_2
 	bcc	*+5
-	brl	L10433
+	brl	L10382
 ;                /* Remember the read position so it can be reset after the data
 ;                 * is read from the queue as this function is only peeking the
 ;                 * data, not removing it. */
 ;                pcOriginalReadPosition = pxQueue->u.xQueue.pcReadFrom;
 	ldy	#$c
-	lda	[<L211+pxQueue_1],Y
-	sta	<L211+pcOriginalReadPosition_1
+	lda	[<L180+pxQueue_1],Y
+	sta	<L180+pcOriginalReadPosition_1
 	iny
 	iny
-	lda	[<L211+pxQueue_1],Y
-	sta	<L211+pcOriginalReadPosition_1+2
+	lda	[<L180+pxQueue_1],Y
+	sta	<L180+pcOriginalReadPosition_1+2
 ;
 ;                prvCopyDataFromQueue( pxQueue, pvBuffer );
-	pei	<L210+pvBuffer_0+2
-	pei	<L210+pvBuffer_0
-	pei	<L211+pxQueue_1+2
-	pei	<L211+pxQueue_1
+	pei	<L179+pvBuffer_0+2
+	pei	<L179+pvBuffer_0
+	pei	<L180+pxQueue_1+2
+	pei	<L180+pxQueue_1
 	jsr	_~prvCopyDataFromQueue
 ;                traceQUEUE_PEEK( pxQueue );
 ;
 ;                /* The data is not being removed, so reset the read pointer. */
 ;                pxQueue->u.xQueue.pcReadFrom = pcOriginalReadPosition;
-	lda	<L211+pcOriginalReadPosition_1
+	lda	<L180+pcOriginalReadPosition_1
 	ldy	#$c
-	sta	[<L211+pxQueue_1],Y
-	lda	<L211+pcOriginalReadPosition_1+2
+	sta	[<L180+pxQueue_1],Y
+	lda	<L180+pcOriginalReadPosition_1+2
 	iny
 	iny
-	sta	[<L211+pxQueue_1],Y
+	sta	[<L180+pxQueue_1],Y
 ;
 ;                /* The data is being left in the queue, so see if there are
 ;                 * any other tasks waiting for the data. */
 ;                if( listLIST_IS_EMPTY( &( pxQueue->xTasksWaitingToReceive ) ) == pdFALSE )
 ;                {
 	ldy	#$22
-	lda	[<L211+pxQueue_1],Y
+	lda	[<L180+pxQueue_1],Y
 	beq	*+5
-	brl	L219
+	brl	L188
 	lda	#$1
-	brl	L221
-L10458:
+	brl	L190
+L10407:
 ;        {
 ;            /* The timeout has expired.  If there is still no data in the queue
 ;             * exit, otherwise go back and try to read the data again. */
 ;            prvUnlockQueue( pxQueue );
-	pei	<L211+pxQueue_1+2
-	pei	<L211+pxQueue_1
+	pei	<L180+pxQueue_1+2
+	pei	<L180+pxQueue_1
 	jsr	_~prvUnlockQueue
 ;            ( void ) xTaskResumeAll();
 	jsr	_~xTaskResumeAll
 ;
 ;            if( prvIsQueueEmpty( pxQueue ) != pdFALSE )
 ;            {
-	pei	<L211+pxQueue_1+2
-	pei	<L211+pxQueue_1
+	pei	<L180+pxQueue_1+2
+	pei	<L180+pxQueue_1
 	jsr	_~prvIsQueueEmpty
 	tax
-	beq	L10431
+	beq	L10380
 ;                traceQUEUE_PEEK_FAILED( pxQueue );
 ;                traceRETURN_xQueuePeek( errQUEUE_EMPTY );
 ;
@@ -4185,14 +3898,14 @@ L20010:
 ;
 ;                    return errQUEUE_EMPTY;
 	lda	#$0
-L224:
+L193:
 	tay
-	lda	<L210+1
-	sta	<L210+1+12
+	lda	<L179+1
+	sta	<L179+1+12
 	pld
 	tsc
 	clc
-	adc	#L210+12
+	adc	#L179+12
 	tcs
 	tya
 	rts
@@ -4204,8 +3917,8 @@ L224:
 ;        }
 ;    }
 ;}
-L210	equ	22
-L211	equ	5
+L179	equ	22
+L180	equ	5
 	ends
 	efunc
 ;/*-----------------------------------------------------------*/
@@ -4222,7 +3935,7 @@ _~xQueueReceiveFromISR:
 	longi	on
 	tsc
 	sec
-	sbc	#L233
+	sbc	#L202
 	tcs
 	phd
 	tcd
@@ -4237,28 +3950,28 @@ pxHigherPriorityTaskWoken_0	set	11
 xReturn_1	set	0
 uxSavedInterruptStatus_1	set	2
 pxQueue_1	set	4
-	lda	<L233+xQueue_0
-	sta	<L234+pxQueue_1
-	lda	<L233+xQueue_0+2
-	sta	<L234+pxQueue_1+2
+	lda	<L202+xQueue_0
+	sta	<L203+pxQueue_1
+	lda	<L202+xQueue_0+2
+	sta	<L203+pxQueue_1+2
 ;
 ;    configASSERT( pxQueue );
-	lda	<L234+pxQueue_1
-	ora	<L234+pxQueue_1+2
-	bne	L10465
-L10469:
-	bra	L10469
-L10465:
+	lda	<L203+pxQueue_1
+	ora	<L203+pxQueue_1+2
+	bne	L10414
+L10418:
+	bra	L10418
+L10414:
 ;    configASSERT( !( ( pvBuffer == NULL ) && ( pxQueue->uxItemSize != ( UBaseType_t ) 0U ) ) );
-	lda	<L233+pvBuffer_0
-	ora	<L233+pvBuffer_0+2
-	bne	L10472
+	lda	<L202+pvBuffer_0
+	ora	<L202+pvBuffer_0+2
+	bne	L10421
 	ldy	#$38
-	lda	[<L234+pxQueue_1],Y
-	beq	L10472
-L10476:
-	bra	L10476
-L10472:
+	lda	[<L203+pxQueue_1],Y
+	beq	L10421
+L10425:
+	bra	L10425
+L10421:
 ;
 ;    /* RTOS ports that support interrupt nesting have the concept of a maximum
 ;     * system call (or maximum API call) interrupt priority.  Interrupts that are
@@ -4280,7 +3993,7 @@ L10472:
 ;    /* More details at: https://github.com/FreeRTOS/FreeRTOS-Kernel/blob/main/MISRA.md#dir-47 */
 ;    /* coverity[misra_c_2012_directive_4_7_violation] */
 ;    uxSavedInterruptStatus = ( UBaseType_t ) taskENTER_CRITICAL_FROM_ISR();
-	stz	<L234+uxSavedInterruptStatus_1
+	stz	<L203+uxSavedInterruptStatus_1
 ;    {
 ;        const UBaseType_t uxMessagesWaiting = pxQueue->uxMessagesWaiting;
 ;
@@ -4288,13 +4001,13 @@ L10472:
 ;        if( uxMessagesWaiting > ( UBaseType_t ) 0 )
 uxMessagesWaiting_2	set	8
 	ldy	#$34
-	lda	[<L234+pxQueue_1],Y
-	sta	<L234+uxMessagesWaiting_2
+	lda	[<L203+pxQueue_1],Y
+	sta	<L203+uxMessagesWaiting_2
 ;        {
 	lda	#$0
-	cmp	<L234+uxMessagesWaiting_2
+	cmp	<L203+uxMessagesWaiting_2
 	bcc	*+5
-	brl	L10479
+	brl	L10428
 ;            const int8_t cRxLock = pxQueue->cRxLock;
 ;
 ;            traceQUEUE_RECEIVE_FROM_ISR( pxQueue );
@@ -4302,23 +4015,23 @@ cRxLock_3	set	10
 	sep	#$20
 	longa	off
 	ldy	#$3a
-	lda	[<L234+pxQueue_1],Y
-	sta	<L234+cRxLock_3
+	lda	[<L203+pxQueue_1],Y
+	sta	<L203+cRxLock_3
 	rep	#$20
 	longa	on
 ;
 ;            prvCopyDataFromQueue( pxQueue, pvBuffer );
-	pei	<L233+pvBuffer_0+2
-	pei	<L233+pvBuffer_0
-	pei	<L234+pxQueue_1+2
-	pei	<L234+pxQueue_1
+	pei	<L202+pvBuffer_0+2
+	pei	<L202+pvBuffer_0
+	pei	<L203+pxQueue_1+2
+	pei	<L203+pxQueue_1
 	jsr	_~prvCopyDataFromQueue
 ;            pxQueue->uxMessagesWaiting = ( UBaseType_t ) ( uxMessagesWaiting - ( UBaseType_t ) 1 );
 	lda	#$ffff
 	clc
-	adc	<L234+uxMessagesWaiting_2
+	adc	<L203+uxMessagesWaiting_2
 	ldy	#$34
-	sta	[<L234+pxQueue_1],Y
+	sta	[<L203+pxQueue_1],Y
 ;
 ;            /* If the queue is locked the event list will not be modified.
 ;             * Instead update the lock count so the task that unlocks the queue
@@ -4328,51 +4041,51 @@ cRxLock_3	set	10
 ;            {
 	sep	#$20
 	longa	off
-	lda	<L234+cRxLock_3
+	lda	<L203+cRxLock_3
 	cmp	#<$ffffffff
 	rep	#$20
 	longa	on
-	bne	L10490
+	bne	L10439
 ;                if( listLIST_IS_EMPTY( &( pxQueue->xTasksWaitingToSend ) ) == pdFALSE )
 ;                {
 	ldy	#$10
-	lda	[<L234+pxQueue_1],Y
-	bne	L240
+	lda	[<L203+pxQueue_1],Y
+	bne	L209
 	lda	#$1
-	bra	L242
-L240:
+	bra	L211
+L209:
 	lda	#$0
-L242:
+L211:
 	tax
-	bne	L10487
+	bne	L10436
 ;                    if( xTaskRemoveFromEventList( &( pxQueue->xTasksWaitingToSend ) ) != pdFALSE )
 ;                    {
 	lda	#$10
 	clc
-	adc	<L234+pxQueue_1
+	adc	<L203+pxQueue_1
 	sta	<R0
 	lda	#$0
-	adc	<L234+pxQueue_1+2
+	adc	<L203+pxQueue_1+2
 	pha
 	pei	<R0
 	jsr	_~xTaskRemoveFromEventList
 	tax
-	beq	L10487
+	beq	L10436
 ;                        /* The task waiting has a higher priority than us so
 ;                         * force a context switch. */
 ;                        if( pxHigherPriorityTaskWoken != NULL )
 ;                        {
-	lda	<L233+pxHigherPriorityTaskWoken_0
-	ora	<L233+pxHigherPriorityTaskWoken_0+2
-	beq	L10487
+	lda	<L202+pxHigherPriorityTaskWoken_0
+	ora	<L202+pxHigherPriorityTaskWoken_0+2
+	beq	L10436
 ;                            *pxHigherPriorityTaskWoken = pdTRUE;
 	lda	#$1
-	sta	[<L233+pxHigherPriorityTaskWoken_0]
+	sta	[<L202+pxHigherPriorityTaskWoken_0]
 ;                        }
 ;                        else
 ;                }
 ;                else
-	bra	L10487
+	bra	L10436
 ;                        {
 ;                            mtCOVERAGE_TEST_MARKER();
 ;                        }
@@ -4390,72 +4103,72 @@ L242:
 ;                /* Increment the lock count so the task that unlocks the queue
 ;                 * knows that data was removed while it was locked. */
 ;                prvIncrementQueueRxLock( pxQueue, cRxLock );
-L10490:
+L10439:
 uxNumberOfTasks_4	set	11
 	jsr	_~uxTaskGetNumberOfTasks
-	sta	<L234+uxNumberOfTasks_4
-	lda	<L234+cRxLock_3
+	sta	<L203+uxNumberOfTasks_4
+	lda	<L203+cRxLock_3
 	and	#$ff
 	bit	#$80
-	beq	L246
+	beq	L215
 	ora	#$ff00
-L246:
-	cmp	<L234+uxNumberOfTasks_4
-	bcs	L10487
+L215:
+	cmp	<L203+uxNumberOfTasks_4
+	bcs	L10436
 	sep	#$20
 	longa	off
-	lda	<L234+cRxLock_3
+	lda	<L203+cRxLock_3
 	cmp	#<$7f
 	rep	#$20
 	longa	on
-	bne	L10492
-L10496:
-	bra	L10496
-L10492:
+	bne	L10441
+L10445:
+	bra	L10445
+L10441:
 	sep	#$20
 	longa	off
-	lda	<L234+cRxLock_3
+	lda	<L203+cRxLock_3
 	ina
 	ldy	#$3a
-	sta	[<L234+pxQueue_1],Y
+	sta	[<L203+pxQueue_1],Y
 	rep	#$20
 	longa	on
 ;            }
-L10487:
+L10436:
 ;
 ;            xReturn = pdPASS;
 	lda	#$1
-	sta	<L234+xReturn_1
+	sta	<L203+xReturn_1
 ;        }
 ;        else
-	bra	L10499
-L10479:
+	bra	L10448
+L10428:
 ;        {
 ;            xReturn = pdFAIL;
-	stz	<L234+xReturn_1
+	stz	<L203+xReturn_1
 ;            traceQUEUE_RECEIVE_FROM_ISR_FAILED( pxQueue );
 ;        }
-L10499:
+L10448:
 ;    }
 ;    taskEXIT_CRITICAL_FROM_ISR( uxSavedInterruptStatus );
 ;
 ;    traceRETURN_xQueueReceiveFromISR( xReturn );
 ;
 ;    return xReturn;
-	lda	<L234+xReturn_1
+	lda	<L203+xReturn_1
 	tay
-	lda	<L233+1
-	sta	<L233+1+12
+	lda	<L202+1
+	sta	<L202+1+12
 	pld
 	tsc
 	clc
-	adc	#L233+12
+	adc	#L202+12
 	tcs
 	tya
 	rts
 ;}
-L233	equ	17
-L234	equ	5
+L202	equ	17
+L203	equ	5
 	ends
 	efunc
 ;/*-----------------------------------------------------------*/
@@ -4471,7 +4184,7 @@ _~xQueuePeekFromISR:
 	longi	on
 	tsc
 	sec
-	sbc	#L250
+	sbc	#L219
 	tcs
 	phd
 	tcd
@@ -4487,34 +4200,34 @@ xReturn_1	set	0
 uxSavedInterruptStatus_1	set	2
 pcOriginalReadPosition_1	set	4
 pxQueue_1	set	8
-	lda	<L250+xQueue_0
-	sta	<L251+pxQueue_1
-	lda	<L250+xQueue_0+2
-	sta	<L251+pxQueue_1+2
+	lda	<L219+xQueue_0
+	sta	<L220+pxQueue_1
+	lda	<L219+xQueue_0+2
+	sta	<L220+pxQueue_1+2
 ;
 ;    configASSERT( ( pxQueue != NULL ) && !( ( pvBuffer == NULL ) && ( pxQueue->uxItemSize != ( UBaseType_t ) 0U ) ) );
-	lda	<L251+pxQueue_1
-	ora	<L251+pxQueue_1+2
-	beq	L10504
-	lda	<L250+pvBuffer_0
-	ora	<L250+pvBuffer_0+2
-	bne	L10500
+	lda	<L220+pxQueue_1
+	ora	<L220+pxQueue_1+2
+	beq	L10453
+	lda	<L219+pvBuffer_0
+	ora	<L219+pvBuffer_0+2
+	bne	L10449
 	ldy	#$38
-	lda	[<L251+pxQueue_1],Y
-	beq	L10500
-L10504:
-	bra	L10504
-L10500:
+	lda	[<L220+pxQueue_1],Y
+	beq	L10449
+L10453:
+	bra	L10453
+L10449:
 ;    configASSERT( ( pxQueue != NULL ) && ( pxQueue->uxItemSize != 0 ) ); /* Can't peek a semaphore. */
-	lda	<L251+pxQueue_1
-	ora	<L251+pxQueue_1+2
-	beq	L10511
+	lda	<L220+pxQueue_1
+	ora	<L220+pxQueue_1+2
+	beq	L10460
 	ldy	#$38
-	lda	[<L251+pxQueue_1],Y
-	bne	L10507
-L10511:
-	bra	L10511
-L10507:
+	lda	[<L220+pxQueue_1],Y
+	bne	L10456
+L10460:
+	bra	L10460
+L10456:
 ;
 ;    /* RTOS ports that support interrupt nesting have the concept of a maximum
 ;     * system call (or maximum API call) interrupt priority.  Interrupts that are
@@ -4536,75 +4249,75 @@ L10507:
 ;    /* More details at: https://github.com/FreeRTOS/FreeRTOS-Kernel/blob/main/MISRA.md#dir-47 */
 ;    /* coverity[misra_c_2012_directive_4_7_violation] */
 ;    uxSavedInterruptStatus = ( UBaseType_t ) taskENTER_CRITICAL_FROM_ISR();
-	stz	<L251+uxSavedInterruptStatus_1
+	stz	<L220+uxSavedInterruptStatus_1
 ;    {
 ;        /* Cannot block in an ISR, so check there is data available. */
 ;        if( pxQueue->uxMessagesWaiting > ( UBaseType_t ) 0 )
 ;        {
 	lda	#$0
 	ldy	#$34
-	cmp	[<L251+pxQueue_1],Y
-	bcs	L10514
+	cmp	[<L220+pxQueue_1],Y
+	bcs	L10463
 ;            traceQUEUE_PEEK_FROM_ISR( pxQueue );
 ;
 ;            /* Remember the read position so it can be reset as nothing is
 ;             * actually being removed from the queue. */
 ;            pcOriginalReadPosition = pxQueue->u.xQueue.pcReadFrom;
 	ldy	#$c
-	lda	[<L251+pxQueue_1],Y
-	sta	<L251+pcOriginalReadPosition_1
+	lda	[<L220+pxQueue_1],Y
+	sta	<L220+pcOriginalReadPosition_1
 	iny
 	iny
-	lda	[<L251+pxQueue_1],Y
-	sta	<L251+pcOriginalReadPosition_1+2
+	lda	[<L220+pxQueue_1],Y
+	sta	<L220+pcOriginalReadPosition_1+2
 ;            prvCopyDataFromQueue( pxQueue, pvBuffer );
-	pei	<L250+pvBuffer_0+2
-	pei	<L250+pvBuffer_0
-	pei	<L251+pxQueue_1+2
-	pei	<L251+pxQueue_1
+	pei	<L219+pvBuffer_0+2
+	pei	<L219+pvBuffer_0
+	pei	<L220+pxQueue_1+2
+	pei	<L220+pxQueue_1
 	jsr	_~prvCopyDataFromQueue
 ;            pxQueue->u.xQueue.pcReadFrom = pcOriginalReadPosition;
-	lda	<L251+pcOriginalReadPosition_1
+	lda	<L220+pcOriginalReadPosition_1
 	ldy	#$c
-	sta	[<L251+pxQueue_1],Y
-	lda	<L251+pcOriginalReadPosition_1+2
+	sta	[<L220+pxQueue_1],Y
+	lda	<L220+pcOriginalReadPosition_1+2
 	iny
 	iny
-	sta	[<L251+pxQueue_1],Y
+	sta	[<L220+pxQueue_1],Y
 ;
 ;            xReturn = pdPASS;
 	lda	#$1
-	sta	<L251+xReturn_1
+	sta	<L220+xReturn_1
 ;        }
 ;        else
-	bra	L10515
-L10514:
+	bra	L10464
+L10463:
 ;        {
 ;            xReturn = pdFAIL;
-	stz	<L251+xReturn_1
+	stz	<L220+xReturn_1
 ;            traceQUEUE_PEEK_FROM_ISR_FAILED( pxQueue );
 ;        }
-L10515:
+L10464:
 ;    }
 ;    taskEXIT_CRITICAL_FROM_ISR( uxSavedInterruptStatus );
 ;
 ;    traceRETURN_xQueuePeekFromISR( xReturn );
 ;
 ;    return xReturn;
-	lda	<L251+xReturn_1
+	lda	<L220+xReturn_1
 	tay
-	lda	<L250+1
-	sta	<L250+1+8
+	lda	<L219+1
+	sta	<L219+1+8
 	pld
 	tsc
 	clc
-	adc	#L250+8
+	adc	#L219+8
 	tcs
 	tya
 	rts
 ;}
-L250	equ	12
-L251	equ	1
+L219	equ	12
+L220	equ	1
 	ends
 	efunc
 ;/*-----------------------------------------------------------*/
@@ -4619,7 +4332,7 @@ _~uxQueueMessagesWaiting:
 	longi	on
 	tsc
 	sec
-	sbc	#L261
+	sbc	#L230
 	tcs
 	phd
 	tcd
@@ -4630,19 +4343,19 @@ xQueue_0	set	3
 uxReturn_1	set	0
 ;
 ;    configASSERT( xQueue );
-	lda	<L261+xQueue_0
-	ora	<L261+xQueue_0+2
-	bne	L10524
-L10520:
-	bra	L10520
+	lda	<L230+xQueue_0
+	ora	<L230+xQueue_0+2
+	bne	L10473
+L10469:
+	bra	L10469
 ;
 ;    portBASE_TYPE_ENTER_CRITICAL();
-L10524:
+L10473:
 ;    {
 ;        uxReturn = ( ( Queue_t * ) xQueue )->uxMessagesWaiting;
 	ldy	#$34
-	lda	[<L261+xQueue_0],Y
-	sta	<L262+uxReturn_1
+	lda	[<L230+xQueue_0],Y
+	sta	<L231+uxReturn_1
 ;    }
 ;    portBASE_TYPE_EXIT_CRITICAL();
 ;
@@ -4650,18 +4363,18 @@ L10524:
 ;
 ;    return uxReturn;
 	tay
-	lda	<L261+1
-	sta	<L261+1+4
+	lda	<L230+1
+	sta	<L230+1+4
 	pld
 	tsc
 	clc
-	adc	#L261+4
+	adc	#L230+4
 	tcs
 	tya
 	rts
 ;}
-L261	equ	2
-L262	equ	1
+L230	equ	2
+L231	equ	1
 	ends
 	efunc
 ;/*-----------------------------------------------------------*/
@@ -4676,7 +4389,7 @@ _~uxQueueSpacesAvailable:
 	longi	on
 	tsc
 	sec
-	sbc	#L265
+	sbc	#L234
 	tcs
 	phd
 	tcd
@@ -4687,29 +4400,29 @@ xQueue_0	set	3
 ;    traceENTER_uxQueueSpacesAvailable( xQueue );
 uxReturn_1	set	0
 pxQueue_1	set	2
-	lda	<L265+xQueue_0
-	sta	<L266+pxQueue_1
-	lda	<L265+xQueue_0+2
-	sta	<L266+pxQueue_1+2
+	lda	<L234+xQueue_0
+	sta	<L235+pxQueue_1
+	lda	<L234+xQueue_0+2
+	sta	<L235+pxQueue_1+2
 ;
 ;    configASSERT( pxQueue );
-	lda	<L266+pxQueue_1
-	ora	<L266+pxQueue_1+2
-	bne	L10537
-L10533:
-	bra	L10533
+	lda	<L235+pxQueue_1
+	ora	<L235+pxQueue_1+2
+	bne	L10486
+L10482:
+	bra	L10482
 ;
 ;    portBASE_TYPE_ENTER_CRITICAL();
-L10537:
+L10486:
 ;    {
 ;        uxReturn = ( UBaseType_t ) ( pxQueue->uxLength - pxQueue->uxMessagesWaiting );
 	sec
 	ldy	#$36
-	lda	[<L266+pxQueue_1],Y
+	lda	[<L235+pxQueue_1],Y
 	dey
 	dey
-	sbc	[<L266+pxQueue_1],Y
-	sta	<L266+uxReturn_1
+	sbc	[<L235+pxQueue_1],Y
+	sta	<L235+uxReturn_1
 ;    }
 ;    portBASE_TYPE_EXIT_CRITICAL();
 ;
@@ -4717,18 +4430,18 @@ L10537:
 ;
 ;    return uxReturn;
 	tay
-	lda	<L265+1
-	sta	<L265+1+4
+	lda	<L234+1
+	sta	<L234+1+4
 	pld
 	tsc
 	clc
-	adc	#L265+4
+	adc	#L234+4
 	tcs
 	tya
 	rts
 ;}
-L265	equ	6
-L266	equ	1
+L234	equ	6
+L235	equ	1
 	ends
 	efunc
 ;/*-----------------------------------------------------------*/
@@ -4743,7 +4456,7 @@ _~uxQueueMessagesWaitingFromISR:
 	longi	on
 	tsc
 	sec
-	sbc	#L269
+	sbc	#L238
 	tcs
 	phd
 	tcd
@@ -4754,39 +4467,39 @@ xQueue_0	set	3
 ;    traceENTER_uxQueueMessagesWaitingFromISR( xQueue );
 uxReturn_1	set	0
 pxQueue_1	set	2
-	lda	<L269+xQueue_0
-	sta	<L270+pxQueue_1
-	lda	<L269+xQueue_0+2
-	sta	<L270+pxQueue_1+2
+	lda	<L238+xQueue_0
+	sta	<L239+pxQueue_1
+	lda	<L238+xQueue_0+2
+	sta	<L239+pxQueue_1+2
 ;
 ;    configASSERT( pxQueue );
-	lda	<L270+pxQueue_1
-	ora	<L270+pxQueue_1+2
-	bne	L10542
-L10546:
-	bra	L10546
-L10542:
+	lda	<L239+pxQueue_1
+	ora	<L239+pxQueue_1+2
+	bne	L10491
+L10495:
+	bra	L10495
+L10491:
 ;    uxReturn = pxQueue->uxMessagesWaiting;
 	ldy	#$34
-	lda	[<L270+pxQueue_1],Y
-	sta	<L270+uxReturn_1
+	lda	[<L239+pxQueue_1],Y
+	sta	<L239+uxReturn_1
 ;
 ;    traceRETURN_uxQueueMessagesWaitingFromISR( uxReturn );
 ;
 ;    return uxReturn;
 	tay
-	lda	<L269+1
-	sta	<L269+1+4
+	lda	<L238+1
+	sta	<L238+1+4
 	pld
 	tsc
 	clc
-	adc	#L269+4
+	adc	#L238+4
 	tcs
 	tya
 	rts
 ;}
-L269	equ	6
-L270	equ	1
+L238	equ	6
+L239	equ	1
 	ends
 	efunc
 ;/*-----------------------------------------------------------*/
@@ -4801,7 +4514,7 @@ _~vQueueDelete:
 	longi	on
 	tsc
 	sec
-	sbc	#L273
+	sbc	#L242
 	tcs
 	phd
 	tcd
@@ -4810,46 +4523,46 @@ xQueue_0	set	3
 ;
 ;    traceENTER_vQueueDelete( xQueue );
 pxQueue_1	set	0
-	lda	<L273+xQueue_0
-	sta	<L274+pxQueue_1
-	lda	<L273+xQueue_0+2
-	sta	<L274+pxQueue_1+2
+	lda	<L242+xQueue_0
+	sta	<L243+pxQueue_1
+	lda	<L242+xQueue_0+2
+	sta	<L243+pxQueue_1+2
 ;
 ;    configASSERT( pxQueue );
-	lda	<L274+pxQueue_1
-	ora	<L274+pxQueue_1+2
-	bne	L10549
-L10553:
-	bra	L10553
-L10549:
+	lda	<L243+pxQueue_1
+	ora	<L243+pxQueue_1+2
+	bne	L10498
+L10502:
+	bra	L10502
+L10498:
 ;    configASSERT( listLIST_IS_EMPTY( &( pxQueue->xTasksWaitingToSend ) ) );
 	ldy	#$10
-	lda	[<L274+pxQueue_1],Y
-	bne	L276
+	lda	[<L243+pxQueue_1],Y
+	bne	L245
 	lda	#$1
-	bra	L278
-L276:
+	bra	L247
+L245:
 	lda	#$0
-L278:
+L247:
 	tax
-	bne	L10556
-L10560:
-	bra	L10560
-L10556:
+	bne	L10505
+L10509:
+	bra	L10509
+L10505:
 ;    configASSERT( listLIST_IS_EMPTY( &( pxQueue->xTasksWaitingToReceive ) ) );
 	ldy	#$22
-	lda	[<L274+pxQueue_1],Y
-	bne	L280
+	lda	[<L243+pxQueue_1],Y
+	bne	L249
 	lda	#$1
-	bra	L282
-L280:
+	bra	L251
+L249:
 	lda	#$0
-L282:
+L251:
 	tax
-	bne	L10563
-L10567:
-	bra	L10567
-L10563:
+	bne	L10512
+L10516:
+	bra	L10516
+L10512:
 ;    traceQUEUE_DELETE( pxQueue );
 ;
 ;    #if ( configQUEUE_REGISTRY_SIZE > 0 )
@@ -4863,6 +4576,9 @@ L10563:
 ;        /* The queue can only have been allocated dynamically - free it
 ;         * again. */
 ;        vPortFree( pxQueue );
+	pei	<L243+pxQueue_1+2
+	pei	<L243+pxQueue_1
+	jsr	_~vPortFree
 ;    }
 ;    #elif ( ( configSUPPORT_DYNAMIC_ALLOCATION == 1 ) && ( configSUPPORT_STATIC_ALLOCATION == 1 ) )
 ;    {
@@ -4870,14 +4586,7 @@ L10563:
 ;         * check before attempting to free the memory. */
 ;        if( pxQueue->ucStaticallyAllocated == ( uint8_t ) pdFALSE )
 ;        {
-	ldy	#$3c
-	lda	[<L274+pxQueue_1],Y
-	and	#$ff
-	bne	L285
 ;            vPortFree( pxQueue );
-	pei	<L274+pxQueue_1+2
-	pei	<L274+pxQueue_1
-	jsr	_~vPortFree
 ;        }
 ;        else
 ;        {
@@ -4894,17 +4603,16 @@ L10563:
 ;
 ;    traceRETURN_vQueueDelete();
 ;}
-L285:
-	lda	<L273+1
-	sta	<L273+1+4
+	lda	<L242+1
+	sta	<L242+1+4
 	pld
 	tsc
 	clc
-	adc	#L273+4
+	adc	#L242+4
 	tcs
 	rts
-L273	equ	4
-L274	equ	1
+L242	equ	4
+L243	equ	1
 	ends
 	efunc
 ;/*-----------------------------------------------------------*/
@@ -4962,7 +4670,7 @@ _~uxQueueGetQueueItemSize:
 	longi	on
 	tsc
 	sec
-	sbc	#L286
+	sbc	#L254
 	tcs
 	phd
 	tcd
@@ -4973,20 +4681,20 @@ xQueue_0	set	3
 ;
 ;    return ( ( Queue_t * ) xQueue )->uxItemSize;
 	ldy	#$38
-	lda	[<L286+xQueue_0],Y
+	lda	[<L254+xQueue_0],Y
 	tay
-	lda	<L286+1
-	sta	<L286+1+4
+	lda	<L254+1
+	sta	<L254+1+4
 	pld
 	tsc
 	clc
-	adc	#L286+4
+	adc	#L254+4
 	tcs
 	tya
 	rts
 ;}
-L286	equ	0
-L287	equ	1
+L254	equ	0
+L255	equ	1
 	ends
 	efunc
 ;/*-----------------------------------------------------------*/
@@ -5001,7 +4709,7 @@ _~uxQueueGetQueueLength:
 	longi	on
 	tsc
 	sec
-	sbc	#L289
+	sbc	#L257
 	tcs
 	phd
 	tcd
@@ -5012,20 +4720,20 @@ xQueue_0	set	3
 ;
 ;    return ( ( Queue_t * ) xQueue )->uxLength;
 	ldy	#$36
-	lda	[<L289+xQueue_0],Y
+	lda	[<L257+xQueue_0],Y
 	tay
-	lda	<L289+1
-	sta	<L289+1+4
+	lda	<L257+1
+	sta	<L257+1+4
 	pld
 	tsc
 	clc
-	adc	#L289+4
+	adc	#L257+4
 	tcs
 	tya
 	rts
 ;}
-L289	equ	0
-L290	equ	1
+L257	equ	0
+L258	equ	1
 	ends
 	efunc
 ;/*-----------------------------------------------------------*/
@@ -5041,7 +4749,7 @@ _~prvGetHighestPriorityOfWaitToReceiveList:
 	longi	on
 	tsc
 	sec
-	sbc	#L292
+	sbc	#L260
 	tcs
 	phd
 	tcd
@@ -5059,45 +4767,45 @@ uxHighestPriorityOfWaitingTasks_1	set	0
 ;        {
 	lda	#$0
 	ldy	#$22
-	cmp	[<L292+pxQueue_0],Y
-	bcs	L10572
+	cmp	[<L260+pxQueue_0],Y
+	bcs	L10519
 ;            uxHighestPriorityOfWaitingTasks = ( UBaseType_t ) ( ( UBaseType_t ) configMAX_PRIORITIES - ( UBaseType_t ) listGET_ITEM_VALUE_OF_HEAD_ENTRY( &( pxQueue->xTasksWaitingToReceive ) ) );
 	ldy	#$2c
-	lda	[<L292+pxQueue_0],Y
+	lda	[<L260+pxQueue_0],Y
 	sta	<R0
 	iny
 	iny
-	lda	[<L292+pxQueue_0],Y
+	lda	[<L260+pxQueue_0],Y
 	sta	<R0+2
 	sec
 	lda	#$5
 	sbc	[<R0]
-	sta	<L293+uxHighestPriorityOfWaitingTasks_1
+	sta	<L261+uxHighestPriorityOfWaitingTasks_1
 ;        }
 ;        else
-	bra	L10573
-L10572:
+	bra	L10520
+L10519:
 ;        {
 ;            uxHighestPriorityOfWaitingTasks = tskIDLE_PRIORITY;
-	stz	<L293+uxHighestPriorityOfWaitingTasks_1
+	stz	<L261+uxHighestPriorityOfWaitingTasks_1
 ;        }
-L10573:
+L10520:
 ;
 ;        return uxHighestPriorityOfWaitingTasks;
-	lda	<L293+uxHighestPriorityOfWaitingTasks_1
+	lda	<L261+uxHighestPriorityOfWaitingTasks_1
 	tay
-	lda	<L292+1
-	sta	<L292+1+4
+	lda	<L260+1
+	sta	<L260+1+4
 	pld
 	tsc
 	clc
-	adc	#L292+4
+	adc	#L260+4
 	tcs
 	tya
 	rts
 ;    }
-L292	equ	6
-L293	equ	5
+L260	equ	6
+L261	equ	5
 	ends
 	efunc
 ;
@@ -5115,7 +4823,7 @@ _~prvCopyDataToQueue:
 	longi	on
 	tsc
 	sec
-	sbc	#L296
+	sbc	#L264
 	tcs
 	phd
 	tcd
@@ -5130,62 +4838,62 @@ xPosition_0	set	11
 ;    uxMessagesWaiting = pxQueue->uxMessagesWaiting;
 xReturn_1	set	0
 uxMessagesWaiting_1	set	2
-	stz	<L297+xReturn_1
+	stz	<L265+xReturn_1
 	ldy	#$34
-	lda	[<L296+pxQueue_0],Y
-	sta	<L297+uxMessagesWaiting_1
+	lda	[<L264+pxQueue_0],Y
+	sta	<L265+uxMessagesWaiting_1
 ;
 ;    if( pxQueue->uxItemSize == ( UBaseType_t ) 0 )
 ;    {
 	ldy	#$38
-	lda	[<L296+pxQueue_0],Y
-	bne	L10574
+	lda	[<L264+pxQueue_0],Y
+	bne	L10521
 ;        #if ( configUSE_MUTEXES == 1 )
 ;        {
 ;            if( pxQueue->uxQueueType == queueQUEUE_IS_MUTEX )
 ;            {
-	lda	[<L296+pxQueue_0]
+	lda	[<L264+pxQueue_0]
 	ldy	#$2
-	ora	[<L296+pxQueue_0],Y
-	bne	L10577
+	ora	[<L264+pxQueue_0],Y
+	bne	L10524
 ;                /* The mutex is no longer being held. */
 ;                xReturn = xTaskPriorityDisinherit( pxQueue->u.xSemaphore.xMutexHolder );
 	ldy	#$a
-	lda	[<L296+pxQueue_0],Y
+	lda	[<L264+pxQueue_0],Y
 	pha
 	dey
 	dey
-	lda	[<L296+pxQueue_0],Y
+	lda	[<L264+pxQueue_0],Y
 	pha
 	jsr	_~xTaskPriorityDisinherit
-	sta	<L297+xReturn_1
+	sta	<L265+xReturn_1
 ;                pxQueue->u.xSemaphore.xMutexHolder = NULL;
 	lda	#$0
 	ldy	#$8
-	sta	[<L296+pxQueue_0],Y
+	sta	[<L264+pxQueue_0],Y
 	iny
 	iny
 L20011:
-	sta	[<L296+pxQueue_0],Y
+	sta	[<L264+pxQueue_0],Y
 ;            }
 ;            else
-L10577:
+L10524:
 ;
 ;    pxQueue->uxMessagesWaiting = ( UBaseType_t ) ( uxMessagesWaiting + ( UBaseType_t ) 1 );
-	lda	<L297+uxMessagesWaiting_1
+	lda	<L265+uxMessagesWaiting_1
 	ina
 	ldy	#$34
-	sta	[<L296+pxQueue_0],Y
+	sta	[<L264+pxQueue_0],Y
 ;
 ;    return xReturn;
-	lda	<L297+xReturn_1
+	lda	<L265+xReturn_1
 	tay
-	lda	<L296+1
-	sta	<L296+1+10
+	lda	<L264+1
+	sta	<L264+1+10
 	pld
 	tsc
 	clc
-	adc	#L296+10
+	adc	#L264+10
 	tcs
 	tya
 	rts
@@ -5196,37 +4904,37 @@ L10577:
 ;        #endif /* configUSE_MUTEXES */
 ;    }
 ;    else if( xPosition == queueSEND_TO_BACK )
-L10574:
+L10521:
 ;    {
-	lda	<L296+xPosition_0
-	bne	L10578
+	lda	<L264+xPosition_0
+	bne	L10525
 ;        ( void ) memcpy( ( void * ) pxQueue->pcWriteTo, pvItemToQueue, ( size_t ) pxQueue->uxItemSize );
 	ldy	#$38
-	lda	[<L296+pxQueue_0],Y
+	lda	[<L264+pxQueue_0],Y
 	pha
-	pei	<L296+pvItemToQueue_0+2
-	pei	<L296+pvItemToQueue_0
+	pei	<L264+pvItemToQueue_0+2
+	pei	<L264+pvItemToQueue_0
 	ldy	#$6
-	lda	[<L296+pxQueue_0],Y
+	lda	[<L264+pxQueue_0],Y
 	pha
 	dey
 	dey
-	lda	[<L296+pxQueue_0],Y
+	lda	[<L264+pxQueue_0],Y
 	pha
 	jsr	_~memcpy
 	sta	<R0
 	stx	<R0+2
 ;        pxQueue->pcWriteTo += pxQueue->uxItemSize;
 	ldy	#$38
-	lda	[<L296+pxQueue_0],Y
+	lda	[<L264+pxQueue_0],Y
 	sta	<R0
 	stz	<R0+2
 	lda	#$4
 	clc
-	adc	<L296+pxQueue_0
+	adc	<L264+pxQueue_0
 	sta	<R1
 	lda	#$0
-	adc	<L296+pxQueue_0+2
+	adc	<L264+pxQueue_0+2
 	sta	<R1+2
 	lda	[<R1]
 	clc
@@ -5241,22 +4949,22 @@ L10574:
 ;        {
 	iny
 	iny
-	lda	[<L296+pxQueue_0],Y
+	lda	[<L264+pxQueue_0],Y
 	ldy	#$8
-	cmp	[<L296+pxQueue_0],Y
+	cmp	[<L264+pxQueue_0],Y
 	dey
 	dey
-	lda	[<L296+pxQueue_0],Y
+	lda	[<L264+pxQueue_0],Y
 	ldy	#$a
-	sbc	[<L296+pxQueue_0],Y
-	bcc	L10577
+	sbc	[<L264+pxQueue_0],Y
+	bcc	L10524
 ;            pxQueue->pcWriteTo = pxQueue->pcHead;
-	lda	[<L296+pxQueue_0]
+	lda	[<L264+pxQueue_0]
 	ldy	#$4
-	sta	[<L296+pxQueue_0],Y
+	sta	[<L264+pxQueue_0],Y
 	dey
 	dey
-	lda	[<L296+pxQueue_0],Y
+	lda	[<L264+pxQueue_0],Y
 	ldy	#$6
 	brl	L20011
 ;        }
@@ -5266,35 +4974,35 @@ L10574:
 ;        }
 ;    }
 ;    else
-L10578:
+L10525:
 ;    {
 ;        ( void ) memcpy( ( void * ) pxQueue->u.xQueue.pcReadFrom, pvItemToQueue, ( size_t ) pxQueue->uxItemSize );
 	ldy	#$38
-	lda	[<L296+pxQueue_0],Y
+	lda	[<L264+pxQueue_0],Y
 	pha
-	pei	<L296+pvItemToQueue_0+2
-	pei	<L296+pvItemToQueue_0
+	pei	<L264+pvItemToQueue_0+2
+	pei	<L264+pvItemToQueue_0
 	ldy	#$e
-	lda	[<L296+pxQueue_0],Y
+	lda	[<L264+pxQueue_0],Y
 	pha
 	dey
 	dey
-	lda	[<L296+pxQueue_0],Y
+	lda	[<L264+pxQueue_0],Y
 	pha
 	jsr	_~memcpy
 	sta	<R0
 	stx	<R0+2
 ;        pxQueue->u.xQueue.pcReadFrom -= pxQueue->uxItemSize;
 	ldy	#$38
-	lda	[<L296+pxQueue_0],Y
+	lda	[<L264+pxQueue_0],Y
 	sta	<R0
 	stz	<R0+2
 	lda	#$c
 	clc
-	adc	<L296+pxQueue_0
+	adc	<L264+pxQueue_0
 	sta	<R1
 	lda	#$0
-	adc	<L296+pxQueue_0+2
+	adc	<L264+pxQueue_0+2
 	sta	<R1+2
 	sec
 	lda	[<R1]
@@ -5308,65 +5016,65 @@ L10578:
 ;        if( pxQueue->u.xQueue.pcReadFrom < pxQueue->pcHead )
 ;        {
 	ldy	#$c
-	lda	[<L296+pxQueue_0],Y
-	cmp	[<L296+pxQueue_0]
+	lda	[<L264+pxQueue_0],Y
+	cmp	[<L264+pxQueue_0]
 	iny
 	iny
-	lda	[<L296+pxQueue_0],Y
+	lda	[<L264+pxQueue_0],Y
 	ldy	#$2
-	sbc	[<L296+pxQueue_0],Y
-	bcs	L10583
+	sbc	[<L264+pxQueue_0],Y
+	bcs	L10530
 ;            pxQueue->u.xQueue.pcReadFrom = ( pxQueue->u.xQueue.pcTail - pxQueue->uxItemSize );
 	ldy	#$38
-	lda	[<L296+pxQueue_0],Y
+	lda	[<L264+pxQueue_0],Y
 	sta	<R0
 	stz	<R0+2
 	sec
 	ldy	#$8
-	lda	[<L296+pxQueue_0],Y
+	lda	[<L264+pxQueue_0],Y
 	sbc	<R0
 	sta	<R1
 	iny
 	iny
-	lda	[<L296+pxQueue_0],Y
+	lda	[<L264+pxQueue_0],Y
 	sbc	<R0+2
 	sta	<R1+2
 	lda	<R1
 	iny
 	iny
-	sta	[<L296+pxQueue_0],Y
+	sta	[<L264+pxQueue_0],Y
 	lda	<R1+2
 	iny
 	iny
-	sta	[<L296+pxQueue_0],Y
+	sta	[<L264+pxQueue_0],Y
 ;        }
 ;        else
 ;        {
 ;            mtCOVERAGE_TEST_MARKER();
 ;        }
-L10583:
+L10530:
 ;
 ;        if( xPosition == queueOVERWRITE )
 ;        {
-	lda	<L296+xPosition_0
+	lda	<L264+xPosition_0
 	cmp	#<$2
 	beq	*+5
-	brl	L10577
+	brl	L10524
 ;            if( uxMessagesWaiting > ( UBaseType_t ) 0 )
 ;            {
 	lda	#$0
-	cmp	<L297+uxMessagesWaiting_1
+	cmp	<L265+uxMessagesWaiting_1
 	bcc	*+5
-	brl	L10577
+	brl	L10524
 ;                /* An item is not being added but overwritten, so subtract
 ;                 * one from the recorded number of items in the queue so when
 ;                 * one is added again below the number of recorded items remains
 ;                 * correct. */
 ;                --uxMessagesWaiting;
-	dec	<L297+uxMessagesWaiting_1
+	dec	<L265+uxMessagesWaiting_1
 ;            }
 ;            else
-	brl	L10577
+	brl	L10524
 ;            {
 ;                mtCOVERAGE_TEST_MARKER();
 ;            }
@@ -5377,8 +5085,8 @@ L10583:
 ;        }
 ;    }
 ;}
-L296	equ	12
-L297	equ	9
+L264	equ	12
+L265	equ	9
 	ends
 	efunc
 ;/*-----------------------------------------------------------*/
@@ -5393,7 +5101,7 @@ _~prvCopyDataFromQueue:
 	longi	on
 	tsc
 	sec
-	sbc	#L306
+	sbc	#L274
 	tcs
 	phd
 	tcd
@@ -5402,18 +5110,18 @@ pvBuffer_0	set	7
 ;    if( pxQueue->uxItemSize != ( UBaseType_t ) 0 )
 ;    {
 	ldy	#$38
-	lda	[<L306+pxQueue_0],Y
-	beq	L310
+	lda	[<L274+pxQueue_0],Y
+	beq	L278
 ;        pxQueue->u.xQueue.pcReadFrom += pxQueue->uxItemSize;
-	lda	[<L306+pxQueue_0],Y
+	lda	[<L274+pxQueue_0],Y
 	sta	<R0
 	stz	<R0+2
 	lda	#$c
 	clc
-	adc	<L306+pxQueue_0
+	adc	<L274+pxQueue_0
 	sta	<R1
 	lda	#$0
-	adc	<L306+pxQueue_0+2
+	adc	<L274+pxQueue_0+2
 	sta	<R1+2
 	lda	[<R1]
 	clc
@@ -5427,59 +5135,59 @@ pvBuffer_0	set	7
 ;        if( pxQueue->u.xQueue.pcReadFrom >= pxQueue->u.xQueue.pcTail )
 ;        {
 	ldy	#$c
-	lda	[<L306+pxQueue_0],Y
+	lda	[<L274+pxQueue_0],Y
 	ldy	#$8
-	cmp	[<L306+pxQueue_0],Y
+	cmp	[<L274+pxQueue_0],Y
 	ldy	#$e
-	lda	[<L306+pxQueue_0],Y
+	lda	[<L274+pxQueue_0],Y
 	ldy	#$a
-	sbc	[<L306+pxQueue_0],Y
-	bcc	L10590
+	sbc	[<L274+pxQueue_0],Y
+	bcc	L10537
 ;            pxQueue->u.xQueue.pcReadFrom = pxQueue->pcHead;
-	lda	[<L306+pxQueue_0]
+	lda	[<L274+pxQueue_0]
 	iny
 	iny
-	sta	[<L306+pxQueue_0],Y
+	sta	[<L274+pxQueue_0],Y
 	ldy	#$2
-	lda	[<L306+pxQueue_0],Y
+	lda	[<L274+pxQueue_0],Y
 	ldy	#$e
-	sta	[<L306+pxQueue_0],Y
+	sta	[<L274+pxQueue_0],Y
 ;        }
 ;        else
 ;        {
 ;            mtCOVERAGE_TEST_MARKER();
 ;        }
-L10590:
+L10537:
 ;
 ;        ( void ) memcpy( ( void * ) pvBuffer, ( void * ) pxQueue->u.xQueue.pcReadFrom, ( size_t ) pxQueue->uxItemSize );
 	ldy	#$38
-	lda	[<L306+pxQueue_0],Y
+	lda	[<L274+pxQueue_0],Y
 	pha
 	ldy	#$e
-	lda	[<L306+pxQueue_0],Y
+	lda	[<L274+pxQueue_0],Y
 	pha
 	dey
 	dey
-	lda	[<L306+pxQueue_0],Y
+	lda	[<L274+pxQueue_0],Y
 	pha
-	pei	<L306+pvBuffer_0+2
-	pei	<L306+pvBuffer_0
+	pei	<L274+pvBuffer_0+2
+	pei	<L274+pvBuffer_0
 	jsr	_~memcpy
 	sta	<R0
 	stx	<R0+2
 ;    }
 ;}
-L310:
-	lda	<L306+1
-	sta	<L306+1+8
+L278:
+	lda	<L274+1
+	sta	<L274+1+8
 	pld
 	tsc
 	clc
-	adc	#L306+8
+	adc	#L274+8
 	tcs
 	rts
-L306	equ	8
-L307	equ	9
+L274	equ	8
+L275	equ	9
 	ends
 	efunc
 ;/*-----------------------------------------------------------*/
@@ -5493,7 +5201,7 @@ _~prvUnlockQueue:
 	longi	on
 	tsc
 	sec
-	sbc	#L311
+	sbc	#L279
 	tcs
 	phd
 	tcd
@@ -5514,11 +5222,11 @@ cTxLock_2	set	0
 	sep	#$20
 	longa	off
 	ldy	#$3b
-	lda	[<L311+pxQueue_0],Y
-	sta	<L312+cTxLock_2
+	lda	[<L279+pxQueue_0],Y
+	sta	<L280+cTxLock_2
 	rep	#$20
 	longa	on
-	bra	L10594
+	bra	L10541
 L20013:
 ;        {
 ;            /* Data was posted while the queue was locked.  Are any tasks
@@ -5570,60 +5278,60 @@ L20013:
 ;                if( listLIST_IS_EMPTY( &( pxQueue->xTasksWaitingToReceive ) ) == pdFALSE )
 ;                {
 	ldy	#$22
-	lda	[<L311+pxQueue_0],Y
-	bne	L315
+	lda	[<L279+pxQueue_0],Y
+	bne	L283
 	lda	#$1
-	bra	L317
-L315:
+	bra	L285
+L283:
 	lda	#$0
-L317:
+L285:
 	tax
-	bne	L10595
+	bne	L10542
 ;                    if( xTaskRemoveFromEventList( &( pxQueue->xTasksWaitingToReceive ) ) != pdFALSE )
 ;                    {
 	lda	#$22
 	clc
-	adc	<L311+pxQueue_0
+	adc	<L279+pxQueue_0
 	sta	<R0
 	lda	#$0
-	adc	<L311+pxQueue_0+2
+	adc	<L279+pxQueue_0+2
 	pha
 	pei	<R0
 	jsr	_~xTaskRemoveFromEventList
 	tax
-	beq	L10599
+	beq	L10546
 ;                        /* The task waiting has a higher priority so record that
 ;                         * a context switch is required. */
 ;                        vTaskMissedYield();
 	jsr	_~vTaskMissedYield
 ;                    }
 ;                    else
-L10599:
+L10546:
 ;            }
 ;            #endif /* configUSE_QUEUE_SETS */
 ;
 ;            --cTxLock;
 	sep	#$20
 	longa	off
-	dec	<L312+cTxLock_2
+	dec	<L280+cTxLock_2
 	rep	#$20
 	longa	on
 ;        }
-L10594:
+L10541:
 	sep	#$20
 	longa	off
 	sec
 	lda	#$0
-	sbc	<L312+cTxLock_2
+	sbc	<L280+cTxLock_2
 	rep	#$20
 	longa	on
-	bvs	L313
+	bvs	L281
 	sep	#$20
 	longa	off
 	eor	#$80
 	rep	#$20
 	longa	on
-L313:
+L281:
 	bpl	L20013
 ;                    {
 ;                        mtCOVERAGE_TEST_MARKER();
@@ -5633,14 +5341,14 @@ L313:
 ;                {
 ;                    break;
 ;                }
-L10595:
+L10542:
 ;
 ;        pxQueue->cTxLock = queueUNLOCKED;
 	sep	#$20
 	longa	off
 	lda	#$ff
 	ldy	#$3b
-	sta	[<L311+pxQueue_0],Y
+	sta	[<L279+pxQueue_0],Y
 	rep	#$20
 	longa	on
 ;    }
@@ -5656,38 +5364,38 @@ cRxLock_3	set	0
 	sep	#$20
 	longa	off
 	dey
-	lda	[<L311+pxQueue_0],Y
-	sta	<L312+cRxLock_3
+	lda	[<L279+pxQueue_0],Y
+	sta	<L280+cRxLock_3
 	rep	#$20
 	longa	on
-	bra	L10606
+	bra	L10553
 L20015:
 ;        {
 ;            if( listLIST_IS_EMPTY( &( pxQueue->xTasksWaitingToSend ) ) == pdFALSE )
 ;            {
 	ldy	#$10
-	lda	[<L311+pxQueue_0],Y
-	bne	L322
+	lda	[<L279+pxQueue_0],Y
+	bne	L290
 	lda	#$1
-	bra	L324
-L322:
+	bra	L292
+L290:
 	lda	#$0
-L324:
+L292:
 	tax
-	bne	L10607
+	bne	L10554
 ;                if( xTaskRemoveFromEventList( &( pxQueue->xTasksWaitingToSend ) ) != pdFALSE )
 ;                {
 	lda	#$10
 	clc
-	adc	<L311+pxQueue_0
+	adc	<L279+pxQueue_0
 	sta	<R0
 	lda	#$0
-	adc	<L311+pxQueue_0+2
+	adc	<L279+pxQueue_0+2
 	pha
 	pei	<R0
 	jsr	_~xTaskRemoveFromEventList
 	tax
-	beq	L10610
+	beq	L10557
 ;                    vTaskMissedYield();
 	jsr	_~vTaskMissedYield
 ;                }
@@ -5695,59 +5403,59 @@ L324:
 ;                {
 ;                    mtCOVERAGE_TEST_MARKER();
 ;                }
-L10610:
+L10557:
 ;
 ;                --cRxLock;
 	sep	#$20
 	longa	off
-	dec	<L312+cRxLock_3
+	dec	<L280+cRxLock_3
 	rep	#$20
 	longa	on
 ;            }
 ;            else
-L10606:
+L10553:
 	sep	#$20
 	longa	off
 	sec
 	lda	#$0
-	sbc	<L312+cRxLock_3
+	sbc	<L280+cRxLock_3
 	rep	#$20
 	longa	on
-	bvs	L320
+	bvs	L288
 	sep	#$20
 	longa	off
 	eor	#$80
 	rep	#$20
 	longa	on
-L320:
+L288:
 	bpl	L20015
 ;            {
 ;                break;
 ;            }
 ;        }
-L10607:
+L10554:
 ;
 ;        pxQueue->cRxLock = queueUNLOCKED;
 	sep	#$20
 	longa	off
 	lda	#$ff
 	ldy	#$3a
-	sta	[<L311+pxQueue_0],Y
+	sta	[<L279+pxQueue_0],Y
 	rep	#$20
 	longa	on
 ;    }
 ;    taskEXIT_CRITICAL();
 ;}
-	lda	<L311+1
-	sta	<L311+1+4
+	lda	<L279+1
+	sta	<L279+1+4
 	pld
 	tsc
 	clc
-	adc	#L311+4
+	adc	#L279+4
 	tcs
 	rts
-L311	equ	5
-L312	equ	5
+L279	equ	5
+L280	equ	5
 	ends
 	efunc
 ;/*-----------------------------------------------------------*/
@@ -5761,7 +5469,7 @@ _~prvIsQueueEmpty:
 	longi	on
 	tsc
 	sec
-	sbc	#L328
+	sbc	#L296
 	tcs
 	phd
 	tcd
@@ -5774,38 +5482,38 @@ xReturn_1	set	0
 ;        if( pxQueue->uxMessagesWaiting == ( UBaseType_t ) 0 )
 ;        {
 	ldy	#$34
-	lda	[<L328+pxQueue_0],Y
-	bne	L10618
+	lda	[<L296+pxQueue_0],Y
+	bne	L10565
 ;            xReturn = pdTRUE;
 	lda	#$1
-	sta	<L329+xReturn_1
+	sta	<L297+xReturn_1
 ;        }
 ;        else
-	bra	L10621
-L10618:
+	bra	L10568
+L10565:
 ;        {
 ;            xReturn = pdFALSE;
-	stz	<L329+xReturn_1
+	stz	<L297+xReturn_1
 ;        }
 ;    }
 ;    taskEXIT_CRITICAL();
-L10621:
+L10568:
 ;
 ;    return xReturn;
-	lda	<L329+xReturn_1
+	lda	<L297+xReturn_1
 	tay
-	lda	<L328+1
-	sta	<L328+1+4
+	lda	<L296+1
+	sta	<L296+1+4
 	pld
 	tsc
 	clc
-	adc	#L328+4
+	adc	#L296+4
 	tcs
 	tya
 	rts
 ;}
-L328	equ	2
-L329	equ	1
+L296	equ	2
+L297	equ	1
 	ends
 	efunc
 ;/*-----------------------------------------------------------*/
@@ -5820,7 +5528,7 @@ _~xQueueIsQueueEmptyFromISR:
 	longi	on
 	tsc
 	sec
-	sbc	#L332
+	sbc	#L300
 	tcs
 	phd
 	tcd
@@ -5831,54 +5539,54 @@ xQueue_0	set	3
 ;    traceENTER_xQueueIsQueueEmptyFromISR( xQueue );
 xReturn_1	set	0
 pxQueue_1	set	2
-	lda	<L332+xQueue_0
-	sta	<L333+pxQueue_1
-	lda	<L332+xQueue_0+2
-	sta	<L333+pxQueue_1+2
+	lda	<L300+xQueue_0
+	sta	<L301+pxQueue_1
+	lda	<L300+xQueue_0+2
+	sta	<L301+pxQueue_1+2
 ;
 ;    configASSERT( pxQueue );
-	lda	<L333+pxQueue_1
-	ora	<L333+pxQueue_1+2
-	bne	L10623
-L10627:
-	bra	L10627
-L10623:
+	lda	<L301+pxQueue_1
+	ora	<L301+pxQueue_1+2
+	bne	L10570
+L10574:
+	bra	L10574
+L10570:
 ;
 ;    if( pxQueue->uxMessagesWaiting == ( UBaseType_t ) 0 )
 ;    {
 	ldy	#$34
-	lda	[<L333+pxQueue_1],Y
-	bne	L10630
+	lda	[<L301+pxQueue_1],Y
+	bne	L10577
 ;        xReturn = pdTRUE;
 	lda	#$1
-	sta	<L333+xReturn_1
+	sta	<L301+xReturn_1
 ;    }
 ;    else
-	bra	L10631
-L10630:
+	bra	L10578
+L10577:
 ;    {
 ;        xReturn = pdFALSE;
-	stz	<L333+xReturn_1
+	stz	<L301+xReturn_1
 ;    }
-L10631:
+L10578:
 ;
 ;    traceRETURN_xQueueIsQueueEmptyFromISR( xReturn );
 ;
 ;    return xReturn;
-	lda	<L333+xReturn_1
+	lda	<L301+xReturn_1
 	tay
-	lda	<L332+1
-	sta	<L332+1+4
+	lda	<L300+1
+	sta	<L300+1+4
 	pld
 	tsc
 	clc
-	adc	#L332+4
+	adc	#L300+4
 	tcs
 	tya
 	rts
 ;}
-L332	equ	6
-L333	equ	1
+L300	equ	6
+L301	equ	1
 	ends
 	efunc
 ;/*-----------------------------------------------------------*/
@@ -5892,7 +5600,7 @@ _~prvIsQueueFull:
 	longi	on
 	tsc
 	sec
-	sbc	#L337
+	sbc	#L305
 	tcs
 	phd
 	tcd
@@ -5905,41 +5613,41 @@ xReturn_1	set	0
 ;        if( pxQueue->uxMessagesWaiting == pxQueue->uxLength )
 ;        {
 	ldy	#$34
-	lda	[<L337+pxQueue_0],Y
+	lda	[<L305+pxQueue_0],Y
 	iny
 	iny
-	cmp	[<L337+pxQueue_0],Y
-	bne	L10635
+	cmp	[<L305+pxQueue_0],Y
+	bne	L10582
 ;            xReturn = pdTRUE;
 	lda	#$1
-	sta	<L338+xReturn_1
+	sta	<L306+xReturn_1
 ;        }
 ;        else
-	bra	L10638
-L10635:
+	bra	L10585
+L10582:
 ;        {
 ;            xReturn = pdFALSE;
-	stz	<L338+xReturn_1
+	stz	<L306+xReturn_1
 ;        }
 ;    }
 ;    taskEXIT_CRITICAL();
-L10638:
+L10585:
 ;
 ;    return xReturn;
-	lda	<L338+xReturn_1
+	lda	<L306+xReturn_1
 	tay
-	lda	<L337+1
-	sta	<L337+1+4
+	lda	<L305+1
+	sta	<L305+1+4
 	pld
 	tsc
 	clc
-	adc	#L337+4
+	adc	#L305+4
 	tcs
 	tya
 	rts
 ;}
-L337	equ	2
-L338	equ	1
+L305	equ	2
+L306	equ	1
 	ends
 	efunc
 ;/*-----------------------------------------------------------*/
@@ -5954,7 +5662,7 @@ _~xQueueIsQueueFullFromISR:
 	longi	on
 	tsc
 	sec
-	sbc	#L341
+	sbc	#L309
 	tcs
 	phd
 	tcd
@@ -5965,57 +5673,57 @@ xQueue_0	set	3
 ;    traceENTER_xQueueIsQueueFullFromISR( xQueue );
 xReturn_1	set	0
 pxQueue_1	set	2
-	lda	<L341+xQueue_0
-	sta	<L342+pxQueue_1
-	lda	<L341+xQueue_0+2
-	sta	<L342+pxQueue_1+2
+	lda	<L309+xQueue_0
+	sta	<L310+pxQueue_1
+	lda	<L309+xQueue_0+2
+	sta	<L310+pxQueue_1+2
 ;
 ;    configASSERT( pxQueue );
-	lda	<L342+pxQueue_1
-	ora	<L342+pxQueue_1+2
-	bne	L10640
-L10644:
-	bra	L10644
-L10640:
+	lda	<L310+pxQueue_1
+	ora	<L310+pxQueue_1+2
+	bne	L10587
+L10591:
+	bra	L10591
+L10587:
 ;
 ;    if( pxQueue->uxMessagesWaiting == pxQueue->uxLength )
 ;    {
 	ldy	#$34
-	lda	[<L342+pxQueue_1],Y
+	lda	[<L310+pxQueue_1],Y
 	iny
 	iny
-	cmp	[<L342+pxQueue_1],Y
-	bne	L10647
+	cmp	[<L310+pxQueue_1],Y
+	bne	L10594
 ;        xReturn = pdTRUE;
 	lda	#$1
-	sta	<L342+xReturn_1
+	sta	<L310+xReturn_1
 ;    }
 ;    else
-	bra	L10648
-L10647:
+	bra	L10595
+L10594:
 ;    {
 ;        xReturn = pdFALSE;
-	stz	<L342+xReturn_1
+	stz	<L310+xReturn_1
 ;    }
-L10648:
+L10595:
 ;
 ;    traceRETURN_xQueueIsQueueFullFromISR( xReturn );
 ;
 ;    return xReturn;
-	lda	<L342+xReturn_1
+	lda	<L310+xReturn_1
 	tay
-	lda	<L341+1
-	sta	<L341+1+4
+	lda	<L309+1
+	sta	<L309+1+4
 	pld
 	tsc
 	clc
-	adc	#L341+4
+	adc	#L309+4
 	tcs
 	tya
 	rts
 ;}
-L341	equ	6
-L342	equ	1
+L309	equ	6
+L310	equ	1
 	ends
 	efunc
 ;/*-----------------------------------------------------------*/
@@ -6452,29 +6160,9 @@ L342	equ	1
 ;                                         TickType_t xTicksToWait,
 ;                                         const BaseType_t xWaitIndefinitely )
 ;    {
-	code
-	xdef	_~vQueueWaitForMessageRestricted
-	func
-_~vQueueWaitForMessageRestricted:
-	longa	on
-	longi	on
-	tsc
-	sec
-	sbc	#L346
-	tcs
-	phd
-	tcd
-xQueue_0	set	3
-xTicksToWait_0	set	7
-xWaitIndefinitely_0	set	11
 ;        Queue_t * const pxQueue = xQueue;
 ;
 ;        traceENTER_vQueueWaitForMessageRestricted( xQueue, xTicksToWait, xWaitIndefinitely );
-pxQueue_1	set	0
-	lda	<L346+xQueue_0
-	sta	<L347+pxQueue_1
-	lda	<L346+xQueue_0+2
-	sta	<L347+pxQueue_1+2
 ;
 ;        /* This function should not be called by application code hence the
 ;         * 'Restricted' in its name.  It is not part of the public API.  It is
@@ -6491,82 +6179,21 @@ pxQueue_1	set	0
 ;         *  the queue is locked, and the calling task blocks on the queue, then the
 ;         *  calling task will be immediately unblocked when the queue is unlocked. */
 ;        prvLockQueue( pxQueue );
-	sep	#$20
-	longa	off
-	ldy	#$3a
-	lda	[<L347+pxQueue_1],Y
-	cmp	#<$ffffffff
-	rep	#$20
-	longa	on
-	bne	L10652
-	sep	#$20
-	longa	off
-	lda	#$0
-	sta	[<L347+pxQueue_1],Y
-	rep	#$20
-	longa	on
-L10652:
-	sep	#$20
-	longa	off
-	ldy	#$3b
-	lda	[<L347+pxQueue_1],Y
-	cmp	#<$ffffffff
-	rep	#$20
-	longa	on
-	bne	L10655
-	sep	#$20
-	longa	off
-	lda	#$0
-	sta	[<L347+pxQueue_1],Y
-	rep	#$20
-	longa	on
-L10655:
 ;
 ;        if( pxQueue->uxMessagesWaiting == ( UBaseType_t ) 0U )
 ;        {
-	ldy	#$34
-	lda	[<L347+pxQueue_1],Y
-	bne	L10658
 ;            /* There is nothing in the queue, block for the specified period. */
 ;            vTaskPlaceOnEventListRestricted( &( pxQueue->xTasksWaitingToReceive ), xTicksToWait, xWaitIndefinitely );
-	pei	<L346+xWaitIndefinitely_0
-	pei	<L346+xTicksToWait_0+2
-	pei	<L346+xTicksToWait_0
-	lda	#$22
-	clc
-	adc	<L347+pxQueue_1
-	sta	<R0
-	lda	#$0
-	adc	<L347+pxQueue_1+2
-	pha
-	pei	<R0
-	jsr	_~vTaskPlaceOnEventListRestricted
 ;        }
 ;        else
 ;        {
 ;            mtCOVERAGE_TEST_MARKER();
 ;        }
-L10658:
 ;
 ;        prvUnlockQueue( pxQueue );
-	pei	<L347+pxQueue_1+2
-	pei	<L347+pxQueue_1
-	jsr	_~prvUnlockQueue
 ;
 ;        traceRETURN_vQueueWaitForMessageRestricted();
 ;    }
-	lda	<L346+1
-	sta	<L346+1+10
-	pld
-	tsc
-	clc
-	adc	#L346+10
-	tcs
-	rts
-L346	equ	8
-L347	equ	5
-	ends
-	efunc
 ;
 ;#endif /* configUSE_TIMERS */
 ;/*-----------------------------------------------------------*/
@@ -6803,7 +6430,6 @@ L347	equ	5
 	xref	_~vTaskMissedYield
 	xref	_~xTaskGetCurrentTaskHandle
 	xref	_~xTaskRemoveFromEventList
-	xref	_~vTaskPlaceOnEventListRestricted
 	xref	_~vTaskPlaceOnEventList
 	xref	_~xTaskCheckForTimeOut
 	xref	_~uxTaskGetNumberOfTasks

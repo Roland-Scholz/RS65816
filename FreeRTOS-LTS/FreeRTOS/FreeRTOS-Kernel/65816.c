@@ -66,8 +66,14 @@ void printHeapStats() {
 
 void shellTask( void *pvParameters )
 {
-	for(;;)
-		printf("shellTask...\n");
+	char c = ' ';
+	
+	for(;;) {
+		*debug_char = c;
+		c++;
+		if (c > 126) c = ' ';
+	}
+		
 }
 
 int main (int argc, char ** argv) {

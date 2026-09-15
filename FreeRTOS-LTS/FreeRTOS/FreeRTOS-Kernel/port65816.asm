@@ -103,6 +103,23 @@ _~xPortStartScheduler:
 	endmod
 
 ;----------------------------------------------------------------------------------
+; Stack-Layout:
+;
+;	13	Program-Bank
+;	12	PC-hi
+;	11	PC-lo
+;	10	Flags
+;	9	A-hi
+;	8	A-lo
+;	7	X-hi
+;	6	X-lo
+;	5	Y-hi
+;	4	Y-lo
+;	3	D-hi
+;	2	D-lo
+;	1	Data-Bank
+;
+;----------------------------------------------------------------------------------
 ;       static void prvSetupTimerInterrupt( void )
 ;----------------------------------------------------------------------------------
 ;	module	prvSetupTimerInterrupt
@@ -168,7 +185,10 @@ _~xPortStartScheduler:
 
 
 ;----------------------------------------------------------------------------------
-;       pxNewTCB->pxTopOfStack = pxPortInitialiseStack( pxTopOfStack, pxTaskCode, pvParameters );
+;       pxNewTCB->pxTopOfStack = _~pxPortInitialiseStack( pxTopOfStack, pxTaskCode, pvParameters );
+;
+; X-reg: pxNewTCB hi (always 0 as stack in in bank 00)
+; A-reg: pxNewTCB lo
 ;----------------------------------------------------------------------------------
 	module	pxPortInitialiseStack
 	code
@@ -178,12 +198,11 @@ _~xPortStartScheduler:
 	;include	"homebrewWDC.inc"
 
 _~pxPortInitialiseStack:
-return_adr_lo	set 1
+s_pvParameters	set 11		;12, 13, 14
+s_pxTaskCode	set 7		;8 , 9, 10
+s_pxTopOfStack	set 3		;4, 5, 6
 return_adr_hi	set 2
-;return_adr_bank	set 3	
-s_pxTopOfStack	set 3		;+4+5+6
-s_pxTaskCode	set 7		;+8+9+10
-s_pvParameters	set 11		;+12+13+14
+return_adr_lo	set 1
 
 M		 equ $20		; Accu 8/16-bit
 IX		 equ $10		; Index 8/16-bit
@@ -234,9 +253,7 @@ istack0:
 	sta	[s_pxTopOfStack],y
 	
 	lda	<1
-	sta	<12
-;	lda	<2
-;	sta	<13
+	sta	<13
 
 	ldy	<s_pxTopOfStack
 	
@@ -244,7 +261,7 @@ istack0:
 	
 	clc
 	tsc
-	adc	#11
+	adc	#12
 	tcs
 	
 	tya
@@ -259,10 +276,8 @@ istack0:
 ;	status			10
 ;	return addr lo/hi	11
 ;	return addr bank	13
-;	pvParameters_lo		14
-
-;	return addr dummy	15+16+17
-
+;
+;	pvParameters_lo		17
 ;	pvParameters_hi		18
 ;	pvParameters_bank	19
 ;	pvParameters_dummy	20
@@ -320,7 +335,7 @@ _~vPortYield:
 	phd
 	phb	
 
-	lda	_~pxCurrentTCB+2
+	lda	_~pxCurrentTCB+2		;store new stack value in pxCurrentTCB
 	pha
 	lda	_~pxCurrentTCB
 	pha

@@ -65,6 +65,17 @@ p_0	set	3
 	sta	[<R0]
 	rep	#$20
 	longa	on
+;	*debug_char = ':';
+	lda	|_~debug_char
+	sta	<R0
+	lda	|_~debug_char+2
+	sta	<R0+2
+	sep	#$20
+	longa	off
+	lda	#$3a
+	sta	[<R0]
+	rep	#$20
+	longa	on
 ;	*debug_hex = (char)((unsigned long)p >> 8);
 	lda	|_~debug_hex
 	sta	<R0
@@ -1493,42 +1504,10 @@ _~uxSchedulerSuspended:
 ;                                        StaticTask_t * const pxTaskBuffer,
 ;                                        TaskHandle_t * const pxCreatedTask )
 ;    {
-	code
-	func
-_~prvCreateStaticTask:
-	longa	on
-	longi	on
-	tsc
-	sec
-	sbc	#L8
-	tcs
-	phd
-	tcd
-pxTaskCode_0	set	3
-pcName_0	set	5
-uxStackDepth_0	set	9
-pvParameters_0	set	11
-uxPriority_0	set	15
-puxStackBuffer_0	set	17
-pxTaskBuffer_0	set	21
-pxCreatedTask_0	set	25
 ;        TCB_t * pxNewTCB;
 ;
 ;        configASSERT( puxStackBuffer != NULL );
-pxNewTCB_1	set	0
-	lda	<L8+puxStackBuffer_0
-	ora	<L8+puxStackBuffer_0+2
-	bne	L10001
-L10005:
-	bra	L10005
-L10001:
 ;        configASSERT( pxTaskBuffer != NULL );
-	lda	<L8+pxTaskBuffer_0
-	ora	<L8+pxTaskBuffer_0+2
-	bne	L10008
-L10012:
-	bra	L10012
-L10008:
 ;
 ;        #if ( configASSERT_DEFINED == 1 )
 ;        {
@@ -1537,110 +1516,38 @@ L10008:
 ;             * structure. */
 ;            volatile size_t xSize = sizeof( StaticTask_t );
 ;            configASSERT( xSize == sizeof( TCB_t ) );
-xSize_2	set	4
-	lda	#$4c
-	sta	<L9+xSize_2
-	cmp	#<$4c
-	beq	L10015
-L10019:
-	bra	L10019
-L10015:
 ;            ( void ) xSize; /* Prevent unused variable warning when configASSERT() is not used. */
 ;        }
 ;        #endif /* configASSERT_DEFINED */
 ;
 ;        if( ( pxTaskBuffer != NULL ) && ( puxStackBuffer != NULL ) )
 ;        {
-	lda	<L8+pxTaskBuffer_0
-	ora	<L8+pxTaskBuffer_0+2
-	beq	L10022
-	lda	<L8+puxStackBuffer_0
-	ora	<L8+puxStackBuffer_0+2
-	beq	L10022
 ;            /* The memory used for the task's TCB and stack are passed into this
 ;             * function - use them. */
 ;            /* MISRA Ref 11.3.1 [Misaligned access] */
 ;            /* More details at: https://github.com/FreeRTOS/FreeRTOS-Kernel/blob/main/MISRA.md#rule-113 */
 ;            /* coverity[misra_c_2012_rule_11_3_violation] */
 ;            pxNewTCB = ( TCB_t * ) pxTaskBuffer;
-	lda	<L8+pxTaskBuffer_0
-	sta	<L9+pxNewTCB_1
-	lda	<L8+pxTaskBuffer_0+2
-	sta	<L9+pxNewTCB_1+2
 ;            ( void ) memset( ( void * ) pxNewTCB, 0x00, sizeof( TCB_t ) );
-	pea	#<$4c
-	pea	#<$0
-	pei	<L9+pxNewTCB_1+2
-	pei	<L9+pxNewTCB_1
-	jsr	_~memset
 ;            pxNewTCB->pxStack = ( StackType_t * ) puxStackBuffer;
-	lda	<L8+puxStackBuffer_0
-	ldy	#$2e
-	sta	[<L9+pxNewTCB_1],Y
-	lda	<L8+puxStackBuffer_0+2
-	iny
-	iny
-	sta	[<L9+pxNewTCB_1],Y
 ;
 ;            #if ( tskSTATIC_AND_DYNAMIC_ALLOCATION_POSSIBLE != 0 )
 ;            {
 ;                /* Tasks can be created statically or dynamically, so note this
 ;                 * task was created statically in case the task is later deleted. */
 ;                pxNewTCB->ucStaticallyAllocated = tskSTATICALLY_ALLOCATED_STACK_AND_TCB;
-	sep	#$20
-	longa	off
-	lda	#$2
-	ldy	#$4b
-	sta	[<L9+pxNewTCB_1],Y
-	rep	#$20
-	longa	on
 ;            }
 ;            #endif /* tskSTATIC_AND_DYNAMIC_ALLOCATION_POSSIBLE */
 ;
 ;            prvInitialiseNewTask( pxTaskCode, pcName, uxStackDepth, pvParameters, uxPriority, pxCreatedTask, pxNewTCB, NULL );
-	pea	#^$0
-	pea	#<$0
-	pei	<L9+pxNewTCB_1+2
-	pei	<L9+pxNewTCB_1
-	pei	<L8+pxCreatedTask_0+2
-	pei	<L8+pxCreatedTask_0
-	pei	<L8+uxPriority_0
-	pei	<L8+pvParameters_0+2
-	pei	<L8+pvParameters_0
-	pei	<L8+uxStackDepth_0
-	pei	<L8+pcName_0+2
-	pei	<L8+pcName_0
-	pei	<L8+pxTaskCode_0
-	jsr	_~prvInitialiseNewTask
 ;        }
 ;        else
-	bra	L10023
-L10022:
 ;        {
 ;            pxNewTCB = NULL;
-	stz	<L9+pxNewTCB_1
-	stz	<L9+pxNewTCB_1+2
 ;        }
-L10023:
 ;
 ;        return pxNewTCB;
-	ldx	<L9+pxNewTCB_1+2
-	lda	<L9+pxNewTCB_1
-	tay
-	lda	<L8+1
-	sta	<L8+1+26
-	pld
-	tsc
-	clc
-	adc	#L8+26
-	tcs
-	tya
-	rts
 ;    }
-L8	equ	10
-L9	equ	5
-	ends
-	efunc
 ;/*-----------------------------------------------------------*/
 ;
 ;    TaskHandle_t xTaskCreateStatic( TaskFunction_t pxTaskCode,
@@ -1651,59 +1558,15 @@ L9	equ	5
 ;                                    StackType_t * const puxStackBuffer,
 ;                                    StaticTask_t * const pxTaskBuffer )
 ;    {
-	code
-	xdef	_~xTaskCreateStatic
-	func
-_~xTaskCreateStatic:
-	longa	on
-	longi	on
-	tsc
-	sec
-	sbc	#L16
-	tcs
-	phd
-	tcd
-pxTaskCode_0	set	3
-pcName_0	set	5
-uxStackDepth_0	set	9
-pvParameters_0	set	11
-uxPriority_0	set	15
-puxStackBuffer_0	set	17
-pxTaskBuffer_0	set	21
 ;        TaskHandle_t xReturn = NULL;
 ;        TCB_t * pxNewTCB;
 ;
 ;        traceENTER_xTaskCreateStatic( pxTaskCode, pcName, uxStackDepth, pvParameters, uxPriority, puxStackBuffer, pxTaskBuffer );
-xReturn_1	set	0
-pxNewTCB_1	set	4
-	stz	<L17+xReturn_1
-	stz	<L17+xReturn_1+2
 ;
 ;        pxNewTCB = prvCreateStaticTask( pxTaskCode, pcName, uxStackDepth, pvParameters, uxPriority, puxStackBuffer, pxTaskBuffer, &xReturn );
-	pea	#0
-	clc
-	tdc
-	adc	#<L17+xReturn_1
-	pha
-	pei	<L16+pxTaskBuffer_0+2
-	pei	<L16+pxTaskBuffer_0
-	pei	<L16+puxStackBuffer_0+2
-	pei	<L16+puxStackBuffer_0
-	pei	<L16+uxPriority_0
-	pei	<L16+pvParameters_0+2
-	pei	<L16+pvParameters_0
-	pei	<L16+uxStackDepth_0
-	pei	<L16+pcName_0+2
-	pei	<L16+pcName_0
-	pei	<L16+pxTaskCode_0
-	jsr	_~prvCreateStaticTask
-	sta	<L17+pxNewTCB_1
-	stx	<L17+pxNewTCB_1+2
 ;
 ;        if( pxNewTCB != NULL )
 ;        {
-	ora	<L17+pxNewTCB_1+2
-	beq	L10025
 ;            #if ( ( configNUMBER_OF_CORES > 1 ) && ( configUSE_CORE_AFFINITY == 1 ) )
 ;            {
 ;                /* Set the task's affinity before scheduling it. */
@@ -1712,36 +1575,16 @@ pxNewTCB_1	set	4
 ;            #endif
 ;
 ;            prvAddNewTaskToReadyList( pxNewTCB );
-	pei	<L17+pxNewTCB_1+2
-	pei	<L17+pxNewTCB_1
-	jsr	_~prvAddNewTaskToReadyList
 ;        }
 ;        else
 ;        {
 ;            mtCOVERAGE_TEST_MARKER();
 ;        }
-L10025:
 ;
 ;        traceRETURN_xTaskCreateStatic( xReturn );
 ;
 ;        return xReturn;
-	ldx	<L17+xReturn_1+2
-	lda	<L17+xReturn_1
-	tay
-	lda	<L16+1
-	sta	<L16+1+22
-	pld
-	tsc
-	clc
-	adc	#L16+22
-	tcs
-	tya
-	rts
 ;    }
-L16	equ	8
-L17	equ	1
-	ends
-	efunc
 ;/*-----------------------------------------------------------*/
 ;
 ;    #if ( ( configNUMBER_OF_CORES > 1 ) && ( configUSE_CORE_AFFINITY == 1 ) )
@@ -2033,16 +1876,16 @@ _~prvCreateTask:
 	longi	on
 	tsc
 	sec
-	sbc	#L20
+	sbc	#L8
 	tcs
 	phd
 	tcd
 pxTaskCode_0	set	3
-pcName_0	set	5
-uxStackDepth_0	set	9
-pvParameters_0	set	11
-uxPriority_0	set	15
-pxCreatedTask_0	set	17
+pcName_0	set	7
+uxStackDepth_0	set	11
+pvParameters_0	set	13
+uxPriority_0	set	17
+pxCreatedTask_0	set	19
 ;        TCB_t * pxNewTCB;
 ;
 ;        /* If the stack grows down then allocate the stack then the TCB so the stack
@@ -2089,134 +1932,120 @@ pxNewTCB_1	set	0
 ;            /* coverity[misra_c_2012_rule_11_5_violation] */
 ;            pxStack = ( StackType_t * ) pvPortMallocStack( ( ( ( size_t ) uxStackDepth ) * sizeof( StackType_t ) ) );
 pxStack_2	set	4
-	lda	<L20+uxStackDepth_0
+	lda	<L8+uxStackDepth_0
 	asl	A
 	pha
 	jsr	_~pvPortMallocStack
-	sta	<L21+pxStack_2
-	stx	<L21+pxStack_2+2
-;
-;			//debug_ptr(pxStack);
+	sta	<L9+pxStack_2
+	stx	<L9+pxStack_2+2
 ;			
 ;            if( pxStack != NULL )
 ;            {
-	ora	<L21+pxStack_2+2
-	beq	L10026
+	ora	<L9+pxStack_2+2
+	beq	L10001
 ;                /* Allocate space for the TCB. */
 ;                /* MISRA Ref 11.5.1 [Malloc memory assignment] */
 ;                /* More details at: https://github.com/FreeRTOS/FreeRTOS-Kernel/blob/main/MISRA.md#rule-115 */
 ;                /* coverity[misra_c_2012_rule_11_5_violation] */
 ;                pxNewTCB = ( TCB_t * ) pvPortMalloc( sizeof( TCB_t ) );
-	pea	#<$4c
+	pea	#<$4b
 	jsr	_~pvPortMalloc
-	sta	<L21+pxNewTCB_1
-	stx	<L21+pxNewTCB_1+2
+	sta	<L9+pxNewTCB_1
+	stx	<L9+pxNewTCB_1+2
 ;
-;				//debug_ptr(pxNewTCB);
 ;                if( pxNewTCB != NULL )
 ;                {
-	ora	<L21+pxNewTCB_1+2
-	beq	L10027
+	ora	<L9+pxNewTCB_1+2
+	beq	L10002
 ;                    ( void ) memset( ( void * ) pxNewTCB, 0x00, sizeof( TCB_t ) );
-	pea	#<$4c
+	pea	#<$4b
 	pea	#<$0
-	pei	<L21+pxNewTCB_1+2
-	pei	<L21+pxNewTCB_1
+	pei	<L9+pxNewTCB_1+2
+	pei	<L9+pxNewTCB_1
 	jsr	_~memset
 ;
 ;                    /* Store the stack location in the TCB. */
 ;                    pxNewTCB->pxStack = pxStack;
-	lda	<L21+pxStack_2
+	lda	<L9+pxStack_2
 	ldy	#$2e
-	sta	[<L21+pxNewTCB_1],Y
-	lda	<L21+pxStack_2+2
+	sta	[<L9+pxNewTCB_1],Y
+	lda	<L9+pxStack_2+2
 	iny
 	iny
-	sta	[<L21+pxNewTCB_1],Y
+	sta	[<L9+pxNewTCB_1],Y
 ;                }
 ;                else
-	bra	L10029
-L10027:
+	bra	L10004
+L10002:
 ;                {
 ;                    /* The stack cannot be used as the TCB was not created.  Free
 ;                     * it again. */
 ;                    vPortFreeStack( pxStack );
-	pei	<L21+pxStack_2+2
-	pei	<L21+pxStack_2
+	pei	<L9+pxStack_2+2
+	pei	<L9+pxStack_2
 	jsr	_~vPortFreeStack
 ;                }
 ;            }
 ;            else
-	bra	L10029
-L10026:
+	bra	L10004
+L10001:
 ;            {
 ;                pxNewTCB = NULL;
-	stz	<L21+pxNewTCB_1
-	stz	<L21+pxNewTCB_1+2
+	stz	<L9+pxNewTCB_1
+	stz	<L9+pxNewTCB_1+2
 ;            }
-L10029:
+L10004:
 ;        }
 ;        #endif /* portSTACK_GROWTH */
 ;
 ;        if( pxNewTCB != NULL )
 ;        {
-	lda	<L21+pxNewTCB_1
-	ora	<L21+pxNewTCB_1+2
-	beq	L10030
+	lda	<L9+pxNewTCB_1
+	ora	<L9+pxNewTCB_1+2
+	beq	L10005
 ;            #if ( tskSTATIC_AND_DYNAMIC_ALLOCATION_POSSIBLE != 0 )
 ;            {
 ;                /* Tasks can be created statically or dynamically, so note this
 ;                 * task was created dynamically in case it is later deleted. */
 ;                pxNewTCB->ucStaticallyAllocated = tskDYNAMICALLY_ALLOCATED_STACK_AND_TCB;
-	sep	#$20
-	longa	off
-	lda	#$0
-	ldy	#$4b
-	sta	[<L21+pxNewTCB_1],Y
-	rep	#$20
-	longa	on
 ;            }
 ;            #endif /* tskSTATIC_AND_DYNAMIC_ALLOCATION_POSSIBLE */
 ;
 ;            prvInitialiseNewTask( pxTaskCode, pcName, uxStackDepth, pvParameters, uxPriority, pxCreatedTask, pxNewTCB, NULL );
 	pea	#^$0
 	pea	#<$0
-	pei	<L21+pxNewTCB_1+2
-	pei	<L21+pxNewTCB_1
-	pei	<L20+pxCreatedTask_0+2
-	pei	<L20+pxCreatedTask_0
-	pei	<L20+uxPriority_0
-	pei	<L20+pvParameters_0+2
-	pei	<L20+pvParameters_0
-	pei	<L20+uxStackDepth_0
-	pei	<L20+pcName_0+2
-	pei	<L20+pcName_0
-	pei	<L20+pxTaskCode_0
+	pei	<L9+pxNewTCB_1+2
+	pei	<L9+pxNewTCB_1
+	pei	<L8+pxCreatedTask_0+2
+	pei	<L8+pxCreatedTask_0
+	pei	<L8+uxPriority_0
+	pei	<L8+pvParameters_0+2
+	pei	<L8+pvParameters_0
+	pei	<L8+uxStackDepth_0
+	pei	<L8+pcName_0+2
+	pei	<L8+pcName_0
+	pei	<L8+pxTaskCode_0+2
+	pei	<L8+pxTaskCode_0
 	jsr	_~prvInitialiseNewTask
 ;        }
-;
-;		debug_ptr(pxNewTCB);
-L10030:
-	pei	<L21+pxNewTCB_1+2
-	pei	<L21+pxNewTCB_1
-	jsr	_~debug_ptr
 ;		
 ;        return pxNewTCB;
-	ldx	<L21+pxNewTCB_1+2
-	lda	<L21+pxNewTCB_1
+L10005:
+	ldx	<L9+pxNewTCB_1+2
+	lda	<L9+pxNewTCB_1
 	tay
-	lda	<L20+1
-	sta	<L20+1+18
+	lda	<L8+1
+	sta	<L8+1+20
 	pld
 	tsc
 	clc
-	adc	#L20+18
+	adc	#L8+20
 	tcs
 	tya
 	rts
 ;    }
-L20	equ	12
-L21	equ	5
+L8	equ	12
+L9	equ	5
 	ends
 	efunc
 ;/*-----------------------------------------------------------*/
@@ -2236,16 +2065,16 @@ _~xTaskCreate:
 	longi	on
 	tsc
 	sec
-	sbc	#L26
+	sbc	#L14
 	tcs
 	phd
 	tcd
 pxTaskCode_0	set	3
-pcName_0	set	5
-uxStackDepth_0	set	9
-pvParameters_0	set	11
-uxPriority_0	set	15
-pxCreatedTask_0	set	17
+pcName_0	set	7
+uxStackDepth_0	set	11
+pvParameters_0	set	13
+uxPriority_0	set	17
+pxCreatedTask_0	set	19
 ;        TCB_t * pxNewTCB;
 ;        BaseType_t xReturn;
 ;
@@ -2254,23 +2083,24 @@ pxNewTCB_1	set	0
 xReturn_1	set	4
 ;
 ;        pxNewTCB = prvCreateTask( pxTaskCode, pcName, uxStackDepth, pvParameters, uxPriority, pxCreatedTask );
-	pei	<L26+pxCreatedTask_0+2
-	pei	<L26+pxCreatedTask_0
-	pei	<L26+uxPriority_0
-	pei	<L26+pvParameters_0+2
-	pei	<L26+pvParameters_0
-	pei	<L26+uxStackDepth_0
-	pei	<L26+pcName_0+2
-	pei	<L26+pcName_0
-	pei	<L26+pxTaskCode_0
+	pei	<L14+pxCreatedTask_0+2
+	pei	<L14+pxCreatedTask_0
+	pei	<L14+uxPriority_0
+	pei	<L14+pvParameters_0+2
+	pei	<L14+pvParameters_0
+	pei	<L14+uxStackDepth_0
+	pei	<L14+pcName_0+2
+	pei	<L14+pcName_0
+	pei	<L14+pxTaskCode_0+2
+	pei	<L14+pxTaskCode_0
 	jsr	_~prvCreateTask
-	sta	<L27+pxNewTCB_1
-	stx	<L27+pxNewTCB_1+2
+	sta	<L15+pxNewTCB_1
+	stx	<L15+pxNewTCB_1+2
 ;
 ;        if( pxNewTCB != NULL )
 ;        {
-	ora	<L27+pxNewTCB_1+2
-	beq	L10031
+	ora	<L15+pxNewTCB_1+2
+	beq	L10006
 ;            #if ( ( configNUMBER_OF_CORES > 1 ) && ( configUSE_CORE_AFFINITY == 1 ) )
 ;            {
 ;                /* Set the task's affinity before scheduling it. */
@@ -2279,38 +2109,38 @@ xReturn_1	set	4
 ;            #endif
 ;
 ;            prvAddNewTaskToReadyList( pxNewTCB );
-	pei	<L27+pxNewTCB_1+2
-	pei	<L27+pxNewTCB_1
+	pei	<L15+pxNewTCB_1+2
+	pei	<L15+pxNewTCB_1
 	jsr	_~prvAddNewTaskToReadyList
 ;            xReturn = pdPASS;
 	lda	#$1
 	bra	L20000
 ;        }
 ;        else
-L10031:
+L10006:
 ;        {
 ;            xReturn = errCOULD_NOT_ALLOCATE_REQUIRED_MEMORY;
 	lda	#$ffff
 L20000:
-	sta	<L27+xReturn_1
+	sta	<L15+xReturn_1
 ;        }
 ;
 ;        traceRETURN_xTaskCreate( xReturn );
-;
+;		
 ;        return xReturn;
 	tay
-	lda	<L26+1
-	sta	<L26+1+18
+	lda	<L14+1
+	sta	<L14+1+20
 	pld
 	tsc
 	clc
-	adc	#L26+18
+	adc	#L14+20
 	tcs
 	tya
 	rts
 ;    }
-L26	equ	6
-L27	equ	1
+L14	equ	6
+L15	equ	1
 	ends
 	efunc
 ;/*-----------------------------------------------------------*/
@@ -2369,18 +2199,18 @@ _~prvInitialiseNewTask:
 	longi	on
 	tsc
 	sec
-	sbc	#L30
+	sbc	#L18
 	tcs
 	phd
 	tcd
 pxTaskCode_0	set	3
-pcName_0	set	5
-uxStackDepth_0	set	9
-pvParameters_0	set	11
-uxPriority_0	set	15
-pxCreatedTask_0	set	17
-pxNewTCB_0	set	21
-xRegions_0	set	25
+pcName_0	set	7
+uxStackDepth_0	set	11
+pvParameters_0	set	13
+uxPriority_0	set	17
+pxCreatedTask_0	set	19
+pxNewTCB_0	set	23
+xRegions_0	set	27
 ;    StackType_t * pxTopOfStack;
 ;    UBaseType_t x;
 ;
@@ -2406,16 +2236,16 @@ pxTopOfStack_1	set	0
 x_1	set	4
 ;        /* Fill the stack with a known value to assist debugging. */
 ;        ( void ) memset( pxNewTCB->pxStack, ( int ) tskSTACK_FILL_BYTE, ( size_t ) uxStackDepth * sizeof( StackType_t ) );
-	lda	<L30+uxStackDepth_0
+	lda	<L18+uxStackDepth_0
 	asl	A
 	pha
 	pea	#<$a5
 	ldy	#$30
-	lda	[<L30+pxNewTCB_0],Y
+	lda	[<L18+pxNewTCB_0],Y
 	pha
 	dey
 	dey
-	lda	[<L30+pxNewTCB_0],Y
+	lda	[<L18+pxNewTCB_0],Y
 	pha
 	jsr	_~memset
 	sta	<R0
@@ -2432,7 +2262,7 @@ x_1	set	4
 ;        pxTopOfStack = &( pxNewTCB->pxStack[ uxStackDepth - ( configSTACK_DEPTH_TYPE ) 1 ] );
 	lda	#$ffff
 	clc
-	adc	<L30+uxStackDepth_0
+	adc	<L18+uxStackDepth_0
 	sta	<R1
 	stz	<R1+2
 	pei	<R1+2
@@ -2444,19 +2274,19 @@ x_1	set	4
 	stx	<R0+2
 	clc
 	ldy	#$2e
-	lda	[<L30+pxNewTCB_0],Y
+	lda	[<L18+pxNewTCB_0],Y
 	adc	<R0
-	sta	<L31+pxTopOfStack_1
+	sta	<L19+pxTopOfStack_1
 	iny
 	iny
-	lda	[<L30+pxNewTCB_0],Y
+	lda	[<L18+pxNewTCB_0],Y
 	adc	<R0+2
-	sta	<L31+pxTopOfStack_1+2
+	sta	<L19+pxTopOfStack_1+2
 ;        pxTopOfStack = ( StackType_t * ) ( ( ( portPOINTER_SIZE_TYPE ) pxTopOfStack ) & ( ~( ( portPOINTER_SIZE_TYPE ) portBYTE_ALIGNMENT_MASK ) ) );
-	lda	<L31+pxTopOfStack_1
-	sta	<L31+pxTopOfStack_1
-	lda	<L31+pxTopOfStack_1+2
-	sta	<L31+pxTopOfStack_1+2
+	lda	<L19+pxTopOfStack_1
+	sta	<L19+pxTopOfStack_1
+	lda	<L19+pxTopOfStack_1+2
+	sta	<L19+pxTopOfStack_1+2
 ;
 ;	    /* Check the alignment of the calculated top of stack is correct. */
 ;        configASSERT( ( ( ( portPOINTER_SIZE_TYPE ) pxTopOfStack & ( portPOINTER_SIZE_TYPE ) portBYTE_ALIGNMENT_MASK ) == 0U ) );
@@ -2486,51 +2316,51 @@ x_1	set	4
 ;    /* Store the task name in the TCB. */
 ;    if( pcName != NULL )
 ;    {
-	lda	<L30+pcName_0
-	ora	<L30+pcName_0+2
+	lda	<L18+pcName_0
+	ora	<L18+pcName_0+2
 	beq	*+5
-	brl	L32
-	brl	L10045
+	brl	L20
+	brl	L10020
 L20002:
 ;
 ;    if( uxPriority >= ( UBaseType_t ) configMAX_PRIORITIES )
 ;    {
-	lda	<L30+uxPriority_0
+	lda	<L18+uxPriority_0
 	cmp	#<$5
 	bcc	*+5
-	brl	L36
-L10054:
+	brl	L24
+L10029:
 ;
 ;    pxNewTCB->uxPriority = uxPriority;
-	lda	<L30+uxPriority_0
+	lda	<L18+uxPriority_0
 	ldy	#$2c
-	sta	[<L30+pxNewTCB_0],Y
+	sta	[<L18+pxNewTCB_0],Y
 ;    #if ( configUSE_MUTEXES == 1 )
 ;    {
 ;        pxNewTCB->uxBasePriority = uxPriority;
-	lda	<L30+uxPriority_0
+	lda	<L18+uxPriority_0
 	ldy	#$42
-	sta	[<L30+pxNewTCB_0],Y
+	sta	[<L18+pxNewTCB_0],Y
 ;    }
 ;    #endif /* configUSE_MUTEXES */
 ;
 ;    vListInitialiseItem( &( pxNewTCB->xStateListItem ) );
 	lda	#$4
 	clc
-	adc	<L30+pxNewTCB_0
+	adc	<L18+pxNewTCB_0
 	sta	<R0
 	lda	#$0
-	adc	<L30+pxNewTCB_0+2
+	adc	<L18+pxNewTCB_0+2
 	pha
 	pei	<R0
 	jsr	_~vListInitialiseItem
 ;    vListInitialiseItem( &( pxNewTCB->xEventListItem ) );
 	lda	#$18
 	clc
-	adc	<L30+pxNewTCB_0
+	adc	<L18+pxNewTCB_0
 	sta	<R0
 	lda	#$0
-	adc	<L30+pxNewTCB_0+2
+	adc	<L18+pxNewTCB_0+2
 	sta	<R0+2
 	pha
 	pei	<R0
@@ -2539,17 +2369,17 @@ L10054:
 ;    /* Set the pxNewTCB as a link back from the ListItem_t.  This is so we can get
 ;     * back to  the containing TCB from a generic item in a list. */
 ;    listSET_LIST_ITEM_OWNER( &( pxNewTCB->xStateListItem ), pxNewTCB );
-	lda	<L30+pxNewTCB_0
+	lda	<L18+pxNewTCB_0
 	ldy	#$10
-	sta	[<L30+pxNewTCB_0],Y
-	lda	<L30+pxNewTCB_0+2
+	sta	[<L18+pxNewTCB_0],Y
+	lda	<L18+pxNewTCB_0+2
 	iny
 	iny
-	sta	[<L30+pxNewTCB_0],Y
+	sta	[<L18+pxNewTCB_0],Y
 ;
 ;    /* Event lists are always in priority order. */
 ;    listSET_LIST_ITEM_VALUE( &( pxNewTCB->xEventListItem ), ( TickType_t ) configMAX_PRIORITIES - ( TickType_t ) uxPriority );
-	lda	<L30+uxPriority_0
+	lda	<L18+uxPriority_0
 	sta	<R0
 	stz	<R0+2
 	sec
@@ -2561,19 +2391,19 @@ L10054:
 	sta	<R1+2
 	lda	<R1
 	ldy	#$18
-	sta	[<L30+pxNewTCB_0],Y
+	sta	[<L18+pxNewTCB_0],Y
 	lda	<R1+2
 	iny
 	iny
-	sta	[<L30+pxNewTCB_0],Y
+	sta	[<L18+pxNewTCB_0],Y
 ;    listSET_LIST_ITEM_OWNER( &( pxNewTCB->xEventListItem ), pxNewTCB );
-	lda	<L30+pxNewTCB_0
+	lda	<L18+pxNewTCB_0
 	ldy	#$24
-	sta	[<L30+pxNewTCB_0],Y
-	lda	<L30+pxNewTCB_0+2
+	sta	[<L18+pxNewTCB_0],Y
+	lda	<L18+pxNewTCB_0+2
 	iny
 	iny
-	sta	[<L30+pxNewTCB_0],Y
+	sta	[<L18+pxNewTCB_0],Y
 ;
 ;    #if ( portUSING_MPU_WRAPPERS == 1 )
 ;    {
@@ -2592,7 +2422,7 @@ L10054:
 ;        configINIT_TLS_BLOCK( pxNewTCB->xTLSBlock, pxTopOfStack );
 ;    }
 ;    #endif
-;
+;	
 ;    /* Initialize the TCB stack to look as if the task was already running,
 ;     * but had been interrupted by the scheduler.  The return address is set
 ;     * to the start of the task function. Once the stack has been initialised
@@ -2625,7 +2455,7 @@ L10054:
 ;        /* If the port has capability to detect stack overflow,
 ;         * pass the stack end address to the stack initialization
 ;         * function as well. */
-;		 
+;		
 ;        #if ( portHAS_STACK_OVERFLOW_CHECKING == 1 )
 ;        {
 ;            #if ( portSTACK_GROWTH < 0 )
@@ -2641,36 +2471,33 @@ L10054:
 ;        #else /* portHAS_STACK_OVERFLOW_CHECKING */
 ;        {
 ;            pxNewTCB->pxTopOfStack = pxPortInitialiseStack( pxTopOfStack, pxTaskCode, pvParameters );
-	pei	<L30+pvParameters_0+2
-	pei	<L30+pvParameters_0
-	pei	<L30+pxTaskCode_0
-	pei	<L31+pxTopOfStack_1+2
-	pei	<L31+pxTopOfStack_1
+	pei	<L18+pvParameters_0+2
+	pei	<L18+pvParameters_0
+	pei	<L18+pxTaskCode_0+2
+	pei	<L18+pxTaskCode_0
+	pei	<L19+pxTopOfStack_1+2
+	pei	<L19+pxTopOfStack_1
 	jsr	_~pxPortInitialiseStack
 	stx	<R0+2
-	sta	[<L30+pxNewTCB_0]
+	sta	[<L18+pxNewTCB_0]
 	lda	<R0+2
 	ldy	#$2
-	sta	[<L30+pxNewTCB_0],Y
+	sta	[<L18+pxNewTCB_0],Y
 ;        }
 ;        #endif /* portHAS_STACK_OVERFLOW_CHECKING */
 ;
 ;        #if ( portSTACK_GROWTH < 0 )
-;        {
-;			//debug_ptr(pxTopOfStack);
-;			//debug_ptr((void *)pxNewTCB->pxTopOfStack);
-;			//debug_word(uxStackDepth);
-;			
+;        {			
 ;            configASSERT( ( ( portPOINTER_SIZE_TYPE ) ( pxTopOfStack - pxNewTCB->pxTopOfStack ) ) < ( ( portPOINTER_SIZE_TYPE ) uxStackDepth ) );
-	lda	<L30+uxStackDepth_0
+	lda	<L18+uxStackDepth_0
 	sta	<R0
 	stz	<R0+2
 	sec
-	lda	<L31+pxTopOfStack_1
-	sbc	[<L30+pxNewTCB_0]
+	lda	<L19+pxTopOfStack_1
+	sbc	[<L18+pxNewTCB_0]
 	sta	<R1
-	lda	<L31+pxTopOfStack_1+2
-	sbc	[<L30+pxNewTCB_0],Y
+	lda	<L19+pxTopOfStack_1+2
+	sbc	[<L18+pxNewTCB_0],Y
 	sta	<R1+2
 	lda	<R1
 	sta	<R2
@@ -2683,8 +2510,7 @@ L10054:
 	cmp	<R0
 	lda	<R2+2
 	sbc	<R0+2
-	bcs	L10059
-;			//debug_ptr(pxTopOfStack);
+	bcs	L10034
 ;        }
 ;        #else /* portSTACK_GROWTH */
 ;        {
@@ -2709,36 +2535,55 @@ L10054:
 ;
 ;    if( pxCreatedTask != NULL )
 ;    {
-	lda	<L30+pxCreatedTask_0
-	ora	<L30+pxCreatedTask_0+2
-	bne	L38
-L39:
-	lda	<L30+1
-	sta	<L30+1+26
+	lda	<L18+pxCreatedTask_0
+	ora	<L18+pxCreatedTask_0+2
+	bne	L26
+L10038:
+;	
+;	debug_ptr((void *)0xcafe);
+	pea	#^$cafe
+	pea	#<$cafe
+	jsr	_~debug_ptr
+;	debug_ptr(pxTopOfStack);
+	pei	<L19+pxTopOfStack_1+2
+	pei	<L19+pxTopOfStack_1
+	jsr	_~debug_ptr
+;	debug_ptr(pxNewTCB->pxStack);
+	ldy	#$30
+	lda	[<L18+pxNewTCB_0],Y
+	pha
+	dey
+	dey
+	lda	[<L18+pxNewTCB_0],Y
+	pha
+	jsr	_~debug_ptr
+;}
+	lda	<L18+1
+	sta	<L18+1+28
 	pld
 	tsc
 	clc
-	adc	#L30+26
+	adc	#L18+28
 	tcs
 	rts
-L10037:
-	bra	L10037
-L32:
+L10012:
+	bra	L10012
+L20:
 ;        for( x = ( UBaseType_t ) 0; x < ( UBaseType_t ) configMAX_TASK_NAME_LEN; x++ )
-	stz	<L31+x_1
-L10043:
+	stz	<L19+x_1
+L10018:
 ;        {
 ;            pxNewTCB->pcTaskName[ x ] = pcName[ x ];
 	lda	#$32
 	clc
-	adc	<L31+x_1
+	adc	<L19+x_1
 	sta	<R0
 	sep	#$20
 	longa	off
-	ldy	<L31+x_1
-	lda	[<L30+pcName_0],Y
+	ldy	<L19+x_1
+	lda	[<L18+pcName_0],Y
 	ldy	<R0
-	sta	[<L30+pxNewTCB_0],Y
+	sta	[<L18+pxNewTCB_0],Y
 	rep	#$20
 	longa	on
 ;
@@ -2747,10 +2592,10 @@ L10043:
 ;             * string is not accessible (extremely unlikely). */
 ;            if( pcName[ x ] == ( char ) 0x00 )
 ;            {
-	ldy	<L31+x_1
-	lda	[<L30+pcName_0],Y
+	ldy	<L19+x_1
+	lda	[<L18+pcName_0],Y
 	and	#$ff
-	beq	L10042
+	beq	L10017
 ;                break;
 ;            }
 ;            else
@@ -2758,11 +2603,11 @@ L10043:
 ;                mtCOVERAGE_TEST_MARKER();
 ;            }
 ;        }
-	inc	<L31+x_1
-	lda	<L31+x_1
+	inc	<L19+x_1
+	lda	<L19+x_1
 	cmp	#<$10
-	bcc	L10043
-L10042:
+	bcc	L10018
+L10017:
 ;
 ;        /* Ensure the name string is terminated in the case that the string length
 ;         * was greater or equal to configMAX_TASK_NAME_LEN. */
@@ -2771,54 +2616,53 @@ L10042:
 	longa	off
 	lda	#$0
 	ldy	#$41
-	sta	[<L30+pxNewTCB_0],Y
+	sta	[<L18+pxNewTCB_0],Y
 	rep	#$20
 	longa	on
 ;    }
 ;    else
-L10045:
-;
+L10020:
+;	
 ;    /* This is used as an array index so must ensure it's not too large. */
 ;    configASSERT( uxPriority < configMAX_PRIORITIES );
-	lda	<L30+uxPriority_0
+	lda	<L18+uxPriority_0
 	cmp	#<$5
 	bcs	*+5
 	brl	L20002
 ;    {
 ;        mtCOVERAGE_TEST_MARKER();
 ;    }
-L10050:
-	bra	L10050
-L36:
+L10025:
+	bra	L10025
+L24:
 ;        uxPriority = ( UBaseType_t ) configMAX_PRIORITIES - ( UBaseType_t ) 1U;
 	lda	#$4
-	sta	<L30+uxPriority_0
+	sta	<L18+uxPriority_0
 ;    }
 ;    else
-	brl	L10054
+	brl	L10029
 ;    {
 ;        mtCOVERAGE_TEST_MARKER();
 ;    }
-L10059:
-	bra	L10059
-L38:
+L10034:
+	bra	L10034
+L26:
 ;        /* Pass the handle out in an anonymous way.  The handle can be used to
 ;         * change the created task's priority, delete the created task, etc.*/
 ;        *pxCreatedTask = ( TaskHandle_t ) pxNewTCB;
-	lda	<L30+pxNewTCB_0
-	sta	[<L30+pxCreatedTask_0]
-	lda	<L30+pxNewTCB_0+2
+	lda	<L18+pxNewTCB_0
+	sta	[<L18+pxCreatedTask_0]
+	lda	<L18+pxNewTCB_0+2
 	ldy	#$2
-	sta	[<L30+pxCreatedTask_0],Y
+	sta	[<L18+pxCreatedTask_0],Y
 ;    }
 ;    else
-	bra	L39
+	brl	L10038
 ;    {
 ;        mtCOVERAGE_TEST_MARKER();
 ;    }
-;}
-L30	equ	18
-L31	equ	13
+L18	equ	18
+L19	equ	13
 	ends
 	efunc
 ;/*-----------------------------------------------------------*/
@@ -2834,7 +2678,7 @@ _~prvAddNewTaskToReadyList:
 	longi	on
 	tsc
 	sec
-	sbc	#L40
+	sbc	#L28
 	tcs
 	phd
 	tcd
@@ -2851,20 +2695,20 @@ pxNewTCB_0	set	3
 	lda	|_~pxCurrentTCB	; volatile
 	ora	|_~pxCurrentTCB+2	; volatile
 	beq	*+5
-	brl	L10067
+	brl	L10042
 ;                /* There are no other tasks, or all the other tasks are in
 ;                 * the suspended state - make this the current task. */
 ;                pxCurrentTCB = pxNewTCB;
-	lda	<L40+pxNewTCB_0
+	lda	<L28+pxNewTCB_0
 	sta	|_~pxCurrentTCB	; volatile
-	lda	<L40+pxNewTCB_0+2
+	lda	<L28+pxNewTCB_0+2
 	sta	|_~pxCurrentTCB+2	; volatile
 ;
 ;                if( uxCurrentNumberOfTasks == ( UBaseType_t ) 1 )
 ;                {
 	lda	|_~uxCurrentNumberOfTasks	; volatile
 	cmp	#<$1
-	bne	L10070
+	bne	L10045
 ;                    /* This is the first task to be created so do the preliminary
 ;                     * initialisation required.  We will not recover if this call
 ;                     * fails, but we will report the failure. */
@@ -2874,7 +2718,7 @@ pxNewTCB_0	set	3
 ;                else
 ;                }
 ;                else
-L10070:
+L10045:
 ;
 ;            uxTaskNumber++;
 	inc	|_~uxTaskNumber
@@ -2890,18 +2734,18 @@ L10070:
 ;            prvAddTaskToReadyList( pxNewTCB );
 	lda	|_~uxTopReadyPriority	; volatile
 	ldy	#$2c
-	cmp	[<L40+pxNewTCB_0],Y
-	bcs	L10084
+	cmp	[<L28+pxNewTCB_0],Y
+	bcs	L10059
 ;                {
 ;                    mtCOVERAGE_TEST_MARKER();
 ;                }
 ;            }
-	lda	[<L40+pxNewTCB_0],Y
+	lda	[<L28+pxNewTCB_0],Y
 	sta	|_~uxTopReadyPriority	; volatile
-L10084:
+L10059:
 pxIndex_2	set	0
 	ldy	#$2c
-	lda	[<L40+pxNewTCB_0],Y
+	lda	[<L28+pxNewTCB_0],Y
 	ldx	#<$12
 	xref	_~~mul
 	jsr	_~~mul
@@ -2913,40 +2757,40 @@ pxIndex_2	set	0
 	adc	<R0
 	sta	<R2
 	lda	(<R2)
-	sta	<L41+pxIndex_2
+	sta	<L29+pxIndex_2
 	ldy	#$2
 	lda	(<R2),Y
-	sta	<L41+pxIndex_2+2
-	lda	<L41+pxIndex_2
+	sta	<L29+pxIndex_2+2
+	lda	<L29+pxIndex_2
 	ldy	#$8
-	sta	[<L40+pxNewTCB_0],Y
-	lda	<L41+pxIndex_2+2
+	sta	[<L28+pxNewTCB_0],Y
+	lda	<L29+pxIndex_2+2
 	iny
 	iny
-	sta	[<L40+pxNewTCB_0],Y
+	sta	[<L28+pxNewTCB_0],Y
 	dey
 	dey
-	lda	[<L41+pxIndex_2],Y
+	lda	[<L29+pxIndex_2],Y
 	ldy	#$c
-	sta	[<L40+pxNewTCB_0],Y
+	sta	[<L28+pxNewTCB_0],Y
 	dey
 	dey
-	lda	[<L41+pxIndex_2],Y
+	lda	[<L29+pxIndex_2],Y
 	ldy	#$e
-	sta	[<L40+pxNewTCB_0],Y
+	sta	[<L28+pxNewTCB_0],Y
 	ldy	#$8
-	lda	[<L41+pxIndex_2],Y
+	lda	[<L29+pxIndex_2],Y
 	sta	<R0
 	iny
 	iny
-	lda	[<L41+pxIndex_2],Y
+	lda	[<L29+pxIndex_2],Y
 	sta	<R0+2
 	lda	#$4
 	clc
-	adc	<L40+pxNewTCB_0
+	adc	<L28+pxNewTCB_0
 	sta	<R1
 	lda	#$0
-	adc	<L40+pxNewTCB_0+2
+	adc	<L28+pxNewTCB_0+2
 	sta	<R1+2
 	lda	<R1
 	ldy	#$4
@@ -2957,21 +2801,21 @@ pxIndex_2	set	0
 	sta	[<R0],Y
 	lda	#$4
 	clc
-	adc	<L40+pxNewTCB_0
+	adc	<L28+pxNewTCB_0
 	sta	<R0
 	lda	#$0
-	adc	<L40+pxNewTCB_0+2
+	adc	<L28+pxNewTCB_0+2
 	sta	<R0+2
 	lda	<R0
 	iny
 	iny
-	sta	[<L41+pxIndex_2],Y
+	sta	[<L29+pxIndex_2],Y
 	lda	<R0+2
 	iny
 	iny
-	sta	[<L41+pxIndex_2],Y
+	sta	[<L29+pxIndex_2],Y
 	ldy	#$2c
-	lda	[<L40+pxNewTCB_0],Y
+	lda	[<L28+pxNewTCB_0],Y
 	ldx	#<$12
 	xref	_~~mul
 	jsr	_~~mul
@@ -2983,19 +2827,19 @@ pxIndex_2	set	0
 	sta	<R0+2
 	lda	<R0
 	ldy	#$14
-	sta	[<L40+pxNewTCB_0],Y
+	sta	[<L28+pxNewTCB_0],Y
 	lda	<R0+2
 	iny
 	iny
-	sta	[<L40+pxNewTCB_0],Y
+	sta	[<L28+pxNewTCB_0],Y
 	ldy	#$2c
-	lda	[<L40+pxNewTCB_0],Y
+	lda	[<L28+pxNewTCB_0],Y
 	ldx	#<$12
 	xref	_~~mul
 	jsr	_~~mul
 	sta	<R0
 	ldy	#$2c
-	lda	[<L40+pxNewTCB_0],Y
+	lda	[<L28+pxNewTCB_0],Y
 	ldx	#<$12
 	xref	_~~mul
 	jsr	_~~mul
@@ -3012,7 +2856,7 @@ pxIndex_2	set	0
 ;        if( xSchedulerRunning != pdFALSE )
 ;        {
 	lda	|_~xSchedulerRunning	; volatile
-	beq	L49
+	beq	L37
 ;            /* If the created task is of a higher priority than the current task
 ;             * then it should run now. */
 ;            taskYIELD_ANY_CORE_IF_USING_PREEMPTION( pxNewTCB );
@@ -3022,16 +2866,16 @@ pxIndex_2	set	0
 	sta	<R0+2
 	ldy	#$2c
 	lda	[<R0],Y
-	cmp	[<L40+pxNewTCB_0],Y
-	bcs	L49
+	cmp	[<L28+pxNewTCB_0],Y
+	bcs	L37
 	jsr	_~vPortYield
-L49:
-	lda	<L40+1
-	sta	<L40+1+4
+L37:
+	lda	<L28+1
+	sta	<L28+1+4
 	pld
 	tsc
 	clc
-	adc	#L40+4
+	adc	#L28+4
 	tcs
 	rts
 ;                {
@@ -3039,7 +2883,7 @@ L49:
 ;                }
 ;            }
 ;            else
-L10067:
+L10042:
 ;            {
 ;                /* If the scheduler is not already running, make this task the
 ;                 * current task if it is the highest priority task to be created
@@ -3048,7 +2892,7 @@ L10067:
 ;                {
 	lda	|_~xSchedulerRunning	; volatile
 	beq	*+5
-	brl	L10070
+	brl	L10045
 ;                    if( pxCurrentTCB->uxPriority <= pxNewTCB->uxPriority )
 ;                    {
 	lda	|_~pxCurrentTCB	; volatile
@@ -3056,18 +2900,18 @@ L10067:
 	lda	|_~pxCurrentTCB+2	; volatile
 	sta	<R0+2
 	ldy	#$2c
-	lda	[<L40+pxNewTCB_0],Y
+	lda	[<L28+pxNewTCB_0],Y
 	cmp	[<R0],Y
 	bcs	*+5
-	brl	L10070
+	brl	L10045
 ;                        pxCurrentTCB = pxNewTCB;
-	lda	<L40+pxNewTCB_0
+	lda	<L28+pxNewTCB_0
 	sta	|_~pxCurrentTCB	; volatile
-	lda	<L40+pxNewTCB_0+2
+	lda	<L28+pxNewTCB_0+2
 	sta	|_~pxCurrentTCB+2	; volatile
 ;                    }
 ;                    else
-	brl	L10070
+	brl	L10045
 ;                    {
 ;                        mtCOVERAGE_TEST_MARKER();
 ;                    }
@@ -3077,8 +2921,8 @@ L10067:
 ;            mtCOVERAGE_TEST_MARKER();
 ;        }
 ;    }
-L40	equ	16
-L41	equ	13
+L28	equ	16
+L29	equ	13
 	ends
 	efunc
 ;
@@ -3188,7 +3032,7 @@ _~vTaskDelete:
 	longi	on
 	tsc
 	sec
-	sbc	#L50
+	sbc	#L38
 	tcs
 	phd
 	tcd
@@ -3201,73 +3045,73 @@ xTaskToDelete_0	set	3
 pxTCB_1	set	0
 xDeleteTCBInIdleTask_1	set	4
 xTaskIsRunningOrYielding_1	set	6
-	stz	<L51+xDeleteTCBInIdleTask_1
+	stz	<L39+xDeleteTCBInIdleTask_1
 ;
 ;        taskENTER_CRITICAL();
 ;        {
 ;            /* If null is passed in here then it is the calling task that is
 ;             * being deleted. */
 ;            pxTCB = prvGetTCBFromHandle( xTaskToDelete );
-	lda	<L50+xTaskToDelete_0
-	ora	<L50+xTaskToDelete_0+2
-	bne	L52
+	lda	<L38+xTaskToDelete_0
+	ora	<L38+xTaskToDelete_0+2
+	bne	L40
 	ldx	|_~pxCurrentTCB+2	; volatile
 	lda	|_~pxCurrentTCB	; volatile
-	bra	L54
-L52:
-	ldx	<L50+xTaskToDelete_0+2
-	lda	<L50+xTaskToDelete_0
-L54:
+	bra	L42
+L40:
+	ldx	<L38+xTaskToDelete_0+2
+	lda	<L38+xTaskToDelete_0
+L42:
 	stx	<R0+2
-	sta	<L51+pxTCB_1
+	sta	<L39+pxTCB_1
 	lda	<R0+2
-	sta	<L51+pxTCB_1+2
+	sta	<L39+pxTCB_1+2
 ;            configASSERT( pxTCB != NULL );
-	lda	<L51+pxTCB_1
-	ora	<L51+pxTCB_1+2
-	bne	L10098
-L10102:
-	bra	L10102
-L10098:
+	lda	<L39+pxTCB_1
+	ora	<L39+pxTCB_1+2
+	bne	L10073
+L10077:
+	bra	L10077
+L10073:
 ;
 ;            /* Remove task from the ready/delayed list. */
 ;            if( uxListRemove( &( pxTCB->xStateListItem ) ) == ( UBaseType_t ) 0 )
 ;            {
 	lda	#$4
 	clc
-	adc	<L51+pxTCB_1
+	adc	<L39+pxTCB_1
 	sta	<R0
 	lda	#$0
-	adc	<L51+pxTCB_1+2
+	adc	<L39+pxTCB_1+2
 	pha
 	pei	<R0
 	jsr	_~uxListRemove
 	tax
-	beq	L10106
+	beq	L10081
 ;                taskRESET_READY_PRIORITY( pxTCB->uxPriority );
 ;            }
 ;            else
 ;            {
 ;                mtCOVERAGE_TEST_MARKER();
 ;            }
-L10106:
+L10081:
 ;
 ;            /* Is the task waiting on an event also? */
 ;            if( listLIST_ITEM_CONTAINER( &( pxTCB->xEventListItem ) ) != NULL )
 ;            {
 	ldy	#$28
-	lda	[<L51+pxTCB_1],Y
+	lda	[<L39+pxTCB_1],Y
 	iny
 	iny
-	ora	[<L51+pxTCB_1],Y
-	beq	L10108
+	ora	[<L39+pxTCB_1],Y
+	beq	L10083
 ;                ( void ) uxListRemove( &( pxTCB->xEventListItem ) );
 	lda	#$18
 	clc
-	adc	<L51+pxTCB_1
+	adc	<L39+pxTCB_1
 	sta	<R0
 	lda	#$0
-	adc	<L51+pxTCB_1+2
+	adc	<L39+pxTCB_1+2
 	pha
 	pei	<R0
 	jsr	_~uxListRemove
@@ -3276,7 +3120,7 @@ L10106:
 ;            {
 ;                mtCOVERAGE_TEST_MARKER();
 ;            }
-L10108:
+L10083:
 ;
 ;            /* Increment the uxTaskNumber also so kernel aware debuggers can
 ;             * detect that the task lists need re-generating.  This is done before
@@ -3289,19 +3133,19 @@ L10108:
 ;             * variables prior to a logical operator to ensure compliance with
 ;             * MISRA C 2012 Rule 13.5. */
 ;            xTaskIsRunningOrYielding = taskTASK_IS_RUNNING_OR_SCHEDULED_TO_YIELD( pxTCB );
-	lda	<L51+pxTCB_1
+	lda	<L39+pxTCB_1
 	cmp	|_~pxCurrentTCB	; volatile
-	bne	L59
-	lda	<L51+pxTCB_1+2
+	bne	L47
+	lda	<L39+pxTCB_1+2
 	cmp	|_~pxCurrentTCB+2	; volatile
-L59:
-	bne	L58
+L47:
+	bne	L46
 	lda	#$1
-	bra	L61
-L58:
+	bra	L49
+L46:
 	lda	#$0
-L61:
-	sta	<L51+xTaskIsRunningOrYielding_1
+L49:
+	sta	<L39+xTaskIsRunningOrYielding_1
 ;
 ;            /* If the task is running (or yielding), we must add it to the
 ;             * termination list so that an idle task can delete it when it is
@@ -3309,9 +3153,9 @@ L61:
 ;            if( ( xSchedulerRunning != pdFALSE ) && ( xTaskIsRunningOrYielding != pdFALSE ) )
 ;            {
 	lda	|_~xSchedulerRunning	; volatile
-	beq	L10109
-	lda	<L51+xTaskIsRunningOrYielding_1
-	beq	L10109
+	beq	L10084
+	lda	<L39+xTaskIsRunningOrYielding_1
+	beq	L10084
 ;                /* A running task or a task which is scheduled to yield is being
 ;                 * deleted. This cannot complete when the task is still running
 ;                 * on a core, as a context switch to another task is required.
@@ -3321,10 +3165,10 @@ L61:
 ;                vListInsertEnd( &xTasksWaitingTermination, &( pxTCB->xStateListItem ) );
 	lda	#$4
 	clc
-	adc	<L51+pxTCB_1
+	adc	<L39+pxTCB_1
 	sta	<R0
 	lda	#$0
-	adc	<L51+pxTCB_1+2
+	adc	<L39+pxTCB_1+2
 	pha
 	pei	<R0
 	lda	#<_~xTasksWaitingTermination
@@ -3348,7 +3192,7 @@ L61:
 ;                /* Delete the task TCB in idle task. */
 ;                xDeleteTCBInIdleTask = pdTRUE;
 	lda	#$1
-	sta	<L51+xDeleteTCBInIdleTask_1
+	sta	<L39+xDeleteTCBInIdleTask_1
 ;
 ;                /* The pre-delete hook is primarily for the Windows simulator,
 ;                 * in which Windows specific clean up operations are performed,
@@ -3386,8 +3230,8 @@ L61:
 ;                #endif /* #if ( configNUMBER_OF_CORES > 1 ) */
 ;            }
 ;            else
-	bra	L10112
-L10109:
+	bra	L10087
+L10084:
 ;            {
 ;                --uxCurrentNumberOfTasks;
 	dec	|_~uxCurrentNumberOfTasks	; volatile
@@ -3400,19 +3244,19 @@ L10109:
 ;            }
 ;        }
 ;        taskEXIT_CRITICAL();
-L10112:
+L10087:
 ;
 ;        /* If the task is not deleting itself, call prvDeleteTCB from outside of
 ;         * critical section. If a task deletes itself, prvDeleteTCB is called
 ;         * from prvCheckTasksWaitingTermination which is called from Idle task. */
 ;        if( xDeleteTCBInIdleTask != pdTRUE )
 ;        {
-	lda	<L51+xDeleteTCBInIdleTask_1
+	lda	<L39+xDeleteTCBInIdleTask_1
 	cmp	#<$1
-	beq	L10114
+	beq	L10089
 ;            prvDeleteTCB( pxTCB );
-	pei	<L51+pxTCB_1+2
-	pei	<L51+pxTCB_1
+	pei	<L39+pxTCB_1+2
+	pei	<L39+pxTCB_1
 	jsr	_~prvDeleteTCB
 ;        }
 ;
@@ -3420,26 +3264,26 @@ L10112:
 ;         * been deleted. */
 ;        #if ( configNUMBER_OF_CORES == 1 )
 ;        {
-L10114:
+L10089:
 ;            if( xSchedulerRunning != pdFALSE )
 ;            {
 	lda	|_~xSchedulerRunning	; volatile
-	beq	L69
+	beq	L57
 ;                if( pxTCB == pxCurrentTCB )
 ;                {
-	lda	<L51+pxTCB_1
+	lda	<L39+pxTCB_1
 	cmp	|_~pxCurrentTCB	; volatile
-	bne	L66
-	lda	<L51+pxTCB_1+2
+	bne	L54
+	lda	<L39+pxTCB_1+2
 	cmp	|_~pxCurrentTCB+2	; volatile
-L66:
-	bne	L69
+L54:
+	bne	L57
 ;                    configASSERT( uxSchedulerSuspended == 0 );
 	lda	|_~uxSchedulerSuspended	; volatile
-	beq	L10117
-L10121:
-	bra	L10121
-L10117:
+	beq	L10092
+L10096:
+	bra	L10096
+L10092:
 ;                    taskYIELD_WITHIN_API();
 	jsr	_~vPortYield
 ;                }
@@ -3453,17 +3297,17 @@ L10117:
 ;
 ;        traceRETURN_vTaskDelete();
 ;    }
-L69:
-	lda	<L50+1
-	sta	<L50+1+4
+L57:
+	lda	<L38+1
+	sta	<L38+1+4
 	pld
 	tsc
 	clc
-	adc	#L50+4
+	adc	#L38+4
 	tcs
 	rts
-L50	equ	16
-L51	equ	9
+L38	equ	16
+L39	equ	9
 	ends
 	efunc
 ;
@@ -3483,7 +3327,7 @@ _~xTaskPeriodicDelay:
 	longi	on
 	tsc
 	sec
-	sbc	#L70
+	sbc	#L58
 	tcs
 	phd
 	tcd
@@ -3497,20 +3341,20 @@ xTicksIncrements_1	set	4
 xTicksToWait_1	set	8
 ;
 ;        configASSERT( pxPreviousWakeTime );
-	lda	<L70+pxPreviousWakeTime_0
-	ora	<L70+pxPreviousWakeTime_0+2
-	bne	L10125
-L10129:
-	bra	L10129
-L10125:
+	lda	<L58+pxPreviousWakeTime_0
+	ora	<L58+pxPreviousWakeTime_0+2
+	bne	L10100
+L10104:
+	bra	L10104
+L10100:
 ;        configASSERT( ( xTimeIncrement > 0U ) );
 	lda	#$0
-	cmp	<L70+xTimeIncrement_0
-	sbc	<L70+xTimeIncrement_0+2
-	bcc	L10132
-L10136:
-	bra	L10136
-L10132:
+	cmp	<L58+xTimeIncrement_0
+	sbc	<L58+xTimeIncrement_0+2
+	bcc	L10107
+L10111:
+	bra	L10111
+L10107:
 ;
 ;        vTaskSuspendAll();
 	jsr	_~vTaskSuspendAll
@@ -3522,73 +3366,73 @@ L10132:
 xTicksElapsed_2	set	12
 	sec
 	lda	|_~xTickCount	; volatile
-	sbc	[<L70+pxPreviousWakeTime_0]
-	sta	<L71+xTicksElapsed_2
+	sbc	[<L58+pxPreviousWakeTime_0]
+	sta	<L59+xTicksElapsed_2
 	lda	|_~xTickCount+2	; volatile
 	ldy	#$2
-	sbc	[<L70+pxPreviousWakeTime_0],Y
-	sta	<L71+xTicksElapsed_2+2
+	sbc	[<L58+pxPreviousWakeTime_0],Y
+	sta	<L59+xTicksElapsed_2+2
 	lda	|_~uxSchedulerSuspended	; volatile
 	cmp	#<$1
-	beq	L10139
-L10143:
-	bra	L10143
-L10139:
+	beq	L10114
+L10118:
+	bra	L10118
+L10114:
 ;
 ;            /* Number of increments to catch up: it could be 0 if
 ;             * not enough ticks have elapsed, 1 in the common case or
 ;             * more than 1 if the task has not been resumed in time */
 ;            xIncrements = xTicksElapsed / xTimeIncrement;
-	pei	<L70+xTimeIncrement_0+2
-	pei	<L70+xTimeIncrement_0
-	pei	<L71+xTicksElapsed_2+2
-	pei	<L71+xTicksElapsed_2
+	pei	<L58+xTimeIncrement_0+2
+	pei	<L58+xTimeIncrement_0
+	pei	<L59+xTicksElapsed_2+2
+	pei	<L59+xTicksElapsed_2
 	xref	_~~ludv
 	jsr	_~~ludv
-	sta	<L71+xIncrements_1
-	stx	<L71+xIncrements_1+2
+	sta	<L59+xIncrements_1
+	stx	<L59+xIncrements_1+2
 ;            xTicksIncrements = xIncrements * xTimeIncrement;
-	pei	<L70+xTimeIncrement_0+2
-	pei	<L70+xTimeIncrement_0
-	pei	<L71+xIncrements_1+2
-	pei	<L71+xIncrements_1
+	pei	<L58+xTimeIncrement_0+2
+	pei	<L58+xTimeIncrement_0
+	pei	<L59+xIncrements_1+2
+	pei	<L59+xIncrements_1
 	xref	_~~lmul
 	jsr	_~~lmul
-	sta	<L71+xTicksIncrements_1
-	stx	<L71+xTicksIncrements_1+2
+	sta	<L59+xTicksIncrements_1
+	stx	<L59+xTicksIncrements_1+2
 ;
 ;            /* Update to the last wake time */
 ;            *pxPreviousWakeTime += xTicksIncrements;
-	lda	[<L70+pxPreviousWakeTime_0]
+	lda	[<L58+pxPreviousWakeTime_0]
 	clc
-	adc	<L71+xTicksIncrements_1
-	sta	[<L70+pxPreviousWakeTime_0]
+	adc	<L59+xTicksIncrements_1
+	sta	[<L58+pxPreviousWakeTime_0]
 	ldy	#$2
-	lda	[<L70+pxPreviousWakeTime_0],Y
-	adc	<L71+xTicksIncrements_1+2
-	sta	[<L70+pxPreviousWakeTime_0],Y
+	lda	[<L58+pxPreviousWakeTime_0],Y
+	adc	<L59+xTicksIncrements_1+2
+	sta	[<L58+pxPreviousWakeTime_0],Y
 ;
 ;            /* Ticks to the next wake time */
 ;            xTicksToWait = xTimeIncrement - ( xTicksElapsed - xTicksIncrements );
 	sec
-	lda	<L71+xTicksElapsed_2
-	sbc	<L71+xTicksIncrements_1
+	lda	<L59+xTicksElapsed_2
+	sbc	<L59+xTicksIncrements_1
 	sta	<R0
-	lda	<L71+xTicksElapsed_2+2
-	sbc	<L71+xTicksIncrements_1+2
+	lda	<L59+xTicksElapsed_2+2
+	sbc	<L59+xTicksIncrements_1+2
 	sta	<R0+2
 	sec
-	lda	<L70+xTimeIncrement_0
+	lda	<L58+xTimeIncrement_0
 	sbc	<R0
-	sta	<L71+xTicksToWait_1
-	lda	<L70+xTimeIncrement_0+2
+	sta	<L59+xTicksToWait_1
+	lda	<L58+xTimeIncrement_0+2
 	sbc	<R0+2
-	sta	<L71+xTicksToWait_1+2
+	sta	<L59+xTicksToWait_1+2
 ;
 ;            prvAddCurrentTaskToDelayedList( xTicksToWait, pdFALSE );
 	pea	#<$0
-	pei	<L71+xTicksToWait_1+2
-	pei	<L71+xTicksToWait_1
+	pei	<L59+xTicksToWait_1+2
+	pei	<L59+xTicksToWait_1
 	jsr	_~prvAddCurrentTaskToDelayedList
 ;        }
 ;
@@ -3598,7 +3442,7 @@ L10139:
 ;        {
 	jsr	_~xTaskResumeAll
 	tax
-	bne	L10147
+	bne	L10122
 ;            taskYIELD_WITHIN_API();
 	jsr	_~vPortYield
 ;        }
@@ -3606,26 +3450,26 @@ L10139:
 ;        {
 ;            mtCOVERAGE_TEST_MARKER();
 ;        }
-L10147:
+L10122:
 ;
 ;        traceRETURN_xTaskPeriodicDelay( xIncrements );
 ;
 ;        return xIncrements;
-	ldx	<L71+xIncrements_1+2
-	lda	<L71+xIncrements_1
+	ldx	<L59+xIncrements_1+2
+	lda	<L59+xIncrements_1
 	tay
-	lda	<L70+1
-	sta	<L70+1+8
+	lda	<L58+1
+	sta	<L58+1+8
 	pld
 	tsc
 	clc
-	adc	#L70+8
+	adc	#L58+8
 	tcs
 	tya
 	rts
 ;    }
-L70	equ	20
-L71	equ	5
+L58	equ	20
+L59	equ	5
 	ends
 	efunc
 ;
@@ -3641,7 +3485,7 @@ _~xTaskDelayUntil:
 	longi	on
 	tsc
 	sec
-	sbc	#L77
+	sbc	#L65
 	tcs
 	phd
 	tcd
@@ -3654,23 +3498,23 @@ xTimeIncrement_0	set	7
 xTimeToWake_1	set	0
 xAlreadyYielded_1	set	4
 xShouldDelay_1	set	6
-	stz	<L78+xShouldDelay_1
+	stz	<L66+xShouldDelay_1
 ;
 ;        configASSERT( pxPreviousWakeTime );
-	lda	<L77+pxPreviousWakeTime_0
-	ora	<L77+pxPreviousWakeTime_0+2
-	bne	L10148
-L10152:
-	bra	L10152
-L10148:
+	lda	<L65+pxPreviousWakeTime_0
+	ora	<L65+pxPreviousWakeTime_0+2
+	bne	L10123
+L10127:
+	bra	L10127
+L10123:
 ;        configASSERT( ( xTimeIncrement > 0U ) );
 	lda	#$0
-	cmp	<L77+xTimeIncrement_0
-	sbc	<L77+xTimeIncrement_0+2
-	bcc	L10155
-L10159:
-	bra	L10159
-L10155:
+	cmp	<L65+xTimeIncrement_0
+	sbc	<L65+xTimeIncrement_0+2
+	bcc	L10130
+L10134:
+	bra	L10134
+L10130:
 ;
 ;        vTaskSuspendAll();
 	jsr	_~vTaskSuspendAll
@@ -3682,34 +3526,34 @@ L10155:
 ;            configASSERT( uxSchedulerSuspended == 1U );
 xConstTickCount_2	set	8
 	lda	|_~xTickCount	; volatile
-	sta	<L78+xConstTickCount_2
+	sta	<L66+xConstTickCount_2
 	lda	|_~xTickCount+2	; volatile
-	sta	<L78+xConstTickCount_2+2
+	sta	<L66+xConstTickCount_2+2
 	lda	|_~uxSchedulerSuspended	; volatile
 	cmp	#<$1
-	beq	L10162
-L10166:
-	bra	L10166
-L10162:
+	beq	L10137
+L10141:
+	bra	L10141
+L10137:
 ;
 ;            /* Generate the tick time at which the task wants to wake. */
 ;            xTimeToWake = *pxPreviousWakeTime + xTimeIncrement;
-	lda	[<L77+pxPreviousWakeTime_0]
+	lda	[<L65+pxPreviousWakeTime_0]
 	clc
-	adc	<L77+xTimeIncrement_0
-	sta	<L78+xTimeToWake_1
+	adc	<L65+xTimeIncrement_0
+	sta	<L66+xTimeToWake_1
 	ldy	#$2
-	lda	[<L77+pxPreviousWakeTime_0],Y
-	adc	<L77+xTimeIncrement_0+2
-	sta	<L78+xTimeToWake_1+2
+	lda	[<L65+pxPreviousWakeTime_0],Y
+	adc	<L65+xTimeIncrement_0+2
+	sta	<L66+xTimeToWake_1+2
 ;
 ;            if( xConstTickCount < *pxPreviousWakeTime )
 ;            {
-	lda	<L78+xConstTickCount_2
-	cmp	[<L77+pxPreviousWakeTime_0]
-	lda	<L78+xConstTickCount_2+2
-	sbc	[<L77+pxPreviousWakeTime_0],Y
-	bcs	L10169
+	lda	<L66+xConstTickCount_2
+	cmp	[<L65+pxPreviousWakeTime_0]
+	lda	<L66+xConstTickCount_2+2
+	sbc	[<L65+pxPreviousWakeTime_0],Y
+	bcs	L10144
 ;                /* The tick count has overflowed since this function was
 ;                 * lasted called.  In this case the only time we should ever
 ;                 * actually delay is if the wake time has also  overflowed,
@@ -3717,37 +3561,37 @@ L10162:
 ;                 * is the case it is as if neither time had overflowed. */
 ;                if( ( xTimeToWake < *pxPreviousWakeTime ) && ( xTimeToWake > xConstTickCount ) )
 ;                {
-	lda	<L78+xTimeToWake_1
-	cmp	[<L77+pxPreviousWakeTime_0]
-	lda	<L78+xTimeToWake_1+2
-	sbc	[<L77+pxPreviousWakeTime_0],Y
-	bcs	L10172
+	lda	<L66+xTimeToWake_1
+	cmp	[<L65+pxPreviousWakeTime_0]
+	lda	<L66+xTimeToWake_1+2
+	sbc	[<L65+pxPreviousWakeTime_0],Y
+	bcs	L10147
 L20011:
-	lda	<L78+xConstTickCount_2
-	cmp	<L78+xTimeToWake_1
-	lda	<L78+xConstTickCount_2+2
-	sbc	<L78+xTimeToWake_1+2
-	bcs	L10172
+	lda	<L66+xConstTickCount_2
+	cmp	<L66+xTimeToWake_1
+	lda	<L66+xConstTickCount_2+2
+	sbc	<L66+xTimeToWake_1+2
+	bcs	L10147
 ;                    xShouldDelay = pdTRUE;
 L20006:
 	lda	#$1
-	sta	<L78+xShouldDelay_1
+	sta	<L66+xShouldDelay_1
 ;                }
 ;                else
-L10172:
+L10147:
 ;
 ;            /* Update the wake time ready for the next call. */
 ;            *pxPreviousWakeTime = xTimeToWake;
-	lda	<L78+xTimeToWake_1
-	sta	[<L77+pxPreviousWakeTime_0]
-	lda	<L78+xTimeToWake_1+2
+	lda	<L66+xTimeToWake_1
+	sta	[<L65+pxPreviousWakeTime_0]
+	lda	<L66+xTimeToWake_1+2
 	ldy	#$2
-	sta	[<L77+pxPreviousWakeTime_0],Y
+	sta	[<L65+pxPreviousWakeTime_0],Y
 ;
 ;            if( xShouldDelay != pdFALSE )
 ;            {
-	lda	<L78+xShouldDelay_1
-	beq	L10176
+	lda	<L66+xShouldDelay_1
+	beq	L10151
 ;                {
 ;                    mtCOVERAGE_TEST_MARKER();
 ;                }
@@ -3759,41 +3603,41 @@ L10172:
 ;                prvAddCurrentTaskToDelayedList( xTimeToWake - xConstTickCount, pdFALSE );
 	pea	#<$0
 	sec
-	lda	<L78+xTimeToWake_1
-	sbc	<L78+xConstTickCount_2
+	lda	<L66+xTimeToWake_1
+	sbc	<L66+xConstTickCount_2
 	sta	<R0
-	lda	<L78+xTimeToWake_1+2
-	sbc	<L78+xConstTickCount_2+2
+	lda	<L66+xTimeToWake_1+2
+	sbc	<L66+xConstTickCount_2+2
 	pha
 	pei	<R0
 	jsr	_~prvAddCurrentTaskToDelayedList
 ;            }
 ;            else
-L10176:
+L10151:
 ;        }
 ;        xAlreadyYielded = xTaskResumeAll();
 	jsr	_~xTaskResumeAll
-	sta	<L78+xAlreadyYielded_1
+	sta	<L66+xAlreadyYielded_1
 ;
 ;        /* Force a reschedule if xTaskResumeAll has not already done so, we may
 ;         * have put ourselves to sleep. */
 ;        if( xAlreadyYielded == pdFALSE )
 ;        {
-	lda	<L78+xAlreadyYielded_1
-	beq	L89
-L10178:
+	lda	<L66+xAlreadyYielded_1
+	beq	L77
+L10153:
 ;
 ;        traceRETURN_xTaskDelayUntil( xShouldDelay );
 ;
 ;        return xShouldDelay;
-	lda	<L78+xShouldDelay_1
+	lda	<L66+xShouldDelay_1
 	tay
-	lda	<L77+1
-	sta	<L77+1+8
+	lda	<L65+1
+	sta	<L65+1+8
 	pld
 	tsc
 	clc
-	adc	#L77+8
+	adc	#L65+8
 	tcs
 	tya
 	rts
@@ -3802,18 +3646,18 @@ L10178:
 ;                }
 ;            }
 ;            else
-L10169:
+L10144:
 ;            {
 ;                /* The tick time has not overflowed.  In this case we will
 ;                 * delay if either the wake time has overflowed, and/or the
 ;                 * tick time is less than the wake time. */
 ;                if( ( xTimeToWake < *pxPreviousWakeTime ) || ( xTimeToWake > xConstTickCount ) )
 ;                {
-	lda	<L78+xTimeToWake_1
-	cmp	[<L77+pxPreviousWakeTime_0]
-	lda	<L78+xTimeToWake_1+2
+	lda	<L66+xTimeToWake_1
+	cmp	[<L65+pxPreviousWakeTime_0]
+	lda	<L66+xTimeToWake_1+2
 	ldy	#$2
-	sbc	[<L77+pxPreviousWakeTime_0],Y
+	sbc	[<L65+pxPreviousWakeTime_0],Y
 	bcc	L20006
 	bra	L20011
 ;                    xShouldDelay = pdTRUE;
@@ -3822,18 +3666,18 @@ L10169:
 ;            {
 ;                mtCOVERAGE_TEST_MARKER();
 ;            }
-L89:
+L77:
 ;            taskYIELD_WITHIN_API();
 	jsr	_~vPortYield
 ;        }
 ;        else
-	bra	L10178
+	bra	L10153
 ;        {
 ;            mtCOVERAGE_TEST_MARKER();
 ;        }
 ;    }
-L77	equ	16
-L78	equ	5
+L65	equ	16
+L66	equ	5
 	ends
 	efunc
 ;
@@ -3852,7 +3696,7 @@ _~vTaskDelay:
 	longi	on
 	tsc
 	sec
-	sbc	#L91
+	sbc	#L79
 	tcs
 	phd
 	tcd
@@ -3861,25 +3705,25 @@ xTicksToDelay_0	set	3
 ;
 ;        traceENTER_vTaskDelay( xTicksToDelay );
 xAlreadyYielded_1	set	0
-	stz	<L92+xAlreadyYielded_1
+	stz	<L80+xAlreadyYielded_1
 ;
 ;        /* A delay time of zero just forces a reschedule. */
 ;        if( xTicksToDelay > ( TickType_t ) 0U )
 ;        {
 	lda	#$0
-	cmp	<L91+xTicksToDelay_0
-	sbc	<L91+xTicksToDelay_0+2
-	bcs	L10187
+	cmp	<L79+xTicksToDelay_0
+	sbc	<L79+xTicksToDelay_0+2
+	bcs	L10162
 ;            vTaskSuspendAll();
 	jsr	_~vTaskSuspendAll
 ;            {
 ;                configASSERT( uxSchedulerSuspended == 1U );
 	lda	|_~uxSchedulerSuspended	; volatile
 	cmp	#<$1
-	beq	L10180
-L10184:
-	bra	L10184
-L10180:
+	beq	L10155
+L10159:
+	bra	L10159
+L10155:
 ;
 ;                traceTASK_DELAY();
 ;
@@ -3892,26 +3736,26 @@ L10180:
 ;                 * executing task. */
 ;                prvAddCurrentTaskToDelayedList( xTicksToDelay, pdFALSE );
 	pea	#<$0
-	pei	<L91+xTicksToDelay_0+2
-	pei	<L91+xTicksToDelay_0
+	pei	<L79+xTicksToDelay_0+2
+	pei	<L79+xTicksToDelay_0
 	jsr	_~prvAddCurrentTaskToDelayedList
 ;            }
 ;            xAlreadyYielded = xTaskResumeAll();
 	jsr	_~xTaskResumeAll
-	sta	<L92+xAlreadyYielded_1
+	sta	<L80+xAlreadyYielded_1
 ;        }
 ;        else
 ;        {
 ;            mtCOVERAGE_TEST_MARKER();
 ;        }
-L10187:
+L10162:
 ;
 ;        /* Force a reschedule if xTaskResumeAll has not already done so, we may
 ;         * have put ourselves to sleep. */
 ;        if( xAlreadyYielded == pdFALSE )
 ;        {
-	lda	<L92+xAlreadyYielded_1
-	bne	L96
+	lda	<L80+xAlreadyYielded_1
+	bne	L84
 ;            taskYIELD_WITHIN_API();
 	jsr	_~vPortYield
 ;        }
@@ -3922,17 +3766,17 @@ L10187:
 ;
 ;        traceRETURN_vTaskDelay();
 ;    }
-L96:
-	lda	<L91+1
-	sta	<L91+1+4
+L84:
+	lda	<L79+1
+	sta	<L79+1+4
 	pld
 	tsc
 	clc
-	adc	#L91+4
+	adc	#L79+4
 	tcs
 	rts
-L91	equ	2
-L92	equ	1
+L79	equ	2
+L80	equ	1
 	ends
 	efunc
 ;
@@ -3951,7 +3795,7 @@ _~eTaskGetState:
 	longi	on
 	tsc
 	sec
-	sbc	#L97
+	sbc	#L85
 	tcs
 	phd
 	tcd
@@ -3970,66 +3814,66 @@ pxEventList_1	set	6
 pxDelayedList_1	set	10
 pxOverflowedDelayedList_1	set	14
 pxTCB_1	set	18
-	lda	<L97+xTask_0
-	sta	<L98+pxTCB_1
-	lda	<L97+xTask_0+2
-	sta	<L98+pxTCB_1+2
+	lda	<L85+xTask_0
+	sta	<L86+pxTCB_1
+	lda	<L85+xTask_0+2
+	sta	<L86+pxTCB_1+2
 ;
 ;        configASSERT( pxTCB != NULL );
-	lda	<L98+pxTCB_1
-	ora	<L98+pxTCB_1+2
-	bne	L10190
-L10194:
-	bra	L10194
-L10190:
+	lda	<L86+pxTCB_1
+	ora	<L86+pxTCB_1+2
+	bne	L10165
+L10169:
+	bra	L10169
+L10165:
 ;
 ;        #if ( configNUMBER_OF_CORES == 1 )
 ;            if( pxTCB == pxCurrentTCB )
 ;            {
-	lda	<L98+pxTCB_1
+	lda	<L86+pxTCB_1
 	cmp	|_~pxCurrentTCB	; volatile
-	bne	L100
-	lda	<L98+pxTCB_1+2
+	bne	L88
+	lda	<L86+pxTCB_1+2
 	cmp	|_~pxCurrentTCB+2	; volatile
-L100:
-	bne	L10200
+L88:
+	bne	L10175
 ;                /* The task calling this function is querying its own state. */
 ;                eReturn = eRunning;
-	stz	<L98+eReturn_1
+	stz	<L86+eReturn_1
 ;            }
 ;            else
-	bra	L10198
+	bra	L10173
 ;        #endif
 ;        {
 ;            taskENTER_CRITICAL();
-L10200:
+L10175:
 ;            {
 ;                pxStateList = listLIST_ITEM_CONTAINER( &( pxTCB->xStateListItem ) );
 	ldy	#$14
-	lda	[<L98+pxTCB_1],Y
-	sta	<L98+pxStateList_1
+	lda	[<L86+pxTCB_1],Y
+	sta	<L86+pxStateList_1
 	iny
 	iny
-	lda	[<L98+pxTCB_1],Y
-	sta	<L98+pxStateList_1+2
+	lda	[<L86+pxTCB_1],Y
+	sta	<L86+pxStateList_1+2
 ;                pxEventList = listLIST_ITEM_CONTAINER( &( pxTCB->xEventListItem ) );
 	ldy	#$28
-	lda	[<L98+pxTCB_1],Y
-	sta	<L98+pxEventList_1
+	lda	[<L86+pxTCB_1],Y
+	sta	<L86+pxEventList_1
 	iny
 	iny
-	lda	[<L98+pxTCB_1],Y
-	sta	<L98+pxEventList_1+2
+	lda	[<L86+pxTCB_1],Y
+	sta	<L86+pxEventList_1+2
 ;                pxDelayedList = pxDelayedTaskList;
 	lda	|_~pxDelayedTaskList	; volatile
-	sta	<L98+pxDelayedList_1
+	sta	<L86+pxDelayedList_1
 	lda	|_~pxDelayedTaskList+2	; volatile
-	sta	<L98+pxDelayedList_1+2
+	sta	<L86+pxDelayedList_1+2
 ;                pxOverflowedDelayedList = pxOverflowDelayedTaskList;
 	lda	|_~pxOverflowDelayedTaskList	; volatile
-	sta	<L98+pxOverflowedDelayedList_1
+	sta	<L86+pxOverflowedDelayedList_1
 	lda	|_~pxOverflowDelayedTaskList+2	; volatile
-	sta	<L98+pxOverflowedDelayedList_1+2
+	sta	<L86+pxOverflowedDelayedList_1+2
 ;            }
 ;            taskEXIT_CRITICAL();
 ;
@@ -4040,18 +3884,18 @@ L10200:
 	xref	_BEG_DATA
 	lda	#_BEG_DATA>>16
 	sta	<R0+2
-	lda	<L98+pxEventList_1
+	lda	<L86+pxEventList_1
 	cmp	<R0
-	bne	L102
-	lda	<L98+pxEventList_1+2
+	bne	L90
+	lda	<L86+pxEventList_1+2
 	cmp	<R0+2
-L102:
-	bne	L10205
+L90:
+	bne	L10180
 ;                /* The task has been placed on the pending ready list, so its
 ;                 * state is eReady regardless of what list the task's state list
 ;                 * item is currently placed on. */
 ;                eReturn = eReady;
-L10217:
+L10192:
 ;            {
 ;                #if ( configNUMBER_OF_CORES == 1 )
 ;                {
@@ -4060,7 +3904,7 @@ L10217:
 ;                    eReturn = eReady;
 	lda	#$1
 L20012:
-	sta	<L98+eReturn_1
+	sta	<L86+eReturn_1
 ;                }
 ;                #else /* #if ( configNUMBER_OF_CORES == 1 ) */
 ;                {
@@ -4079,41 +3923,41 @@ L20012:
 ;                #endif /* #if ( configNUMBER_OF_CORES == 1 ) */
 ;            }
 ;        }
-L10198:
+L10173:
 ;
 ;        traceRETURN_eTaskGetState( eReturn );
 ;
 ;        return eReturn;
-	lda	<L98+eReturn_1
+	lda	<L86+eReturn_1
 	tay
-	lda	<L97+1
-	sta	<L97+1+4
+	lda	<L85+1
+	sta	<L85+1+4
 	pld
 	tsc
 	clc
-	adc	#L97+4
+	adc	#L85+4
 	tcs
 	tya
 	rts
 ;            }
 ;            else if( ( pxStateList == pxDelayedList ) || ( pxStateList == pxOverflowedDelayedList ) )
-L10205:
+L10180:
 ;            {
-	lda	<L98+pxStateList_1
-	cmp	<L98+pxDelayedList_1
-	bne	L105
-	lda	<L98+pxStateList_1+2
-	cmp	<L98+pxDelayedList_1+2
-L105:
-	beq	L104
-	lda	<L98+pxStateList_1
-	cmp	<L98+pxOverflowedDelayedList_1
-	bne	L107
-	lda	<L98+pxStateList_1+2
-	cmp	<L98+pxOverflowedDelayedList_1+2
-L107:
-	bne	L10207
-L104:
+	lda	<L86+pxStateList_1
+	cmp	<L86+pxDelayedList_1
+	bne	L93
+	lda	<L86+pxStateList_1+2
+	cmp	<L86+pxDelayedList_1+2
+L93:
+	beq	L92
+	lda	<L86+pxStateList_1
+	cmp	<L86+pxOverflowedDelayedList_1
+	bne	L95
+	lda	<L86+pxStateList_1+2
+	cmp	<L86+pxOverflowedDelayedList_1+2
+L95:
+	bne	L10182
+L92:
 ;                /* The task being queried is referenced from one of the Blocked
 ;                 * lists. */
 ;                eReturn = eBlocked;
@@ -4123,31 +3967,31 @@ L104:
 ;
 ;            #if ( INCLUDE_vTaskSuspend == 1 )
 ;                else if( pxStateList == &xSuspendedTaskList )
-L10207:
+L10182:
 ;                {
 	lda	#<_~xSuspendedTaskList
 	sta	<R0
 	xref	_BEG_DATA
 	lda	#_BEG_DATA>>16
 	sta	<R0+2
-	lda	<L98+pxStateList_1
+	lda	<L86+pxStateList_1
 	cmp	<R0
-	bne	L109
-	lda	<L98+pxStateList_1+2
+	bne	L97
+	lda	<L86+pxStateList_1+2
 	cmp	<R0+2
-L109:
-	bne	L10209
+L97:
+	bne	L10184
 ;                    /* The task being queried is referenced from the suspended
 ;                     * list.  Is it genuinely suspended or is it blocked
 ;                     * indefinitely? */
 ;                    if( listLIST_ITEM_CONTAINER( &( pxTCB->xEventListItem ) ) == NULL )
 ;                    {
 	ldy	#$28
-	lda	[<L98+pxTCB_1],Y
+	lda	[<L86+pxTCB_1],Y
 	iny
 	iny
-	ora	[<L98+pxTCB_1],Y
-	bne	L104
+	ora	[<L86+pxTCB_1],Y
+	bne	L92
 ;                        #if ( configUSE_TASK_NOTIFICATIONS == 1 )
 ;                        {
 ;                            BaseType_t x;
@@ -4160,37 +4004,37 @@ L109:
 ;                            eReturn = eSuspended;
 x_2	set	22
 	lda	#$3
-	sta	<L98+eReturn_1
+	sta	<L86+eReturn_1
 ;
 ;                            for( x = ( BaseType_t ) 0; x < ( BaseType_t ) configTASK_NOTIFICATION_ARRAY_ENTRIES; x++ )
-	stz	<L98+x_2
-L10213:
+	stz	<L86+x_2
+L10188:
 ;                            {
 ;                                if( pxTCB->ucNotifyState[ x ] == taskWAITING_NOTIFICATION )
 ;                                {
 	lda	#$4a
 	clc
-	adc	<L98+x_2
+	adc	<L86+x_2
 	tay
 	sep	#$20
 	longa	off
-	lda	[<L98+pxTCB_1],Y
+	lda	[<L86+pxTCB_1],Y
 	cmp	#<$1
 	rep	#$20
 	longa	on
-	beq	L104
+	beq	L92
 ;                                    eReturn = eBlocked;
 ;                    {
 ;                        eReturn = eBlocked;
 ;                                    break;
 ;                                }
 ;                            }
-	inc	<L98+x_2
-	lda	<L98+x_2
-	bmi	L10213
+	inc	<L86+x_2
+	lda	<L86+x_2
+	bmi	L10188
 	dea
-	bmi	L10213
-	bra	L10198
+	bmi	L10188
+	bra	L10173
 ;                        }
 ;                        #else /* if ( configUSE_TASK_NOTIFICATIONS == 1 ) */
 ;                        {
@@ -4205,25 +4049,25 @@ L10213:
 ;
 ;            #if ( INCLUDE_vTaskDelete == 1 )
 ;                else if( ( pxStateList == &xTasksWaitingTermination ) || ( pxStateList == NULL ) )
-L10209:
+L10184:
 ;                {
 	lda	#<_~xTasksWaitingTermination
 	sta	<R0
 	xref	_BEG_DATA
 	lda	#_BEG_DATA>>16
 	sta	<R0+2
-	lda	<L98+pxStateList_1
+	lda	<L86+pxStateList_1
 	cmp	<R0
-	bne	L116
-	lda	<L98+pxStateList_1+2
+	bne	L104
+	lda	<L86+pxStateList_1+2
 	cmp	<R0+2
-L116:
-	beq	L115
-	lda	<L98+pxStateList_1
-	ora	<L98+pxStateList_1+2
+L104:
+	beq	L103
+	lda	<L86+pxStateList_1
+	ora	<L86+pxStateList_1+2
 	beq	*+5
-	brl	L10217
-L115:
+	brl	L10192
+L103:
 ;                    /* The task being queried is referenced from the deleted
 ;                     * tasks list, or it is not referenced from any lists at
 ;                     * all. */
@@ -4235,8 +4079,8 @@ L115:
 ;
 ;            else
 ;    }
-L97	equ	28
-L98	equ	5
+L85	equ	28
+L86	equ	5
 	ends
 	efunc
 ;
@@ -4255,7 +4099,7 @@ _~uxTaskPriorityGet:
 	longi	on
 	tsc
 	sec
-	sbc	#L120
+	sbc	#L108
 	tcs
 	phd
 	tcd
@@ -4272,32 +4116,32 @@ uxReturn_1	set	4
 ;            /* If null is passed in here then it is the priority of the task
 ;             * that called uxTaskPriorityGet() that is being queried. */
 ;            pxTCB = prvGetTCBFromHandle( xTask );
-	lda	<L120+xTask_0
-	ora	<L120+xTask_0+2
-	bne	L122
+	lda	<L108+xTask_0
+	ora	<L108+xTask_0+2
+	bne	L110
 	ldx	|_~pxCurrentTCB+2	; volatile
 	lda	|_~pxCurrentTCB	; volatile
-	bra	L124
-L122:
-	ldx	<L120+xTask_0+2
-	lda	<L120+xTask_0
-L124:
+	bra	L112
+L110:
+	ldx	<L108+xTask_0+2
+	lda	<L108+xTask_0
+L112:
 	stx	<R0+2
-	sta	<L121+pxTCB_1
+	sta	<L109+pxTCB_1
 	lda	<R0+2
-	sta	<L121+pxTCB_1+2
+	sta	<L109+pxTCB_1+2
 ;            configASSERT( pxTCB != NULL );
-	lda	<L121+pxTCB_1
-	ora	<L121+pxTCB_1+2
-	bne	L10222
-L10226:
-	bra	L10226
-L10222:
+	lda	<L109+pxTCB_1
+	ora	<L109+pxTCB_1+2
+	bne	L10197
+L10201:
+	bra	L10201
+L10197:
 ;
 ;            uxReturn = pxTCB->uxPriority;
 	ldy	#$2c
-	lda	[<L121+pxTCB_1],Y
-	sta	<L121+uxReturn_1
+	lda	[<L109+pxTCB_1],Y
+	sta	<L109+uxReturn_1
 ;        }
 ;        portBASE_TYPE_EXIT_CRITICAL();
 ;
@@ -4305,18 +4149,18 @@ L10222:
 ;
 ;        return uxReturn;
 	tay
-	lda	<L120+1
-	sta	<L120+1+4
+	lda	<L108+1
+	sta	<L108+1+4
 	pld
 	tsc
 	clc
-	adc	#L120+4
+	adc	#L108+4
 	tcs
 	tya
 	rts
 ;    }
-L120	equ	10
-L121	equ	5
+L108	equ	10
+L109	equ	5
 	ends
 	efunc
 ;
@@ -4335,7 +4179,7 @@ _~uxTaskPriorityGetFromISR:
 	longi	on
 	tsc
 	sec
-	sbc	#L127
+	sbc	#L115
 	tcs
 	phd
 	tcd
@@ -4371,37 +4215,37 @@ uxSavedInterruptStatus_1	set	6
 ;        /* More details at: https://github.com/FreeRTOS/FreeRTOS-Kernel/blob/main/MISRA.md#dir-47 */
 ;        /* coverity[misra_c_2012_directive_4_7_violation] */
 ;        uxSavedInterruptStatus = ( UBaseType_t ) taskENTER_CRITICAL_FROM_ISR();
-	stz	<L128+uxSavedInterruptStatus_1
+	stz	<L116+uxSavedInterruptStatus_1
 ;        {
 ;            /* If null is passed in here then it is the priority of the calling
 ;             * task that is being queried. */
 ;            pxTCB = prvGetTCBFromHandle( xTask );
-	lda	<L127+xTask_0
-	ora	<L127+xTask_0+2
-	bne	L129
+	lda	<L115+xTask_0
+	ora	<L115+xTask_0+2
+	bne	L117
 	ldx	|_~pxCurrentTCB+2	; volatile
 	lda	|_~pxCurrentTCB	; volatile
-	bra	L131
-L129:
-	ldx	<L127+xTask_0+2
-	lda	<L127+xTask_0
-L131:
+	bra	L119
+L117:
+	ldx	<L115+xTask_0+2
+	lda	<L115+xTask_0
+L119:
 	stx	<R0+2
-	sta	<L128+pxTCB_1
+	sta	<L116+pxTCB_1
 	lda	<R0+2
-	sta	<L128+pxTCB_1+2
+	sta	<L116+pxTCB_1+2
 ;            configASSERT( pxTCB != NULL );
-	lda	<L128+pxTCB_1
-	ora	<L128+pxTCB_1+2
-	bne	L10232
-L10236:
-	bra	L10236
-L10232:
+	lda	<L116+pxTCB_1
+	ora	<L116+pxTCB_1+2
+	bne	L10207
+L10211:
+	bra	L10211
+L10207:
 ;
 ;            uxReturn = pxTCB->uxPriority;
 	ldy	#$2c
-	lda	[<L128+pxTCB_1],Y
-	sta	<L128+uxReturn_1
+	lda	[<L116+pxTCB_1],Y
+	sta	<L116+uxReturn_1
 ;        }
 ;        taskEXIT_CRITICAL_FROM_ISR( uxSavedInterruptStatus );
 ;
@@ -4409,18 +4253,18 @@ L10232:
 ;
 ;        return uxReturn;
 	tay
-	lda	<L127+1
-	sta	<L127+1+4
+	lda	<L115+1
+	sta	<L115+1+4
 	pld
 	tsc
 	clc
-	adc	#L127+4
+	adc	#L115+4
 	tcs
 	tya
 	rts
 ;    }
-L127	equ	12
-L128	equ	5
+L115	equ	12
+L116	equ	5
 	ends
 	efunc
 ;
@@ -4439,7 +4283,7 @@ _~uxTaskBasePriorityGet:
 	longi	on
 	tsc
 	sec
-	sbc	#L134
+	sbc	#L122
 	tcs
 	phd
 	tcd
@@ -4456,32 +4300,32 @@ uxReturn_1	set	4
 ;            /* If null is passed in here then it is the base priority of the task
 ;             * that called uxTaskBasePriorityGet() that is being queried. */
 ;            pxTCB = prvGetTCBFromHandle( xTask );
-	lda	<L134+xTask_0
-	ora	<L134+xTask_0+2
-	bne	L136
+	lda	<L122+xTask_0
+	ora	<L122+xTask_0+2
+	bne	L124
 	ldx	|_~pxCurrentTCB+2	; volatile
 	lda	|_~pxCurrentTCB	; volatile
-	bra	L138
-L136:
-	ldx	<L134+xTask_0+2
-	lda	<L134+xTask_0
-L138:
+	bra	L126
+L124:
+	ldx	<L122+xTask_0+2
+	lda	<L122+xTask_0
+L126:
 	stx	<R0+2
-	sta	<L135+pxTCB_1
+	sta	<L123+pxTCB_1
 	lda	<R0+2
-	sta	<L135+pxTCB_1+2
+	sta	<L123+pxTCB_1+2
 ;            configASSERT( pxTCB != NULL );
-	lda	<L135+pxTCB_1
-	ora	<L135+pxTCB_1+2
-	bne	L10242
-L10246:
-	bra	L10246
-L10242:
+	lda	<L123+pxTCB_1
+	ora	<L123+pxTCB_1+2
+	bne	L10217
+L10221:
+	bra	L10221
+L10217:
 ;
 ;            uxReturn = pxTCB->uxBasePriority;
 	ldy	#$42
-	lda	[<L135+pxTCB_1],Y
-	sta	<L135+uxReturn_1
+	lda	[<L123+pxTCB_1],Y
+	sta	<L123+uxReturn_1
 ;        }
 ;        portBASE_TYPE_EXIT_CRITICAL();
 ;
@@ -4489,18 +4333,18 @@ L10242:
 ;
 ;        return uxReturn;
 	tay
-	lda	<L134+1
-	sta	<L134+1+4
+	lda	<L122+1
+	sta	<L122+1+4
 	pld
 	tsc
 	clc
-	adc	#L134+4
+	adc	#L122+4
 	tcs
 	tya
 	rts
 ;    }
-L134	equ	10
-L135	equ	5
+L122	equ	10
+L123	equ	5
 	ends
 	efunc
 ;
@@ -4519,7 +4363,7 @@ _~uxTaskBasePriorityGetFromISR:
 	longi	on
 	tsc
 	sec
-	sbc	#L141
+	sbc	#L129
 	tcs
 	phd
 	tcd
@@ -4555,37 +4399,37 @@ uxSavedInterruptStatus_1	set	6
 ;        /* More details at: https://github.com/FreeRTOS/FreeRTOS-Kernel/blob/main/MISRA.md#dir-47 */
 ;        /* coverity[misra_c_2012_directive_4_7_violation] */
 ;        uxSavedInterruptStatus = ( UBaseType_t ) taskENTER_CRITICAL_FROM_ISR();
-	stz	<L142+uxSavedInterruptStatus_1
+	stz	<L130+uxSavedInterruptStatus_1
 ;        {
 ;            /* If null is passed in here then it is the base priority of the calling
 ;             * task that is being queried. */
 ;            pxTCB = prvGetTCBFromHandle( xTask );
-	lda	<L141+xTask_0
-	ora	<L141+xTask_0+2
-	bne	L143
+	lda	<L129+xTask_0
+	ora	<L129+xTask_0+2
+	bne	L131
 	ldx	|_~pxCurrentTCB+2	; volatile
 	lda	|_~pxCurrentTCB	; volatile
-	bra	L145
-L143:
-	ldx	<L141+xTask_0+2
-	lda	<L141+xTask_0
-L145:
+	bra	L133
+L131:
+	ldx	<L129+xTask_0+2
+	lda	<L129+xTask_0
+L133:
 	stx	<R0+2
-	sta	<L142+pxTCB_1
+	sta	<L130+pxTCB_1
 	lda	<R0+2
-	sta	<L142+pxTCB_1+2
+	sta	<L130+pxTCB_1+2
 ;            configASSERT( pxTCB != NULL );
-	lda	<L142+pxTCB_1
-	ora	<L142+pxTCB_1+2
-	bne	L10252
-L10256:
-	bra	L10256
-L10252:
+	lda	<L130+pxTCB_1
+	ora	<L130+pxTCB_1+2
+	bne	L10227
+L10231:
+	bra	L10231
+L10227:
 ;
 ;            uxReturn = pxTCB->uxBasePriority;
 	ldy	#$42
-	lda	[<L142+pxTCB_1],Y
-	sta	<L142+uxReturn_1
+	lda	[<L130+pxTCB_1],Y
+	sta	<L130+uxReturn_1
 ;        }
 ;        taskEXIT_CRITICAL_FROM_ISR( uxSavedInterruptStatus );
 ;
@@ -4593,18 +4437,18 @@ L10252:
 ;
 ;        return uxReturn;
 	tay
-	lda	<L141+1
-	sta	<L141+1+4
+	lda	<L129+1
+	sta	<L129+1+4
 	pld
 	tsc
 	clc
-	adc	#L141+4
+	adc	#L129+4
 	tcs
 	tya
 	rts
 ;    }
-L141	equ	12
-L142	equ	5
+L129	equ	12
+L130	equ	5
 	ends
 	efunc
 ;
@@ -4624,7 +4468,7 @@ _~vTaskPrioritySet:
 	longi	on
 	tsc
 	sec
-	sbc	#L148
+	sbc	#L136
 	tcs
 	phd
 	tcd
@@ -4643,25 +4487,25 @@ pxTCB_1	set	0
 uxCurrentBasePriority_1	set	4
 uxPriorityUsedOnEntry_1	set	6
 xYieldRequired_1	set	8
-	stz	<L149+xYieldRequired_1
+	stz	<L137+xYieldRequired_1
 ;
 ;        configASSERT( uxNewPriority < configMAX_PRIORITIES );
-	lda	<L148+uxNewPriority_0
+	lda	<L136+uxNewPriority_0
 	cmp	#<$5
-	bcc	L10259
-L10263:
-	bra	L10263
-L10259:
+	bcc	L10234
+L10238:
+	bra	L10238
+L10234:
 ;
 ;        /* Ensure the new priority is valid. */
 ;        if( uxNewPriority >= ( UBaseType_t ) configMAX_PRIORITIES )
 ;        {
-	lda	<L148+uxNewPriority_0
+	lda	<L136+uxNewPriority_0
 	cmp	#<$5
-	bcc	L10269
+	bcc	L10244
 ;            uxNewPriority = ( UBaseType_t ) configMAX_PRIORITIES - ( UBaseType_t ) 1U;
 	lda	#$4
-	sta	<L148+uxNewPriority_0
+	sta	<L136+uxNewPriority_0
 ;        }
 ;        else
 ;        {
@@ -4669,32 +4513,32 @@ L10259:
 ;        }
 ;
 ;        taskENTER_CRITICAL();
-L10269:
+L10244:
 ;        {
 ;            /* If null is passed in here then it is the priority of the calling
 ;             * task that is being changed. */
 ;            pxTCB = prvGetTCBFromHandle( xTask );
-	lda	<L148+xTask_0
-	ora	<L148+xTask_0+2
-	bne	L152
+	lda	<L136+xTask_0
+	ora	<L136+xTask_0+2
+	bne	L140
 	ldx	|_~pxCurrentTCB+2	; volatile
 	lda	|_~pxCurrentTCB	; volatile
-	bra	L154
-L152:
-	ldx	<L148+xTask_0+2
-	lda	<L148+xTask_0
-L154:
+	bra	L142
+L140:
+	ldx	<L136+xTask_0+2
+	lda	<L136+xTask_0
+L142:
 	stx	<R0+2
-	sta	<L149+pxTCB_1
+	sta	<L137+pxTCB_1
 	lda	<R0+2
-	sta	<L149+pxTCB_1+2
+	sta	<L137+pxTCB_1+2
 ;            configASSERT( pxTCB != NULL );
-	lda	<L149+pxTCB_1
-	ora	<L149+pxTCB_1+2
-	bne	L10271
-L10275:
-	bra	L10275
-L10271:
+	lda	<L137+pxTCB_1
+	ora	<L137+pxTCB_1+2
+	bne	L10246
+L10250:
+	bra	L10250
+L10246:
 ;
 ;            traceTASK_PRIORITY_SET( pxTCB, uxNewPriority );
 ;
@@ -4702,8 +4546,8 @@ L10271:
 ;            {
 ;                uxCurrentBasePriority = pxTCB->uxBasePriority;
 	ldy	#$42
-	lda	[<L149+pxTCB_1],Y
-	sta	<L149+uxCurrentBasePriority_1
+	lda	[<L137+pxTCB_1],Y
+	sta	<L137+uxCurrentBasePriority_1
 ;            }
 ;            #else
 ;            {
@@ -4713,28 +4557,28 @@ L10271:
 ;
 ;            if( uxCurrentBasePriority != uxNewPriority )
 ;            {
-	cmp	<L148+uxNewPriority_0
+	cmp	<L136+uxNewPriority_0
 	bne	*+5
-	brl	L178
+	brl	L166
 ;                /* The priority change may have readied a task of higher
 ;                 * priority than a running task. */
 ;                if( uxNewPriority > uxCurrentBasePriority )
 ;                {
-	lda	<L149+uxCurrentBasePriority_1
-	cmp	<L148+uxNewPriority_0
+	lda	<L137+uxCurrentBasePriority_1
+	cmp	<L136+uxNewPriority_0
 	bcc	*+5
-	brl	L10279
+	brl	L10254
 ;                    #if ( configNUMBER_OF_CORES == 1 )
 ;                    {
 ;                        if( pxTCB != pxCurrentTCB )
 ;                        {
-	lda	<L149+pxTCB_1
+	lda	<L137+pxTCB_1
 	cmp	|_~pxCurrentTCB	; volatile
-	bne	L158
-	lda	<L149+pxTCB_1+2
+	bne	L146
+	lda	<L137+pxTCB_1+2
 	cmp	|_~pxCurrentTCB+2	; volatile
-L158:
-	beq	L10284
+L146:
+	beq	L10259
 ;                            /* The priority of a task other than the currently
 ;                             * running task is being raised.  Is the priority being
 ;                             * raised above that of the running task? */
@@ -4746,12 +4590,12 @@ L158:
 	sta	<R0+2
 	ldy	#$2c
 	lda	[<R0],Y
-	cmp	<L148+uxNewPriority_0
-	bcs	L10284
+	cmp	<L136+uxNewPriority_0
+	bcs	L10259
 ;                                xYieldRequired = pdTRUE;
 L20018:
 	lda	#$1
-	sta	<L149+xYieldRequired_1
+	sta	<L137+xYieldRequired_1
 ;                            }
 ;                            else
 ;                    }
@@ -4764,15 +4608,15 @@ L20018:
 ;                    #endif /* #if ( configNUMBER_OF_CORES == 1 ) */
 ;                }
 ;                else if( taskTASK_IS_RUNNING( pxTCB ) == pdTRUE )
-L10284:
+L10259:
 ;
 ;                /* Remember the ready list the task might be referenced from
 ;                 * before its uxPriority member is changed so the
 ;                 * taskRESET_READY_PRIORITY() macro can function correctly. */
 ;                uxPriorityUsedOnEntry = pxTCB->uxPriority;
 	ldy	#$2c
-	lda	[<L149+pxTCB_1],Y
-	sta	<L149+uxPriorityUsedOnEntry_1
+	lda	[<L137+pxTCB_1],Y
+	sta	<L137+uxPriorityUsedOnEntry_1
 ;
 ;                #if ( configUSE_MUTEXES == 1 )
 ;                {
@@ -4782,25 +4626,25 @@ L10284:
 ;                    if( ( pxTCB->uxBasePriority == pxTCB->uxPriority ) || ( uxNewPriority > pxTCB->uxPriority ) )
 ;                    {
 	ldy	#$42
-	lda	[<L149+pxTCB_1],Y
+	lda	[<L137+pxTCB_1],Y
 	ldy	#$2c
-	cmp	[<L149+pxTCB_1],Y
-	beq	L166
+	cmp	[<L137+pxTCB_1],Y
+	beq	L154
 ;                {
 ;                    /* Setting the priority of any other task down does not
 ;                     * require a yield as the running task must be above the
 ;                     * new priority of the task being modified. */
 ;                }
-	lda	[<L149+pxTCB_1],Y
-	cmp	<L148+uxNewPriority_0
-	bcc	L166
-L10288:
+	lda	[<L137+pxTCB_1],Y
+	cmp	<L136+uxNewPriority_0
+	bcc	L154
+L10263:
 ;
 ;                    /* The base priority gets set whatever. */
 ;                    pxTCB->uxBasePriority = uxNewPriority;
-	lda	<L148+uxNewPriority_0
+	lda	<L136+uxNewPriority_0
 	ldy	#$42
-	sta	[<L149+pxTCB_1],Y
+	sta	[<L137+pxTCB_1],Y
 ;                }
 ;                #else /* if ( configUSE_MUTEXES == 1 ) */
 ;                {
@@ -4813,14 +4657,14 @@ L10288:
 ;                if( ( listGET_LIST_ITEM_VALUE( &( pxTCB->xEventListItem ) ) & taskEVENT_LIST_ITEM_VALUE_IN_USE ) == ( ( TickType_t ) 0U ) )
 ;                {
 	ldy	#$1a
-	lda	[<L149+pxTCB_1],Y
+	lda	[<L137+pxTCB_1],Y
 	and	#^$80000000
-	bne	L10290
+	bne	L10265
 ;                    {
 ;                        mtCOVERAGE_TEST_MARKER();
 ;                    }
 ;                    listSET_LIST_ITEM_VALUE( &( pxTCB->xEventListItem ), ( ( TickType_t ) configMAX_PRIORITIES - ( TickType_t ) uxNewPriority ) );
-	lda	<L148+uxNewPriority_0
+	lda	<L136+uxNewPriority_0
 	sta	<R0
 	stz	<R0+2
 	sec
@@ -4833,14 +4677,14 @@ L10288:
 	lda	<R1
 	dey
 	dey
-	sta	[<L149+pxTCB_1],Y
+	sta	[<L137+pxTCB_1],Y
 	lda	<R1+2
 	iny
 	iny
-	sta	[<L149+pxTCB_1],Y
+	sta	[<L137+pxTCB_1],Y
 ;                }
 ;                else
-L10290:
+L10265:
 ;
 ;                /* If the task is in the blocked or suspended list we need do
 ;                 * nothing more than change its priority variable. However, if
@@ -4848,7 +4692,7 @@ L10290:
 ;                 * in the list appropriate to its new priority. */
 ;                if( listIS_CONTAINED_WITHIN( &( pxReadyTasksLists[ uxPriorityUsedOnEntry ] ), &( pxTCB->xStateListItem ) ) != pdFALSE )
 ;                {
-	lda	<L149+uxPriorityUsedOnEntry_1
+	lda	<L137+uxPriorityUsedOnEntry_1
 	ldx	#<$12
 	xref	_~~mul
 	jsr	_~~mul
@@ -4860,24 +4704,24 @@ L10290:
 	sta	<R0+2
 	lda	<R0
 	ldy	#$14
-	cmp	[<L149+pxTCB_1],Y
-	bne	L171
+	cmp	[<L137+pxTCB_1],Y
+	bne	L159
 	lda	<R0+2
 	iny
 	iny
-	cmp	[<L149+pxTCB_1],Y
-L171:
-	beq	L172
+	cmp	[<L137+pxTCB_1],Y
+L159:
+	beq	L160
 	lda	#$0
-	bra	L173
-L166:
+	bra	L161
+L154:
 ;                        pxTCB->uxPriority = uxNewPriority;
-	lda	<L148+uxNewPriority_0
+	lda	<L136+uxNewPriority_0
 	ldy	#$2c
-	sta	[<L149+pxTCB_1],Y
+	sta	[<L137+pxTCB_1],Y
 ;                    }
 ;                    else
-	bra	L10288
+	bra	L10263
 ;                            {
 ;                                mtCOVERAGE_TEST_MARKER();
 ;                            }
@@ -4888,23 +4732,23 @@ L166:
 ;                             * but the running task must already be the highest
 ;                             * priority task able to run so no yield is required. */
 ;                        }
-L10279:
+L10254:
 ;                {
-	lda	<L149+pxTCB_1
+	lda	<L137+pxTCB_1
 	cmp	|_~pxCurrentTCB	; volatile
-	bne	L162
-	lda	<L149+pxTCB_1+2
+	bne	L150
+	lda	<L137+pxTCB_1+2
 	cmp	|_~pxCurrentTCB+2	; volatile
-L162:
-	bne	L161
+L150:
+	bne	L149
 	lda	#$1
-	bra	L164
-L161:
+	bra	L152
+L149:
 	lda	#$0
-L164:
+L152:
 	cmp	#<$1
 	beq	*+5
-	brl	L10284
+	brl	L10259
 ;                    /* Setting the priority of a running task down means
 ;                     * there may now be another task of higher priority that
 ;                     * is ready to execute. */
@@ -4920,12 +4764,12 @@ L164:
 ;                {
 ;                    mtCOVERAGE_TEST_MARKER();
 ;                }
-L172:
+L160:
 	lda	#$1
-L173:
+L161:
 	tax
 	bne	*+5
-	brl	L10304
+	brl	L10279
 ;                    /* The task is currently in its ready list - remove before
 ;                     * adding it to its new ready list.  As we are in a critical
 ;                     * section we can do this even if the scheduler is suspended. */
@@ -4933,15 +4777,15 @@ L173:
 ;                    {
 	lda	#$4
 	clc
-	adc	<L149+pxTCB_1
+	adc	<L137+pxTCB_1
 	sta	<R0
 	lda	#$0
-	adc	<L149+pxTCB_1+2
+	adc	<L137+pxTCB_1+2
 	pha
 	pei	<R0
 	jsr	_~uxListRemove
 	tax
-	beq	L10299
+	beq	L10274
 ;                        /* It is known that the task is in its ready list so
 ;                         * there is no need to check again and the port level
 ;                         * reset macro can be called directly. */
@@ -4953,17 +4797,17 @@ L173:
 ;                    }
 ;
 ;                    prvAddTaskToReadyList( pxTCB );
-L10299:
+L10274:
 	lda	|_~uxTopReadyPriority	; volatile
 	ldy	#$2c
-	cmp	[<L149+pxTCB_1],Y
-	bcs	L10303
-	lda	[<L149+pxTCB_1],Y
+	cmp	[<L137+pxTCB_1],Y
+	bcs	L10278
+	lda	[<L137+pxTCB_1],Y
 	sta	|_~uxTopReadyPriority	; volatile
-L10303:
+L10278:
 pxIndex_2	set	10
 	ldy	#$2c
-	lda	[<L149+pxTCB_1],Y
+	lda	[<L137+pxTCB_1],Y
 	ldx	#<$12
 	xref	_~~mul
 	jsr	_~~mul
@@ -4975,40 +4819,40 @@ pxIndex_2	set	10
 	adc	<R0
 	sta	<R2
 	lda	(<R2)
-	sta	<L149+pxIndex_2
+	sta	<L137+pxIndex_2
 	ldy	#$2
 	lda	(<R2),Y
-	sta	<L149+pxIndex_2+2
-	lda	<L149+pxIndex_2
+	sta	<L137+pxIndex_2+2
+	lda	<L137+pxIndex_2
 	ldy	#$8
-	sta	[<L149+pxTCB_1],Y
-	lda	<L149+pxIndex_2+2
+	sta	[<L137+pxTCB_1],Y
+	lda	<L137+pxIndex_2+2
 	iny
 	iny
-	sta	[<L149+pxTCB_1],Y
+	sta	[<L137+pxTCB_1],Y
 	dey
 	dey
-	lda	[<L149+pxIndex_2],Y
+	lda	[<L137+pxIndex_2],Y
 	ldy	#$c
-	sta	[<L149+pxTCB_1],Y
+	sta	[<L137+pxTCB_1],Y
 	dey
 	dey
-	lda	[<L149+pxIndex_2],Y
+	lda	[<L137+pxIndex_2],Y
 	ldy	#$e
-	sta	[<L149+pxTCB_1],Y
+	sta	[<L137+pxTCB_1],Y
 	ldy	#$8
-	lda	[<L149+pxIndex_2],Y
+	lda	[<L137+pxIndex_2],Y
 	sta	<R0
 	iny
 	iny
-	lda	[<L149+pxIndex_2],Y
+	lda	[<L137+pxIndex_2],Y
 	sta	<R0+2
 	lda	#$4
 	clc
-	adc	<L149+pxTCB_1
+	adc	<L137+pxTCB_1
 	sta	<R1
 	lda	#$0
-	adc	<L149+pxTCB_1+2
+	adc	<L137+pxTCB_1+2
 	sta	<R1+2
 	lda	<R1
 	ldy	#$4
@@ -5019,21 +4863,21 @@ pxIndex_2	set	10
 	sta	[<R0],Y
 	lda	#$4
 	clc
-	adc	<L149+pxTCB_1
+	adc	<L137+pxTCB_1
 	sta	<R0
 	lda	#$0
-	adc	<L149+pxTCB_1+2
+	adc	<L137+pxTCB_1+2
 	sta	<R0+2
 	lda	<R0
 	iny
 	iny
-	sta	[<L149+pxIndex_2],Y
+	sta	[<L137+pxIndex_2],Y
 	lda	<R0+2
 	iny
 	iny
-	sta	[<L149+pxIndex_2],Y
+	sta	[<L137+pxIndex_2],Y
 	ldy	#$2c
-	lda	[<L149+pxTCB_1],Y
+	lda	[<L137+pxTCB_1],Y
 	ldx	#<$12
 	xref	_~~mul
 	jsr	_~~mul
@@ -5045,19 +4889,19 @@ pxIndex_2	set	10
 	sta	<R0+2
 	lda	<R0
 	ldy	#$14
-	sta	[<L149+pxTCB_1],Y
+	sta	[<L137+pxTCB_1],Y
 	lda	<R0+2
 	iny
 	iny
-	sta	[<L149+pxTCB_1],Y
+	sta	[<L137+pxTCB_1],Y
 	ldy	#$2c
-	lda	[<L149+pxTCB_1],Y
+	lda	[<L137+pxTCB_1],Y
 	ldx	#<$12
 	xref	_~~mul
 	jsr	_~~mul
 	sta	<R0
 	ldy	#$2c
-	lda	[<L149+pxTCB_1],Y
+	lda	[<L137+pxTCB_1],Y
 	ldx	#<$12
 	xref	_~~mul
 	jsr	_~~mul
@@ -5068,19 +4912,19 @@ pxIndex_2	set	10
 	sta	|_~pxReadyTasksLists,X
 ;                }
 ;                else
-L10304:
+L10279:
 ;
 ;                if( xYieldRequired != pdFALSE )
 ;                {
-	lda	<L149+xYieldRequired_1
-	bne	L10308
-L178:
-	lda	<L148+1
-	sta	<L148+1+6
+	lda	<L137+xYieldRequired_1
+	bne	L10283
+L166:
+	lda	<L136+1
+	sta	<L136+1+6
 	pld
 	tsc
 	clc
-	adc	#L148+6
+	adc	#L136+6
 	tcs
 	rts
 ;                {
@@ -5099,11 +4943,11 @@ L178:
 ;                }
 ;                    /* The running task priority is set down. Request the task to yield. */
 ;                    taskYIELD_TASK_CORE_IF_USING_PREEMPTION( pxTCB );
-L10308:
+L10283:
 	jsr	_~vPortYield
 ;                }
 ;                else
-	bra	L178
+	bra	L166
 ;                {
 ;                    #if ( configNUMBER_OF_CORES > 1 )
 ;                        if( xYieldForTask != pdFALSE )
@@ -5129,8 +4973,8 @@ L10308:
 ;
 ;        traceRETURN_vTaskPrioritySet();
 ;    }
-L148	equ	26
-L149	equ	13
+L136	equ	26
+L137	equ	13
 	ends
 	efunc
 ;
@@ -5287,7 +5131,7 @@ _~vTaskSuspend:
 	longi	on
 	tsc
 	sec
-	sbc	#L179
+	sbc	#L167
 	tcs
 	phd
 	tcd
@@ -5302,27 +5146,27 @@ pxTCB_1	set	0
 ;            /* If null is passed in here then it is the running task that is
 ;             * being suspended. */
 ;            pxTCB = prvGetTCBFromHandle( xTaskToSuspend );
-	lda	<L179+xTaskToSuspend_0
-	ora	<L179+xTaskToSuspend_0+2
-	bne	L181
+	lda	<L167+xTaskToSuspend_0
+	ora	<L167+xTaskToSuspend_0+2
+	bne	L169
 	ldx	|_~pxCurrentTCB+2	; volatile
 	lda	|_~pxCurrentTCB	; volatile
-	bra	L183
-L181:
-	ldx	<L179+xTaskToSuspend_0+2
-	lda	<L179+xTaskToSuspend_0
-L183:
+	bra	L171
+L169:
+	ldx	<L167+xTaskToSuspend_0+2
+	lda	<L167+xTaskToSuspend_0
+L171:
 	stx	<R0+2
-	sta	<L180+pxTCB_1
+	sta	<L168+pxTCB_1
 	lda	<R0+2
-	sta	<L180+pxTCB_1+2
+	sta	<L168+pxTCB_1+2
 ;            configASSERT( pxTCB != NULL );
-	lda	<L180+pxTCB_1
-	ora	<L180+pxTCB_1+2
-	bne	L10316
-L10320:
-	bra	L10320
-L10316:
+	lda	<L168+pxTCB_1
+	ora	<L168+pxTCB_1+2
+	bne	L10291
+L10295:
+	bra	L10295
+L10291:
 ;
 ;            traceTASK_SUSPEND( pxTCB );
 ;
@@ -5332,39 +5176,39 @@ L10316:
 ;            {
 	lda	#$4
 	clc
-	adc	<L180+pxTCB_1
+	adc	<L168+pxTCB_1
 	sta	<R0
 	lda	#$0
-	adc	<L180+pxTCB_1+2
+	adc	<L168+pxTCB_1+2
 	pha
 	pei	<R0
 	jsr	_~uxListRemove
 	tax
-	beq	L10324
+	beq	L10299
 ;                taskRESET_READY_PRIORITY( pxTCB->uxPriority );
 ;            }
 ;            else
 ;            {
 ;                mtCOVERAGE_TEST_MARKER();
 ;            }
-L10324:
+L10299:
 ;
 ;            /* Is the task waiting on an event also? */
 ;            if( listLIST_ITEM_CONTAINER( &( pxTCB->xEventListItem ) ) != NULL )
 ;            {
 	ldy	#$28
-	lda	[<L180+pxTCB_1],Y
+	lda	[<L168+pxTCB_1],Y
 	iny
 	iny
-	ora	[<L180+pxTCB_1],Y
-	beq	L10326
+	ora	[<L168+pxTCB_1],Y
+	beq	L10301
 ;                ( void ) uxListRemove( &( pxTCB->xEventListItem ) );
 	lda	#$18
 	clc
-	adc	<L180+pxTCB_1
+	adc	<L168+pxTCB_1
 	sta	<R0
 	lda	#$0
-	adc	<L180+pxTCB_1+2
+	adc	<L168+pxTCB_1+2
 	pha
 	pei	<R0
 	jsr	_~uxListRemove
@@ -5373,15 +5217,15 @@ L10324:
 ;            {
 ;                mtCOVERAGE_TEST_MARKER();
 ;            }
-L10326:
+L10301:
 ;
 ;            vListInsertEnd( &xSuspendedTaskList, &( pxTCB->xStateListItem ) );
 	lda	#$4
 	clc
-	adc	<L180+pxTCB_1
+	adc	<L168+pxTCB_1
 	sta	<R0
 	lda	#$0
-	adc	<L180+pxTCB_1+2
+	adc	<L168+pxTCB_1+2
 	pha
 	pei	<R0
 	lda	#<_~xSuspendedTaskList
@@ -5398,43 +5242,43 @@ L10326:
 ;
 ;                for( x = ( BaseType_t ) 0; x < ( BaseType_t ) configTASK_NOTIFICATION_ARRAY_ENTRIES; x++ )
 x_2	set	4
-	stz	<L180+x_2
-L10329:
+	stz	<L168+x_2
+L10304:
 ;                {
 ;                    if( pxTCB->ucNotifyState[ x ] == taskWAITING_NOTIFICATION )
 ;                    {
 	lda	#$4a
 	clc
-	adc	<L180+x_2
+	adc	<L168+x_2
 	tay
 	sep	#$20
 	longa	off
-	lda	[<L180+pxTCB_1],Y
+	lda	[<L168+pxTCB_1],Y
 	cmp	#<$1
 	rep	#$20
 	longa	on
-	bne	L10327
+	bne	L10302
 ;                        /* The task was blocked to wait for a notification, but is
 ;                         * now suspended, so no notification was received. */
 ;                        pxTCB->ucNotifyState[ x ] = taskNOT_WAITING_NOTIFICATION;
 	lda	#$4a
 	clc
-	adc	<L180+x_2
+	adc	<L168+x_2
 	tay
 	sep	#$20
 	longa	off
 	lda	#$0
-	sta	[<L180+pxTCB_1],Y
+	sta	[<L168+pxTCB_1],Y
 	rep	#$20
 	longa	on
 ;                    }
 ;                }
-L10327:
-	inc	<L180+x_2
-	lda	<L180+x_2
-	bmi	L10329
+L10302:
+	inc	<L168+x_2
+	lda	<L168+x_2
+	bmi	L10304
 	dea
-	bmi	L10329
+	bmi	L10304
 ;            }
 ;            #endif /* if ( configUSE_TASK_NOTIFICATIONS == 1 ) */
 ;
@@ -5488,7 +5332,7 @@ L10327:
 uxCurrentListLength_3	set	4
 ;            {
 	lda	|_~xSchedulerRunning	; volatile
-	beq	L10341
+	beq	L10316
 ;                /* Reset the next expected unblock time in case it referred to the
 ;                 * task that is now in the Suspended state. */
 ;                taskENTER_CRITICAL();
@@ -5502,33 +5346,33 @@ uxCurrentListLength_3	set	4
 ;            {
 ;                mtCOVERAGE_TEST_MARKER();
 ;            }
-L10341:
+L10316:
 ;
 ;            if( pxTCB == pxCurrentTCB )
 ;            {
-	lda	<L180+pxTCB_1
+	lda	<L168+pxTCB_1
 	cmp	|_~pxCurrentTCB	; volatile
-	bne	L191
-	lda	<L180+pxTCB_1+2
+	bne	L179
+	lda	<L168+pxTCB_1+2
 	cmp	|_~pxCurrentTCB+2	; volatile
-L191:
-	bne	L196
+L179:
+	bne	L184
 ;                if( xSchedulerRunning != pdFALSE )
 ;                {
 	lda	|_~xSchedulerRunning	; volatile
-	beq	L10343
+	beq	L10318
 ;                    /* The current task has just been suspended. */
 ;                    configASSERT( uxSchedulerSuspended == 0 );
 	lda	|_~uxSchedulerSuspended	; volatile
-	beq	L10344
-L10348:
-	bra	L10348
-L10344:
+	beq	L10319
+L10323:
+	bra	L10323
+L10319:
 ;                    portYIELD_WITHIN_API();
 	jsr	_~vPortYield
 ;                }
 ;                else
-	bra	L196
+	bra	L184
 L20020:
 ;                        /* No other tasks are ready, so set pxCurrentTCB back to
 ;                         * NULL so when the next task is created pxCurrentTCB will
@@ -5539,16 +5383,16 @@ L20020:
 	stz	|_~pxCurrentTCB+2	; volatile
 ;                    }
 ;                    else
-L196:
-	lda	<L179+1
-	sta	<L179+1+4
+L184:
+	lda	<L167+1
+	sta	<L167+1+4
 	pld
 	tsc
 	clc
-	adc	#L179+4
+	adc	#L167+4
 	tcs
 	rts
-L10343:
+L10318:
 ;                {
 ;                    /* The scheduler is not running, but the task that was pointed
 ;                     * to by pxCurrentTCB has just been suspended and pxCurrentTCB
@@ -5559,7 +5403,7 @@ L10343:
 ;                     * with MISRA C 2012 Rule 13.2. */
 ;                    uxCurrentListLength = listCURRENT_LIST_LENGTH( &xSuspendedTaskList );
 	lda	|_~xSuspendedTaskList
-	sta	<L180+uxCurrentListLength_3
+	sta	<L168+uxCurrentListLength_3
 ;
 ;                    if( uxCurrentListLength == uxCurrentNumberOfTasks )
 ;                    {
@@ -5572,7 +5416,7 @@ L10343:
 ;                }
 ;            }
 ;            else
-	bra	L196
+	bra	L184
 ;            {
 ;                mtCOVERAGE_TEST_MARKER();
 ;            }
@@ -5581,8 +5425,8 @@ L10343:
 ;
 ;        traceRETURN_vTaskSuspend();
 ;    }
-L179	equ	14
-L180	equ	9
+L167	equ	14
+L168	equ	9
 	ends
 	efunc
 ;
@@ -5600,7 +5444,7 @@ _~prvTaskIsTaskSuspended:
 	longi	on
 	tsc
 	sec
-	sbc	#L197
+	sbc	#L185
 	tcs
 	phd
 	tcd
@@ -5615,17 +5459,17 @@ xTask_0	set	3
 ;        configASSERT( xTask );
 xReturn_1	set	0
 pxTCB_1	set	2
-	stz	<L198+xReturn_1
-	lda	<L197+xTask_0
-	sta	<L198+pxTCB_1
-	lda	<L197+xTask_0+2
-	sta	<L198+pxTCB_1+2
-	lda	<L197+xTask_0
-	ora	<L197+xTask_0+2
-	bne	L10355
-L10359:
-	bra	L10359
-L10355:
+	stz	<L186+xReturn_1
+	lda	<L185+xTask_0
+	sta	<L186+pxTCB_1
+	lda	<L185+xTask_0+2
+	sta	<L186+pxTCB_1+2
+	lda	<L185+xTask_0
+	ora	<L185+xTask_0+2
+	bne	L10330
+L10334:
+	bra	L10334
+L10330:
 ;
 ;        /* Is the task being resumed actually in the suspended list? */
 ;        if( listIS_CONTAINED_WITHIN( &xSuspendedTaskList, &( pxTCB->xStateListItem ) ) != pdFALSE )
@@ -5636,22 +5480,22 @@ L10355:
 	lda	#_BEG_DATA>>16
 	sta	<R0+2
 	ldy	#$14
-	lda	[<L198+pxTCB_1],Y
+	lda	[<L186+pxTCB_1],Y
 	cmp	<R0
-	bne	L201
+	bne	L189
 	iny
 	iny
-	lda	[<L198+pxTCB_1],Y
+	lda	[<L186+pxTCB_1],Y
 	cmp	<R0+2
-L201:
-	bne	L200
+L189:
+	bne	L188
 	lda	#$1
-	bra	L203
-L200:
+	bra	L191
+L188:
 	lda	#$0
-L203:
+L191:
 	tax
-	beq	L10371
+	beq	L10346
 ;            /* Has the task already been resumed from within an ISR? */
 ;            if( listIS_CONTAINED_WITHIN( &xPendingReadyList, &( pxTCB->xEventListItem ) ) == pdFALSE )
 ;            {
@@ -5661,39 +5505,39 @@ L203:
 	lda	#_BEG_DATA>>16
 	sta	<R0+2
 	ldy	#$28
-	lda	[<L198+pxTCB_1],Y
+	lda	[<L186+pxTCB_1],Y
 	cmp	<R0
-	bne	L206
+	bne	L194
 	iny
 	iny
-	lda	[<L198+pxTCB_1],Y
+	lda	[<L186+pxTCB_1],Y
 	cmp	<R0+2
-L206:
-	bne	L205
+L194:
+	bne	L193
 	lda	#$1
-	bra	L208
-L205:
+	bra	L196
+L193:
 	lda	#$0
-L208:
+L196:
 	tax
-	bne	L10371
+	bne	L10346
 ;                /* Is it in the suspended list because it is in the Suspended
 ;                 * state, or because it is blocked with no timeout? */
 ;                if( listIS_CONTAINED_WITHIN( NULL, &( pxTCB->xEventListItem ) ) != pdFALSE )
 ;                {
 	ldy	#$28
-	lda	[<L198+pxTCB_1],Y
+	lda	[<L186+pxTCB_1],Y
 	iny
 	iny
-	ora	[<L198+pxTCB_1],Y
-	bne	L210
+	ora	[<L186+pxTCB_1],Y
+	bne	L198
 	lda	#$1
-	bra	L212
-L210:
+	bra	L200
+L198:
 	lda	#$0
-L212:
+L200:
 	tax
-	beq	L10371
+	beq	L10346
 ;                    #if ( configUSE_TASK_NOTIFICATIONS == 1 )
 ;                    {
 ;                        BaseType_t x;
@@ -5706,53 +5550,53 @@ L212:
 ;                        xReturn = pdTRUE;
 x_2	set	6
 	lda	#$1
-	sta	<L198+xReturn_1
+	sta	<L186+xReturn_1
 ;
 ;                        for( x = ( BaseType_t ) 0; x < ( BaseType_t ) configTASK_NOTIFICATION_ARRAY_ENTRIES; x++ )
-	stz	<L198+x_2
-L10367:
+	stz	<L186+x_2
+L10342:
 ;                        {
 ;                            if( pxTCB->ucNotifyState[ x ] == taskWAITING_NOTIFICATION )
 ;                            {
 	lda	#$4a
 	clc
-	adc	<L198+x_2
+	adc	<L186+x_2
 	tay
 	sep	#$20
 	longa	off
-	lda	[<L198+pxTCB_1],Y
+	lda	[<L186+pxTCB_1],Y
 	cmp	#<$1
 	rep	#$20
 	longa	on
-	bne	L10365
+	bne	L10340
 ;                                xReturn = pdFALSE;
-	stz	<L198+xReturn_1
+	stz	<L186+xReturn_1
 ;                                break;
 ;            }
 ;            else
-L10371:
+L10346:
 ;
 ;        return xReturn;
-	lda	<L198+xReturn_1
+	lda	<L186+xReturn_1
 	tay
-	lda	<L197+1
-	sta	<L197+1+4
+	lda	<L185+1
+	sta	<L185+1+4
 	pld
 	tsc
 	clc
-	adc	#L197+4
+	adc	#L185+4
 	tcs
 	tya
 	rts
 ;                            }
 ;                        }
-L10365:
-	inc	<L198+x_2
-	lda	<L198+x_2
-	bmi	L10367
+L10340:
+	inc	<L186+x_2
+	lda	<L186+x_2
+	bmi	L10342
 	dea
-	bpl	L10371
-	bra	L10367
+	bpl	L10346
+	bra	L10342
 ;                    }
 ;                    #else /* if ( configUSE_TASK_NOTIFICATIONS == 1 ) */
 ;                    {
@@ -5773,8 +5617,8 @@ L10365:
 ;            mtCOVERAGE_TEST_MARKER();
 ;        }
 ;    }
-L197	equ	12
-L198	equ	5
+L185	equ	12
+L186	equ	5
 	ends
 	efunc
 ;
@@ -5793,7 +5637,7 @@ _~vTaskResume:
 	longi	on
 	tsc
 	sec
-	sbc	#L218
+	sbc	#L206
 	tcs
 	phd
 	tcd
@@ -5802,19 +5646,19 @@ xTaskToResume_0	set	3
 ;
 ;        traceENTER_vTaskResume( xTaskToResume );
 pxTCB_1	set	0
-	lda	<L218+xTaskToResume_0
-	sta	<L219+pxTCB_1
-	lda	<L218+xTaskToResume_0+2
-	sta	<L219+pxTCB_1+2
+	lda	<L206+xTaskToResume_0
+	sta	<L207+pxTCB_1
+	lda	<L206+xTaskToResume_0+2
+	sta	<L207+pxTCB_1+2
 ;
 ;        /* It does not make sense to resume the calling task. */
 ;        configASSERT( xTaskToResume );
-	lda	<L218+xTaskToResume_0
-	ora	<L218+xTaskToResume_0+2
-	bne	L10372
-L10376:
-	bra	L10376
-L10372:
+	lda	<L206+xTaskToResume_0
+	ora	<L206+xTaskToResume_0+2
+	bne	L10347
+L10351:
+	bra	L10351
+L10347:
 ;
 ;        #if ( configNUMBER_OF_CORES == 1 )
 ;
@@ -5831,28 +5675,28 @@ L10372:
 ;            if( pxTCB != NULL )
 ;        #endif
 ;        {
-	lda	<L219+pxTCB_1
+	lda	<L207+pxTCB_1
 	cmp	|_~pxCurrentTCB	; volatile
-	bne	L221
-	lda	<L219+pxTCB_1+2
+	bne	L209
+	lda	<L207+pxTCB_1+2
 	cmp	|_~pxCurrentTCB+2	; volatile
-L221:
+L209:
 	bne	*+5
-	brl	L227
-	lda	<L219+pxTCB_1
-	ora	<L219+pxTCB_1+2
+	brl	L215
+	lda	<L207+pxTCB_1
+	ora	<L207+pxTCB_1+2
 	bne	*+5
-	brl	L227
+	brl	L215
 ;            taskENTER_CRITICAL();
 ;            {
 ;                if( prvTaskIsTaskSuspended( pxTCB ) != pdFALSE )
 ;                {
-	pei	<L219+pxTCB_1+2
-	pei	<L219+pxTCB_1
+	pei	<L207+pxTCB_1+2
+	pei	<L207+pxTCB_1
 	jsr	_~prvTaskIsTaskSuspended
 	tax
 	bne	*+5
-	brl	L227
+	brl	L215
 ;                    traceTASK_RESUME( pxTCB );
 ;
 ;                    /* The ready list can be accessed even if the scheduler is
@@ -5860,24 +5704,24 @@ L221:
 ;                    ( void ) uxListRemove( &( pxTCB->xStateListItem ) );
 	lda	#$4
 	clc
-	adc	<L219+pxTCB_1
+	adc	<L207+pxTCB_1
 	sta	<R0
 	lda	#$0
-	adc	<L219+pxTCB_1+2
+	adc	<L207+pxTCB_1+2
 	pha
 	pei	<R0
 	jsr	_~uxListRemove
 ;                    prvAddTaskToReadyList( pxTCB );
 	lda	|_~uxTopReadyPriority	; volatile
 	ldy	#$2c
-	cmp	[<L219+pxTCB_1],Y
-	bcs	L10393
-	lda	[<L219+pxTCB_1],Y
+	cmp	[<L207+pxTCB_1],Y
+	bcs	L10368
+	lda	[<L207+pxTCB_1],Y
 	sta	|_~uxTopReadyPriority	; volatile
-L10393:
+L10368:
 pxIndex_2	set	4
 	ldy	#$2c
-	lda	[<L219+pxTCB_1],Y
+	lda	[<L207+pxTCB_1],Y
 	ldx	#<$12
 	xref	_~~mul
 	jsr	_~~mul
@@ -5889,40 +5733,40 @@ pxIndex_2	set	4
 	adc	<R0
 	sta	<R2
 	lda	(<R2)
-	sta	<L219+pxIndex_2
+	sta	<L207+pxIndex_2
 	ldy	#$2
 	lda	(<R2),Y
-	sta	<L219+pxIndex_2+2
-	lda	<L219+pxIndex_2
+	sta	<L207+pxIndex_2+2
+	lda	<L207+pxIndex_2
 	ldy	#$8
-	sta	[<L219+pxTCB_1],Y
-	lda	<L219+pxIndex_2+2
+	sta	[<L207+pxTCB_1],Y
+	lda	<L207+pxIndex_2+2
 	iny
 	iny
-	sta	[<L219+pxTCB_1],Y
+	sta	[<L207+pxTCB_1],Y
 	dey
 	dey
-	lda	[<L219+pxIndex_2],Y
+	lda	[<L207+pxIndex_2],Y
 	ldy	#$c
-	sta	[<L219+pxTCB_1],Y
+	sta	[<L207+pxTCB_1],Y
 	dey
 	dey
-	lda	[<L219+pxIndex_2],Y
+	lda	[<L207+pxIndex_2],Y
 	ldy	#$e
-	sta	[<L219+pxTCB_1],Y
+	sta	[<L207+pxTCB_1],Y
 	ldy	#$8
-	lda	[<L219+pxIndex_2],Y
+	lda	[<L207+pxIndex_2],Y
 	sta	<R0
 	iny
 	iny
-	lda	[<L219+pxIndex_2],Y
+	lda	[<L207+pxIndex_2],Y
 	sta	<R0+2
 	lda	#$4
 	clc
-	adc	<L219+pxTCB_1
+	adc	<L207+pxTCB_1
 	sta	<R1
 	lda	#$0
-	adc	<L219+pxTCB_1+2
+	adc	<L207+pxTCB_1+2
 	sta	<R1+2
 	lda	<R1
 	ldy	#$4
@@ -5933,21 +5777,21 @@ pxIndex_2	set	4
 	sta	[<R0],Y
 	lda	#$4
 	clc
-	adc	<L219+pxTCB_1
+	adc	<L207+pxTCB_1
 	sta	<R0
 	lda	#$0
-	adc	<L219+pxTCB_1+2
+	adc	<L207+pxTCB_1+2
 	sta	<R0+2
 	lda	<R0
 	iny
 	iny
-	sta	[<L219+pxIndex_2],Y
+	sta	[<L207+pxIndex_2],Y
 	lda	<R0+2
 	iny
 	iny
-	sta	[<L219+pxIndex_2],Y
+	sta	[<L207+pxIndex_2],Y
 	ldy	#$2c
-	lda	[<L219+pxTCB_1],Y
+	lda	[<L207+pxTCB_1],Y
 	ldx	#<$12
 	xref	_~~mul
 	jsr	_~~mul
@@ -5959,19 +5803,19 @@ pxIndex_2	set	4
 	sta	<R0+2
 	lda	<R0
 	ldy	#$14
-	sta	[<L219+pxTCB_1],Y
+	sta	[<L207+pxTCB_1],Y
 	lda	<R0+2
 	iny
 	iny
-	sta	[<L219+pxTCB_1],Y
+	sta	[<L207+pxTCB_1],Y
 	ldy	#$2c
-	lda	[<L219+pxTCB_1],Y
+	lda	[<L207+pxTCB_1],Y
 	ldx	#<$12
 	xref	_~~mul
 	jsr	_~~mul
 	sta	<R0
 	ldy	#$2c
-	lda	[<L219+pxTCB_1],Y
+	lda	[<L207+pxTCB_1],Y
 	ldx	#<$12
 	xref	_~~mul
 	jsr	_~~mul
@@ -5991,18 +5835,18 @@ pxIndex_2	set	4
 	sta	<R0+2
 	ldy	#$2c
 	lda	[<R0],Y
-	cmp	[<L219+pxTCB_1],Y
-	bcs	L227
+	cmp	[<L207+pxTCB_1],Y
+	bcs	L215
 	jsr	_~vPortYield
 ;        }
 ;        else
-L227:
-	lda	<L218+1
-	sta	<L218+1+4
+L215:
+	lda	<L206+1
+	sta	<L206+1+4
 	pld
 	tsc
 	clc
-	adc	#L218+4
+	adc	#L206+4
 	tcs
 	rts
 ;                }
@@ -6018,8 +5862,8 @@ L227:
 ;
 ;        traceRETURN_vTaskResume();
 ;    }
-L218	equ	20
-L219	equ	13
+L206	equ	20
+L207	equ	13
 	ends
 	efunc
 ;
@@ -6039,7 +5883,7 @@ _~xTaskResumeFromISR:
 	longi	on
 	tsc
 	sec
-	sbc	#L228
+	sbc	#L216
 	tcs
 	phd
 	tcd
@@ -6052,19 +5896,19 @@ xTaskToResume_0	set	3
 xYieldRequired_1	set	0
 pxTCB_1	set	2
 uxSavedInterruptStatus_1	set	6
-	stz	<L229+xYieldRequired_1
-	lda	<L228+xTaskToResume_0
-	sta	<L229+pxTCB_1
-	lda	<L228+xTaskToResume_0+2
-	sta	<L229+pxTCB_1+2
+	stz	<L217+xYieldRequired_1
+	lda	<L216+xTaskToResume_0
+	sta	<L217+pxTCB_1
+	lda	<L216+xTaskToResume_0+2
+	sta	<L217+pxTCB_1+2
 ;
 ;        configASSERT( xTaskToResume );
-	lda	<L228+xTaskToResume_0
-	ora	<L228+xTaskToResume_0+2
-	bne	L10404
-L10408:
-	bra	L10408
-L10404:
+	lda	<L216+xTaskToResume_0
+	ora	<L216+xTaskToResume_0+2
+	bne	L10379
+L10383:
+	bra	L10383
+L10379:
 ;
 ;        /* RTOS ports that support interrupt nesting have the concept of a
 ;         * maximum  system call (or maximum API call) interrupt priority.
@@ -6088,16 +5932,16 @@ L10404:
 ;        /* More details at: https://github.com/FreeRTOS/FreeRTOS-Kernel/blob/main/MISRA.md#dir-47 */
 ;        /* coverity[misra_c_2012_directive_4_7_violation] */
 ;        uxSavedInterruptStatus = taskENTER_CRITICAL_FROM_ISR();
-	stz	<L229+uxSavedInterruptStatus_1
+	stz	<L217+uxSavedInterruptStatus_1
 ;        {
 ;            if( prvTaskIsTaskSuspended( pxTCB ) != pdFALSE )
 ;            {
-	pei	<L229+pxTCB_1+2
-	pei	<L229+pxTCB_1
+	pei	<L217+pxTCB_1+2
+	pei	<L217+pxTCB_1
 	jsr	_~prvTaskIsTaskSuspended
 	tax
 	bne	*+5
-	brl	L10426
+	brl	L10401
 ;                traceTASK_RESUME_FROM_ISR( pxTCB );
 ;
 ;                /* Check the ready lists can be accessed. */
@@ -6105,7 +5949,7 @@ L10404:
 ;                {
 	lda	|_~uxSchedulerSuspended	; volatile
 	beq	*+5
-	brl	L10412
+	brl	L10387
 ;                    #if ( configNUMBER_OF_CORES == 1 )
 ;                    {
 ;                        /* Ready lists can be accessed so move the task from the
@@ -6118,11 +5962,11 @@ L10404:
 	sta	<R0+2
 	ldy	#$2c
 	lda	[<R0],Y
-	cmp	[<L229+pxTCB_1],Y
-	bcs	L10414
+	cmp	[<L217+pxTCB_1],Y
+	bcs	L10389
 ;                            xYieldRequired = pdTRUE;
 	lda	#$1
-	sta	<L229+xYieldRequired_1
+	sta	<L217+xYieldRequired_1
 ;
 ;                            /* Mark that a yield is pending in case the user is not
 ;                             * using the return value to initiate a context switch
@@ -6134,31 +5978,31 @@ L10404:
 ;                        {
 ;                            mtCOVERAGE_TEST_MARKER();
 ;                        }
-L10414:
+L10389:
 ;                    }
 ;                    #endif /* #if ( configNUMBER_OF_CORES == 1 ) */
 ;
 ;                    ( void ) uxListRemove( &( pxTCB->xStateListItem ) );
 	lda	#$4
 	clc
-	adc	<L229+pxTCB_1
+	adc	<L217+pxTCB_1
 	sta	<R0
 	lda	#$0
-	adc	<L229+pxTCB_1+2
+	adc	<L217+pxTCB_1+2
 	pha
 	pei	<R0
 	jsr	_~uxListRemove
 ;                    prvAddTaskToReadyList( pxTCB );
 	lda	|_~uxTopReadyPriority	; volatile
 	ldy	#$2c
-	cmp	[<L229+pxTCB_1],Y
-	bcs	L10424
-	lda	[<L229+pxTCB_1],Y
+	cmp	[<L217+pxTCB_1],Y
+	bcs	L10399
+	lda	[<L217+pxTCB_1],Y
 	sta	|_~uxTopReadyPriority	; volatile
-L10424:
+L10399:
 pxIndex_2	set	8
 	ldy	#$2c
-	lda	[<L229+pxTCB_1],Y
+	lda	[<L217+pxTCB_1],Y
 	ldx	#<$12
 	xref	_~~mul
 	jsr	_~~mul
@@ -6170,40 +6014,40 @@ pxIndex_2	set	8
 	adc	<R0
 	sta	<R2
 	lda	(<R2)
-	sta	<L229+pxIndex_2
+	sta	<L217+pxIndex_2
 	ldy	#$2
 	lda	(<R2),Y
-	sta	<L229+pxIndex_2+2
-	lda	<L229+pxIndex_2
+	sta	<L217+pxIndex_2+2
+	lda	<L217+pxIndex_2
 	ldy	#$8
-	sta	[<L229+pxTCB_1],Y
-	lda	<L229+pxIndex_2+2
+	sta	[<L217+pxTCB_1],Y
+	lda	<L217+pxIndex_2+2
 	iny
 	iny
-	sta	[<L229+pxTCB_1],Y
+	sta	[<L217+pxTCB_1],Y
 	dey
 	dey
-	lda	[<L229+pxIndex_2],Y
+	lda	[<L217+pxIndex_2],Y
 	ldy	#$c
-	sta	[<L229+pxTCB_1],Y
+	sta	[<L217+pxTCB_1],Y
 	dey
 	dey
-	lda	[<L229+pxIndex_2],Y
+	lda	[<L217+pxIndex_2],Y
 	ldy	#$e
-	sta	[<L229+pxTCB_1],Y
+	sta	[<L217+pxTCB_1],Y
 	ldy	#$8
-	lda	[<L229+pxIndex_2],Y
+	lda	[<L217+pxIndex_2],Y
 	sta	<R0
 	iny
 	iny
-	lda	[<L229+pxIndex_2],Y
+	lda	[<L217+pxIndex_2],Y
 	sta	<R0+2
 	lda	#$4
 	clc
-	adc	<L229+pxTCB_1
+	adc	<L217+pxTCB_1
 	sta	<R1
 	lda	#$0
-	adc	<L229+pxTCB_1+2
+	adc	<L217+pxTCB_1+2
 	sta	<R1+2
 	lda	<R1
 	ldy	#$4
@@ -6214,21 +6058,21 @@ pxIndex_2	set	8
 	sta	[<R0],Y
 	lda	#$4
 	clc
-	adc	<L229+pxTCB_1
+	adc	<L217+pxTCB_1
 	sta	<R0
 	lda	#$0
-	adc	<L229+pxTCB_1+2
+	adc	<L217+pxTCB_1+2
 	sta	<R0+2
 	lda	<R0
 	iny
 	iny
-	sta	[<L229+pxIndex_2],Y
+	sta	[<L217+pxIndex_2],Y
 	lda	<R0+2
 	iny
 	iny
-	sta	[<L229+pxIndex_2],Y
+	sta	[<L217+pxIndex_2],Y
 	ldy	#$2c
-	lda	[<L229+pxTCB_1],Y
+	lda	[<L217+pxTCB_1],Y
 	ldx	#<$12
 	xref	_~~mul
 	jsr	_~~mul
@@ -6240,19 +6084,19 @@ pxIndex_2	set	8
 	sta	<R0+2
 	lda	<R0
 	ldy	#$14
-	sta	[<L229+pxTCB_1],Y
+	sta	[<L217+pxTCB_1],Y
 	lda	<R0+2
 	iny
 	iny
-	sta	[<L229+pxTCB_1],Y
+	sta	[<L217+pxTCB_1],Y
 	ldy	#$2c
-	lda	[<L229+pxTCB_1],Y
+	lda	[<L217+pxTCB_1],Y
 	ldx	#<$12
 	xref	_~~mul
 	jsr	_~~mul
 	sta	<R0
 	ldy	#$2c
-	lda	[<L229+pxTCB_1],Y
+	lda	[<L217+pxTCB_1],Y
 	ldx	#<$12
 	xref	_~~mul
 	jsr	_~~mul
@@ -6263,25 +6107,25 @@ pxIndex_2	set	8
 	sta	|_~pxReadyTasksLists,X
 ;                }
 ;                else
-L10426:
+L10401:
 ;        }
 ;        taskEXIT_CRITICAL_FROM_ISR( uxSavedInterruptStatus );
 ;
 ;        traceRETURN_xTaskResumeFromISR( xYieldRequired );
 ;
 ;        return xYieldRequired;
-	lda	<L229+xYieldRequired_1
+	lda	<L217+xYieldRequired_1
 	tay
-	lda	<L228+1
-	sta	<L228+1+4
+	lda	<L216+1
+	sta	<L216+1+4
 	pld
 	tsc
 	clc
-	adc	#L228+4
+	adc	#L216+4
 	tcs
 	tya
 	rts
-L10412:
+L10387:
 ;                {
 ;                    /* The delayed or ready lists cannot be accessed so the task
 ;                     * is held in the pending ready list until the scheduler is
@@ -6289,10 +6133,10 @@ L10412:
 ;                    vListInsertEnd( &( xPendingReadyList ), &( pxTCB->xEventListItem ) );
 	lda	#$18
 	clc
-	adc	<L229+pxTCB_1
+	adc	<L217+pxTCB_1
 	sta	<R0
 	lda	#$0
-	adc	<L229+pxTCB_1+2
+	adc	<L217+pxTCB_1+2
 	pha
 	pei	<R0
 	lda	#<_~xPendingReadyList
@@ -6316,13 +6160,13 @@ L10412:
 ;                #endif /* #if ( ( configNUMBER_OF_CORES > 1 ) && ( configUSE_PREEMPTION == 1 ) ) */
 ;            }
 ;            else
-	bra	L10426
+	bra	L10401
 ;            {
 ;                mtCOVERAGE_TEST_MARKER();
 ;            }
 ;    }
-L228	equ	24
-L229	equ	13
+L216	equ	24
+L217	equ	13
 	ends
 	efunc
 ;
@@ -6338,7 +6182,7 @@ _~prvCreateIdleTasks:
 	longi	on
 	tsc
 	sec
-	sbc	#L236
+	sbc	#L224
 	tcs
 	phd
 	tcd
@@ -6357,14 +6201,14 @@ xReturn_1	set	0
 xCoreID_1	set	2
 cIdleName_1	set	4
 pxIdleTaskFunction_1	set	20
-xIdleTaskNameIndex_1	set	22
+xIdleTaskNameIndex_1	set	24
 	lda	#$1
-	sta	<L237+xReturn_1
-	pea	#^L238
-	pea	#<L238
+	sta	<L225+xReturn_1
+	pea	#^L226
+	pea	#<L226
 	clc
 	tdc
-	adc	#<L237+cIdleName_1
+	adc	#<L225+cIdleName_1
 	sta	<R0
 	lda	#$0
 	pha
@@ -6372,9 +6216,10 @@ xIdleTaskNameIndex_1	set	22
 	lda	#$10
 	xref	_~~fmov
 	jsr	_~~fmov
-	stz	<L237+pxIdleTaskFunction_1
-	stz	<L237+xIdleTaskNameIndex_1
-L10429:
+	stz	<L225+pxIdleTaskFunction_1
+	stz	<L225+pxIdleTaskFunction_1+2
+	stz	<L225+xIdleTaskNameIndex_1
+L10404:
 ;    {
 ;        /* MISRA Ref 18.1.1 [Configuration dependent bounds checking] */
 ;        /* More details at: https://github.com/FreeRTOS/FreeRTOS-Kernel/blob/main/MISRA.md#rule-181. */
@@ -6386,18 +6231,18 @@ L10429:
 	sta	<R0+2
 	sep	#$20
 	longa	off
-	ldy	<L237+xIdleTaskNameIndex_1
+	ldy	<L225+xIdleTaskNameIndex_1
 	lda	[<R0],Y
-	ldx	<L237+xIdleTaskNameIndex_1
-	sta	<L237+cIdleName_1,X
+	ldx	<L225+xIdleTaskNameIndex_1
+	sta	<L225+cIdleName_1,X
 	rep	#$20
 	longa	on
 ;
 ;        if( cIdleName[ xIdleTaskNameIndex ] == ( char ) 0x00 )
 ;        {
-	lda	<L237+cIdleName_1,X
+	lda	<L225+cIdleName_1,X
 	and	#$ff
-	beq	L10428
+	beq	L10403
 ;            break;
 ;        }
 ;        else
@@ -6405,32 +6250,35 @@ L10429:
 ;            mtCOVERAGE_TEST_MARKER();
 ;        }
 ;    }
-	inc	<L237+xIdleTaskNameIndex_1
-	lda	<L237+xIdleTaskNameIndex_1
+	inc	<L225+xIdleTaskNameIndex_1
+	lda	<L225+xIdleTaskNameIndex_1
 	cmp	#<$f
-	bcc	L10429
-L10428:
+	bcc	L10404
+L10403:
 ;
 ;    /* Ensure null termination. */
 ;    cIdleName[ xIdleTaskNameIndex ] = '\0';
 	sep	#$20
 	longa	off
 	lda	#$0
-	ldx	<L237+xIdleTaskNameIndex_1
-	sta	<L237+cIdleName_1,X
+	ldx	<L225+xIdleTaskNameIndex_1
+	sta	<L225+cIdleName_1,X
 	rep	#$20
 	longa	on
 ;
 ;    /* Add each idle task at the lowest priority. */
 ;    for( xCoreID = ( BaseType_t ) 0; xCoreID < ( BaseType_t ) configNUMBER_OF_CORES; xCoreID++ )
-	stz	<L237+xCoreID_1
-L10433:
+	stz	<L225+xCoreID_1
+L10408:
 ;    {
 ;        #if ( configNUMBER_OF_CORES == 1 )
 ;        {
 ;            pxIdleTaskFunction = &prvIdleTask;
 	lda	#<_~prvIdleTask
-	sta	<L237+pxIdleTaskFunction_1
+	sta	<L225+pxIdleTaskFunction_1
+	xref	_BEG_DATA
+	lda	#_BEG_DATA>>16
+	sta	<L225+pxIdleTaskFunction_1+2
 ;        }
 ;        #else /* #if (  configNUMBER_OF_CORES == 1 ) */
 ;        {
@@ -6474,30 +6322,7 @@ L10433:
 ;             * address of the RAM then create the idle task. */
 ;            #if ( configNUMBER_OF_CORES == 1 )
 ;            {
-pxIdleTaskTCBBuffer_2	set	24
-pxIdleTaskStackBuffer_2	set	28
-uxIdleTaskStackSize_2	set	32
-	stz	<L237+pxIdleTaskTCBBuffer_2
-	stz	<L237+pxIdleTaskTCBBuffer_2+2
-	stz	<L237+pxIdleTaskStackBuffer_2
-	stz	<L237+pxIdleTaskStackBuffer_2+2
 ;                vApplicationGetIdleTaskMemory( &pxIdleTaskTCBBuffer, &pxIdleTaskStackBuffer, &uxIdleTaskStackSize );
-	pea	#0
-	clc
-	tdc
-	adc	#<L237+uxIdleTaskStackSize_2
-	pha
-	pea	#0
-	clc
-	tdc
-	adc	#<L237+pxIdleTaskStackBuffer_2
-	pha
-	pea	#0
-	clc
-	tdc
-	adc	#<L237+pxIdleTaskTCBBuffer_2
-	pha
-	jsr	_~vApplicationGetIdleTaskMemory
 ;            }
 ;            #else
 ;            {
@@ -6518,56 +6343,15 @@ uxIdleTaskStackSize_2	set	32
 ;                                                             portPRIVILEGE_BIT, /* In effect ( tskIDLE_PRIORITY | portPRIVILEGE_BIT ), but tskIDLE_PRIORITY is zero. */
 ;                                                             pxIdleTaskStackBuffer,
 ;                                                             pxIdleTaskTCBBuffer );
-	lda	<L237+xCoreID_1
-	asl	A
-	asl	A
-	clc
-	adc	#<_~xIdleTaskHandles
-	sta	<R1
-	pei	<L237+pxIdleTaskTCBBuffer_2+2
-	pei	<L237+pxIdleTaskTCBBuffer_2
-	pei	<L237+pxIdleTaskStackBuffer_2+2
-	pei	<L237+pxIdleTaskStackBuffer_2
-	pea	#<$0
-	pea	#^$0
-	pea	#<$0
-	pei	<L237+uxIdleTaskStackSize_2
-	pea	#0
-	clc
-	tdc
-	adc	#<L237+cIdleName_1
-	pha
-	pei	<L237+pxIdleTaskFunction_1
-	jsr	_~xTaskCreateStatic
-	stx	<R0+2
-	sta	(<R1)
-	lda	<R0+2
-	ldy	#$2
-	sta	(<R1),Y
 ;
 ;            if( xIdleTaskHandles[ xCoreID ] != NULL )
 ;            {
-	lda	<L237+xCoreID_1
-	asl	A
-	asl	A
-	clc
-	adc	#<_~xIdleTaskHandles
-	sta	<R1
-	lda	(<R1)
-	ora	(<R1),Y
-	beq	L10434
 ;                xReturn = pdPASS;
-	lda	#$1
-	sta	<L237+xReturn_1
 ;            }
 ;            else
-	bra	L10435
-L10434:
 ;            {
 ;                xReturn = pdFAIL;
-	stz	<L237+xReturn_1
 ;            }
-L10435:
 ;        }
 ;        #else /* if ( configSUPPORT_STATIC_ALLOCATION == 1 ) */
 ;        {
@@ -6578,15 +6362,37 @@ L10435:
 ;                                   ( void * ) NULL,
 ;                                   portPRIVILEGE_BIT, /* In effect ( tskIDLE_PRIORITY | portPRIVILEGE_BIT ), but tskIDLE_PRIORITY is zero. */
 ;                                   &xIdleTaskHandles[ xCoreID ] );
+	lda	<L225+xCoreID_1
+	asl	A
+	asl	A
+	clc
+	adc	#<_~xIdleTaskHandles
+	sta	<R0
+	xref	_BEG_DATA
+	lda	#_BEG_DATA>>16
+	pha
+	pei	<R0
+	pea	#<$0
+	pea	#^$0
+	pea	#<$0
+	pea	#<$80
+	pea	#0
+	clc
+	tdc
+	adc	#<L225+cIdleName_1
+	pha
+	pei	<L225+pxIdleTaskFunction_1+2
+	pei	<L225+pxIdleTaskFunction_1
+	jsr	_~xTaskCreate
+	sta	<L225+xReturn_1
 ;        }
 ;        #endif /* configSUPPORT_STATIC_ALLOCATION */
 ;
 ;        /* Break the loop if any of the idle task is failed to be created. */
 ;        if( xReturn != pdPASS )
 ;        {
-	lda	<L237+xReturn_1
 	cmp	#<$1
-	bne	L10432
+	bne	L10407
 ;            break;
 ;        }
 ;        else
@@ -6609,32 +6415,30 @@ L10435:
 ;            #endif /* if ( configNUMBER_OF_CORES == 1 ) */
 ;        }
 ;    }
-	inc	<L237+xCoreID_1
-	lda	<L237+xCoreID_1
-	bpl	*+5
-	brl	L10433
+	inc	<L225+xCoreID_1
+	lda	<L225+xCoreID_1
+	bmi	L10408
 	dea
-	bpl	*+5
-	brl	L10433
-L10432:
+	bmi	L10408
+L10407:
 ;
 ;    return xReturn;
-	lda	<L237+xReturn_1
+	lda	<L225+xReturn_1
 	tay
 	pld
 	tsc
 	clc
-	adc	#L236
+	adc	#L224
 	tcs
 	tya
 	rts
 ;}
-L236	equ	42
-L237	equ	9
+L224	equ	38
+L225	equ	13
 	ends
 	efunc
 	data
-L238:
+L226:
 	db	$0
 	ds	15
 	ends
@@ -6655,7 +6459,7 @@ _~vTaskStartScheduler:
 	longi	on
 	tsc
 	sec
-	sbc	#L247
+	sbc	#L234
 	tcs
 	phd
 	tcd
@@ -6674,31 +6478,25 @@ xReturn_1	set	0
 ;
 ;    xReturn = prvCreateIdleTasks();
 	jsr	_~prvCreateIdleTasks
-	sta	<L248+xReturn_1
+	sta	<L235+xReturn_1
 ;
 ;    #if ( configUSE_TIMERS == 1 )
 ;    {
 ;        if( xReturn == pdPASS )
 ;        {
-	cmp	#<$1
-	bne	L10438
 ;            xReturn = xTimerCreateTimerTask();
-	jsr	_~xTimerCreateTimerTask
-	sta	<L248+xReturn_1
 ;        }
 ;        else
 ;        {
 ;            mtCOVERAGE_TEST_MARKER();
 ;        }
-L10438:
 ;    }
 ;    #endif /* configUSE_TIMERS */
 ;
 ;    if( xReturn == pdPASS )
 ;    {
-	lda	<L248+xReturn_1
 	cmp	#<$1
-	bne	L10439
+	bne	L10410
 ;        /* freertos_tasks_c_additions_init() should only be called if the user
 ;         * definable macro FREERTOS_TASKS_C_ADDITIONS_INIT() is defined, as that is
 ;         * the only macro called by the function. */
@@ -6762,24 +6560,24 @@ L10438:
 ;         * nothing to return to. */
 ;    }
 ;    else
-L252:
+L238:
 	pld
 	tsc
 	clc
-	adc	#L247
+	adc	#L234
 	tcs
 	rts
-L10439:
+L10410:
 ;    {
 ;        /* This line will only be reached if the kernel could not be started,
 ;         * because there was not enough FreeRTOS heap to create the idle task
 ;         * or the timer task. */
 ;        configASSERT( xReturn != errCOULD_NOT_ALLOCATE_REQUIRED_MEMORY );
-	lda	<L248+xReturn_1
+	lda	<L235+xReturn_1
 	cmp	#<$ffffffff
-	bne	L252
-L10448:
-	bra	L10448
+	bne	L238
+L10419:
+	bra	L10419
 ;    }
 ;
 ;    /* Prevent compiler warnings if INCLUDE_xTaskGetIdleTaskHandle is set to 0,
@@ -6792,8 +6590,8 @@ L10448:
 ;
 ;    traceRETURN_vTaskStartScheduler();
 ;}
-L247	equ	6
-L248	equ	5
+L234	equ	6
+L235	equ	5
 	ends
 	efunc
 ;/*-----------------------------------------------------------*/
@@ -6808,7 +6606,7 @@ _~vTaskEndScheduler:
 	longi	on
 	tsc
 	sec
-	sbc	#L253
+	sbc	#L239
 	tcs
 	phd
 	tcd
@@ -6820,25 +6618,19 @@ _~vTaskEndScheduler:
 ;
 ;        #if ( configUSE_TIMERS == 1 )
 ;        {
-xCoreID_2	set	0
 ;            /* Delete the timer task created by the kernel. */
 ;            vTaskDelete( xTimerGetTimerDaemonTaskHandle() );
-	jsr	_~xTimerGetTimerDaemonTaskHandle
-	sta	<R0
-	stx	<R0+2
-	phx
-	pha
-	jsr	_~vTaskDelete
 ;        }
 ;        #endif /* #if ( configUSE_TIMERS == 1 ) */
 ;
 ;        /* Delete Idle tasks created by the kernel.*/
 ;        for( xCoreID = 0; xCoreID < ( BaseType_t ) configNUMBER_OF_CORES; xCoreID++ )
-	stz	<L254+xCoreID_2
-L10453:
+xCoreID_2	set	0
+	stz	<L240+xCoreID_2
+L10424:
 ;        {
 ;            vTaskDelete( xIdleTaskHandles[ xCoreID ] );
-	lda	<L254+xCoreID_2
+	lda	<L240+xCoreID_2
 	asl	A
 	asl	A
 	clc
@@ -6851,11 +6643,11 @@ L10453:
 	pha
 	jsr	_~vTaskDelete
 ;        }
-	inc	<L254+xCoreID_2
-	lda	<L254+xCoreID_2
-	bmi	L10453
+	inc	<L240+xCoreID_2
+	lda	<L240+xCoreID_2
+	bmi	L10424
 	dea
-	bmi	L10453
+	bmi	L10424
 ;
 ;        /* Idle task is responsible for reclaiming the resources of the tasks in
 ;         * xTasksWaitingTermination list. Since the idle task is now deleted and
@@ -6883,11 +6675,11 @@ L10453:
 	pld
 	tsc
 	clc
-	adc	#L253
+	adc	#L239
 	tcs
 	rts
-L253	equ	10
-L254	equ	9
+L239	equ	10
+L240	equ	9
 	ends
 	efunc
 ;/*----------------------------------------------------------*/
@@ -7007,8 +6799,8 @@ _~vTaskSuspendAll:
 ;    traceRETURN_vTaskSuspendAll();
 ;}
 	rts
-L258	equ	0
-L259	equ	1
+L244	equ	0
+L245	equ	1
 	ends
 	efunc
 ;
@@ -7088,7 +6880,7 @@ _~xTaskResumeAll:
 	longi	on
 	tsc
 	sec
-	sbc	#L261
+	sbc	#L247
 	tcs
 	phd
 	tcd
@@ -7098,9 +6890,9 @@ _~xTaskResumeAll:
 ;    traceENTER_xTaskResumeAll();
 pxTCB_1	set	0
 xAlreadyYielded_1	set	4
-	stz	<L262+pxTCB_1
-	stz	<L262+pxTCB_1+2
-	stz	<L262+xAlreadyYielded_1
+	stz	<L248+pxTCB_1
+	stz	<L248+pxTCB_1+2
+	stz	<L248+xAlreadyYielded_1
 ;
 ;    #if ( configNUMBER_OF_CORES > 1 )
 ;        if( xSchedulerRunning != pdFALSE )
@@ -7119,12 +6911,12 @@ xAlreadyYielded_1	set	4
 ;             * previous call to vTaskSuspendAll(). */
 ;            configASSERT( uxSchedulerSuspended != 0U );
 xCoreID_2	set	6
-	stz	<L262+xCoreID_2
+	stz	<L248+xCoreID_2
 	lda	|_~uxSchedulerSuspended	; volatile
-	bne	L10460
-L10464:
-	bra	L10464
-L10460:
+	bne	L10431
+L10435:
+	bra	L10435
+L10431:
 ;
 ;            uxSchedulerSuspended = ( UBaseType_t ) ( uxSchedulerSuspended - 1U );
 	dec	|_~uxSchedulerSuspended	; volatile
@@ -7134,20 +6926,20 @@ L10460:
 ;            {
 	lda	|_~uxSchedulerSuspended	; volatile
 	beq	*+5
-	brl	L10506
+	brl	L10477
 ;                if( uxCurrentNumberOfTasks > ( UBaseType_t ) 0U )
 ;                {
 	lda	#$0
 	cmp	|_~uxCurrentNumberOfTasks	; volatile
 	bcs	*+5
-	brl	L10469
+	brl	L10440
 ;                    /* Move any readied tasks from the pending list into the
 ;                     * appropriate ready list. */
 ;                    while( listLIST_IS_EMPTY( &xPendingReadyList ) == pdFALSE )
-	brl	L10506
+	brl	L10477
 L20023:
 	lda	#$1
-	brl	L268
+	brl	L254
 L20021:
 ;                    {
 ;                        /* MISRA Ref 11.5.3 [Void pointer assignment] */
@@ -7160,176 +6952,176 @@ L20021:
 	sta	<R0+2
 	ldy	#$c
 	lda	[<R0],Y
-	sta	<L262+pxTCB_1
+	sta	<L248+pxTCB_1
 	iny
 	iny
 	lda	[<R0],Y
-	sta	<L262+pxTCB_1+2
+	sta	<L248+pxTCB_1+2
 ;                        listREMOVE_ITEM( &( pxTCB->xEventListItem ) );
 pxList_3	set	8
 	ldy	#$28
-	lda	[<L262+pxTCB_1],Y
-	sta	<L262+pxList_3
+	lda	[<L248+pxTCB_1],Y
+	sta	<L248+pxList_3
 	iny
 	iny
-	lda	[<L262+pxTCB_1],Y
-	sta	<L262+pxList_3+2
+	lda	[<L248+pxTCB_1],Y
+	sta	<L248+pxList_3+2
 	ldy	#$1c
-	lda	[<L262+pxTCB_1],Y
+	lda	[<L248+pxTCB_1],Y
 	sta	<R0
 	iny
 	iny
-	lda	[<L262+pxTCB_1],Y
+	lda	[<L248+pxTCB_1],Y
 	sta	<R0+2
 	iny
 	iny
-	lda	[<L262+pxTCB_1],Y
+	lda	[<L248+pxTCB_1],Y
 	ldy	#$8
 	sta	[<R0],Y
 	ldy	#$22
-	lda	[<L262+pxTCB_1],Y
+	lda	[<L248+pxTCB_1],Y
 	ldy	#$a
 	sta	[<R0],Y
 	ldy	#$20
-	lda	[<L262+pxTCB_1],Y
+	lda	[<L248+pxTCB_1],Y
 	sta	<R0
 	iny
 	iny
-	lda	[<L262+pxTCB_1],Y
+	lda	[<L248+pxTCB_1],Y
 	sta	<R0+2
 	ldy	#$1c
-	lda	[<L262+pxTCB_1],Y
+	lda	[<L248+pxTCB_1],Y
 	ldy	#$4
 	sta	[<R0],Y
 	ldy	#$1e
-	lda	[<L262+pxTCB_1],Y
+	lda	[<L248+pxTCB_1],Y
 	ldy	#$6
 	sta	[<R0],Y
 	lda	#$18
 	clc
-	adc	<L262+pxTCB_1
+	adc	<L248+pxTCB_1
 	sta	<R0
 	lda	#$0
-	adc	<L262+pxTCB_1+2
+	adc	<L248+pxTCB_1+2
 	sta	<R0+2
 	ldy	#$2
-	lda	[<L262+pxList_3],Y
+	lda	[<L248+pxList_3],Y
 	cmp	<R0
-	bne	L270
+	bne	L256
 	iny
 	iny
-	lda	[<L262+pxList_3],Y
+	lda	[<L248+pxList_3],Y
 	cmp	<R0+2
-L270:
-	bne	L10474
+L256:
+	bne	L10445
 	ldy	#$20
-	lda	[<L262+pxTCB_1],Y
+	lda	[<L248+pxTCB_1],Y
 	ldy	#$2
-	sta	[<L262+pxList_3],Y
+	sta	[<L248+pxList_3],Y
 	ldy	#$22
-	lda	[<L262+pxTCB_1],Y
+	lda	[<L248+pxTCB_1],Y
 	ldy	#$4
-	sta	[<L262+pxList_3],Y
-L10474:
+	sta	[<L248+pxList_3],Y
+L10445:
 	lda	#$0
 	ldy	#$28
-	sta	[<L262+pxTCB_1],Y
+	sta	[<L248+pxTCB_1],Y
 	iny
 	iny
-	sta	[<L262+pxTCB_1],Y
+	sta	[<L248+pxTCB_1],Y
 	lda	#$ffff
 	clc
-	adc	[<L262+pxList_3]
-	sta	[<L262+pxList_3]
+	adc	[<L248+pxList_3]
+	sta	[<L248+pxList_3]
 ;                        portMEMORY_BARRIER();
 ;                        listREMOVE_ITEM( &( pxTCB->xStateListItem ) );
 pxList_4	set	8
 	ldy	#$14
-	lda	[<L262+pxTCB_1],Y
-	sta	<L262+pxList_4
+	lda	[<L248+pxTCB_1],Y
+	sta	<L248+pxList_4
 	iny
 	iny
-	lda	[<L262+pxTCB_1],Y
-	sta	<L262+pxList_4+2
+	lda	[<L248+pxTCB_1],Y
+	sta	<L248+pxList_4+2
 	ldy	#$8
-	lda	[<L262+pxTCB_1],Y
+	lda	[<L248+pxTCB_1],Y
 	sta	<R0
 	iny
 	iny
-	lda	[<L262+pxTCB_1],Y
+	lda	[<L248+pxTCB_1],Y
 	sta	<R0+2
 	iny
 	iny
-	lda	[<L262+pxTCB_1],Y
+	lda	[<L248+pxTCB_1],Y
 	ldy	#$8
 	sta	[<R0],Y
 	ldy	#$e
-	lda	[<L262+pxTCB_1],Y
+	lda	[<L248+pxTCB_1],Y
 	ldy	#$a
 	sta	[<R0],Y
 	iny
 	iny
-	lda	[<L262+pxTCB_1],Y
+	lda	[<L248+pxTCB_1],Y
 	sta	<R0
 	iny
 	iny
-	lda	[<L262+pxTCB_1],Y
+	lda	[<L248+pxTCB_1],Y
 	sta	<R0+2
 	ldy	#$8
-	lda	[<L262+pxTCB_1],Y
+	lda	[<L248+pxTCB_1],Y
 	ldy	#$4
 	sta	[<R0],Y
 	ldy	#$a
-	lda	[<L262+pxTCB_1],Y
+	lda	[<L248+pxTCB_1],Y
 	ldy	#$6
 	sta	[<R0],Y
 	lda	#$4
 	clc
-	adc	<L262+pxTCB_1
+	adc	<L248+pxTCB_1
 	sta	<R0
 	lda	#$0
-	adc	<L262+pxTCB_1+2
+	adc	<L248+pxTCB_1+2
 	sta	<R0+2
 	ldy	#$2
-	lda	[<L262+pxList_4],Y
+	lda	[<L248+pxList_4],Y
 	cmp	<R0
-	bne	L272
+	bne	L258
 	iny
 	iny
-	lda	[<L262+pxList_4],Y
+	lda	[<L248+pxList_4],Y
 	cmp	<R0+2
-L272:
-	bne	L10478
+L258:
+	bne	L10449
 	ldy	#$c
-	lda	[<L262+pxTCB_1],Y
+	lda	[<L248+pxTCB_1],Y
 	ldy	#$2
-	sta	[<L262+pxList_4],Y
+	sta	[<L248+pxList_4],Y
 	ldy	#$e
-	lda	[<L262+pxTCB_1],Y
+	lda	[<L248+pxTCB_1],Y
 	ldy	#$4
-	sta	[<L262+pxList_4],Y
-L10478:
+	sta	[<L248+pxList_4],Y
+L10449:
 	lda	#$0
 	ldy	#$14
-	sta	[<L262+pxTCB_1],Y
+	sta	[<L248+pxTCB_1],Y
 	iny
 	iny
-	sta	[<L262+pxTCB_1],Y
+	sta	[<L248+pxTCB_1],Y
 	lda	#$ffff
 	clc
-	adc	[<L262+pxList_4]
-	sta	[<L262+pxList_4]
+	adc	[<L248+pxList_4]
+	sta	[<L248+pxList_4]
 ;                        prvAddTaskToReadyList( pxTCB );
 	lda	|_~uxTopReadyPriority	; volatile
 	ldy	#$2c
-	cmp	[<L262+pxTCB_1],Y
-	bcs	L10488
-	lda	[<L262+pxTCB_1],Y
+	cmp	[<L248+pxTCB_1],Y
+	bcs	L10459
+	lda	[<L248+pxTCB_1],Y
 	sta	|_~uxTopReadyPriority	; volatile
-L10488:
+L10459:
 pxIndex_5	set	8
 	ldy	#$2c
-	lda	[<L262+pxTCB_1],Y
+	lda	[<L248+pxTCB_1],Y
 	ldx	#<$12
 	xref	_~~mul
 	jsr	_~~mul
@@ -7341,40 +7133,40 @@ pxIndex_5	set	8
 	adc	<R0
 	sta	<R2
 	lda	(<R2)
-	sta	<L262+pxIndex_5
+	sta	<L248+pxIndex_5
 	ldy	#$2
 	lda	(<R2),Y
-	sta	<L262+pxIndex_5+2
-	lda	<L262+pxIndex_5
+	sta	<L248+pxIndex_5+2
+	lda	<L248+pxIndex_5
 	ldy	#$8
-	sta	[<L262+pxTCB_1],Y
-	lda	<L262+pxIndex_5+2
+	sta	[<L248+pxTCB_1],Y
+	lda	<L248+pxIndex_5+2
 	iny
 	iny
-	sta	[<L262+pxTCB_1],Y
+	sta	[<L248+pxTCB_1],Y
 	dey
 	dey
-	lda	[<L262+pxIndex_5],Y
+	lda	[<L248+pxIndex_5],Y
 	ldy	#$c
-	sta	[<L262+pxTCB_1],Y
+	sta	[<L248+pxTCB_1],Y
 	dey
 	dey
-	lda	[<L262+pxIndex_5],Y
+	lda	[<L248+pxIndex_5],Y
 	ldy	#$e
-	sta	[<L262+pxTCB_1],Y
+	sta	[<L248+pxTCB_1],Y
 	ldy	#$8
-	lda	[<L262+pxIndex_5],Y
+	lda	[<L248+pxIndex_5],Y
 	sta	<R0
 	iny
 	iny
-	lda	[<L262+pxIndex_5],Y
+	lda	[<L248+pxIndex_5],Y
 	sta	<R0+2
 	lda	#$4
 	clc
-	adc	<L262+pxTCB_1
+	adc	<L248+pxTCB_1
 	sta	<R1
 	lda	#$0
-	adc	<L262+pxTCB_1+2
+	adc	<L248+pxTCB_1+2
 	sta	<R1+2
 	lda	<R1
 	ldy	#$4
@@ -7385,21 +7177,21 @@ pxIndex_5	set	8
 	sta	[<R0],Y
 	lda	#$4
 	clc
-	adc	<L262+pxTCB_1
+	adc	<L248+pxTCB_1
 	sta	<R0
 	lda	#$0
-	adc	<L262+pxTCB_1+2
+	adc	<L248+pxTCB_1+2
 	sta	<R0+2
 	lda	<R0
 	iny
 	iny
-	sta	[<L262+pxIndex_5],Y
+	sta	[<L248+pxIndex_5],Y
 	lda	<R0+2
 	iny
 	iny
-	sta	[<L262+pxIndex_5],Y
+	sta	[<L248+pxIndex_5],Y
 	ldy	#$2c
-	lda	[<L262+pxTCB_1],Y
+	lda	[<L248+pxTCB_1],Y
 	ldx	#<$12
 	xref	_~~mul
 	jsr	_~~mul
@@ -7411,19 +7203,19 @@ pxIndex_5	set	8
 	sta	<R0+2
 	lda	<R0
 	ldy	#$14
-	sta	[<L262+pxTCB_1],Y
+	sta	[<L248+pxTCB_1],Y
 	lda	<R0+2
 	iny
 	iny
-	sta	[<L262+pxTCB_1],Y
+	sta	[<L248+pxTCB_1],Y
 	ldy	#$2c
-	lda	[<L262+pxTCB_1],Y
+	lda	[<L248+pxTCB_1],Y
 	ldx	#<$12
 	xref	_~~mul
 	jsr	_~~mul
 	sta	<R0
 	ldy	#$2c
-	lda	[<L262+pxTCB_1],Y
+	lda	[<L248+pxTCB_1],Y
 	ldx	#<$12
 	xref	_~~mul
 	jsr	_~~mul
@@ -7445,8 +7237,8 @@ pxIndex_5	set	8
 	sta	<R0+2
 	ldy	#$2c
 	lda	[<R0],Y
-	cmp	[<L262+pxTCB_1],Y
-	bcs	L10469
+	cmp	[<L248+pxTCB_1],Y
+	bcs	L10440
 ;                                xYieldPendings[ xCoreID ] = pdTRUE;
 	lda	#$1
 	sta	|_~xYieldPendings	; volatile
@@ -7461,7 +7253,7 @@ pxIndex_5	set	8
 ;                        }
 ;                        #endif /* #if ( configNUMBER_OF_CORES == 1 ) */
 ;                    }
-L10469:
+L10440:
 	lda	|_~xPendingReadyList
 	bne	*+5
 	brl	L20023
@@ -7469,16 +7261,16 @@ L10469:
 ;                                mtCOVERAGE_TEST_MARKER();
 ;                            }
 	lda	#$0
-L268:
+L254:
 	tax
 	bne	*+5
 	brl	L20021
 ;
 ;                    if( pxTCB != NULL )
 ;                    {
-	lda	<L262+pxTCB_1
-	ora	<L262+pxTCB_1+2
-	beq	L10491
+	lda	<L248+pxTCB_1
+	ora	<L248+pxTCB_1+2
+	beq	L10462
 ;                        /* A task was unblocked while the scheduler was suspended,
 ;                         * which may have prevented the next unblock time from being
 ;                         * re-calculated, in which case re-calculate it now.  Mainly
@@ -7499,28 +7291,28 @@ L268:
 ;                     * protects itself within a critical section. Suspending the scheduler
 ;                     * from any core causes xTaskIncrementTick to increment uxPendedCounts. */
 ;                    {
-L10491:
+L10462:
 ;                        TickType_t xPendedCounts = xPendedTicks; /* Non-volatile copy. */
 ;
 ;                        if( xPendedCounts > ( TickType_t ) 0U )
 xPendedCounts_6	set	8
 	lda	|_~xPendedTicks	; volatile
-	sta	<L262+xPendedCounts_6
+	sta	<L248+xPendedCounts_6
 	lda	|_~xPendedTicks+2	; volatile
-	sta	<L262+xPendedCounts_6+2
+	sta	<L248+xPendedCounts_6+2
 ;                        {
 	lda	#$0
-	cmp	<L262+xPendedCounts_6
-	sbc	<L262+xPendedCounts_6+2
-	bcs	L10498
+	cmp	<L248+xPendedCounts_6
+	sbc	<L248+xPendedCounts_6+2
+	bcs	L10469
 ;                            do
-L10495:
+L10466:
 ;                            {
 ;                                if( xTaskIncrementTick() != pdFALSE )
 ;                                {
 	jsr	_~xTaskIncrementTick
 	tax
-	beq	L10497
+	beq	L10468
 ;                                    /* Other cores are interrupted from
 ;                                     * within xTaskIncrementTick(). */
 ;                                    xYieldPendings[ xCoreID ] = pdTRUE;
@@ -7531,19 +7323,19 @@ L10495:
 ;                                {
 ;                                    mtCOVERAGE_TEST_MARKER();
 ;                                }
-L10497:
+L10468:
 ;
 ;                                --xPendedCounts;
-	lda	<L262+xPendedCounts_6
-	bne	L279
-	dec	<L262+xPendedCounts_6+2
-L279:
-	dec	<L262+xPendedCounts_6
+	lda	<L248+xPendedCounts_6
+	bne	L265
+	dec	<L248+xPendedCounts_6+2
+L265:
+	dec	<L248+xPendedCounts_6
 ;                            } while( xPendedCounts > ( TickType_t ) 0U );
 	lda	#$0
-	cmp	<L262+xPendedCounts_6
-	sbc	<L262+xPendedCounts_6+2
-	bcc	L10495
+	cmp	<L248+xPendedCounts_6
+	sbc	<L248+xPendedCounts_6+2
+	bcc	L10466
 ;
 ;                            xPendedTicks = 0;
 	stz	|_~xPendedTicks	; volatile
@@ -7553,18 +7345,18 @@ L279:
 ;                        {
 ;                            mtCOVERAGE_TEST_MARKER();
 ;                        }
-L10498:
+L10469:
 ;                    }
 ;
 ;                    if( xYieldPendings[ xCoreID ] != pdFALSE )
 ;                    {
 	lda	|_~xYieldPendings	; volatile
-	beq	L10506
+	beq	L10477
 ;                        #if ( configUSE_PREEMPTION != 0 )
 ;                        {
 ;                            xAlreadyYielded = pdTRUE;
 	lda	#$1
-	sta	<L262+xAlreadyYielded_1
+	sta	<L248+xAlreadyYielded_1
 ;                        }
 ;                        #endif /* #if ( configUSE_PREEMPTION != 0 ) */
 ;
@@ -7576,18 +7368,18 @@ L10498:
 ;                        #endif /* #if ( configNUMBER_OF_CORES == 1 ) */
 ;                    }
 ;                    else
-L10506:
+L10477:
 ;    }
 ;
 ;    traceRETURN_xTaskResumeAll( xAlreadyYielded );
 ;
 ;    return xAlreadyYielded;
-	lda	<L262+xAlreadyYielded_1
+	lda	<L248+xAlreadyYielded_1
 	tay
 	pld
 	tsc
 	clc
-	adc	#L261
+	adc	#L247
 	tcs
 	tya
 	rts
@@ -7603,8 +7395,8 @@ L10506:
 ;        }
 ;        taskEXIT_CRITICAL();
 ;}
-L261	equ	24
-L262	equ	13
+L247	equ	24
+L248	equ	13
 	ends
 	efunc
 ;/*-----------------------------------------------------------*/
@@ -7619,7 +7411,7 @@ _~xTaskGetTickCount:
 	longi	on
 	tsc
 	sec
-	sbc	#L283
+	sbc	#L269
 	tcs
 	phd
 	tcd
@@ -7633,28 +7425,28 @@ xTicks_1	set	0
 ;    {
 ;        xTicks = xTickCount;
 	lda	|_~xTickCount	; volatile
-	sta	<L284+xTicks_1
+	sta	<L270+xTicks_1
 	lda	|_~xTickCount+2	; volatile
-	sta	<L284+xTicks_1+2
+	sta	<L270+xTicks_1+2
 ;    }
 ;    portTICK_TYPE_EXIT_CRITICAL();
 ;
 ;    traceRETURN_xTaskGetTickCount( xTicks );
 ;
 ;    return xTicks;
-	ldx	<L284+xTicks_1+2
-	lda	<L284+xTicks_1
+	ldx	<L270+xTicks_1+2
+	lda	<L270+xTicks_1
 	tay
 	pld
 	tsc
 	clc
-	adc	#L283
+	adc	#L269
 	tcs
 	tya
 	rts
 ;}
-L283	equ	4
-L284	equ	1
+L269	equ	4
+L270	equ	1
 	ends
 	efunc
 ;/*-----------------------------------------------------------*/
@@ -7669,7 +7461,7 @@ _~xTaskGetTickCountFromISR:
 	longi	on
 	tsc
 	sec
-	sbc	#L286
+	sbc	#L272
 	tcs
 	phd
 	tcd
@@ -7697,32 +7489,32 @@ uxSavedInterruptStatus_1	set	4
 ;    portASSERT_IF_INTERRUPT_PRIORITY_INVALID();
 ;
 ;    uxSavedInterruptStatus = portTICK_TYPE_SET_INTERRUPT_MASK_FROM_ISR();
-	stz	<L287+uxSavedInterruptStatus_1
+	stz	<L273+uxSavedInterruptStatus_1
 ;    {
 ;        xReturn = xTickCount;
 	lda	|_~xTickCount	; volatile
-	sta	<L287+xReturn_1
+	sta	<L273+xReturn_1
 	lda	|_~xTickCount+2	; volatile
-	sta	<L287+xReturn_1+2
+	sta	<L273+xReturn_1+2
 ;    }
 ;    portTICK_TYPE_CLEAR_INTERRUPT_MASK_FROM_ISR( uxSavedInterruptStatus );
 ;
 ;    traceRETURN_xTaskGetTickCountFromISR( xReturn );
 ;
 ;    return xReturn;
-	ldx	<L287+xReturn_1+2
-	lda	<L287+xReturn_1
+	ldx	<L273+xReturn_1+2
+	lda	<L273+xReturn_1
 	tay
 	pld
 	tsc
 	clc
-	adc	#L286
+	adc	#L272
 	tcs
 	tya
 	rts
 ;}
-L286	equ	6
-L287	equ	1
+L272	equ	6
+L273	equ	1
 	ends
 	efunc
 ;/*-----------------------------------------------------------*/
@@ -7745,8 +7537,8 @@ _~uxTaskGetNumberOfTasks:
 	lda	|_~uxCurrentNumberOfTasks	; volatile
 	rts
 ;}
-L289	equ	0
-L290	equ	1
+L275	equ	0
+L276	equ	1
 	ends
 	efunc
 ;/*-----------------------------------------------------------*/
@@ -7761,7 +7553,7 @@ _~pcTaskGetName:
 	longi	on
 	tsc
 	sec
-	sbc	#L292
+	sbc	#L278
 	tcs
 	phd
 	tcd
@@ -7774,53 +7566,53 @@ pxTCB_1	set	0
 ;    /* If null is passed in here then the name of the calling task is being
 ;     * queried. */
 ;    pxTCB = prvGetTCBFromHandle( xTaskToQuery );
-	lda	<L292+xTaskToQuery_0
-	ora	<L292+xTaskToQuery_0+2
-	bne	L294
+	lda	<L278+xTaskToQuery_0
+	ora	<L278+xTaskToQuery_0+2
+	bne	L280
 	ldx	|_~pxCurrentTCB+2	; volatile
 	lda	|_~pxCurrentTCB	; volatile
-	bra	L296
-L294:
-	ldx	<L292+xTaskToQuery_0+2
-	lda	<L292+xTaskToQuery_0
-L296:
+	bra	L282
+L280:
+	ldx	<L278+xTaskToQuery_0+2
+	lda	<L278+xTaskToQuery_0
+L282:
 	stx	<R0+2
-	sta	<L293+pxTCB_1
+	sta	<L279+pxTCB_1
 	lda	<R0+2
-	sta	<L293+pxTCB_1+2
+	sta	<L279+pxTCB_1+2
 ;    configASSERT( pxTCB != NULL );
-	lda	<L293+pxTCB_1
-	ora	<L293+pxTCB_1+2
-	bne	L10514
-L10518:
-	bra	L10518
-L10514:
+	lda	<L279+pxTCB_1
+	ora	<L279+pxTCB_1+2
+	bne	L10485
+L10489:
+	bra	L10489
+L10485:
 ;
 ;    traceRETURN_pcTaskGetName( &( pxTCB->pcTaskName[ 0 ] ) );
 ;
 ;    return &( pxTCB->pcTaskName[ 0 ] );
 	lda	#$32
 	clc
-	adc	<L293+pxTCB_1
+	adc	<L279+pxTCB_1
 	sta	<R0
 	lda	#$0
-	adc	<L293+pxTCB_1+2
+	adc	<L279+pxTCB_1+2
 	sta	<R0+2
 	ldx	<R0+2
 	lda	<R0
 	tay
-	lda	<L292+1
-	sta	<L292+1+4
+	lda	<L278+1
+	sta	<L278+1+4
 	pld
 	tsc
 	clc
-	adc	#L292+4
+	adc	#L278+4
 	tcs
 	tya
 	rts
 ;}
-L292	equ	8
-L293	equ	5
+L278	equ	8
+L279	equ	5
 	ends
 	efunc
 ;/*-----------------------------------------------------------*/
@@ -7836,7 +7628,7 @@ _~prvSearchForNameWithinSingleList:
 	longi	on
 	tsc
 	sec
-	sbc	#L299
+	sbc	#L285
 	tcs
 	phd
 	tcd
@@ -7860,28 +7652,28 @@ cNextChar_1	set	10
 xBreakLoop_1	set	11
 pxEndMarker_1	set	13
 pxIterator_1	set	17
-	stz	<L300+pxReturn_1
-	stz	<L300+pxReturn_1+2
-	stz	<L300+pxTCB_1
-	stz	<L300+pxTCB_1+2
+	stz	<L286+pxReturn_1
+	stz	<L286+pxReturn_1+2
+	stz	<L286+pxTCB_1
+	stz	<L286+pxTCB_1+2
 	lda	#$6
 	clc
-	adc	<L299+pxList_0
-	sta	<L300+pxEndMarker_1
+	adc	<L285+pxList_0
+	sta	<L286+pxEndMarker_1
 	lda	#$0
-	adc	<L299+pxList_0+2
-	sta	<L300+pxEndMarker_1+2
+	adc	<L285+pxList_0+2
+	sta	<L286+pxEndMarker_1+2
 ;        {
 	lda	#$0
-	cmp	[<L299+pxList_0]
-	bcs	L10535
+	cmp	[<L285+pxList_0]
+	bcs	L10506
 ;            for( pxIterator = listGET_HEAD_ENTRY( pxList ); pxIterator != pxEndMarker; pxIterator = listGET_NEXT( pxIterator ) )
 	ldy	#$a
-	lda	[<L299+pxList_0],Y
-	sta	<L300+pxIterator_1
+	lda	[<L285+pxList_0],Y
+	sta	<L286+pxIterator_1
 	iny
 	iny
-	lda	[<L299+pxList_0],Y
+	lda	[<L285+pxList_0],Y
 	bra	L20024
 L20031:
 ;                    /* The handle has been found. */
@@ -7889,94 +7681,94 @@ L20031:
 ;                }
 ;            }
 	ldy	#$4
-	lda	[<L300+pxIterator_1],Y
+	lda	[<L286+pxIterator_1],Y
 	sta	<R0
 	iny
 	iny
-	lda	[<L300+pxIterator_1],Y
+	lda	[<L286+pxIterator_1],Y
 	sta	<R0+2
 	lda	<R0
-	sta	<L300+pxIterator_1
+	sta	<L286+pxIterator_1
 	lda	<R0+2
 L20024:
-	sta	<L300+pxIterator_1+2
-	lda	<L300+pxIterator_1
-	cmp	<L300+pxEndMarker_1
-	bne	L307
-	lda	<L300+pxIterator_1+2
-	cmp	<L300+pxEndMarker_1+2
-L307:
-	beq	L10535
+	sta	<L286+pxIterator_1+2
+	lda	<L286+pxIterator_1
+	cmp	<L286+pxEndMarker_1
+	bne	L293
+	lda	<L286+pxIterator_1+2
+	cmp	<L286+pxEndMarker_1+2
+L293:
+	beq	L10506
 ;            {
 ;                /* MISRA Ref 11.5.3 [Void pointer assignment] */
 ;                /* More details at: https://github.com/FreeRTOS/FreeRTOS-Kernel/blob/main/MISRA.md#rule-115 */
 ;                /* coverity[misra_c_2012_rule_11_5_violation] */
 ;                pxTCB = listGET_LIST_ITEM_OWNER( pxIterator );
 	ldy	#$c
-	lda	[<L300+pxIterator_1],Y
-	sta	<L300+pxTCB_1
+	lda	[<L286+pxIterator_1],Y
+	sta	<L286+pxTCB_1
 	iny
 	iny
-	lda	[<L300+pxIterator_1],Y
-	sta	<L300+pxTCB_1+2
+	lda	[<L286+pxIterator_1],Y
+	sta	<L286+pxTCB_1+2
 ;
 ;                /* Check each character in the name looking for a match or
 ;                 * mismatch. */
 ;                xBreakLoop = pdFALSE;
-	stz	<L300+xBreakLoop_1
+	stz	<L286+xBreakLoop_1
 ;
 ;                for( x = ( UBaseType_t ) 0; x < ( UBaseType_t ) configMAX_TASK_NAME_LEN; x++ )
-	stz	<L300+x_1
-	bra	L10528
+	stz	<L286+x_1
+	bra	L10499
 L20029:
-	inc	<L300+x_1
-	lda	<L300+x_1
+	inc	<L286+x_1
+	lda	<L286+x_1
 	cmp	#<$10
-	bcs	L10527
-L10528:
+	bcs	L10498
+L10499:
 ;                {
 ;                    cNextChar = pxTCB->pcTaskName[ x ];
 	lda	#$32
 	clc
-	adc	<L300+x_1
+	adc	<L286+x_1
 	tay
 	sep	#$20
 	longa	off
-	lda	[<L300+pxTCB_1],Y
-	sta	<L300+cNextChar_1
+	lda	[<L286+pxTCB_1],Y
+	sta	<L286+cNextChar_1
 ;
 ;                    if( cNextChar != pcNameToQuery[ x ] )
 ;                    {
-	ldy	<L300+x_1
-	lda	[<L299+pcNameToQuery_0],Y
-	cmp	<L300+cNextChar_1
+	ldy	<L286+x_1
+	lda	[<L285+pcNameToQuery_0],Y
+	cmp	<L286+cNextChar_1
 	rep	#$20
 	longa	on
 	bne	L20026
 ;                    {
-	lda	<L300+cNextChar_1
+	lda	<L286+cNextChar_1
 	and	#$ff
-	bne	L10530
+	bne	L10501
 ;                        /* Both strings terminated, a match must have been
 ;                         * found. */
 ;                        pxReturn = pxTCB;
-	lda	<L300+pxTCB_1
-	sta	<L300+pxReturn_1
-	lda	<L300+pxTCB_1+2
-	sta	<L300+pxReturn_1+2
+	lda	<L286+pxTCB_1
+	sta	<L286+pxReturn_1
+	lda	<L286+pxTCB_1+2
+	sta	<L286+pxReturn_1+2
 ;                        xBreakLoop = pdTRUE;
 L20026:
 ;                        /* Characters didn't match. */
 ;                        xBreakLoop = pdTRUE;
 	lda	#$1
-	sta	<L300+xBreakLoop_1
+	sta	<L286+xBreakLoop_1
 ;                    }
 ;                    else if( cNextChar == ( char ) 0x00 )
-L10530:
+L10501:
 ;
 ;                    if( xBreakLoop != pdFALSE )
 ;                    {
-	lda	<L300+xBreakLoop_1
+	lda	<L286+xBreakLoop_1
 	beq	L20029
 ;                    {
 ;                        mtCOVERAGE_TEST_MARKER();
@@ -7984,12 +7776,12 @@ L10530:
 ;                        break;
 ;                    }
 ;                }
-L10527:
+L10498:
 ;
 ;                if( pxReturn != NULL )
 ;                {
-	lda	<L300+pxReturn_1
-	ora	<L300+pxReturn_1+2
+	lda	<L286+pxReturn_1
+	ora	<L286+pxReturn_1+2
 	beq	L20031
 ;                    }
 ;                    else
@@ -7998,24 +7790,24 @@ L10527:
 ;        {
 ;            mtCOVERAGE_TEST_MARKER();
 ;        }
-L10535:
+L10506:
 ;
 ;        return pxReturn;
-	ldx	<L300+pxReturn_1+2
-	lda	<L300+pxReturn_1
+	ldx	<L286+pxReturn_1+2
+	lda	<L286+pxReturn_1
 	tay
-	lda	<L299+1
-	sta	<L299+1+8
+	lda	<L285+1
+	sta	<L285+1+8
 	pld
 	tsc
 	clc
-	adc	#L299+8
+	adc	#L285+8
 	tcs
 	tya
 	rts
 ;    }
-L299	equ	25
-L300	equ	5
+L285	equ	25
+L286	equ	5
 	ends
 	efunc
 ;
@@ -8034,7 +7826,7 @@ _~xTaskGetHandle:
 	longi	on
 	tsc
 	sec
-	sbc	#L310
+	sbc	#L296
 	tcs
 	phd
 	tcd
@@ -8046,32 +7838,32 @@ pcNameToQuery_0	set	3
 uxQueue_1	set	0
 pxTCB_1	set	2
 	lda	#$5
-	sta	<L311+uxQueue_1
+	sta	<L297+uxQueue_1
 ;
 ;        /* Task names will be truncated to configMAX_TASK_NAME_LEN - 1 bytes. */
 ;        configASSERT( strlen( pcNameToQuery ) < configMAX_TASK_NAME_LEN );
-	pei	<L310+pcNameToQuery_0+2
-	pei	<L310+pcNameToQuery_0
+	pei	<L296+pcNameToQuery_0+2
+	pei	<L296+pcNameToQuery_0
 	jsr	_~strlen
 	cmp	#<$10
-	bcc	L10536
-L10540:
-	bra	L10540
-L10536:
+	bcc	L10507
+L10511:
+	bra	L10511
+L10507:
 ;
 ;        vTaskSuspendAll();
 	jsr	_~vTaskSuspendAll
 ;        {
 ;            /* Search the ready lists. */
 ;            do
-L10545:
+L10516:
 ;            {
 ;                uxQueue--;
-	dec	<L311+uxQueue_1
+	dec	<L297+uxQueue_1
 ;                pxTCB = prvSearchForNameWithinSingleList( ( List_t * ) &( pxReadyTasksLists[ uxQueue ] ), pcNameToQuery );
-	pei	<L310+pcNameToQuery_0+2
-	pei	<L310+pcNameToQuery_0
-	lda	<L311+uxQueue_1
+	pei	<L296+pcNameToQuery_0+2
+	pei	<L296+pcNameToQuery_0
+	lda	<L297+uxQueue_1
 	ldx	#<$12
 	xref	_~~mul
 	jsr	_~~mul
@@ -8083,70 +7875,70 @@ L10545:
 	pha
 	pei	<R0
 	jsr	_~prvSearchForNameWithinSingleList
-	sta	<L311+pxTCB_1
-	stx	<L311+pxTCB_1+2
+	sta	<L297+pxTCB_1
+	stx	<L297+pxTCB_1+2
 ;
 ;                if( pxTCB != NULL )
 ;                {
-	ora	<L311+pxTCB_1+2
-	bne	L10544
+	ora	<L297+pxTCB_1+2
+	bne	L10515
 ;                    /* Found the handle. */
 ;                    break;
 ;                }
 ;            } while( uxQueue > ( UBaseType_t ) tskIDLE_PRIORITY );
 	lda	#$0
-	cmp	<L311+uxQueue_1
-	bcc	L10545
-L10544:
+	cmp	<L297+uxQueue_1
+	bcc	L10516
+L10515:
 ;
 ;            /* Search the delayed lists. */
 ;            if( pxTCB == NULL )
 ;            {
-	lda	<L311+pxTCB_1
-	ora	<L311+pxTCB_1+2
-	bne	L10547
+	lda	<L297+pxTCB_1
+	ora	<L297+pxTCB_1+2
+	bne	L10518
 ;                pxTCB = prvSearchForNameWithinSingleList( ( List_t * ) pxDelayedTaskList, pcNameToQuery );
-	pei	<L310+pcNameToQuery_0+2
-	pei	<L310+pcNameToQuery_0
+	pei	<L296+pcNameToQuery_0+2
+	pei	<L296+pcNameToQuery_0
 	lda	|_~pxDelayedTaskList+2	; volatile
 	pha
 	lda	|_~pxDelayedTaskList	; volatile
 	pha
 	jsr	_~prvSearchForNameWithinSingleList
-	sta	<L311+pxTCB_1
-	stx	<L311+pxTCB_1+2
+	sta	<L297+pxTCB_1
+	stx	<L297+pxTCB_1+2
 ;            }
 ;
 ;            if( pxTCB == NULL )
-L10547:
+L10518:
 ;            {
-	lda	<L311+pxTCB_1
-	ora	<L311+pxTCB_1+2
-	bne	L10548
+	lda	<L297+pxTCB_1
+	ora	<L297+pxTCB_1+2
+	bne	L10519
 ;                pxTCB = prvSearchForNameWithinSingleList( ( List_t * ) pxOverflowDelayedTaskList, pcNameToQuery );
-	pei	<L310+pcNameToQuery_0+2
-	pei	<L310+pcNameToQuery_0
+	pei	<L296+pcNameToQuery_0+2
+	pei	<L296+pcNameToQuery_0
 	lda	|_~pxOverflowDelayedTaskList+2	; volatile
 	pha
 	lda	|_~pxOverflowDelayedTaskList	; volatile
 	pha
 	jsr	_~prvSearchForNameWithinSingleList
-	sta	<L311+pxTCB_1
-	stx	<L311+pxTCB_1+2
+	sta	<L297+pxTCB_1
+	stx	<L297+pxTCB_1+2
 ;            }
 ;
 ;            #if ( INCLUDE_vTaskSuspend == 1 )
 ;            {
-L10548:
+L10519:
 ;                if( pxTCB == NULL )
 ;                {
-	lda	<L311+pxTCB_1
-	ora	<L311+pxTCB_1+2
-	bne	L10549
+	lda	<L297+pxTCB_1
+	ora	<L297+pxTCB_1+2
+	bne	L10520
 ;                    /* Search the suspended list. */
 ;                    pxTCB = prvSearchForNameWithinSingleList( &xSuspendedTaskList, pcNameToQuery );
-	pei	<L310+pcNameToQuery_0+2
-	pei	<L310+pcNameToQuery_0
+	pei	<L296+pcNameToQuery_0+2
+	pei	<L296+pcNameToQuery_0
 	lda	#<_~xSuspendedTaskList
 	sta	<R0
 	xref	_BEG_DATA
@@ -8154,24 +7946,24 @@ L10548:
 	pha
 	pei	<R0
 	jsr	_~prvSearchForNameWithinSingleList
-	sta	<L311+pxTCB_1
-	stx	<L311+pxTCB_1+2
+	sta	<L297+pxTCB_1
+	stx	<L297+pxTCB_1+2
 ;                }
 ;            }
-L10549:
+L10520:
 ;            #endif
 ;
 ;            #if ( INCLUDE_vTaskDelete == 1 )
 ;            {
 ;                if( pxTCB == NULL )
 ;                {
-	lda	<L311+pxTCB_1
-	ora	<L311+pxTCB_1+2
-	bne	L10550
+	lda	<L297+pxTCB_1
+	ora	<L297+pxTCB_1+2
+	bne	L10521
 ;                    /* Search the deleted list. */
 ;                    pxTCB = prvSearchForNameWithinSingleList( &xTasksWaitingTermination, pcNameToQuery );
-	pei	<L310+pcNameToQuery_0+2
-	pei	<L310+pcNameToQuery_0
+	pei	<L296+pcNameToQuery_0+2
+	pei	<L296+pcNameToQuery_0
 	lda	#<_~xTasksWaitingTermination
 	sta	<R0
 	xref	_BEG_DATA
@@ -8179,11 +7971,11 @@ L10549:
 	pha
 	pei	<R0
 	jsr	_~prvSearchForNameWithinSingleList
-	sta	<L311+pxTCB_1
-	stx	<L311+pxTCB_1+2
+	sta	<L297+pxTCB_1
+	stx	<L297+pxTCB_1+2
 ;                }
 ;            }
-L10550:
+L10521:
 ;            #endif
 ;        }
 ;        ( void ) xTaskResumeAll();
@@ -8192,21 +7984,21 @@ L10550:
 ;        traceRETURN_xTaskGetHandle( pxTCB );
 ;
 ;        return pxTCB;
-	ldx	<L311+pxTCB_1+2
-	lda	<L311+pxTCB_1
+	ldx	<L297+pxTCB_1+2
+	lda	<L297+pxTCB_1
 	tay
-	lda	<L310+1
-	sta	<L310+1+4
+	lda	<L296+1
+	sta	<L296+1+4
 	pld
 	tsc
 	clc
-	adc	#L310+4
+	adc	#L296+4
 	tcs
 	tya
 	rts
 ;    }
-L310	equ	18
-L311	equ	13
+L296	equ	18
+L297	equ	13
 	ends
 	efunc
 ;
@@ -8219,135 +8011,38 @@ L311	equ	13
 ;                                      StackType_t ** ppuxStackBuffer,
 ;                                      StaticTask_t ** ppxTaskBuffer )
 ;    {
-	code
-	xdef	_~xTaskGetStaticBuffers
-	func
-_~xTaskGetStaticBuffers:
-	longa	on
-	longi	on
-	tsc
-	sec
-	sbc	#L320
-	tcs
-	phd
-	tcd
-xTask_0	set	3
-ppuxStackBuffer_0	set	7
-ppxTaskBuffer_0	set	11
 ;        BaseType_t xReturn;
 ;        TCB_t * pxTCB;
 ;
 ;        traceENTER_xTaskGetStaticBuffers( xTask, ppuxStackBuffer, ppxTaskBuffer );
-xReturn_1	set	0
-pxTCB_1	set	2
 ;
 ;        configASSERT( ppuxStackBuffer != NULL );
-	lda	<L320+ppuxStackBuffer_0
-	ora	<L320+ppuxStackBuffer_0+2
-	bne	L10551
-L10555:
-	bra	L10555
-L10551:
 ;        configASSERT( ppxTaskBuffer != NULL );
-	lda	<L320+ppxTaskBuffer_0
-	ora	<L320+ppxTaskBuffer_0+2
-	bne	L10558
-L10562:
-	bra	L10562
-L10558:
 ;
 ;        pxTCB = prvGetTCBFromHandle( xTask );
-	lda	<L320+xTask_0
-	ora	<L320+xTask_0+2
-	bne	L324
-	ldx	|_~pxCurrentTCB+2	; volatile
-	lda	|_~pxCurrentTCB	; volatile
-	bra	L326
-L324:
-	ldx	<L320+xTask_0+2
-	lda	<L320+xTask_0
-L326:
-	stx	<R0+2
-	sta	<L321+pxTCB_1
-	lda	<R0+2
-	sta	<L321+pxTCB_1+2
 ;        configASSERT( pxTCB != NULL );
-	lda	<L321+pxTCB_1
-	ora	<L321+pxTCB_1+2
-	bne	L10565
-L10569:
-	bra	L10569
-L10565:
 ;
 ;        #if ( tskSTATIC_AND_DYNAMIC_ALLOCATION_POSSIBLE == 1 )
 ;        {
 ;            if( pxTCB->ucStaticallyAllocated == tskSTATICALLY_ALLOCATED_STACK_AND_TCB )
 ;            {
-	sep	#$20
-	longa	off
-	ldy	#$4b
-	lda	[<L321+pxTCB_1],Y
-	cmp	#<$2
-	rep	#$20
-	longa	on
-	bne	L10572
 ;                *ppuxStackBuffer = pxTCB->pxStack;
-	ldy	#$2e
-	lda	[<L321+pxTCB_1],Y
-	sta	[<L320+ppuxStackBuffer_0]
-	iny
-	iny
-	lda	[<L321+pxTCB_1],Y
-	ldy	#$2
-	sta	[<L320+ppuxStackBuffer_0],Y
 ;                /* MISRA Ref 11.3.1 [Misaligned access] */
 ;                /* More details at: https://github.com/FreeRTOS/FreeRTOS-Kernel/blob/main/MISRA.md#rule-113 */
 ;                /* coverity[misra_c_2012_rule_11_3_violation] */
 ;                *ppxTaskBuffer = ( StaticTask_t * ) pxTCB;
-	lda	<L321+pxTCB_1
-	sta	[<L320+ppxTaskBuffer_0]
-	lda	<L321+pxTCB_1+2
-	bra	L20035
-L20037:
+;                xReturn = pdTRUE;
+;            }
+;            else if( pxTCB->ucStaticallyAllocated == tskSTATICALLY_ALLOCATED_STACK_ONLY )
+;            {
 ;                *ppuxStackBuffer = pxTCB->pxStack;
-	ldy	#$2e
-	lda	[<L321+pxTCB_1],Y
-	sta	[<L320+ppuxStackBuffer_0]
-	iny
-	iny
-	lda	[<L321+pxTCB_1],Y
-	ldy	#$2
-	sta	[<L320+ppuxStackBuffer_0],Y
 ;                *ppxTaskBuffer = NULL;
-	lda	#$0
-	sta	[<L320+ppxTaskBuffer_0]
 ;                xReturn = pdTRUE;
 ;            }
 ;            else
-L20035:
-	ldy	#$2
-	sta	[<L320+ppxTaskBuffer_0],Y
-;                xReturn = pdTRUE;
-	lda	#$1
-	sta	<L321+xReturn_1
-;            }
-;            else if( pxTCB->ucStaticallyAllocated == tskSTATICALLY_ALLOCATED_STACK_ONLY )
-	bra	L10573
-L10572:
-;            {
-	sep	#$20
-	longa	off
-	ldy	#$4b
-	lda	[<L321+pxTCB_1],Y
-	cmp	#<$1
-	rep	#$20
-	longa	on
-	beq	L20037
 ;            {
 ;                xReturn = pdFALSE;
-	stz	<L321+xReturn_1
 ;            }
-L10573:
 ;        }
 ;        #else /* tskSTATIC_AND_DYNAMIC_ALLOCATION_POSSIBLE == 1 */
 ;        {
@@ -8360,22 +8055,7 @@ L10573:
 ;        traceRETURN_xTaskGetStaticBuffers( xReturn );
 ;
 ;        return xReturn;
-	lda	<L321+xReturn_1
-	tay
-	lda	<L320+1
-	sta	<L320+1+12
-	pld
-	tsc
-	clc
-	adc	#L320+12
-	tcs
-	tya
-	rts
 ;    }
-L320	equ	10
-L321	equ	5
-	ends
-	efunc
 ;
 ;#endif /* configSUPPORT_STATIC_ALLOCATION */
 ;/*-----------------------------------------------------------*/
@@ -8606,7 +8286,7 @@ _~xTaskCatchUpTicks:
 	longi	on
 	tsc
 	sec
-	sbc	#L331
+	sbc	#L306
 	tcs
 	phd
 	tcd
@@ -8620,10 +8300,10 @@ xYieldOccurred_1	set	0
 ;     * relies on xPendedTicks being wound down to 0 in xTaskResumeAll(). */
 ;    configASSERT( uxSchedulerSuspended == ( UBaseType_t ) 0U );
 	lda	|_~uxSchedulerSuspended	; volatile
-	beq	L10576
-L10580:
-	bra	L10580
-L10576:
+	beq	L10522
+L10526:
+	bra	L10526
+L10522:
 ;
 ;    /* Use xPendedTicks to mimic xTicksToCatchUp number of ticks occurring when
 ;     * the scheduler is suspended so the ticks are executed in xTaskResumeAll(). */
@@ -8636,33 +8316,33 @@ L10576:
 ;        xPendedTicks += xTicksToCatchUp;
 	lda	|_~xPendedTicks	; volatile
 	clc
-	adc	<L331+xTicksToCatchUp_0
+	adc	<L306+xTicksToCatchUp_0
 	sta	|_~xPendedTicks	; volatile
 	lda	|_~xPendedTicks+2	; volatile
-	adc	<L331+xTicksToCatchUp_0+2
+	adc	<L306+xTicksToCatchUp_0+2
 	sta	|_~xPendedTicks+2	; volatile
 ;    }
 ;    taskEXIT_CRITICAL();
 ;    xYieldOccurred = xTaskResumeAll();
 	jsr	_~xTaskResumeAll
-	sta	<L332+xYieldOccurred_1
+	sta	<L307+xYieldOccurred_1
 ;
 ;    traceRETURN_xTaskCatchUpTicks( xYieldOccurred );
 ;
 ;    return xYieldOccurred;
 	tay
-	lda	<L331+1
-	sta	<L331+1+4
+	lda	<L306+1
+	sta	<L306+1+4
 	pld
 	tsc
 	clc
-	adc	#L331+4
+	adc	#L306+4
 	tcs
 	tya
 	rts
 ;}
-L331	equ	2
-L332	equ	1
+L306	equ	2
+L307	equ	1
 	ends
 	efunc
 ;/*----------------------------------------------------------*/
@@ -8773,7 +8453,7 @@ _~xTaskIncrementTick:
 	longi	on
 	tsc
 	sec
-	sbc	#L335
+	sbc	#L310
 	tcs
 	phd
 	tcd
@@ -8785,7 +8465,7 @@ _~xTaskIncrementTick:
 pxTCB_1	set	0
 xItemValue_1	set	4
 xSwitchRequired_1	set	8
-	stz	<L336+xSwitchRequired_1
+	stz	<L311+xSwitchRequired_1
 ;
 ;    /* Called by the portable layer each time a tick interrupt occurs.
 ;     * Increments the tick then checks to see if the new tick value will cause any
@@ -8800,7 +8480,7 @@ xSwitchRequired_1	set	8
 ;    {
 	lda	|_~uxSchedulerSuspended	; volatile
 	beq	*+5
-	brl	L10589
+	brl	L10535
 ;        /* Minor optimisation.  The tick count cannot change in this
 ;         * block. */
 ;        const TickType_t xConstTickCount = xTickCount + ( TickType_t ) 1;
@@ -8812,20 +8492,20 @@ xConstTickCount_2	set	10
 	lda	#$1
 	clc
 	adc	|_~xTickCount	; volatile
-	sta	<L336+xConstTickCount_2
+	sta	<L311+xConstTickCount_2
 	lda	#$0
 	adc	|_~xTickCount+2	; volatile
-	sta	<L336+xConstTickCount_2+2
-	lda	<L336+xConstTickCount_2
+	sta	<L311+xConstTickCount_2+2
+	lda	<L311+xConstTickCount_2
 	sta	|_~xTickCount	; volatile
-	lda	<L336+xConstTickCount_2+2
+	lda	<L311+xConstTickCount_2+2
 	sta	|_~xTickCount+2	; volatile
 ;
 ;        if( xConstTickCount == ( TickType_t ) 0U )
 ;        {
-	lda	<L336+xConstTickCount_2
-	ora	<L336+xConstTickCount_2+2
-	bne	L10601
+	lda	<L311+xConstTickCount_2
+	ora	<L311+xConstTickCount_2+2
+	bne	L10547
 ;            taskSWITCH_DELAYED_LISTS();
 pxTemp_3	set	14
 	lda	|_~pxDelayedTaskList	; volatile
@@ -8833,28 +8513,28 @@ pxTemp_3	set	14
 	lda	|_~pxDelayedTaskList+2	; volatile
 	sta	<R0+2
 	lda	[<R0]
-	bne	L339
+	bne	L314
 	lda	#$1
-	bra	L341
-L339:
+	bra	L316
+L314:
 	lda	#$0
-L341:
+L316:
 	tax
-	bne	L10594
-L10598:
-	bra	L10598
-L10594:
+	bne	L10540
+L10544:
+	bra	L10544
+L10540:
 	lda	|_~pxDelayedTaskList	; volatile
-	sta	<L336+pxTemp_3
+	sta	<L311+pxTemp_3
 	lda	|_~pxDelayedTaskList+2	; volatile
-	sta	<L336+pxTemp_3+2
+	sta	<L311+pxTemp_3+2
 	lda	|_~pxOverflowDelayedTaskList	; volatile
 	sta	|_~pxDelayedTaskList	; volatile
 	lda	|_~pxOverflowDelayedTaskList+2	; volatile
 	sta	|_~pxDelayedTaskList+2	; volatile
-	lda	<L336+pxTemp_3
+	lda	<L311+pxTemp_3
 	sta	|_~pxOverflowDelayedTaskList	; volatile
-	lda	<L336+pxTemp_3+2
+	lda	<L311+pxTemp_3+2
 	sta	|_~pxOverflowDelayedTaskList+2	; volatile
 	inc	|_~xNumOfOverflows	; volatile
 	jsr	_~prvResetNextTaskUnblockTime
@@ -8863,7 +8543,7 @@ L10594:
 ;        {
 ;            mtCOVERAGE_TEST_MARKER();
 ;        }
-L10601:
+L10547:
 ;
 ;        /* See if this tick has made a timeout expire.  Tasks are stored in
 ;         * the  queue in the order of their wake time - meaning once one task
@@ -8871,13 +8551,13 @@ L10601:
 ;         * look any further down the list. */
 ;        if( xConstTickCount >= xNextTaskUnblockTime )
 ;        {
-	lda	<L336+xConstTickCount_2
+	lda	<L311+xConstTickCount_2
 	cmp	|_~xNextTaskUnblockTime	; volatile
-	lda	<L336+xConstTickCount_2+2
+	lda	<L311+xConstTickCount_2+2
 	sbc	|_~xNextTaskUnblockTime+2	; volatile
-	bcc	L10602
+	bcc	L10548
 ;            for( ; ; )
-L10605:
+L10551:
 ;            {
 ;                if( listLIST_IS_EMPTY( pxDelayedTaskList ) != pdFALSE )
 ;                {
@@ -8886,14 +8566,14 @@ L10605:
 	lda	|_~pxDelayedTaskList+2	; volatile
 	sta	<R0+2
 	lda	[<R0]
-	bne	L344
+	bne	L319
 	lda	#$1
-	bra	L346
-L344:
+	bra	L321
+L319:
 	lda	#$0
-L346:
+L321:
 	tax
-	beq	L10606
+	beq	L10552
 ;                    /* The delayed list is empty.  Set xNextTaskUnblockTime
 ;                     * to the maximum possible value so it is extremely
 ;                     * unlikely that the
@@ -8902,10 +8582,10 @@ L346:
 ;                    xNextTaskUnblockTime = portMAX_DELAY;
 	lda	#$ffff
 	sta	|_~xNextTaskUnblockTime	; volatile
-L20038:
+L20032:
 	sta	|_~xNextTaskUnblockTime+2	; volatile
 ;                    break;
-L10602:
+L10548:
 ;            #if ( configNUMBER_OF_CORES == 1 )
 ;            {
 ;                if( listCURRENT_LIST_LENGTH( &( pxReadyTasksLists[ pxCurrentTCB->uxPriority ] ) ) > 1U )
@@ -8923,11 +8603,11 @@ L10602:
 	lda	#$1
 	cmp	|_~pxReadyTasksLists,X
 	bcs	*+5
-	brl	L356
-	brl	L10631
+	brl	L331
+	brl	L10577
 ;                }
 ;                else
-L10606:
+L10552:
 ;                {
 ;                    /* The delayed list is not empty, get the value of the
 ;                     * item at the head of the delayed list.  This is the time
@@ -8949,37 +8629,37 @@ L10606:
 	lda	[<R0],Y
 	sta	<R1+2
 	lda	[<R1],Y
-	sta	<L336+pxTCB_1
+	sta	<L311+pxTCB_1
 	iny
 	iny
 	lda	[<R1],Y
-	sta	<L336+pxTCB_1+2
+	sta	<L311+pxTCB_1+2
 ;                    xItemValue = listGET_LIST_ITEM_VALUE( &( pxTCB->xStateListItem ) );
 	ldy	#$4
-	lda	[<L336+pxTCB_1],Y
-	sta	<L336+xItemValue_1
+	lda	[<L311+pxTCB_1],Y
+	sta	<L311+xItemValue_1
 	iny
 	iny
-	lda	[<L336+pxTCB_1],Y
-	sta	<L336+xItemValue_1+2
+	lda	[<L311+pxTCB_1],Y
+	sta	<L311+xItemValue_1+2
 ;
 ;                    if( xConstTickCount < xItemValue )
 ;                    {
-	lda	<L336+xConstTickCount_2
-	cmp	<L336+xItemValue_1
-	lda	<L336+xConstTickCount_2+2
-	sbc	<L336+xItemValue_1+2
-	bcs	L10610
+	lda	<L311+xConstTickCount_2
+	cmp	<L311+xItemValue_1
+	lda	<L311+xConstTickCount_2+2
+	sbc	<L311+xItemValue_1+2
+	bcs	L10556
 ;                        /* It is not time to unblock this item yet, but the
 ;                         * item value is the time at which the task at the head
 ;                         * of the blocked list must be removed from the Blocked
 ;                         * state -  so record the item value in
 ;                         * xNextTaskUnblockTime. */
 ;                        xNextTaskUnblockTime = xItemValue;
-	lda	<L336+xItemValue_1
+	lda	<L311+xItemValue_1
 	sta	|_~xNextTaskUnblockTime	; volatile
-	lda	<L336+xItemValue_1+2
-	bra	L20038
+	lda	<L311+xItemValue_1+2
+	bra	L20032
 ;                        break;
 ;                    }
 ;                    else
@@ -8989,172 +8669,172 @@ L10606:
 ;
 ;                    /* It is time to remove the item from the Blocked state. */
 ;                    listREMOVE_ITEM( &( pxTCB->xStateListItem ) );
-L10610:
+L10556:
 pxList_4	set	14
 	ldy	#$14
-	lda	[<L336+pxTCB_1],Y
-	sta	<L336+pxList_4
+	lda	[<L311+pxTCB_1],Y
+	sta	<L311+pxList_4
 	iny
 	iny
-	lda	[<L336+pxTCB_1],Y
-	sta	<L336+pxList_4+2
+	lda	[<L311+pxTCB_1],Y
+	sta	<L311+pxList_4+2
 	ldy	#$8
-	lda	[<L336+pxTCB_1],Y
+	lda	[<L311+pxTCB_1],Y
 	sta	<R0
 	iny
 	iny
-	lda	[<L336+pxTCB_1],Y
+	lda	[<L311+pxTCB_1],Y
 	sta	<R0+2
 	iny
 	iny
-	lda	[<L336+pxTCB_1],Y
+	lda	[<L311+pxTCB_1],Y
 	ldy	#$8
 	sta	[<R0],Y
 	ldy	#$e
-	lda	[<L336+pxTCB_1],Y
+	lda	[<L311+pxTCB_1],Y
 	ldy	#$a
 	sta	[<R0],Y
 	iny
 	iny
-	lda	[<L336+pxTCB_1],Y
+	lda	[<L311+pxTCB_1],Y
 	sta	<R0
 	iny
 	iny
-	lda	[<L336+pxTCB_1],Y
+	lda	[<L311+pxTCB_1],Y
 	sta	<R0+2
 	ldy	#$8
-	lda	[<L336+pxTCB_1],Y
+	lda	[<L311+pxTCB_1],Y
 	ldy	#$4
 	sta	[<R0],Y
 	ldy	#$a
-	lda	[<L336+pxTCB_1],Y
+	lda	[<L311+pxTCB_1],Y
 	ldy	#$6
 	sta	[<R0],Y
 	lda	#$4
 	clc
-	adc	<L336+pxTCB_1
+	adc	<L311+pxTCB_1
 	sta	<R0
 	lda	#$0
-	adc	<L336+pxTCB_1+2
+	adc	<L311+pxTCB_1+2
 	sta	<R0+2
 	ldy	#$2
-	lda	[<L336+pxList_4],Y
+	lda	[<L311+pxList_4],Y
 	cmp	<R0
-	bne	L349
+	bne	L324
 	iny
 	iny
-	lda	[<L336+pxList_4],Y
+	lda	[<L311+pxList_4],Y
 	cmp	<R0+2
-L349:
-	bne	L10611
+L324:
+	bne	L10557
 	ldy	#$c
-	lda	[<L336+pxTCB_1],Y
+	lda	[<L311+pxTCB_1],Y
 	ldy	#$2
-	sta	[<L336+pxList_4],Y
+	sta	[<L311+pxList_4],Y
 	ldy	#$e
-	lda	[<L336+pxTCB_1],Y
+	lda	[<L311+pxTCB_1],Y
 	ldy	#$4
-	sta	[<L336+pxList_4],Y
-L10611:
+	sta	[<L311+pxList_4],Y
+L10557:
 	lda	#$0
 	ldy	#$14
-	sta	[<L336+pxTCB_1],Y
+	sta	[<L311+pxTCB_1],Y
 	iny
 	iny
-	sta	[<L336+pxTCB_1],Y
+	sta	[<L311+pxTCB_1],Y
 	lda	#$ffff
 	clc
-	adc	[<L336+pxList_4]
-	sta	[<L336+pxList_4]
+	adc	[<L311+pxList_4]
+	sta	[<L311+pxList_4]
 ;
 ;                    /* Is the task waiting on an event also?  If so remove
 ;                     * it from the event list. */
 ;                    if( listLIST_ITEM_CONTAINER( &( pxTCB->xEventListItem ) ) != NULL )
 ;                    {
 	ldy	#$28
-	lda	[<L336+pxTCB_1],Y
+	lda	[<L311+pxTCB_1],Y
 	iny
 	iny
-	ora	[<L336+pxTCB_1],Y
+	ora	[<L311+pxTCB_1],Y
 	bne	*+5
-	brl	L10623
+	brl	L10569
 ;                        listREMOVE_ITEM( &( pxTCB->xEventListItem ) );
 pxList_5	set	14
 	dey
 	dey
-	lda	[<L336+pxTCB_1],Y
-	sta	<L336+pxList_5
+	lda	[<L311+pxTCB_1],Y
+	sta	<L311+pxList_5
 	iny
 	iny
-	lda	[<L336+pxTCB_1],Y
-	sta	<L336+pxList_5+2
+	lda	[<L311+pxTCB_1],Y
+	sta	<L311+pxList_5+2
 	ldy	#$1c
-	lda	[<L336+pxTCB_1],Y
+	lda	[<L311+pxTCB_1],Y
 	sta	<R0
 	iny
 	iny
-	lda	[<L336+pxTCB_1],Y
+	lda	[<L311+pxTCB_1],Y
 	sta	<R0+2
 	iny
 	iny
-	lda	[<L336+pxTCB_1],Y
+	lda	[<L311+pxTCB_1],Y
 	ldy	#$8
 	sta	[<R0],Y
 	ldy	#$22
-	lda	[<L336+pxTCB_1],Y
+	lda	[<L311+pxTCB_1],Y
 	ldy	#$a
 	sta	[<R0],Y
 	ldy	#$20
-	lda	[<L336+pxTCB_1],Y
+	lda	[<L311+pxTCB_1],Y
 	sta	<R0
 	iny
 	iny
-	lda	[<L336+pxTCB_1],Y
+	lda	[<L311+pxTCB_1],Y
 	sta	<R0+2
 	ldy	#$1c
-	lda	[<L336+pxTCB_1],Y
+	lda	[<L311+pxTCB_1],Y
 	ldy	#$4
 	sta	[<R0],Y
 	ldy	#$1e
-	lda	[<L336+pxTCB_1],Y
+	lda	[<L311+pxTCB_1],Y
 	ldy	#$6
 	sta	[<R0],Y
 	lda	#$18
 	clc
-	adc	<L336+pxTCB_1
+	adc	<L311+pxTCB_1
 	sta	<R0
 	lda	#$0
-	adc	<L336+pxTCB_1+2
+	adc	<L311+pxTCB_1+2
 	sta	<R0+2
 	ldy	#$2
-	lda	[<L336+pxList_5],Y
+	lda	[<L311+pxList_5],Y
 	cmp	<R0
-	bne	L352
+	bne	L327
 	iny
 	iny
-	lda	[<L336+pxList_5],Y
+	lda	[<L311+pxList_5],Y
 	cmp	<R0+2
-L352:
-	bne	L10616
+L327:
+	bne	L10562
 	ldy	#$20
-	lda	[<L336+pxTCB_1],Y
+	lda	[<L311+pxTCB_1],Y
 	ldy	#$2
-	sta	[<L336+pxList_5],Y
+	sta	[<L311+pxList_5],Y
 	ldy	#$22
-	lda	[<L336+pxTCB_1],Y
+	lda	[<L311+pxTCB_1],Y
 	ldy	#$4
-	sta	[<L336+pxList_5],Y
-L10616:
+	sta	[<L311+pxList_5],Y
+L10562:
 	lda	#$0
 	ldy	#$28
-	sta	[<L336+pxTCB_1],Y
+	sta	[<L311+pxTCB_1],Y
 	iny
 	iny
-	sta	[<L336+pxTCB_1],Y
+	sta	[<L311+pxTCB_1],Y
 	lda	#$ffff
 	clc
-	adc	[<L336+pxList_5]
-	sta	[<L336+pxList_5]
+	adc	[<L311+pxList_5]
+	sta	[<L311+pxList_5]
 ;                    }
 ;                    else
 ;                    {
@@ -9164,17 +8844,17 @@ L10616:
 ;                    /* Place the unblocked task into the appropriate ready
 ;                     * list. */
 ;                    prvAddTaskToReadyList( pxTCB );
-L10623:
+L10569:
 	lda	|_~uxTopReadyPriority	; volatile
 	ldy	#$2c
-	cmp	[<L336+pxTCB_1],Y
-	bcs	L10627
-	lda	[<L336+pxTCB_1],Y
+	cmp	[<L311+pxTCB_1],Y
+	bcs	L10573
+	lda	[<L311+pxTCB_1],Y
 	sta	|_~uxTopReadyPriority	; volatile
-L10627:
+L10573:
 pxIndex_6	set	14
 	ldy	#$2c
-	lda	[<L336+pxTCB_1],Y
+	lda	[<L311+pxTCB_1],Y
 	ldx	#<$12
 	xref	_~~mul
 	jsr	_~~mul
@@ -9186,40 +8866,40 @@ pxIndex_6	set	14
 	adc	<R0
 	sta	<R2
 	lda	(<R2)
-	sta	<L336+pxIndex_6
+	sta	<L311+pxIndex_6
 	ldy	#$2
 	lda	(<R2),Y
-	sta	<L336+pxIndex_6+2
-	lda	<L336+pxIndex_6
+	sta	<L311+pxIndex_6+2
+	lda	<L311+pxIndex_6
 	ldy	#$8
-	sta	[<L336+pxTCB_1],Y
-	lda	<L336+pxIndex_6+2
+	sta	[<L311+pxTCB_1],Y
+	lda	<L311+pxIndex_6+2
 	iny
 	iny
-	sta	[<L336+pxTCB_1],Y
+	sta	[<L311+pxTCB_1],Y
 	dey
 	dey
-	lda	[<L336+pxIndex_6],Y
+	lda	[<L311+pxIndex_6],Y
 	ldy	#$c
-	sta	[<L336+pxTCB_1],Y
+	sta	[<L311+pxTCB_1],Y
 	dey
 	dey
-	lda	[<L336+pxIndex_6],Y
+	lda	[<L311+pxIndex_6],Y
 	ldy	#$e
-	sta	[<L336+pxTCB_1],Y
+	sta	[<L311+pxTCB_1],Y
 	ldy	#$8
-	lda	[<L336+pxIndex_6],Y
+	lda	[<L311+pxIndex_6],Y
 	sta	<R0
 	iny
 	iny
-	lda	[<L336+pxIndex_6],Y
+	lda	[<L311+pxIndex_6],Y
 	sta	<R0+2
 	lda	#$4
 	clc
-	adc	<L336+pxTCB_1
+	adc	<L311+pxTCB_1
 	sta	<R1
 	lda	#$0
-	adc	<L336+pxTCB_1+2
+	adc	<L311+pxTCB_1+2
 	sta	<R1+2
 	lda	<R1
 	ldy	#$4
@@ -9230,21 +8910,21 @@ pxIndex_6	set	14
 	sta	[<R0],Y
 	lda	#$4
 	clc
-	adc	<L336+pxTCB_1
+	adc	<L311+pxTCB_1
 	sta	<R0
 	lda	#$0
-	adc	<L336+pxTCB_1+2
+	adc	<L311+pxTCB_1+2
 	sta	<R0+2
 	lda	<R0
 	iny
 	iny
-	sta	[<L336+pxIndex_6],Y
+	sta	[<L311+pxIndex_6],Y
 	lda	<R0+2
 	iny
 	iny
-	sta	[<L336+pxIndex_6],Y
+	sta	[<L311+pxIndex_6],Y
 	ldy	#$2c
-	lda	[<L336+pxTCB_1],Y
+	lda	[<L311+pxTCB_1],Y
 	ldx	#<$12
 	xref	_~~mul
 	jsr	_~~mul
@@ -9256,19 +8936,19 @@ pxIndex_6	set	14
 	sta	<R0+2
 	lda	<R0
 	ldy	#$14
-	sta	[<L336+pxTCB_1],Y
+	sta	[<L311+pxTCB_1],Y
 	lda	<R0+2
 	iny
 	iny
-	sta	[<L336+pxTCB_1],Y
+	sta	[<L311+pxTCB_1],Y
 	ldy	#$2c
-	lda	[<L336+pxTCB_1],Y
+	lda	[<L311+pxTCB_1],Y
 	ldx	#<$12
 	xref	_~~mul
 	jsr	_~~mul
 	sta	<R0
 	ldy	#$2c
-	lda	[<L336+pxTCB_1],Y
+	lda	[<L311+pxTCB_1],Y
 	ldx	#<$12
 	xref	_~~mul
 	jsr	_~~mul
@@ -9300,15 +8980,15 @@ pxIndex_6	set	14
 	sta	<R0+2
 	ldy	#$2c
 	lda	[<R0],Y
-	cmp	[<L336+pxTCB_1],Y
+	cmp	[<L311+pxTCB_1],Y
 	bcc	*+5
-	brl	L10605
+	brl	L10551
 ;                                xSwitchRequired = pdTRUE;
 	lda	#$1
-	sta	<L336+xSwitchRequired_1
+	sta	<L311+xSwitchRequired_1
 ;                            }
 ;                            else
-	brl	L10605
+	brl	L10551
 ;                            {
 ;                                mtCOVERAGE_TEST_MARKER();
 ;                            }
@@ -9329,13 +9009,13 @@ pxIndex_6	set	14
 ;         * writer has not explicitly turned time slicing off. */
 ;        #if ( ( configUSE_PREEMPTION == 1 ) && ( configUSE_TIME_SLICING == 1 ) )
 ;        {
-L356:
+L331:
 ;                    xSwitchRequired = pdTRUE;
 	lda	#$1
-	sta	<L336+xSwitchRequired_1
+	sta	<L311+xSwitchRequired_1
 ;                }
 ;                else
-L10631:
+L10577:
 ;            }
 ;            #else /* #if ( configNUMBER_OF_CORES == 1 ) */
 ;            {
@@ -9380,16 +9060,16 @@ L10631:
 ;                if( xYieldPendings[ 0 ] != pdFALSE )
 ;                {
 	lda	|_~xYieldPendings	; volatile
-	beq	L10634
+	beq	L10580
 ;                {
 ;                    mtCOVERAGE_TEST_MARKER();
 ;                }
 ;                    xSwitchRequired = pdTRUE;
 	lda	#$1
-	sta	<L336+xSwitchRequired_1
+	sta	<L311+xSwitchRequired_1
 ;                }
 ;                else
-	bra	L10634
+	bra	L10580
 ;                {
 ;                    mtCOVERAGE_TEST_MARKER();
 ;                }
@@ -9428,11 +9108,11 @@ L10631:
 ;        #endif /* #if ( configUSE_PREEMPTION == 1 ) */
 ;    }
 ;    else
-L10589:
+L10535:
 ;    {
 ;        xPendedTicks += 1U;
 	inc	|_~xPendedTicks	; volatile
-	bne	L10634
+	bne	L10580
 	inc	|_~xPendedTicks+2	; volatile
 ;
 ;        /* The tick hook gets called at regular intervals, even if the
@@ -9443,23 +9123,23 @@ L10589:
 ;        }
 ;        #endif
 ;    }
-L10634:
+L10580:
 ;
 ;    traceRETURN_xTaskIncrementTick( xSwitchRequired );
 ;
 ;    return xSwitchRequired;
-	lda	<L336+xSwitchRequired_1
+	lda	<L311+xSwitchRequired_1
 	tay
 	pld
 	tsc
 	clc
-	adc	#L335
+	adc	#L310
 	tcs
 	tya
 	rts
 ;}
-L335	equ	30
-L336	equ	13
+L310	equ	30
+L311	equ	13
 	ends
 	efunc
 ;/*-----------------------------------------------------------*/
@@ -9608,7 +9288,7 @@ _~vTaskSwitchContext:
 	longi	on
 	tsc
 	sec
-	sbc	#L360
+	sbc	#L335
 	tcs
 	phd
 	tcd
@@ -9617,7 +9297,7 @@ _~vTaskSwitchContext:
 ;        if( uxSchedulerSuspended != ( UBaseType_t ) 0U )
 ;        {
 	lda	|_~uxSchedulerSuspended	; volatile
-	beq	L10635
+	beq	L10581
 ;            /* The scheduler is currently suspended - do not allow a context
 ;             * switch. */
 ;            xYieldPendings[ 0 ] = pdTRUE;
@@ -9625,8 +9305,8 @@ _~vTaskSwitchContext:
 	sta	|_~xYieldPendings	; volatile
 ;        }
 ;        else
-	brl	L380
-L10635:
+	brl	L355
+L10581:
 ;        {
 ;            xYieldPendings[ 0 ] = pdFALSE;
 	stz	|_~xYieldPendings	; volatile
@@ -9670,14 +9350,14 @@ ulCheckValue_2	set	4
 	sta	<R0+2
 	ldy	#$2e
 	lda	[<R0],Y
-	sta	<L361+pulStack_2
+	sta	<L336+pulStack_2
 	iny
 	iny
 	lda	[<R0],Y
-	sta	<L361+pulStack_2+2
+	sta	<L336+pulStack_2+2
 	lda	#$a5a5
-	sta	<L361+ulCheckValue_2
-	sta	<L361+ulCheckValue_2+2
+	sta	<L336+ulCheckValue_2
+	sta	<L336+ulCheckValue_2+2
 	lda	|_~pxCurrentTCB	; volatile
 	sta	<R0
 	lda	|_~pxCurrentTCB+2	; volatile
@@ -9695,55 +9375,55 @@ ulCheckValue_2	set	4
 	lda	[<R0],Y
 	ldy	#$2
 	sbc	[<R1],Y
-	bcs	L363
-	lda	[<L361+pulStack_2]
+	bcs	L338
+	lda	[<L336+pulStack_2]
 	cmp	#<$a5a5a5a5
-	bne	L365
-	lda	[<L361+pulStack_2],Y
+	bne	L340
+	lda	[<L336+pulStack_2],Y
 	cmp	#^$a5a5a5a5
-L365:
-	bne	L363
+L340:
+	bne	L338
 	ldy	#$4
-	lda	[<L361+pulStack_2],Y
+	lda	[<L336+pulStack_2],Y
 	cmp	#<$a5a5a5a5
-	bne	L367
+	bne	L342
 	iny
 	iny
-	lda	[<L361+pulStack_2],Y
+	lda	[<L336+pulStack_2],Y
 	cmp	#^$a5a5a5a5
-L367:
-	bne	L363
+L342:
+	bne	L338
 	ldy	#$8
-	lda	[<L361+pulStack_2],Y
+	lda	[<L336+pulStack_2],Y
 	cmp	#<$a5a5a5a5
-	bne	L369
+	bne	L344
 	iny
 	iny
-	lda	[<L361+pulStack_2],Y
+	lda	[<L336+pulStack_2],Y
 	cmp	#^$a5a5a5a5
-L369:
-	bne	L363
+L344:
+	bne	L338
 	ldy	#$c
-	lda	[<L361+pulStack_2],Y
+	lda	[<L336+pulStack_2],Y
 	cmp	#<$a5a5a5a5
-	bne	L371
+	bne	L346
 	iny
 	iny
-	lda	[<L361+pulStack_2],Y
+	lda	[<L336+pulStack_2],Y
 	cmp	#^$a5a5a5a5
-L371:
-	beq	L10643
-L363:
+L346:
+	beq	L10589
+L338:
 pcOverflowTaskName_3	set	8
 	lda	#$32
 	clc
 	adc	|_~pxCurrentTCB	; volatile
-	sta	<L361+pcOverflowTaskName_3
+	sta	<L336+pcOverflowTaskName_3
 	lda	#$0
 	adc	|_~pxCurrentTCB+2	; volatile
-	sta	<L361+pcOverflowTaskName_3+2
+	sta	<L336+pcOverflowTaskName_3+2
 	pha
-	pei	<L361+pcOverflowTaskName_3
+	pei	<L336+pcOverflowTaskName_3
 	lda	|_~pxCurrentTCB+2	; volatile
 	pha
 	lda	|_~pxCurrentTCB	; volatile
@@ -9763,93 +9443,93 @@ pcOverflowTaskName_3	set	8
 ;            /* More details at: https://github.com/FreeRTOS/FreeRTOS-Kernel/blob/main/MISRA.md#rule-115 */
 ;            /* coverity[misra_c_2012_rule_11_5_violation] */
 ;            taskSELECT_HIGHEST_PRIORITY_TASK();
-L10643:
+L10589:
 uxTopPriority_4	set	0
 	lda	|_~uxTopReadyPriority	; volatile
-	sta	<L361+uxTopPriority_4
-	bra	L10644
-L20042:
-	lda	<L361+uxTopPriority_4
-	bne	L10646
-L10650:
-	bra	L10650
-L10646:
-	dec	<L361+uxTopPriority_4
-L10644:
-	lda	<L361+uxTopPriority_4
+	sta	<L336+uxTopPriority_4
+	bra	L10590
+L20036:
+	lda	<L336+uxTopPriority_4
+	bne	L10592
+L10596:
+	bra	L10596
+L10592:
+	dec	<L336+uxTopPriority_4
+L10590:
+	lda	<L336+uxTopPriority_4
 	ldx	#<$12
 	xref	_~~mul
 	jsr	_~~mul
 	tax
 	lda	|_~pxReadyTasksLists,X
-	bne	L373
+	bne	L348
 	lda	#$1
-	bra	L375
-L373:
+	bra	L350
+L348:
 	lda	#$0
-L375:
+L350:
 	tax
-	bne	L20042
+	bne	L20036
 pxConstList_5	set	2
-	lda	<L361+uxTopPriority_4
+	lda	<L336+uxTopPriority_4
 	ldx	#<$12
 	xref	_~~mul
 	jsr	_~~mul
 	clc
 	adc	#<_~pxReadyTasksLists
-	sta	<L361+pxConstList_5
+	sta	<L336+pxConstList_5
 	xref	_BEG_DATA
 	lda	#_BEG_DATA>>16
-	sta	<L361+pxConstList_5+2
+	sta	<L336+pxConstList_5+2
 	ldy	#$2
-	lda	[<L361+pxConstList_5],Y
+	lda	[<L336+pxConstList_5],Y
 	sta	<R0
 	iny
 	iny
-	lda	[<L361+pxConstList_5],Y
+	lda	[<L336+pxConstList_5],Y
 	sta	<R0+2
 	lda	[<R0],Y
 	dey
 	dey
-	sta	[<L361+pxConstList_5],Y
+	sta	[<L336+pxConstList_5],Y
 	ldy	#$6
 	lda	[<R0],Y
 	dey
 	dey
-	sta	[<L361+pxConstList_5],Y
+	sta	[<L336+pxConstList_5],Y
 	lda	#$6
 	clc
-	adc	<L361+pxConstList_5
+	adc	<L336+pxConstList_5
 	sta	<R0
 	lda	#$0
-	adc	<L361+pxConstList_5+2
+	adc	<L336+pxConstList_5+2
 	sta	<R0+2
 	dey
 	dey
-	lda	[<L361+pxConstList_5],Y
+	lda	[<L336+pxConstList_5],Y
 	cmp	<R0
-	bne	L378
+	bne	L353
 	iny
 	iny
-	lda	[<L361+pxConstList_5],Y
+	lda	[<L336+pxConstList_5],Y
 	cmp	<R0+2
-L378:
-	bne	L10656
+L353:
+	bne	L10602
 	ldy	#$a
-	lda	[<L361+pxConstList_5],Y
+	lda	[<L336+pxConstList_5],Y
 	ldy	#$2
-	sta	[<L361+pxConstList_5],Y
+	sta	[<L336+pxConstList_5],Y
 	ldy	#$c
-	lda	[<L361+pxConstList_5],Y
+	lda	[<L336+pxConstList_5],Y
 	ldy	#$4
-	sta	[<L361+pxConstList_5],Y
-L10656:
+	sta	[<L336+pxConstList_5],Y
+L10602:
 	ldy	#$2
-	lda	[<L361+pxConstList_5],Y
+	lda	[<L336+pxConstList_5],Y
 	sta	<R0
 	iny
 	iny
-	lda	[<L361+pxConstList_5],Y
+	lda	[<L336+pxConstList_5],Y
 	sta	<R0+2
 	ldy	#$c
 	lda	[<R0],Y
@@ -9858,7 +9538,7 @@ L10656:
 	iny
 	lda	[<R0],Y
 	sta	|_~pxCurrentTCB+2	; volatile
-	lda	<L361+uxTopPriority_4
+	lda	<L336+uxTopPriority_4
 	sta	|_~uxTopReadyPriority	; volatile
 ;            traceTASK_SWITCHED_IN();
 ;
@@ -9885,15 +9565,15 @@ L10656:
 ;
 ;        traceRETURN_vTaskSwitchContext();
 ;    }
-L380:
+L355:
 	pld
 	tsc
 	clc
-	adc	#L360
+	adc	#L335
 	tcs
 	rts
-L360	equ	20
-L361	equ	9
+L335	equ	20
+L336	equ	9
 	ends
 	efunc
 ;#else /* if ( configNUMBER_OF_CORES == 1 ) */
@@ -10010,7 +9690,7 @@ _~vTaskPlaceOnEventList:
 	longi	on
 	tsc
 	sec
-	sbc	#L381
+	sbc	#L356
 	tcs
 	phd
 	tcd
@@ -10019,12 +9699,12 @@ xTicksToWait_0	set	7
 ;    traceENTER_vTaskPlaceOnEventList( pxEventList, xTicksToWait );
 ;
 ;    configASSERT( pxEventList );
-	lda	<L381+pxEventList_0
-	ora	<L381+pxEventList_0+2
-	bne	L10657
-L10661:
-	bra	L10661
-L10657:
+	lda	<L356+pxEventList_0
+	ora	<L356+pxEventList_0+2
+	bne	L10603
+L10607:
+	bra	L10607
+L10603:
 ;
 ;    /* THIS FUNCTION MUST BE CALLED WITH THE
 ;     * SCHEDULER SUSPENDED AND THE QUEUE BEING ACCESSED LOCKED. */
@@ -10049,28 +9729,28 @@ L10657:
 	adc	|_~pxCurrentTCB+2	; volatile
 	pha
 	pei	<R0
-	pei	<L381+pxEventList_0+2
-	pei	<L381+pxEventList_0
+	pei	<L356+pxEventList_0+2
+	pei	<L356+pxEventList_0
 	jsr	_~vListInsert
 ;
 ;    prvAddCurrentTaskToDelayedList( xTicksToWait, pdTRUE );
 	pea	#<$1
-	pei	<L381+xTicksToWait_0+2
-	pei	<L381+xTicksToWait_0
+	pei	<L356+xTicksToWait_0+2
+	pei	<L356+xTicksToWait_0
 	jsr	_~prvAddCurrentTaskToDelayedList
 ;
 ;    traceRETURN_vTaskPlaceOnEventList();
 ;}
-	lda	<L381+1
-	sta	<L381+1+8
+	lda	<L356+1
+	sta	<L356+1+8
 	pld
 	tsc
 	clc
-	adc	#L381+8
+	adc	#L356+8
 	tcs
 	rts
-L381	equ	4
-L382	equ	5
+L356	equ	4
+L357	equ	5
 	ends
 	efunc
 ;/*-----------------------------------------------------------*/
@@ -10087,7 +9767,7 @@ _~vTaskPlaceOnUnorderedEventList:
 	longi	on
 	tsc
 	sec
-	sbc	#L385
+	sbc	#L360
 	tcs
 	phd
 	tcd
@@ -10097,21 +9777,21 @@ xTicksToWait_0	set	11
 ;    traceENTER_vTaskPlaceOnUnorderedEventList( pxEventList, xItemValue, xTicksToWait );
 ;
 ;    configASSERT( pxEventList );
-	lda	<L385+pxEventList_0
-	ora	<L385+pxEventList_0+2
-	bne	L10664
-L10668:
-	bra	L10668
-L10664:
+	lda	<L360+pxEventList_0
+	ora	<L360+pxEventList_0+2
+	bne	L10610
+L10614:
+	bra	L10614
+L10610:
 ;
 ;    /* THIS FUNCTION MUST BE CALLED WITH THE SCHEDULER SUSPENDED.  It is used by
 ;     * the event groups implementation. */
 ;    configASSERT( uxSchedulerSuspended != ( UBaseType_t ) 0U );
 	lda	|_~uxSchedulerSuspended	; volatile
-	bne	L10671
-L10675:
-	bra	L10675
-L10671:
+	bne	L10617
+L10621:
+	bra	L10621
+L10617:
 ;
 ;    /* Store the item value in the event list item.  It is safe to access the
 ;     * event list item here as interrupts won't access the event list item of a
@@ -10121,9 +9801,9 @@ L10671:
 	sta	<R0
 	lda	|_~pxCurrentTCB+2	; volatile
 	sta	<R0+2
-	lda	<L385+xItemValue_0
+	lda	<L360+xItemValue_0
 	sta	<R1
-	lda	<L385+xItemValue_0+2
+	lda	<L360+xItemValue_0+2
 	ora	#^$80000000
 	sta	<R1+2
 	lda	<R1
@@ -10142,20 +9822,20 @@ L10671:
 ;    listINSERT_END( pxEventList, &( pxCurrentTCB->xEventListItem ) );
 pxIndex_2	set	0
 	ldy	#$2
-	lda	[<L385+pxEventList_0],Y
-	sta	<L386+pxIndex_2
+	lda	[<L360+pxEventList_0],Y
+	sta	<L361+pxIndex_2
 	iny
 	iny
-	lda	[<L385+pxEventList_0],Y
-	sta	<L386+pxIndex_2+2
+	lda	[<L360+pxEventList_0],Y
+	sta	<L361+pxIndex_2+2
 	lda	|_~pxCurrentTCB	; volatile
 	sta	<R0
 	lda	|_~pxCurrentTCB+2	; volatile
 	sta	<R0+2
-	lda	<L386+pxIndex_2
+	lda	<L361+pxIndex_2
 	ldy	#$1c
 	sta	[<R0],Y
-	lda	<L386+pxIndex_2+2
+	lda	<L361+pxIndex_2+2
 	iny
 	iny
 	sta	[<R0],Y
@@ -10164,19 +9844,19 @@ pxIndex_2	set	0
 	lda	|_~pxCurrentTCB+2	; volatile
 	sta	<R0+2
 	ldy	#$8
-	lda	[<L386+pxIndex_2],Y
+	lda	[<L361+pxIndex_2],Y
 	ldy	#$20
 	sta	[<R0],Y
 	ldy	#$a
-	lda	[<L386+pxIndex_2],Y
+	lda	[<L361+pxIndex_2],Y
 	ldy	#$22
 	sta	[<R0],Y
 	ldy	#$8
-	lda	[<L386+pxIndex_2],Y
+	lda	[<L361+pxIndex_2],Y
 	sta	<R0
 	iny
 	iny
-	lda	[<L386+pxIndex_2],Y
+	lda	[<L361+pxIndex_2],Y
 	sta	<R0+2
 	lda	#$18
 	clc
@@ -10202,44 +9882,44 @@ pxIndex_2	set	0
 	lda	<R0
 	iny
 	iny
-	sta	[<L386+pxIndex_2],Y
+	sta	[<L361+pxIndex_2],Y
 	lda	<R0+2
 	iny
 	iny
-	sta	[<L386+pxIndex_2],Y
+	sta	[<L361+pxIndex_2],Y
 	lda	|_~pxCurrentTCB	; volatile
 	sta	<R0
 	lda	|_~pxCurrentTCB+2	; volatile
 	sta	<R0+2
-	lda	<L385+pxEventList_0
+	lda	<L360+pxEventList_0
 	ldy	#$28
 	sta	[<R0],Y
-	lda	<L385+pxEventList_0+2
+	lda	<L360+pxEventList_0+2
 	iny
 	iny
 	sta	[<R0],Y
-	lda	[<L385+pxEventList_0]
+	lda	[<L360+pxEventList_0]
 	ina
-	sta	[<L385+pxEventList_0]
+	sta	[<L360+pxEventList_0]
 ;
 ;    prvAddCurrentTaskToDelayedList( xTicksToWait, pdTRUE );
 	pea	#<$1
-	pei	<L385+xTicksToWait_0+2
-	pei	<L385+xTicksToWait_0
+	pei	<L360+xTicksToWait_0+2
+	pei	<L360+xTicksToWait_0
 	jsr	_~prvAddCurrentTaskToDelayedList
 ;
 ;    traceRETURN_vTaskPlaceOnUnorderedEventList();
 ;}
-	lda	<L385+1
-	sta	<L385+1+12
+	lda	<L360+1
+	sta	<L360+1+12
 	pld
 	tsc
 	clc
-	adc	#L385+12
+	adc	#L360+12
 	tcs
 	rts
-L385	equ	12
-L386	equ	9
+L360	equ	12
+L361	equ	9
 	ends
 	efunc
 ;/*-----------------------------------------------------------*/
@@ -10250,29 +9930,9 @@ L386	equ	9
 ;                                          TickType_t xTicksToWait,
 ;                                          const BaseType_t xWaitIndefinitely )
 ;    {
-	code
-	xdef	_~vTaskPlaceOnEventListRestricted
-	func
-_~vTaskPlaceOnEventListRestricted:
-	longa	on
-	longi	on
-	tsc
-	sec
-	sbc	#L390
-	tcs
-	phd
-	tcd
-pxEventList_0	set	3
-xTicksToWait_0	set	7
-xWaitIndefinitely_0	set	11
 ;        traceENTER_vTaskPlaceOnEventListRestricted( pxEventList, xTicksToWait, xWaitIndefinitely );
 ;
 ;        configASSERT( pxEventList );
-	lda	<L390+pxEventList_0
-	ora	<L390+pxEventList_0+2
-	bne	L10690
-L10685:
-	bra	L10685
 ;
 ;        /* This function should not be called by application code hence the
 ;         * 'Restricted' in its name.  It is not part of the public API.  It is
@@ -10285,124 +9945,20 @@ L10685:
 ;         * be waiting on this event list, so the faster vListInsertEnd() function
 ;         * can be used in place of vListInsert. */
 ;        listINSERT_END( pxEventList, &( pxCurrentTCB->xEventListItem ) );
-L10690:
-pxIndex_2	set	0
-	ldy	#$2
-	lda	[<L390+pxEventList_0],Y
-	sta	<L391+pxIndex_2
-	iny
-	iny
-	lda	[<L390+pxEventList_0],Y
-	sta	<L391+pxIndex_2+2
-	lda	|_~pxCurrentTCB	; volatile
-	sta	<R0
-	lda	|_~pxCurrentTCB+2	; volatile
-	sta	<R0+2
-	lda	<L391+pxIndex_2
-	ldy	#$1c
-	sta	[<R0],Y
-	lda	<L391+pxIndex_2+2
-	iny
-	iny
-	sta	[<R0],Y
-	lda	|_~pxCurrentTCB	; volatile
-	sta	<R0
-	lda	|_~pxCurrentTCB+2	; volatile
-	sta	<R0+2
-	ldy	#$8
-	lda	[<L391+pxIndex_2],Y
-	ldy	#$20
-	sta	[<R0],Y
-	ldy	#$a
-	lda	[<L391+pxIndex_2],Y
-	ldy	#$22
-	sta	[<R0],Y
-	ldy	#$8
-	lda	[<L391+pxIndex_2],Y
-	sta	<R0
-	iny
-	iny
-	lda	[<L391+pxIndex_2],Y
-	sta	<R0+2
-	lda	#$18
-	clc
-	adc	|_~pxCurrentTCB	; volatile
-	sta	<R1
-	lda	#$0
-	adc	|_~pxCurrentTCB+2	; volatile
-	sta	<R1+2
-	lda	<R1
-	ldy	#$4
-	sta	[<R0],Y
-	lda	<R1+2
-	iny
-	iny
-	sta	[<R0],Y
-	lda	#$18
-	clc
-	adc	|_~pxCurrentTCB	; volatile
-	sta	<R0
-	lda	#$0
-	adc	|_~pxCurrentTCB+2	; volatile
-	sta	<R0+2
-	lda	<R0
-	iny
-	iny
-	sta	[<L391+pxIndex_2],Y
-	lda	<R0+2
-	iny
-	iny
-	sta	[<L391+pxIndex_2],Y
-	lda	|_~pxCurrentTCB	; volatile
-	sta	<R0
-	lda	|_~pxCurrentTCB+2	; volatile
-	sta	<R0+2
-	lda	<L390+pxEventList_0
-	ldy	#$28
-	sta	[<R0],Y
-	lda	<L390+pxEventList_0+2
-	iny
-	iny
-	sta	[<R0],Y
-	lda	[<L390+pxEventList_0]
-	ina
-	sta	[<L390+pxEventList_0]
 ;
 ;        /* If the task should block indefinitely then set the block time to a
 ;         * value that will be recognised as an indefinite delay inside the
 ;         * prvAddCurrentTaskToDelayedList() function. */
 ;        if( xWaitIndefinitely != pdFALSE )
 ;        {
-	lda	<L390+xWaitIndefinitely_0
-	beq	L10691
 ;            xTicksToWait = portMAX_DELAY;
-	lda	#$ffff
-	sta	<L390+xTicksToWait_0
-	sta	<L390+xTicksToWait_0+2
 ;        }
 ;
 ;        traceTASK_DELAY_UNTIL( ( xTickCount + xTicksToWait ) );
-L10691:
 ;        prvAddCurrentTaskToDelayedList( xTicksToWait, xWaitIndefinitely );
-	pei	<L390+xWaitIndefinitely_0
-	pei	<L390+xTicksToWait_0+2
-	pei	<L390+xTicksToWait_0
-	jsr	_~prvAddCurrentTaskToDelayedList
 ;
 ;        traceRETURN_vTaskPlaceOnEventListRestricted();
 ;    }
-	lda	<L390+1
-	sta	<L390+1+10
-	pld
-	tsc
-	clc
-	adc	#L390+10
-	tcs
-	rts
-L390	equ	12
-L391	equ	9
-	ends
-	efunc
 ;
 ;#endif /* configUSE_TIMERS */
 ;/*-----------------------------------------------------------*/
@@ -10417,7 +9973,7 @@ _~xTaskRemoveFromEventList:
 	longi	on
 	tsc
 	sec
-	sbc	#L395
+	sbc	#L365
 	tcs
 	phd
 	tcd
@@ -10447,195 +10003,195 @@ xReturn_1	set	4
 ;    /* coverity[misra_c_2012_rule_11_5_violation] */
 ;    pxUnblockedTCB = listGET_OWNER_OF_HEAD_ENTRY( pxEventList );
 	ldy	#$a
-	lda	[<L395+pxEventList_0],Y
+	lda	[<L365+pxEventList_0],Y
 	sta	<R0
 	iny
 	iny
-	lda	[<L395+pxEventList_0],Y
+	lda	[<L365+pxEventList_0],Y
 	sta	<R0+2
 	lda	[<R0],Y
-	sta	<L396+pxUnblockedTCB_1
+	sta	<L366+pxUnblockedTCB_1
 	iny
 	iny
 	lda	[<R0],Y
-	sta	<L396+pxUnblockedTCB_1+2
+	sta	<L366+pxUnblockedTCB_1+2
 ;    configASSERT( pxUnblockedTCB );
-	lda	<L396+pxUnblockedTCB_1
-	ora	<L396+pxUnblockedTCB_1+2
-	bne	L10701
-L10696:
-	bra	L10696
+	lda	<L366+pxUnblockedTCB_1
+	ora	<L366+pxUnblockedTCB_1+2
+	bne	L10636
+L10631:
+	bra	L10631
 ;    listREMOVE_ITEM( &( pxUnblockedTCB->xEventListItem ) );
-L10701:
+L10636:
 pxList_2	set	6
 	ldy	#$28
-	lda	[<L396+pxUnblockedTCB_1],Y
-	sta	<L396+pxList_2
+	lda	[<L366+pxUnblockedTCB_1],Y
+	sta	<L366+pxList_2
 	iny
 	iny
-	lda	[<L396+pxUnblockedTCB_1],Y
-	sta	<L396+pxList_2+2
+	lda	[<L366+pxUnblockedTCB_1],Y
+	sta	<L366+pxList_2+2
 	ldy	#$1c
-	lda	[<L396+pxUnblockedTCB_1],Y
+	lda	[<L366+pxUnblockedTCB_1],Y
 	sta	<R0
 	iny
 	iny
-	lda	[<L396+pxUnblockedTCB_1],Y
+	lda	[<L366+pxUnblockedTCB_1],Y
 	sta	<R0+2
 	iny
 	iny
-	lda	[<L396+pxUnblockedTCB_1],Y
+	lda	[<L366+pxUnblockedTCB_1],Y
 	ldy	#$8
 	sta	[<R0],Y
 	ldy	#$22
-	lda	[<L396+pxUnblockedTCB_1],Y
+	lda	[<L366+pxUnblockedTCB_1],Y
 	ldy	#$a
 	sta	[<R0],Y
 	ldy	#$20
-	lda	[<L396+pxUnblockedTCB_1],Y
+	lda	[<L366+pxUnblockedTCB_1],Y
 	sta	<R0
 	iny
 	iny
-	lda	[<L396+pxUnblockedTCB_1],Y
+	lda	[<L366+pxUnblockedTCB_1],Y
 	sta	<R0+2
 	ldy	#$1c
-	lda	[<L396+pxUnblockedTCB_1],Y
+	lda	[<L366+pxUnblockedTCB_1],Y
 	ldy	#$4
 	sta	[<R0],Y
 	ldy	#$1e
-	lda	[<L396+pxUnblockedTCB_1],Y
+	lda	[<L366+pxUnblockedTCB_1],Y
 	ldy	#$6
 	sta	[<R0],Y
 	lda	#$18
 	clc
-	adc	<L396+pxUnblockedTCB_1
+	adc	<L366+pxUnblockedTCB_1
 	sta	<R0
 	lda	#$0
-	adc	<L396+pxUnblockedTCB_1+2
+	adc	<L366+pxUnblockedTCB_1+2
 	sta	<R0+2
 	ldy	#$2
-	lda	[<L396+pxList_2],Y
+	lda	[<L366+pxList_2],Y
 	cmp	<R0
-	bne	L398
+	bne	L368
 	iny
 	iny
-	lda	[<L396+pxList_2],Y
+	lda	[<L366+pxList_2],Y
 	cmp	<R0+2
-L398:
-	bne	L10702
+L368:
+	bne	L10637
 	ldy	#$20
-	lda	[<L396+pxUnblockedTCB_1],Y
+	lda	[<L366+pxUnblockedTCB_1],Y
 	ldy	#$2
-	sta	[<L396+pxList_2],Y
+	sta	[<L366+pxList_2],Y
 	ldy	#$22
-	lda	[<L396+pxUnblockedTCB_1],Y
+	lda	[<L366+pxUnblockedTCB_1],Y
 	ldy	#$4
-	sta	[<L396+pxList_2],Y
-L10702:
+	sta	[<L366+pxList_2],Y
+L10637:
 	lda	#$0
 	ldy	#$28
-	sta	[<L396+pxUnblockedTCB_1],Y
+	sta	[<L366+pxUnblockedTCB_1],Y
 	iny
 	iny
-	sta	[<L396+pxUnblockedTCB_1],Y
+	sta	[<L366+pxUnblockedTCB_1],Y
 	lda	#$ffff
 	clc
-	adc	[<L396+pxList_2]
-	sta	[<L396+pxList_2]
+	adc	[<L366+pxList_2]
+	sta	[<L366+pxList_2]
 ;
 ;    if( uxSchedulerSuspended == ( UBaseType_t ) 0U )
 ;    {
 	lda	|_~uxSchedulerSuspended	; volatile
 	beq	*+5
-	brl	L10721
+	brl	L10656
 ;        listREMOVE_ITEM( &( pxUnblockedTCB->xStateListItem ) );
 pxList_3	set	6
 	ldy	#$14
-	lda	[<L396+pxUnblockedTCB_1],Y
-	sta	<L396+pxList_3
+	lda	[<L366+pxUnblockedTCB_1],Y
+	sta	<L366+pxList_3
 	iny
 	iny
-	lda	[<L396+pxUnblockedTCB_1],Y
-	sta	<L396+pxList_3+2
+	lda	[<L366+pxUnblockedTCB_1],Y
+	sta	<L366+pxList_3+2
 	ldy	#$8
-	lda	[<L396+pxUnblockedTCB_1],Y
+	lda	[<L366+pxUnblockedTCB_1],Y
 	sta	<R0
 	iny
 	iny
-	lda	[<L396+pxUnblockedTCB_1],Y
+	lda	[<L366+pxUnblockedTCB_1],Y
 	sta	<R0+2
 	iny
 	iny
-	lda	[<L396+pxUnblockedTCB_1],Y
+	lda	[<L366+pxUnblockedTCB_1],Y
 	ldy	#$8
 	sta	[<R0],Y
 	ldy	#$e
-	lda	[<L396+pxUnblockedTCB_1],Y
+	lda	[<L366+pxUnblockedTCB_1],Y
 	ldy	#$a
 	sta	[<R0],Y
 	iny
 	iny
-	lda	[<L396+pxUnblockedTCB_1],Y
+	lda	[<L366+pxUnblockedTCB_1],Y
 	sta	<R0
 	iny
 	iny
-	lda	[<L396+pxUnblockedTCB_1],Y
+	lda	[<L366+pxUnblockedTCB_1],Y
 	sta	<R0+2
 	ldy	#$8
-	lda	[<L396+pxUnblockedTCB_1],Y
+	lda	[<L366+pxUnblockedTCB_1],Y
 	ldy	#$4
 	sta	[<R0],Y
 	ldy	#$a
-	lda	[<L396+pxUnblockedTCB_1],Y
+	lda	[<L366+pxUnblockedTCB_1],Y
 	ldy	#$6
 	sta	[<R0],Y
 	lda	#$4
 	clc
-	adc	<L396+pxUnblockedTCB_1
+	adc	<L366+pxUnblockedTCB_1
 	sta	<R0
 	lda	#$0
-	adc	<L396+pxUnblockedTCB_1+2
+	adc	<L366+pxUnblockedTCB_1+2
 	sta	<R0+2
 	ldy	#$2
-	lda	[<L396+pxList_3],Y
+	lda	[<L366+pxList_3],Y
 	cmp	<R0
-	bne	L401
+	bne	L371
 	iny
 	iny
-	lda	[<L396+pxList_3],Y
+	lda	[<L366+pxList_3],Y
 	cmp	<R0+2
-L401:
-	bne	L10707
+L371:
+	bne	L10642
 	ldy	#$c
-	lda	[<L396+pxUnblockedTCB_1],Y
+	lda	[<L366+pxUnblockedTCB_1],Y
 	ldy	#$2
-	sta	[<L396+pxList_3],Y
+	sta	[<L366+pxList_3],Y
 	ldy	#$e
-	lda	[<L396+pxUnblockedTCB_1],Y
+	lda	[<L366+pxUnblockedTCB_1],Y
 	ldy	#$4
-	sta	[<L396+pxList_3],Y
-L10707:
+	sta	[<L366+pxList_3],Y
+L10642:
 	lda	#$0
 	ldy	#$14
-	sta	[<L396+pxUnblockedTCB_1],Y
+	sta	[<L366+pxUnblockedTCB_1],Y
 	iny
 	iny
-	sta	[<L396+pxUnblockedTCB_1],Y
+	sta	[<L366+pxUnblockedTCB_1],Y
 	lda	#$ffff
 	clc
-	adc	[<L396+pxList_3]
-	sta	[<L396+pxList_3]
+	adc	[<L366+pxList_3]
+	sta	[<L366+pxList_3]
 ;        prvAddTaskToReadyList( pxUnblockedTCB );
 	lda	|_~uxTopReadyPriority	; volatile
 	ldy	#$2c
-	cmp	[<L396+pxUnblockedTCB_1],Y
-	bcs	L10717
-	lda	[<L396+pxUnblockedTCB_1],Y
+	cmp	[<L366+pxUnblockedTCB_1],Y
+	bcs	L10652
+	lda	[<L366+pxUnblockedTCB_1],Y
 	sta	|_~uxTopReadyPriority	; volatile
-L10717:
+L10652:
 pxIndex_4	set	6
 	ldy	#$2c
-	lda	[<L396+pxUnblockedTCB_1],Y
+	lda	[<L366+pxUnblockedTCB_1],Y
 	ldx	#<$12
 	xref	_~~mul
 	jsr	_~~mul
@@ -10647,40 +10203,40 @@ pxIndex_4	set	6
 	adc	<R0
 	sta	<R2
 	lda	(<R2)
-	sta	<L396+pxIndex_4
+	sta	<L366+pxIndex_4
 	ldy	#$2
 	lda	(<R2),Y
-	sta	<L396+pxIndex_4+2
-	lda	<L396+pxIndex_4
+	sta	<L366+pxIndex_4+2
+	lda	<L366+pxIndex_4
 	ldy	#$8
-	sta	[<L396+pxUnblockedTCB_1],Y
-	lda	<L396+pxIndex_4+2
+	sta	[<L366+pxUnblockedTCB_1],Y
+	lda	<L366+pxIndex_4+2
 	iny
 	iny
-	sta	[<L396+pxUnblockedTCB_1],Y
+	sta	[<L366+pxUnblockedTCB_1],Y
 	dey
 	dey
-	lda	[<L396+pxIndex_4],Y
+	lda	[<L366+pxIndex_4],Y
 	ldy	#$c
-	sta	[<L396+pxUnblockedTCB_1],Y
+	sta	[<L366+pxUnblockedTCB_1],Y
 	dey
 	dey
-	lda	[<L396+pxIndex_4],Y
+	lda	[<L366+pxIndex_4],Y
 	ldy	#$e
-	sta	[<L396+pxUnblockedTCB_1],Y
+	sta	[<L366+pxUnblockedTCB_1],Y
 	ldy	#$8
-	lda	[<L396+pxIndex_4],Y
+	lda	[<L366+pxIndex_4],Y
 	sta	<R0
 	iny
 	iny
-	lda	[<L396+pxIndex_4],Y
+	lda	[<L366+pxIndex_4],Y
 	sta	<R0+2
 	lda	#$4
 	clc
-	adc	<L396+pxUnblockedTCB_1
+	adc	<L366+pxUnblockedTCB_1
 	sta	<R1
 	lda	#$0
-	adc	<L396+pxUnblockedTCB_1+2
+	adc	<L366+pxUnblockedTCB_1+2
 	sta	<R1+2
 	lda	<R1
 	ldy	#$4
@@ -10691,21 +10247,21 @@ pxIndex_4	set	6
 	sta	[<R0],Y
 	lda	#$4
 	clc
-	adc	<L396+pxUnblockedTCB_1
+	adc	<L366+pxUnblockedTCB_1
 	sta	<R0
 	lda	#$0
-	adc	<L396+pxUnblockedTCB_1+2
+	adc	<L366+pxUnblockedTCB_1+2
 	sta	<R0+2
 	lda	<R0
 	iny
 	iny
-	sta	[<L396+pxIndex_4],Y
+	sta	[<L366+pxIndex_4],Y
 	lda	<R0+2
 	iny
 	iny
-	sta	[<L396+pxIndex_4],Y
+	sta	[<L366+pxIndex_4],Y
 	ldy	#$2c
-	lda	[<L396+pxUnblockedTCB_1],Y
+	lda	[<L366+pxUnblockedTCB_1],Y
 	ldx	#<$12
 	xref	_~~mul
 	jsr	_~~mul
@@ -10717,19 +10273,19 @@ pxIndex_4	set	6
 	sta	<R0+2
 	lda	<R0
 	ldy	#$14
-	sta	[<L396+pxUnblockedTCB_1],Y
+	sta	[<L366+pxUnblockedTCB_1],Y
 	lda	<R0+2
 	iny
 	iny
-	sta	[<L396+pxUnblockedTCB_1],Y
+	sta	[<L366+pxUnblockedTCB_1],Y
 	ldy	#$2c
-	lda	[<L396+pxUnblockedTCB_1],Y
+	lda	[<L366+pxUnblockedTCB_1],Y
 	ldx	#<$12
 	xref	_~~mul
 	jsr	_~~mul
 	sta	<R0
 	ldy	#$2c
-	lda	[<L396+pxUnblockedTCB_1],Y
+	lda	[<L366+pxUnblockedTCB_1],Y
 	ldx	#<$12
 	xref	_~~mul
 	jsr	_~~mul
@@ -10754,45 +10310,45 @@ pxIndex_4	set	6
 ;        #endif
 ;    }
 ;    else
-	brl	L10718
+	brl	L10653
 ;    {
 ;        /* The delayed and ready lists cannot be accessed, so hold this task
 ;         * pending until the scheduler is resumed. */
 ;        listINSERT_END( &( xPendingReadyList ), &( pxUnblockedTCB->xEventListItem ) );
-L10721:
+L10656:
 pxIndex_5	set	6
 	lda	|_~xPendingReadyList+2
-	sta	<L396+pxIndex_5
+	sta	<L366+pxIndex_5
 	lda	|_~xPendingReadyList+2+2
-	sta	<L396+pxIndex_5+2
-	lda	<L396+pxIndex_5
+	sta	<L366+pxIndex_5+2
+	lda	<L366+pxIndex_5
 	ldy	#$1c
-	sta	[<L396+pxUnblockedTCB_1],Y
-	lda	<L396+pxIndex_5+2
+	sta	[<L366+pxUnblockedTCB_1],Y
+	lda	<L366+pxIndex_5+2
 	iny
 	iny
-	sta	[<L396+pxUnblockedTCB_1],Y
+	sta	[<L366+pxUnblockedTCB_1],Y
 	ldy	#$8
-	lda	[<L396+pxIndex_5],Y
+	lda	[<L366+pxIndex_5],Y
 	ldy	#$20
-	sta	[<L396+pxUnblockedTCB_1],Y
+	sta	[<L366+pxUnblockedTCB_1],Y
 	ldy	#$a
-	lda	[<L396+pxIndex_5],Y
+	lda	[<L366+pxIndex_5],Y
 	ldy	#$22
-	sta	[<L396+pxUnblockedTCB_1],Y
+	sta	[<L366+pxUnblockedTCB_1],Y
 	ldy	#$8
-	lda	[<L396+pxIndex_5],Y
+	lda	[<L366+pxIndex_5],Y
 	sta	<R0
 	iny
 	iny
-	lda	[<L396+pxIndex_5],Y
+	lda	[<L366+pxIndex_5],Y
 	sta	<R0+2
 	lda	#$18
 	clc
-	adc	<L396+pxUnblockedTCB_1
+	adc	<L366+pxUnblockedTCB_1
 	sta	<R1
 	lda	#$0
-	adc	<L396+pxUnblockedTCB_1+2
+	adc	<L366+pxUnblockedTCB_1+2
 	sta	<R1+2
 	lda	<R1
 	ldy	#$4
@@ -10803,19 +10359,19 @@ pxIndex_5	set	6
 	sta	[<R0],Y
 	lda	#$18
 	clc
-	adc	<L396+pxUnblockedTCB_1
+	adc	<L366+pxUnblockedTCB_1
 	sta	<R0
 	lda	#$0
-	adc	<L396+pxUnblockedTCB_1+2
+	adc	<L366+pxUnblockedTCB_1+2
 	sta	<R0+2
 	lda	<R0
 	iny
 	iny
-	sta	[<L396+pxIndex_5],Y
+	sta	[<L366+pxIndex_5],Y
 	lda	<R0+2
 	iny
 	iny
-	sta	[<L396+pxIndex_5],Y
+	sta	[<L366+pxIndex_5],Y
 	lda	#<_~xPendingReadyList
 	sta	<R0
 	xref	_BEG_DATA
@@ -10823,14 +10379,14 @@ pxIndex_5	set	6
 	sta	<R0+2
 	lda	<R0
 	ldy	#$28
-	sta	[<L396+pxUnblockedTCB_1],Y
+	sta	[<L366+pxUnblockedTCB_1],Y
 	lda	<R0+2
 	iny
 	iny
-	sta	[<L396+pxUnblockedTCB_1],Y
+	sta	[<L366+pxUnblockedTCB_1],Y
 	inc	|_~xPendingReadyList
 ;    }
-L10718:
+L10653:
 ;
 ;    #if ( configNUMBER_OF_CORES == 1 )
 ;    {
@@ -10842,14 +10398,14 @@ L10718:
 	sta	<R0+2
 	ldy	#$2c
 	lda	[<R0],Y
-	cmp	[<L396+pxUnblockedTCB_1],Y
-	bcs	L10722
+	cmp	[<L366+pxUnblockedTCB_1],Y
+	bcs	L10657
 ;            /* Return true if the task removed from the event list has a higher
 ;             * priority than the calling task.  This allows the calling task to know if
 ;             * it should force a context switch now. */
 ;            xReturn = pdTRUE;
 	lda	#$1
-	sta	<L396+xReturn_1
+	sta	<L366+xReturn_1
 ;
 ;            /* Mark that a yield is pending in case the user is not using the
 ;             * "xHigherPriorityTaskWoken" parameter to an ISR safe FreeRTOS function. */
@@ -10857,13 +10413,13 @@ L10718:
 	sta	|_~xYieldPendings	; volatile
 ;        }
 ;        else
-	bra	L10723
-L10722:
+	bra	L10658
+L10657:
 ;        {
 ;            xReturn = pdFALSE;
-	stz	<L396+xReturn_1
+	stz	<L366+xReturn_1
 ;        }
-L10723:
+L10658:
 ;    }
 ;    #else /* #if ( configNUMBER_OF_CORES == 1 ) */
 ;    {
@@ -10884,20 +10440,20 @@ L10723:
 ;
 ;    traceRETURN_xTaskRemoveFromEventList( xReturn );
 ;    return xReturn;
-	lda	<L396+xReturn_1
+	lda	<L366+xReturn_1
 	tay
-	lda	<L395+1
-	sta	<L395+1+4
+	lda	<L365+1
+	sta	<L365+1+4
 	pld
 	tsc
 	clc
-	adc	#L395+4
+	adc	#L365+4
 	tcs
 	tya
 	rts
 ;}
-L395	equ	22
-L396	equ	13
+L365	equ	22
+L366	equ	13
 	ends
 	efunc
 ;/*-----------------------------------------------------------*/
@@ -10913,7 +10469,7 @@ _~vTaskRemoveFromUnorderedEventList:
 	longi	on
 	tsc
 	sec
-	sbc	#L406
+	sbc	#L376
 	tcs
 	phd
 	tcd
@@ -10928,23 +10484,23 @@ pxUnblockedTCB_1	set	0
 ;     * the event flags implementation. */
 ;    configASSERT( uxSchedulerSuspended != ( UBaseType_t ) 0U );
 	lda	|_~uxSchedulerSuspended	; volatile
-	bne	L10724
-L10728:
-	bra	L10728
-L10724:
+	bne	L10659
+L10663:
+	bra	L10663
+L10659:
 ;
 ;    /* Store the new item value in the event list. */
 ;    listSET_LIST_ITEM_VALUE( pxEventListItem, xItemValue | taskEVENT_LIST_ITEM_VALUE_IN_USE );
-	lda	<L406+xItemValue_0
+	lda	<L376+xItemValue_0
 	sta	<R0
-	lda	<L406+xItemValue_0+2
+	lda	<L376+xItemValue_0+2
 	ora	#^$80000000
 	sta	<R0+2
 	lda	<R0
-	sta	[<L406+pxEventListItem_0]
+	sta	[<L376+pxEventListItem_0]
 	lda	<R0+2
 	ldy	#$2
-	sta	[<L406+pxEventListItem_0],Y
+	sta	[<L376+pxEventListItem_0],Y
 ;
 ;    /* Remove the event list form the event flag.  Interrupts do not access
 ;     * event flags. */
@@ -10953,87 +10509,87 @@ L10724:
 ;    /* coverity[misra_c_2012_rule_11_5_violation] */
 ;    pxUnblockedTCB = listGET_LIST_ITEM_OWNER( pxEventListItem );
 	ldy	#$c
-	lda	[<L406+pxEventListItem_0],Y
-	sta	<L407+pxUnblockedTCB_1
+	lda	[<L376+pxEventListItem_0],Y
+	sta	<L377+pxUnblockedTCB_1
 	iny
 	iny
-	lda	[<L406+pxEventListItem_0],Y
-	sta	<L407+pxUnblockedTCB_1+2
+	lda	[<L376+pxEventListItem_0],Y
+	sta	<L377+pxUnblockedTCB_1+2
 ;    configASSERT( pxUnblockedTCB );
-	lda	<L407+pxUnblockedTCB_1
-	ora	<L407+pxUnblockedTCB_1+2
-	bne	L10740
-L10735:
-	bra	L10735
+	lda	<L377+pxUnblockedTCB_1
+	ora	<L377+pxUnblockedTCB_1+2
+	bne	L10675
+L10670:
+	bra	L10670
 ;    listREMOVE_ITEM( pxEventListItem );
-L10740:
+L10675:
 pxList_2	set	4
 	ldy	#$10
-	lda	[<L406+pxEventListItem_0],Y
-	sta	<L407+pxList_2
+	lda	[<L376+pxEventListItem_0],Y
+	sta	<L377+pxList_2
 	iny
 	iny
-	lda	[<L406+pxEventListItem_0],Y
-	sta	<L407+pxList_2+2
+	lda	[<L376+pxEventListItem_0],Y
+	sta	<L377+pxList_2+2
 	ldy	#$4
-	lda	[<L406+pxEventListItem_0],Y
+	lda	[<L376+pxEventListItem_0],Y
 	sta	<R0
 	iny
 	iny
-	lda	[<L406+pxEventListItem_0],Y
+	lda	[<L376+pxEventListItem_0],Y
 	sta	<R0+2
 	iny
 	iny
-	lda	[<L406+pxEventListItem_0],Y
+	lda	[<L376+pxEventListItem_0],Y
 	sta	[<R0],Y
 	iny
 	iny
-	lda	[<L406+pxEventListItem_0],Y
+	lda	[<L376+pxEventListItem_0],Y
 	sta	[<R0],Y
 	dey
 	dey
-	lda	[<L406+pxEventListItem_0],Y
+	lda	[<L376+pxEventListItem_0],Y
 	sta	<R0
 	iny
 	iny
-	lda	[<L406+pxEventListItem_0],Y
+	lda	[<L376+pxEventListItem_0],Y
 	sta	<R0+2
 	ldy	#$4
-	lda	[<L406+pxEventListItem_0],Y
+	lda	[<L376+pxEventListItem_0],Y
 	sta	[<R0],Y
 	iny
 	iny
-	lda	[<L406+pxEventListItem_0],Y
+	lda	[<L376+pxEventListItem_0],Y
 	sta	[<R0],Y
 	ldy	#$2
-	lda	[<L407+pxList_2],Y
-	cmp	<L406+pxEventListItem_0
-	bne	L410
+	lda	[<L377+pxList_2],Y
+	cmp	<L376+pxEventListItem_0
+	bne	L380
 	iny
 	iny
-	lda	[<L407+pxList_2],Y
-	cmp	<L406+pxEventListItem_0+2
-L410:
-	bne	L10741
+	lda	[<L377+pxList_2],Y
+	cmp	<L376+pxEventListItem_0+2
+L380:
+	bne	L10676
 	ldy	#$8
-	lda	[<L406+pxEventListItem_0],Y
+	lda	[<L376+pxEventListItem_0],Y
 	ldy	#$2
-	sta	[<L407+pxList_2],Y
+	sta	[<L377+pxList_2],Y
 	ldy	#$a
-	lda	[<L406+pxEventListItem_0],Y
+	lda	[<L376+pxEventListItem_0],Y
 	ldy	#$4
-	sta	[<L407+pxList_2],Y
-L10741:
+	sta	[<L377+pxList_2],Y
+L10676:
 	lda	#$0
 	ldy	#$10
-	sta	[<L406+pxEventListItem_0],Y
+	sta	[<L376+pxEventListItem_0],Y
 	iny
 	iny
-	sta	[<L406+pxEventListItem_0],Y
+	sta	[<L376+pxEventListItem_0],Y
 	lda	#$ffff
 	clc
-	adc	[<L407+pxList_2]
-	sta	[<L407+pxList_2]
+	adc	[<L377+pxList_2]
+	sta	[<L377+pxList_2]
 ;
 ;    #if ( configUSE_TICKLESS_IDLE != 0 )
 ;    {
@@ -11056,91 +10612,91 @@ L10741:
 pxList_3	set	4
 	iny
 	iny
-	lda	[<L407+pxUnblockedTCB_1],Y
-	sta	<L407+pxList_3
+	lda	[<L377+pxUnblockedTCB_1],Y
+	sta	<L377+pxList_3
 	iny
 	iny
-	lda	[<L407+pxUnblockedTCB_1],Y
-	sta	<L407+pxList_3+2
+	lda	[<L377+pxUnblockedTCB_1],Y
+	sta	<L377+pxList_3+2
 	ldy	#$8
-	lda	[<L407+pxUnblockedTCB_1],Y
+	lda	[<L377+pxUnblockedTCB_1],Y
 	sta	<R0
 	iny
 	iny
-	lda	[<L407+pxUnblockedTCB_1],Y
+	lda	[<L377+pxUnblockedTCB_1],Y
 	sta	<R0+2
 	iny
 	iny
-	lda	[<L407+pxUnblockedTCB_1],Y
+	lda	[<L377+pxUnblockedTCB_1],Y
 	ldy	#$8
 	sta	[<R0],Y
 	ldy	#$e
-	lda	[<L407+pxUnblockedTCB_1],Y
+	lda	[<L377+pxUnblockedTCB_1],Y
 	ldy	#$a
 	sta	[<R0],Y
 	iny
 	iny
-	lda	[<L407+pxUnblockedTCB_1],Y
+	lda	[<L377+pxUnblockedTCB_1],Y
 	sta	<R0
 	iny
 	iny
-	lda	[<L407+pxUnblockedTCB_1],Y
+	lda	[<L377+pxUnblockedTCB_1],Y
 	sta	<R0+2
 	ldy	#$8
-	lda	[<L407+pxUnblockedTCB_1],Y
+	lda	[<L377+pxUnblockedTCB_1],Y
 	ldy	#$4
 	sta	[<R0],Y
 	ldy	#$a
-	lda	[<L407+pxUnblockedTCB_1],Y
+	lda	[<L377+pxUnblockedTCB_1],Y
 	ldy	#$6
 	sta	[<R0],Y
 	lda	#$4
 	clc
-	adc	<L407+pxUnblockedTCB_1
+	adc	<L377+pxUnblockedTCB_1
 	sta	<R0
 	lda	#$0
-	adc	<L407+pxUnblockedTCB_1+2
+	adc	<L377+pxUnblockedTCB_1+2
 	sta	<R0+2
 	ldy	#$2
-	lda	[<L407+pxList_3],Y
+	lda	[<L377+pxList_3],Y
 	cmp	<R0
-	bne	L412
+	bne	L382
 	iny
 	iny
-	lda	[<L407+pxList_3],Y
+	lda	[<L377+pxList_3],Y
 	cmp	<R0+2
-L412:
-	bne	L10745
+L382:
+	bne	L10680
 	ldy	#$c
-	lda	[<L407+pxUnblockedTCB_1],Y
+	lda	[<L377+pxUnblockedTCB_1],Y
 	ldy	#$2
-	sta	[<L407+pxList_3],Y
+	sta	[<L377+pxList_3],Y
 	ldy	#$e
-	lda	[<L407+pxUnblockedTCB_1],Y
+	lda	[<L377+pxUnblockedTCB_1],Y
 	ldy	#$4
-	sta	[<L407+pxList_3],Y
-L10745:
+	sta	[<L377+pxList_3],Y
+L10680:
 	lda	#$0
 	ldy	#$14
-	sta	[<L407+pxUnblockedTCB_1],Y
+	sta	[<L377+pxUnblockedTCB_1],Y
 	iny
 	iny
-	sta	[<L407+pxUnblockedTCB_1],Y
+	sta	[<L377+pxUnblockedTCB_1],Y
 	lda	#$ffff
 	clc
-	adc	[<L407+pxList_3]
-	sta	[<L407+pxList_3]
+	adc	[<L377+pxList_3]
+	sta	[<L377+pxList_3]
 ;    prvAddTaskToReadyList( pxUnblockedTCB );
 	lda	|_~uxTopReadyPriority	; volatile
 	ldy	#$2c
-	cmp	[<L407+pxUnblockedTCB_1],Y
-	bcs	L10755
-	lda	[<L407+pxUnblockedTCB_1],Y
+	cmp	[<L377+pxUnblockedTCB_1],Y
+	bcs	L10690
+	lda	[<L377+pxUnblockedTCB_1],Y
 	sta	|_~uxTopReadyPriority	; volatile
-L10755:
+L10690:
 pxIndex_4	set	4
 	ldy	#$2c
-	lda	[<L407+pxUnblockedTCB_1],Y
+	lda	[<L377+pxUnblockedTCB_1],Y
 	ldx	#<$12
 	xref	_~~mul
 	jsr	_~~mul
@@ -11152,40 +10708,40 @@ pxIndex_4	set	4
 	adc	<R0
 	sta	<R2
 	lda	(<R2)
-	sta	<L407+pxIndex_4
+	sta	<L377+pxIndex_4
 	ldy	#$2
 	lda	(<R2),Y
-	sta	<L407+pxIndex_4+2
-	lda	<L407+pxIndex_4
+	sta	<L377+pxIndex_4+2
+	lda	<L377+pxIndex_4
 	ldy	#$8
-	sta	[<L407+pxUnblockedTCB_1],Y
-	lda	<L407+pxIndex_4+2
+	sta	[<L377+pxUnblockedTCB_1],Y
+	lda	<L377+pxIndex_4+2
 	iny
 	iny
-	sta	[<L407+pxUnblockedTCB_1],Y
+	sta	[<L377+pxUnblockedTCB_1],Y
 	dey
 	dey
-	lda	[<L407+pxIndex_4],Y
+	lda	[<L377+pxIndex_4],Y
 	ldy	#$c
-	sta	[<L407+pxUnblockedTCB_1],Y
+	sta	[<L377+pxUnblockedTCB_1],Y
 	dey
 	dey
-	lda	[<L407+pxIndex_4],Y
+	lda	[<L377+pxIndex_4],Y
 	ldy	#$e
-	sta	[<L407+pxUnblockedTCB_1],Y
+	sta	[<L377+pxUnblockedTCB_1],Y
 	ldy	#$8
-	lda	[<L407+pxIndex_4],Y
+	lda	[<L377+pxIndex_4],Y
 	sta	<R0
 	iny
 	iny
-	lda	[<L407+pxIndex_4],Y
+	lda	[<L377+pxIndex_4],Y
 	sta	<R0+2
 	lda	#$4
 	clc
-	adc	<L407+pxUnblockedTCB_1
+	adc	<L377+pxUnblockedTCB_1
 	sta	<R1
 	lda	#$0
-	adc	<L407+pxUnblockedTCB_1+2
+	adc	<L377+pxUnblockedTCB_1+2
 	sta	<R1+2
 	lda	<R1
 	ldy	#$4
@@ -11196,21 +10752,21 @@ pxIndex_4	set	4
 	sta	[<R0],Y
 	lda	#$4
 	clc
-	adc	<L407+pxUnblockedTCB_1
+	adc	<L377+pxUnblockedTCB_1
 	sta	<R0
 	lda	#$0
-	adc	<L407+pxUnblockedTCB_1+2
+	adc	<L377+pxUnblockedTCB_1+2
 	sta	<R0+2
 	lda	<R0
 	iny
 	iny
-	sta	[<L407+pxIndex_4],Y
+	sta	[<L377+pxIndex_4],Y
 	lda	<R0+2
 	iny
 	iny
-	sta	[<L407+pxIndex_4],Y
+	sta	[<L377+pxIndex_4],Y
 	ldy	#$2c
-	lda	[<L407+pxUnblockedTCB_1],Y
+	lda	[<L377+pxUnblockedTCB_1],Y
 	ldx	#<$12
 	xref	_~~mul
 	jsr	_~~mul
@@ -11222,19 +10778,19 @@ pxIndex_4	set	4
 	sta	<R0+2
 	lda	<R0
 	ldy	#$14
-	sta	[<L407+pxUnblockedTCB_1],Y
+	sta	[<L377+pxUnblockedTCB_1],Y
 	lda	<R0+2
 	iny
 	iny
-	sta	[<L407+pxUnblockedTCB_1],Y
+	sta	[<L377+pxUnblockedTCB_1],Y
 	ldy	#$2c
-	lda	[<L407+pxUnblockedTCB_1],Y
+	lda	[<L377+pxUnblockedTCB_1],Y
 	ldx	#<$12
 	xref	_~~mul
 	jsr	_~~mul
 	sta	<R0
 	ldy	#$2c
-	lda	[<L407+pxUnblockedTCB_1],Y
+	lda	[<L377+pxUnblockedTCB_1],Y
 	ldx	#<$12
 	xref	_~~mul
 	jsr	_~~mul
@@ -11254,8 +10810,8 @@ pxIndex_4	set	4
 	sta	<R0+2
 	ldy	#$2c
 	lda	[<R0],Y
-	cmp	[<L407+pxUnblockedTCB_1],Y
-	bcs	L416
+	cmp	[<L377+pxUnblockedTCB_1],Y
+	bcs	L386
 ;            /* The unblocked task has a priority above that of the calling task, so
 ;             * a context switch is required.  This function is called with the
 ;             * scheduler suspended so xYieldPending is set so the context switch
@@ -11281,17 +10837,17 @@ pxIndex_4	set	4
 ;
 ;    traceRETURN_vTaskRemoveFromUnorderedEventList();
 ;}
-L416:
-	lda	<L406+1
-	sta	<L406+1+8
+L386:
+	lda	<L376+1
+	sta	<L376+1+8
 	pld
 	tsc
 	clc
-	adc	#L406+8
+	adc	#L376+8
 	tcs
 	rts
-L406	equ	20
-L407	equ	13
+L376	equ	20
+L377	equ	13
 	ends
 	efunc
 ;/*-----------------------------------------------------------*/
@@ -11306,7 +10862,7 @@ _~vTaskSetTimeOutState:
 	longi	on
 	tsc
 	sec
-	sbc	#L417
+	sbc	#L387
 	tcs
 	phd
 	tcd
@@ -11314,40 +10870,40 @@ pxTimeOut_0	set	3
 ;    traceENTER_vTaskSetTimeOutState( pxTimeOut );
 ;
 ;    configASSERT( pxTimeOut );
-	lda	<L417+pxTimeOut_0
-	ora	<L417+pxTimeOut_0+2
-	bne	L10765
-L10761:
-	bra	L10761
+	lda	<L387+pxTimeOut_0
+	ora	<L387+pxTimeOut_0+2
+	bne	L10700
+L10696:
+	bra	L10696
 ;    taskENTER_CRITICAL();
-L10765:
+L10700:
 ;    {
 ;        pxTimeOut->xOverflowCount = xNumOfOverflows;
 	lda	|_~xNumOfOverflows	; volatile
-	sta	[<L417+pxTimeOut_0]
+	sta	[<L387+pxTimeOut_0]
 ;        pxTimeOut->xTimeOnEntering = xTickCount;
 	lda	|_~xTickCount	; volatile
 	ldy	#$2
-	sta	[<L417+pxTimeOut_0],Y
+	sta	[<L387+pxTimeOut_0],Y
 	lda	|_~xTickCount+2	; volatile
 	iny
 	iny
-	sta	[<L417+pxTimeOut_0],Y
+	sta	[<L387+pxTimeOut_0],Y
 ;    }
 ;    taskEXIT_CRITICAL();
 ;
 ;    traceRETURN_vTaskSetTimeOutState();
 ;}
-	lda	<L417+1
-	sta	<L417+1+4
+	lda	<L387+1
+	sta	<L387+1+4
 	pld
 	tsc
 	clc
-	adc	#L417+4
+	adc	#L387+4
 	tcs
 	rts
-L417	equ	0
-L418	equ	1
+L387	equ	0
+L388	equ	1
 	ends
 	efunc
 ;/*-----------------------------------------------------------*/
@@ -11362,7 +10918,7 @@ _~vTaskInternalSetTimeOutState:
 	longi	on
 	tsc
 	sec
-	sbc	#L421
+	sbc	#L391
 	tcs
 	phd
 	tcd
@@ -11372,28 +10928,28 @@ pxTimeOut_0	set	3
 ;    /* For internal use only as it does not use a critical section. */
 ;    pxTimeOut->xOverflowCount = xNumOfOverflows;
 	lda	|_~xNumOfOverflows	; volatile
-	sta	[<L421+pxTimeOut_0]
+	sta	[<L391+pxTimeOut_0]
 ;    pxTimeOut->xTimeOnEntering = xTickCount;
 	lda	|_~xTickCount	; volatile
 	ldy	#$2
-	sta	[<L421+pxTimeOut_0],Y
+	sta	[<L391+pxTimeOut_0],Y
 	lda	|_~xTickCount+2	; volatile
 	iny
 	iny
-	sta	[<L421+pxTimeOut_0],Y
+	sta	[<L391+pxTimeOut_0],Y
 ;
 ;    traceRETURN_vTaskInternalSetTimeOutState();
 ;}
-	lda	<L421+1
-	sta	<L421+1+4
+	lda	<L391+1
+	sta	<L391+1+4
 	pld
 	tsc
 	clc
-	adc	#L421+4
+	adc	#L391+4
 	tcs
 	rts
-L421	equ	0
-L422	equ	1
+L391	equ	0
+L392	equ	1
 	ends
 	efunc
 ;/*-----------------------------------------------------------*/
@@ -11409,7 +10965,7 @@ _~xTaskCheckForTimeOut:
 	longi	on
 	tsc
 	sec
-	sbc	#L424
+	sbc	#L394
 	tcs
 	phd
 	tcd
@@ -11421,21 +10977,21 @@ pxTicksToWait_0	set	7
 xReturn_1	set	0
 ;
 ;    configASSERT( pxTimeOut );
-	lda	<L424+pxTimeOut_0
-	ora	<L424+pxTimeOut_0+2
-	bne	L10770
-L10774:
-	bra	L10774
-L10770:
+	lda	<L394+pxTimeOut_0
+	ora	<L394+pxTimeOut_0+2
+	bne	L10705
+L10709:
+	bra	L10709
+L10705:
 ;    configASSERT( pxTicksToWait );
-	lda	<L424+pxTicksToWait_0
-	ora	<L424+pxTicksToWait_0+2
-	bne	L10785
-L10781:
-	bra	L10781
+	lda	<L394+pxTicksToWait_0
+	ora	<L394+pxTicksToWait_0+2
+	bne	L10720
+L10716:
+	bra	L10716
 ;
 ;    taskENTER_CRITICAL();
-L10785:
+L10720:
 ;    {
 ;        /* Minor optimisation.  The tick count cannot change in this block. */
 ;        const TickType_t xConstTickCount = xTickCount;
@@ -11457,54 +11013,54 @@ L10785:
 xConstTickCount_2	set	2
 xElapsedTime_2	set	6
 	lda	|_~xTickCount	; volatile
-	sta	<L425+xConstTickCount_2
+	sta	<L395+xConstTickCount_2
 	lda	|_~xTickCount+2	; volatile
-	sta	<L425+xConstTickCount_2+2
+	sta	<L395+xConstTickCount_2+2
 	sec
-	lda	<L425+xConstTickCount_2
+	lda	<L395+xConstTickCount_2
 	ldy	#$2
-	sbc	[<L424+pxTimeOut_0],Y
-	sta	<L425+xElapsedTime_2
-	lda	<L425+xConstTickCount_2+2
+	sbc	[<L394+pxTimeOut_0],Y
+	sta	<L395+xElapsedTime_2
+	lda	<L395+xConstTickCount_2+2
 	iny
 	iny
-	sbc	[<L424+pxTimeOut_0],Y
-	sta	<L425+xElapsedTime_2+2
+	sbc	[<L394+pxTimeOut_0],Y
+	sta	<L395+xElapsedTime_2+2
 ;            {
-	lda	[<L424+pxTicksToWait_0]
+	lda	[<L394+pxTicksToWait_0]
 	cmp	#<$ffffffff
-	bne	L428
+	bne	L398
 	dey
 	dey
-	lda	[<L424+pxTicksToWait_0],Y
+	lda	[<L394+pxTicksToWait_0],Y
 	cmp	#^$ffffffff
-L428:
-	bne	L10787
+L398:
+	bne	L10722
 ;                /* If INCLUDE_vTaskSuspend is set to 1 and the block time
 ;                 * specified is the maximum block time then the task should block
 ;                 * indefinitely, and therefore never time out. */
 ;                xReturn = pdFALSE;
-L20043:
-	stz	<L425+xReturn_1
+L20037:
+	stz	<L395+xReturn_1
 ;            }
 ;            else
-	bra	L10794
-L10787:
+	bra	L10729
+L10722:
 ;        #endif
 ;
 ;        if( ( xNumOfOverflows != pxTimeOut->xOverflowCount ) && ( xConstTickCount >= pxTimeOut->xTimeOnEntering ) )
 ;        {
 	lda	|_~xNumOfOverflows	; volatile
-	cmp	[<L424+pxTimeOut_0]
-	beq	L10789
-	lda	<L425+xConstTickCount_2
+	cmp	[<L394+pxTimeOut_0]
+	beq	L10724
+	lda	<L395+xConstTickCount_2
 	ldy	#$2
-	cmp	[<L424+pxTimeOut_0],Y
-	lda	<L425+xConstTickCount_2+2
+	cmp	[<L394+pxTimeOut_0],Y
+	lda	<L395+xConstTickCount_2+2
 	iny
 	iny
-	sbc	[<L424+pxTimeOut_0],Y
-	bcc	L10789
+	sbc	[<L394+pxTimeOut_0],Y
+	bcc	L10724
 ;            /* The tick count is greater than the time at which
 ;             * vTaskSetTimeout() was called, but has also overflowed since
 ;             * vTaskSetTimeOut() was called.  It must have wrapped all the way
@@ -11512,73 +11068,73 @@ L10787:
 ;             * was called. */
 ;            xReturn = pdTRUE;
 	lda	#$1
-	sta	<L425+xReturn_1
+	sta	<L395+xReturn_1
 ;            *pxTicksToWait = ( TickType_t ) 0;
 	dea
-	sta	[<L424+pxTicksToWait_0]
+	sta	[<L394+pxTicksToWait_0]
 	dey
 	dey
-	sta	[<L424+pxTicksToWait_0],Y
+	sta	[<L394+pxTicksToWait_0],Y
 ;        }
 ;        else if( xElapsedTime < *pxTicksToWait )
-	bra	L10794
-L10789:
+	bra	L10729
+L10724:
 ;        {
-	lda	<L425+xElapsedTime_2
-	cmp	[<L424+pxTicksToWait_0]
-	lda	<L425+xElapsedTime_2+2
+	lda	<L395+xElapsedTime_2
+	cmp	[<L394+pxTicksToWait_0]
+	lda	<L395+xElapsedTime_2+2
 	ldy	#$2
-	sbc	[<L424+pxTicksToWait_0],Y
-	bcs	L10791
+	sbc	[<L394+pxTicksToWait_0],Y
+	bcs	L10726
 ;            /* Not a genuine timeout. Adjust parameters for time remaining. */
 ;            *pxTicksToWait -= xElapsedTime;
 	sec
-	lda	[<L424+pxTicksToWait_0]
-	sbc	<L425+xElapsedTime_2
-	sta	[<L424+pxTicksToWait_0]
-	lda	[<L424+pxTicksToWait_0],Y
-	sbc	<L425+xElapsedTime_2+2
-	sta	[<L424+pxTicksToWait_0],Y
+	lda	[<L394+pxTicksToWait_0]
+	sbc	<L395+xElapsedTime_2
+	sta	[<L394+pxTicksToWait_0]
+	lda	[<L394+pxTicksToWait_0],Y
+	sbc	<L395+xElapsedTime_2+2
+	sta	[<L394+pxTicksToWait_0],Y
 ;            vTaskInternalSetTimeOutState( pxTimeOut );
-	pei	<L424+pxTimeOut_0+2
-	pei	<L424+pxTimeOut_0
+	pei	<L394+pxTimeOut_0+2
+	pei	<L394+pxTimeOut_0
 	jsr	_~vTaskInternalSetTimeOutState
 ;            xReturn = pdFALSE;
 ;        }
 ;        else
-	bra	L20043
-L10791:
+	bra	L20037
+L10726:
 ;        {
 ;            *pxTicksToWait = ( TickType_t ) 0;
 	lda	#$0
-	sta	[<L424+pxTicksToWait_0]
+	sta	[<L394+pxTicksToWait_0]
 	ldy	#$2
-	sta	[<L424+pxTicksToWait_0],Y
+	sta	[<L394+pxTicksToWait_0],Y
 ;            xReturn = pdTRUE;
 	ina
-	sta	<L425+xReturn_1
+	sta	<L395+xReturn_1
 ;        }
 ;    }
 ;    taskEXIT_CRITICAL();
-L10794:
+L10729:
 ;
 ;    traceRETURN_xTaskCheckForTimeOut( xReturn );
 ;
 ;    return xReturn;
-	lda	<L425+xReturn_1
+	lda	<L395+xReturn_1
 	tay
-	lda	<L424+1
-	sta	<L424+1+8
+	lda	<L394+1
+	sta	<L394+1+8
 	pld
 	tsc
 	clc
-	adc	#L424+8
+	adc	#L394+8
 	tcs
 	tya
 	rts
 ;}
-L424	equ	10
-L425	equ	1
+L394	equ	10
+L395	equ	1
 	ends
 	efunc
 ;/*-----------------------------------------------------------*/
@@ -11601,8 +11157,8 @@ _~vTaskMissedYield:
 ;    traceRETURN_vTaskMissedYield();
 ;}
 	rts
-L434	equ	0
-L435	equ	1
+L404	equ	0
+L405	equ	1
 	ends
 	efunc
 ;/*-----------------------------------------------------------*/
@@ -11752,7 +11308,7 @@ _~prvIdleTask:
 	longi	on
 	tsc
 	sec
-	sbc	#L437
+	sbc	#L407
 	tcs
 	phd
 	tcd
@@ -11777,13 +11333,13 @@ pvParameters_0	set	3
 ;    #endif /* #if ( configNUMBER_OF_CORES > 1 ) */
 ;
 ;    for( ; configCONTROL_INFINITE_LOOP(); )
-	bra	L10798
-L20045:
+	bra	L10733
+L20039:
 ;                taskYIELD();
 	jsr	_~vPortYield
 ;            }
 ;            else
-L10798:
+L10733:
 ;    {
 ;        /* See if any tasks have deleted themselves - if so then the idle task
 ;         * is responsible for freeing the deleted task's TCB and stack. */
@@ -11816,7 +11372,7 @@ L10798:
 ;            {
 	lda	#$1
 	cmp	|_~pxReadyTasksLists
-	bcc	L20045
+	bcc	L20039
 ;            {
 ;                mtCOVERAGE_TEST_MARKER();
 ;            }
@@ -11894,10 +11450,10 @@ L10798:
 ;        }
 ;        #endif /* #if ( ( configNUMBER_OF_CORES > 1 ) && ( configUSE_PASSIVE_IDLE_HOOK == 1 ) ) */
 ;    }
-	bra	L10798
+	bra	L10733
 ;}
-L437	equ	0
-L438	equ	1
+L407	equ	0
+L408	equ	1
 	ends
 	efunc
 ;/*-----------------------------------------------------------*/
@@ -12043,7 +11599,7 @@ _~prvInitialiseTaskLists:
 	longi	on
 	tsc
 	sec
-	sbc	#L440
+	sbc	#L410
 	tcs
 	phd
 	tcd
@@ -12051,11 +11607,11 @@ _~prvInitialiseTaskLists:
 ;
 ;    for( uxPriority = ( UBaseType_t ) 0U; uxPriority < ( UBaseType_t ) configMAX_PRIORITIES; uxPriority++ )
 uxPriority_1	set	0
-	stz	<L441+uxPriority_1
-L10803:
+	stz	<L411+uxPriority_1
+L10738:
 ;    {
 ;        vListInitialise( &( pxReadyTasksLists[ uxPriority ] ) );
-	lda	<L441+uxPriority_1
+	lda	<L411+uxPriority_1
 	ldx	#<$12
 	xref	_~~mul
 	jsr	_~~mul
@@ -12068,10 +11624,10 @@ L10803:
 	pei	<R0
 	jsr	_~vListInitialise
 ;    }
-	inc	<L441+uxPriority_1
-	lda	<L441+uxPriority_1
+	inc	<L411+uxPriority_1
+	lda	<L411+uxPriority_1
 	cmp	#<$5
-	bcc	L10803
+	bcc	L10738
 ;
 ;    vListInitialise( &xDelayedTaskList1 );
 	lda	#<_~xDelayedTaskList1
@@ -12142,11 +11698,11 @@ L10803:
 	pld
 	tsc
 	clc
-	adc	#L440
+	adc	#L410
 	tcs
 	rts
-L440	equ	14
-L441	equ	13
+L410	equ	14
+L411	equ	13
 	ends
 	efunc
 ;/*-----------------------------------------------------------*/
@@ -12160,7 +11716,7 @@ _~prvCheckTasksWaitingTermination:
 	longi	on
 	tsc
 	sec
-	sbc	#L444
+	sbc	#L414
 	tcs
 	phd
 	tcd
@@ -12174,8 +11730,8 @@ _~prvCheckTasksWaitingTermination:
 ;         * being called too often in the idle task. */
 ;        while( uxDeletedTasksWaitingCleanUp > ( UBaseType_t ) 0U )
 pxTCB_2	set	0
-	bra	L10804
-L20047:
+	bra	L10739
+L20041:
 ;        {
 ;            #if ( configNUMBER_OF_CORES == 1 )
 ;            {
@@ -12192,18 +11748,18 @@ L20047:
 	sta	<R0+2
 	ldy	#$c
 	lda	[<R0],Y
-	sta	<L445+pxTCB_2
+	sta	<L415+pxTCB_2
 	iny
 	iny
 	lda	[<R0],Y
-	sta	<L445+pxTCB_2+2
+	sta	<L415+pxTCB_2+2
 ;                        ( void ) uxListRemove( &( pxTCB->xStateListItem ) );
 	lda	#$4
 	clc
-	adc	<L445+pxTCB_2
+	adc	<L415+pxTCB_2
 	sta	<R0
 	lda	#$0
-	adc	<L445+pxTCB_2+2
+	adc	<L415+pxTCB_2+2
 	pha
 	pei	<R0
 	jsr	_~uxListRemove
@@ -12216,8 +11772,8 @@ L20047:
 ;                taskEXIT_CRITICAL();
 ;
 ;                prvDeleteTCB( pxTCB );
-	pei	<L445+pxTCB_2+2
-	pei	<L445+pxTCB_2
+	pei	<L415+pxTCB_2+2
+	pei	<L415+pxTCB_2
 	jsr	_~prvDeleteTCB
 ;            }
 ;            #else /* #if( configNUMBER_OF_CORES == 1 ) */
@@ -12261,21 +11817,21 @@ L20047:
 ;            }
 ;            #endif /* #if( configNUMBER_OF_CORES == 1 ) */
 ;        }
-L10804:
+L10739:
 	lda	#$0
 	cmp	|_~uxDeletedTasksWaitingCleanUp	; volatile
-	bcc	L20047
+	bcc	L20041
 ;    }
 ;    #endif /* INCLUDE_vTaskDelete */
 ;}
 	pld
 	tsc
 	clc
-	adc	#L444
+	adc	#L414
 	tcs
 	rts
-L444	equ	12
-L445	equ	9
+L414	equ	12
+L415	equ	9
 	ends
 	efunc
 ;/*-----------------------------------------------------------*/
@@ -12476,7 +12032,7 @@ _~prvTaskCheckFreeStackSpace:
 	longi	on
 	tsc
 	sec
-	sbc	#L448
+	sbc	#L418
 	tcs
 	phd
 	tcd
@@ -12485,45 +12041,45 @@ pucStackByte_0	set	3
 ;
 ;        while( *pucStackByte == ( uint8_t ) tskSTACK_FILL_BYTE )
 uxCount_1	set	0
-	stz	<L449+uxCount_1
-	bra	L10812
-L20049:
+	stz	<L419+uxCount_1
+	bra	L10747
+L20043:
 ;        {
 ;            pucStackByte -= portSTACK_GROWTH;
-	inc	<L448+pucStackByte_0
-	bne	L451
-	inc	<L448+pucStackByte_0+2
-L451:
+	inc	<L418+pucStackByte_0
+	bne	L421
+	inc	<L418+pucStackByte_0+2
+L421:
 ;            uxCount++;
-	inc	<L449+uxCount_1
+	inc	<L419+uxCount_1
 ;        }
-L10812:
+L10747:
 	sep	#$20
 	longa	off
-	lda	[<L448+pucStackByte_0]
+	lda	[<L418+pucStackByte_0]
 	cmp	#<$a5
 	rep	#$20
 	longa	on
-	beq	L20049
+	beq	L20043
 ;
 ;        uxCount /= ( configSTACK_DEPTH_TYPE ) sizeof( StackType_t );
-	lsr	<L449+uxCount_1
+	lsr	<L419+uxCount_1
 ;
 ;        return uxCount;
-	lda	<L449+uxCount_1
+	lda	<L419+uxCount_1
 	tay
-	lda	<L448+1
-	sta	<L448+1+4
+	lda	<L418+1
+	sta	<L418+1+4
 	pld
 	tsc
 	clc
-	adc	#L448+4
+	adc	#L418+4
 	tcs
 	tya
 	rts
 ;    }
-L448	equ	2
-L449	equ	1
+L418	equ	2
+L419	equ	1
 	ends
 	efunc
 ;
@@ -12587,7 +12143,7 @@ _~uxTaskGetStackHighWaterMark:
 	longi	on
 	tsc
 	sec
-	sbc	#L453
+	sbc	#L423
 	tcs
 	phd
 	tcd
@@ -12602,38 +12158,38 @@ pucEndOfStack_1	set	4
 uxReturn_1	set	8
 ;
 ;        pxTCB = prvGetTCBFromHandle( xTask );
-	lda	<L453+xTask_0
-	ora	<L453+xTask_0+2
-	bne	L455
+	lda	<L423+xTask_0
+	ora	<L423+xTask_0+2
+	bne	L425
 	ldx	|_~pxCurrentTCB+2	; volatile
 	lda	|_~pxCurrentTCB	; volatile
-	bra	L457
-L455:
-	ldx	<L453+xTask_0+2
-	lda	<L453+xTask_0
-L457:
+	bra	L427
+L425:
+	ldx	<L423+xTask_0+2
+	lda	<L423+xTask_0
+L427:
 	stx	<R0+2
-	sta	<L454+pxTCB_1
+	sta	<L424+pxTCB_1
 	lda	<R0+2
-	sta	<L454+pxTCB_1+2
+	sta	<L424+pxTCB_1+2
 ;        configASSERT( pxTCB != NULL );
-	lda	<L454+pxTCB_1
-	ora	<L454+pxTCB_1+2
-	bne	L10814
-L10818:
-	bra	L10818
-L10814:
+	lda	<L424+pxTCB_1
+	ora	<L424+pxTCB_1+2
+	bne	L10749
+L10753:
+	bra	L10753
+L10749:
 ;
 ;        #if portSTACK_GROWTH < 0
 ;        {
 ;            pucEndOfStack = ( uint8_t * ) pxTCB->pxStack;
 	ldy	#$2e
-	lda	[<L454+pxTCB_1],Y
-	sta	<L454+pucEndOfStack_1
+	lda	[<L424+pxTCB_1],Y
+	sta	<L424+pucEndOfStack_1
 	iny
 	iny
-	lda	[<L454+pxTCB_1],Y
-	sta	<L454+pucEndOfStack_1+2
+	lda	[<L424+pxTCB_1],Y
+	sta	<L424+pucEndOfStack_1+2
 ;        }
 ;        #else
 ;        {
@@ -12643,26 +12199,26 @@ L10814:
 ;
 ;        uxReturn = ( UBaseType_t ) prvTaskCheckFreeStackSpace( pucEndOfStack );
 	pha
-	pei	<L454+pucEndOfStack_1
+	pei	<L424+pucEndOfStack_1
 	jsr	_~prvTaskCheckFreeStackSpace
-	sta	<L454+uxReturn_1
+	sta	<L424+uxReturn_1
 ;
 ;        traceRETURN_uxTaskGetStackHighWaterMark( uxReturn );
 ;
 ;        return uxReturn;
 	tay
-	lda	<L453+1
-	sta	<L453+1+4
+	lda	<L423+1
+	sta	<L423+1+4
 	pld
 	tsc
 	clc
-	adc	#L453+4
+	adc	#L423+4
 	tcs
 	tya
 	rts
 ;    }
-L453	equ	14
-L454	equ	5
+L423	equ	14
+L424	equ	5
 	ends
 	efunc
 ;
@@ -12680,7 +12236,7 @@ _~prvDeleteTCB:
 	longi	on
 	tsc
 	sec
-	sbc	#L460
+	sbc	#L430
 	tcs
 	phd
 	tcd
@@ -12702,7 +12258,18 @@ pxTCB_0	set	3
 ;            /* The task can only have been allocated dynamically - free both
 ;             * the stack and TCB. */
 ;            vPortFreeStack( pxTCB->pxStack );
+	ldy	#$30
+	lda	[<L430+pxTCB_0],Y
+	pha
+	dey
+	dey
+	lda	[<L430+pxTCB_0],Y
+	pha
+	jsr	_~vPortFreeStack
 ;            vPortFree( pxTCB );
+	pei	<L430+pxTCB_0+2
+	pei	<L430+pxTCB_0
+	jsr	_~vPortFree
 ;        }
 ;        #elif ( tskSTATIC_AND_DYNAMIC_ALLOCATION_POSSIBLE != 0 )
 ;        {
@@ -12711,72 +12278,37 @@ pxTCB_0	set	3
 ;             * memory. */
 ;            if( pxTCB->ucStaticallyAllocated == tskDYNAMICALLY_ALLOCATED_STACK_AND_TCB )
 ;            {
-	ldy	#$4b
-	lda	[<L460+pxTCB_0],Y
-	and	#$ff
-	bne	L10821
 ;                /* Both the stack and TCB were allocated dynamically, so both
 ;                 * must be freed. */
 ;                vPortFreeStack( pxTCB->pxStack );
-	ldy	#$30
-	lda	[<L460+pxTCB_0],Y
-	pha
-	dey
-	dey
-	lda	[<L460+pxTCB_0],Y
-	pha
-	jsr	_~vPortFreeStack
 ;                vPortFree( pxTCB );
-L20054:
-	pei	<L460+pxTCB_0+2
-	pei	<L460+pxTCB_0
-	jsr	_~vPortFree
 ;            }
 ;            else if( pxTCB->ucStaticallyAllocated == tskSTATICALLY_ALLOCATED_STACK_ONLY )
-L465:
-	lda	<L460+1
-	sta	<L460+1+4
-	pld
-	tsc
-	clc
-	adc	#L460+4
-	tcs
-	rts
+;            {
 ;                /* Only the stack was statically allocated, so the TCB is the
 ;                 * only memory that must be freed. */
 ;                vPortFree( pxTCB );
 ;            }
 ;            else
-L10821:
-;            {
-	sep	#$20
-	longa	off
-	ldy	#$4b
-	lda	[<L460+pxTCB_0],Y
-	cmp	#<$1
-	rep	#$20
-	longa	on
-	beq	L20054
 ;            {
 ;                /* Neither the stack nor the TCB were allocated dynamically, so
 ;                 * nothing needs to be freed. */
 ;                configASSERT( pxTCB->ucStaticallyAllocated == tskSTATICALLY_ALLOCATED_STACK_AND_TCB );
-	sep	#$20
-	longa	off
-	lda	[<L460+pxTCB_0],Y
-	cmp	#<$2
-	rep	#$20
-	longa	on
-	beq	L465
-L10829:
-	bra	L10829
 ;                mtCOVERAGE_TEST_MARKER();
 ;            }
 ;        }
 ;        #endif /* configSUPPORT_DYNAMIC_ALLOCATION */
 ;    }
-L460	equ	0
-L461	equ	1
+	lda	<L430+1
+	sta	<L430+1+4
+	pld
+	tsc
+	clc
+	adc	#L430+4
+	tcs
+	rts
+L430	equ	0
+L431	equ	1
 	ends
 	efunc
 ;
@@ -12792,7 +12324,7 @@ _~prvResetNextTaskUnblockTime:
 	longi	on
 	tsc
 	sec
-	sbc	#L466
+	sbc	#L433
 	tcs
 	phd
 	tcd
@@ -12803,14 +12335,14 @@ _~prvResetNextTaskUnblockTime:
 	lda	|_~pxDelayedTaskList+2	; volatile
 	sta	<R0+2
 	lda	[<R0]
-	bne	L468
+	bne	L435
 	lda	#$1
-	bra	L470
-L468:
+	bra	L437
+L435:
 	lda	#$0
-L470:
+L437:
 	tax
-	beq	L10832
+	beq	L10756
 ;        /* The new current delayed list is empty.  Set xNextTaskUnblockTime to
 ;         * the maximum possible value so it is  extremely unlikely that the
 ;         * if( xTickCount >= xNextTaskUnblockTime ) test will pass until
@@ -12818,10 +12350,10 @@ L470:
 ;        xNextTaskUnblockTime = portMAX_DELAY;
 	lda	#$ffff
 	sta	|_~xNextTaskUnblockTime	; volatile
-	bra	L20055
+	bra	L20044
 ;    }
 ;    else
-L10832:
+L10756:
 ;    {
 ;        /* The new current delayed list is not empty, get the value of
 ;         * the item at the head of the delayed list.  This is the time at
@@ -12843,18 +12375,18 @@ L10832:
 	sta	|_~xNextTaskUnblockTime	; volatile
 	ldy	#$2
 	lda	[<R1],Y
-L20055:
+L20044:
 	sta	|_~xNextTaskUnblockTime+2	; volatile
 ;    }
 ;}
 	pld
 	tsc
 	clc
-	adc	#L466
+	adc	#L433
 	tcs
 	rts
-L466	equ	8
-L467	equ	9
+L433	equ	8
+L434	equ	9
 	ends
 	efunc
 ;/*-----------------------------------------------------------*/
@@ -12872,7 +12404,7 @@ _~xTaskGetCurrentTaskHandle:
 	longi	on
 	tsc
 	sec
-	sbc	#L473
+	sbc	#L440
 	tcs
 	phd
 	tcd
@@ -12886,26 +12418,26 @@ xReturn_1	set	0
 ;             * individual execution thread. */
 ;            xReturn = pxCurrentTCB;
 	lda	|_~pxCurrentTCB	; volatile
-	sta	<L474+xReturn_1
+	sta	<L441+xReturn_1
 	lda	|_~pxCurrentTCB+2	; volatile
-	sta	<L474+xReturn_1+2
+	sta	<L441+xReturn_1+2
 ;
 ;            traceRETURN_xTaskGetCurrentTaskHandle( xReturn );
 ;
 ;            return xReturn;
-	ldx	<L474+xReturn_1+2
-	lda	<L474+xReturn_1
+	ldx	<L441+xReturn_1+2
+	lda	<L441+xReturn_1
 	tay
 	pld
 	tsc
 	clc
-	adc	#L473
+	adc	#L440
 	tcs
 	tya
 	rts
 ;        }
-L473	equ	4
-L474	equ	1
+L440	equ	4
+L441	equ	1
 	ends
 	efunc
 ;    #else /* #if ( configNUMBER_OF_CORES == 1 ) */
@@ -12938,7 +12470,7 @@ _~xTaskGetCurrentTaskHandleForCore:
 	longi	on
 	tsc
 	sec
-	sbc	#L476
+	sbc	#L443
 	tcs
 	phd
 	tcd
@@ -12947,55 +12479,55 @@ xCoreID_0	set	3
 ;
 ;        traceENTER_xTaskGetCurrentTaskHandleForCore( xCoreID );
 xReturn_1	set	0
-	stz	<L477+xReturn_1
-	stz	<L477+xReturn_1+2
+	stz	<L444+xReturn_1
+	stz	<L444+xReturn_1+2
 ;
 ;        if( taskVALID_CORE_ID( xCoreID ) != pdFALSE )
 ;        {
-	lda	<L476+xCoreID_0
-	bmi	L478
-	lda	<L476+xCoreID_0
-	bmi	L480
+	lda	<L443+xCoreID_0
+	bmi	L445
+	lda	<L443+xCoreID_0
+	bmi	L447
 	dea
-	bpl	L478
-L480:
+	bpl	L445
+L447:
 	lda	#$1
-	bra	L481
-L478:
+	bra	L448
+L445:
 	lda	#$0
-L481:
+L448:
 	tax
-	beq	L10834
+	beq	L10758
 ;            #if ( configNUMBER_OF_CORES == 1 )
 ;                xReturn = pxCurrentTCB;
 	lda	|_~pxCurrentTCB	; volatile
-	sta	<L477+xReturn_1
+	sta	<L444+xReturn_1
 	lda	|_~pxCurrentTCB+2	; volatile
-	sta	<L477+xReturn_1+2
+	sta	<L444+xReturn_1+2
 ;            #else /* #if ( configNUMBER_OF_CORES == 1 ) */
 ;                xReturn = pxCurrentTCBs[ xCoreID ];
 ;            #endif /* #if ( configNUMBER_OF_CORES == 1 ) */
 ;        }
 ;
 ;        traceRETURN_xTaskGetCurrentTaskHandleForCore( xReturn );
-L10834:
+L10758:
 ;
 ;        return xReturn;
-	ldx	<L477+xReturn_1+2
-	lda	<L477+xReturn_1
+	ldx	<L444+xReturn_1+2
+	lda	<L444+xReturn_1
 	tay
-	lda	<L476+1
-	sta	<L476+1+2
+	lda	<L443+1
+	sta	<L443+1+2
 	pld
 	tsc
 	clc
-	adc	#L476+2
+	adc	#L443+2
 	tcs
 	tya
 	rts
 ;    }
-L476	equ	4
-L477	equ	1
+L443	equ	4
+L444	equ	1
 	ends
 	efunc
 ;
@@ -13014,7 +12546,7 @@ _~xTaskGetSchedulerState:
 	longi	on
 	tsc
 	sec
-	sbc	#L484
+	sbc	#L451
 	tcs
 	phd
 	tcd
@@ -13026,21 +12558,21 @@ xReturn_1	set	0
 ;        if( xSchedulerRunning == pdFALSE )
 ;        {
 	lda	|_~xSchedulerRunning	; volatile
-	bne	L10835
+	bne	L10759
 ;            xReturn = taskSCHEDULER_NOT_STARTED;
 	lda	#$1
-	bra	L20056
-L20058:
+	bra	L20045
+L20047:
 ;                    xReturn = taskSCHEDULER_RUNNING;
 	lda	#$2
 ;                }
 ;                else
-L20056:
-	sta	<L485+xReturn_1
+L20045:
+	sta	<L452+xReturn_1
 ;        }
 ;        else
-	bra	L10836
-L10835:
+	bra	L10760
+L10759:
 ;        {
 ;            #if ( configNUMBER_OF_CORES > 1 )
 ;                taskENTER_CRITICAL();
@@ -13049,33 +12581,33 @@ L10835:
 ;                if( uxSchedulerSuspended == ( UBaseType_t ) 0U )
 ;                {
 	lda	|_~uxSchedulerSuspended	; volatile
-	beq	L20058
+	beq	L20047
 ;                {
 ;                    xReturn = taskSCHEDULER_SUSPENDED;
-	stz	<L485+xReturn_1
+	stz	<L452+xReturn_1
 ;                }
 ;            }
 ;            #if ( configNUMBER_OF_CORES > 1 )
 ;                taskEXIT_CRITICAL();
 ;            #endif
 ;        }
-L10836:
+L10760:
 ;
 ;        traceRETURN_xTaskGetSchedulerState( xReturn );
 ;
 ;        return xReturn;
-	lda	<L485+xReturn_1
+	lda	<L452+xReturn_1
 	tay
 	pld
 	tsc
 	clc
-	adc	#L484
+	adc	#L451
 	tcs
 	tya
 	rts
 ;    }
-L484	equ	2
-L485	equ	1
+L451	equ	2
+L452	equ	1
 	ends
 	efunc
 ;
@@ -13094,7 +12626,7 @@ _~xTaskPriorityInherit:
 	longi	on
 	tsc
 	sec
-	sbc	#L489
+	sbc	#L456
 	tcs
 	phd
 	tcd
@@ -13105,20 +12637,20 @@ pxMutexHolder_0	set	3
 ;        traceENTER_xTaskPriorityInherit( pxMutexHolder );
 pxMutexHolderTCB_1	set	0
 xReturn_1	set	4
-	lda	<L489+pxMutexHolder_0
-	sta	<L490+pxMutexHolderTCB_1
-	lda	<L489+pxMutexHolder_0+2
-	sta	<L490+pxMutexHolderTCB_1+2
-	stz	<L490+xReturn_1
+	lda	<L456+pxMutexHolder_0
+	sta	<L457+pxMutexHolderTCB_1
+	lda	<L456+pxMutexHolder_0+2
+	sta	<L457+pxMutexHolderTCB_1+2
+	stz	<L457+xReturn_1
 ;
 ;        /* If the mutex is taken by an interrupt, the mutex holder is NULL. Priority
 ;         * inheritance is not applied in this scenario. */
 ;        if( pxMutexHolder != NULL )
 ;        {
-	lda	<L489+pxMutexHolder_0
-	ora	<L489+pxMutexHolder_0+2
+	lda	<L456+pxMutexHolder_0
+	ora	<L456+pxMutexHolder_0+2
 	bne	*+5
-	brl	L10860
+	brl	L10784
 ;            /* If the holder of the mutex has a priority below the priority of
 ;             * the task attempting to obtain the mutex then it will temporarily
 ;             * inherit the priority of the task attempting to obtain the mutex. */
@@ -13129,19 +12661,19 @@ xReturn_1	set	4
 	lda	|_~pxCurrentTCB+2	; volatile
 	sta	<R0+2
 	ldy	#$2c
-	lda	[<L490+pxMutexHolderTCB_1],Y
+	lda	[<L457+pxMutexHolderTCB_1],Y
 	cmp	[<R0],Y
 	bcc	*+5
-	brl	L10840
+	brl	L10764
 ;                /* Adjust the mutex holder state to account for its new
 ;                 * priority.  Only reset the event list item value if the value is
 ;                 * not being used for anything else. */
 ;                if( ( listGET_LIST_ITEM_VALUE( &( pxMutexHolderTCB->xEventListItem ) ) & taskEVENT_LIST_ITEM_VALUE_IN_USE ) == ( ( TickType_t ) 0U ) )
 ;                {
 	ldy	#$1a
-	lda	[<L490+pxMutexHolderTCB_1],Y
+	lda	[<L457+pxMutexHolderTCB_1],Y
 	and	#^$80000000
-	bne	L10842
+	bne	L10766
 ;                    listSET_LIST_ITEM_VALUE( &( pxMutexHolderTCB->xEventListItem ), ( TickType_t ) configMAX_PRIORITIES - ( TickType_t ) pxCurrentTCB->uxPriority );
 	lda	|_~pxCurrentTCB	; volatile
 	sta	<R0
@@ -13160,24 +12692,24 @@ xReturn_1	set	4
 	sta	<R1+2
 	lda	<R1
 	ldy	#$18
-	sta	[<L490+pxMutexHolderTCB_1],Y
+	sta	[<L457+pxMutexHolderTCB_1],Y
 	lda	<R1+2
 	iny
 	iny
-	sta	[<L490+pxMutexHolderTCB_1],Y
+	sta	[<L457+pxMutexHolderTCB_1],Y
 ;                }
 ;                else
 ;                {
 ;                    mtCOVERAGE_TEST_MARKER();
 ;                }
-L10842:
+L10766:
 ;
 ;                /* If the task being modified is in the ready state it will need
 ;                 * to be moved into a new list. */
 ;                if( listIS_CONTAINED_WITHIN( &( pxReadyTasksLists[ pxMutexHolderTCB->uxPriority ] ), &( pxMutexHolderTCB->xStateListItem ) ) != pdFALSE )
 ;                {
 	ldy	#$2c
-	lda	[<L490+pxMutexHolderTCB_1],Y
+	lda	[<L457+pxMutexHolderTCB_1],Y
 	ldx	#<$12
 	xref	_~~mul
 	jsr	_~~mul
@@ -13189,35 +12721,35 @@ L10842:
 	sta	<R0+2
 	lda	<R0
 	ldy	#$14
-	cmp	[<L490+pxMutexHolderTCB_1],Y
-	bne	L495
+	cmp	[<L457+pxMutexHolderTCB_1],Y
+	bne	L462
 	lda	<R0+2
 	iny
 	iny
-	cmp	[<L490+pxMutexHolderTCB_1],Y
-L495:
-	bne	L494
+	cmp	[<L457+pxMutexHolderTCB_1],Y
+L462:
+	bne	L461
 	lda	#$1
-	bra	L497
-L494:
+	bra	L464
+L461:
 	lda	#$0
-L497:
+L464:
 	tax
 	bne	*+5
-	brl	L10843
+	brl	L10767
 ;                    if( uxListRemove( &( pxMutexHolderTCB->xStateListItem ) ) == ( UBaseType_t ) 0 )
 ;                    {
 	lda	#$4
 	clc
-	adc	<L490+pxMutexHolderTCB_1
+	adc	<L457+pxMutexHolderTCB_1
 	sta	<R0
 	lda	#$0
-	adc	<L490+pxMutexHolderTCB_1+2
+	adc	<L457+pxMutexHolderTCB_1+2
 	pha
 	pei	<R0
 	jsr	_~uxListRemove
 	tax
-	beq	L10845
+	beq	L10769
 ;                        /* It is known that the task is in its ready list so
 ;                         * there is no need to check again and the port level
 ;                         * reset macro can be called directly. */
@@ -13227,7 +12759,7 @@ L497:
 ;                    {
 ;                        mtCOVERAGE_TEST_MARKER();
 ;                    }
-L10845:
+L10769:
 ;
 ;                    /* Inherit the priority before being moved into the new list. */
 ;                    pxMutexHolderTCB->uxPriority = pxCurrentTCB->uxPriority;
@@ -13237,17 +12769,17 @@ L10845:
 	sta	<R0+2
 	ldy	#$2c
 	lda	[<R0],Y
-	sta	[<L490+pxMutexHolderTCB_1],Y
+	sta	[<L457+pxMutexHolderTCB_1],Y
 ;                    prvAddTaskToReadyList( pxMutexHolderTCB );
 	lda	|_~uxTopReadyPriority	; volatile
-	cmp	[<L490+pxMutexHolderTCB_1],Y
-	bcs	L10855
-	lda	[<L490+pxMutexHolderTCB_1],Y
+	cmp	[<L457+pxMutexHolderTCB_1],Y
+	bcs	L10779
+	lda	[<L457+pxMutexHolderTCB_1],Y
 	sta	|_~uxTopReadyPriority	; volatile
-L10855:
+L10779:
 pxIndex_2	set	6
 	ldy	#$2c
-	lda	[<L490+pxMutexHolderTCB_1],Y
+	lda	[<L457+pxMutexHolderTCB_1],Y
 	ldx	#<$12
 	xref	_~~mul
 	jsr	_~~mul
@@ -13259,40 +12791,40 @@ pxIndex_2	set	6
 	adc	<R0
 	sta	<R2
 	lda	(<R2)
-	sta	<L490+pxIndex_2
+	sta	<L457+pxIndex_2
 	ldy	#$2
 	lda	(<R2),Y
-	sta	<L490+pxIndex_2+2
-	lda	<L490+pxIndex_2
+	sta	<L457+pxIndex_2+2
+	lda	<L457+pxIndex_2
 	ldy	#$8
-	sta	[<L490+pxMutexHolderTCB_1],Y
-	lda	<L490+pxIndex_2+2
+	sta	[<L457+pxMutexHolderTCB_1],Y
+	lda	<L457+pxIndex_2+2
 	iny
 	iny
-	sta	[<L490+pxMutexHolderTCB_1],Y
+	sta	[<L457+pxMutexHolderTCB_1],Y
 	dey
 	dey
-	lda	[<L490+pxIndex_2],Y
+	lda	[<L457+pxIndex_2],Y
 	ldy	#$c
-	sta	[<L490+pxMutexHolderTCB_1],Y
+	sta	[<L457+pxMutexHolderTCB_1],Y
 	dey
 	dey
-	lda	[<L490+pxIndex_2],Y
+	lda	[<L457+pxIndex_2],Y
 	ldy	#$e
-	sta	[<L490+pxMutexHolderTCB_1],Y
+	sta	[<L457+pxMutexHolderTCB_1],Y
 	ldy	#$8
-	lda	[<L490+pxIndex_2],Y
+	lda	[<L457+pxIndex_2],Y
 	sta	<R0
 	iny
 	iny
-	lda	[<L490+pxIndex_2],Y
+	lda	[<L457+pxIndex_2],Y
 	sta	<R0+2
 	lda	#$4
 	clc
-	adc	<L490+pxMutexHolderTCB_1
+	adc	<L457+pxMutexHolderTCB_1
 	sta	<R1
 	lda	#$0
-	adc	<L490+pxMutexHolderTCB_1+2
+	adc	<L457+pxMutexHolderTCB_1+2
 	sta	<R1+2
 	lda	<R1
 	ldy	#$4
@@ -13303,21 +12835,21 @@ pxIndex_2	set	6
 	sta	[<R0],Y
 	lda	#$4
 	clc
-	adc	<L490+pxMutexHolderTCB_1
+	adc	<L457+pxMutexHolderTCB_1
 	sta	<R0
 	lda	#$0
-	adc	<L490+pxMutexHolderTCB_1+2
+	adc	<L457+pxMutexHolderTCB_1+2
 	sta	<R0+2
 	lda	<R0
 	iny
 	iny
-	sta	[<L490+pxIndex_2],Y
+	sta	[<L457+pxIndex_2],Y
 	lda	<R0+2
 	iny
 	iny
-	sta	[<L490+pxIndex_2],Y
+	sta	[<L457+pxIndex_2],Y
 	ldy	#$2c
-	lda	[<L490+pxMutexHolderTCB_1],Y
+	lda	[<L457+pxMutexHolderTCB_1],Y
 	ldx	#<$12
 	xref	_~~mul
 	jsr	_~~mul
@@ -13329,19 +12861,19 @@ pxIndex_2	set	6
 	sta	<R0+2
 	lda	<R0
 	ldy	#$14
-	sta	[<L490+pxMutexHolderTCB_1],Y
+	sta	[<L457+pxMutexHolderTCB_1],Y
 	lda	<R0+2
 	iny
 	iny
-	sta	[<L490+pxMutexHolderTCB_1],Y
+	sta	[<L457+pxMutexHolderTCB_1],Y
 	ldy	#$2c
-	lda	[<L490+pxMutexHolderTCB_1],Y
+	lda	[<L457+pxMutexHolderTCB_1],Y
 	ldx	#<$12
 	xref	_~~mul
 	jsr	_~~mul
 	sta	<R0
 	ldy	#$2c
-	lda	[<L490+pxMutexHolderTCB_1],Y
+	lda	[<L457+pxMutexHolderTCB_1],Y
 	ldx	#<$12
 	xref	_~~mul
 	jsr	_~~mul
@@ -13362,8 +12894,8 @@ pxIndex_2	set	6
 ;                    #endif /* if ( configNUMBER_OF_CORES > 1 ) */
 ;                }
 ;                else
-	bra	L10856
-L10843:
+	bra	L10780
+L10767:
 ;                {
 ;                    /* Just inherit the priority. */
 ;                    pxMutexHolderTCB->uxPriority = pxCurrentTCB->uxPriority;
@@ -13373,35 +12905,35 @@ L10843:
 	sta	<R0+2
 	ldy	#$2c
 	lda	[<R0],Y
-	sta	[<L490+pxMutexHolderTCB_1],Y
+	sta	[<L457+pxMutexHolderTCB_1],Y
 ;                }
-L10856:
+L10780:
 ;
 ;                traceTASK_PRIORITY_INHERIT( pxMutexHolderTCB, pxCurrentTCB->uxPriority );
 ;
 ;                /* Inheritance occurred. */
 ;                xReturn = pdTRUE;
 	lda	#$1
-	sta	<L490+xReturn_1
+	sta	<L457+xReturn_1
 ;            }
 ;            else
-L10860:
+L10784:
 ;
 ;        traceRETURN_xTaskPriorityInherit( xReturn );
 ;
 ;        return xReturn;
-	lda	<L490+xReturn_1
+	lda	<L457+xReturn_1
 	tay
-	lda	<L489+1
-	sta	<L489+1+4
+	lda	<L456+1
+	sta	<L456+1+4
 	pld
 	tsc
 	clc
-	adc	#L489+4
+	adc	#L456+4
 	tcs
 	tya
 	rts
-L10840:
+L10764:
 ;            {
 ;                if( pxMutexHolderTCB->uxBasePriority < pxCurrentTCB->uxPriority )
 ;                {
@@ -13410,10 +12942,10 @@ L10840:
 	lda	|_~pxCurrentTCB+2	; volatile
 	sta	<R0+2
 	ldy	#$42
-	lda	[<L490+pxMutexHolderTCB_1],Y
+	lda	[<L457+pxMutexHolderTCB_1],Y
 	ldy	#$2c
 	cmp	[<R0],Y
-	bcs	L10860
+	bcs	L10784
 ;                    /* The base priority of the mutex holder is lower than the
 ;                     * priority of the task attempting to take the mutex, but the
 ;                     * current priority of the mutex holder is not lower than the
@@ -13422,7 +12954,7 @@ L10840:
 ;                     * priority, but inheritance would have occurred if that had
 ;                     * not been the case. */
 ;                    xReturn = pdTRUE;
-	bra	L10856
+	bra	L10780
 ;                }
 ;                else
 ;                {
@@ -13435,8 +12967,8 @@ L10840:
 ;            mtCOVERAGE_TEST_MARKER();
 ;        }
 ;    }
-L489	equ	22
-L490	equ	13
+L456	equ	22
+L457	equ	13
 	ends
 	efunc
 ;
@@ -13455,7 +12987,7 @@ _~xTaskPriorityDisinherit:
 	longi	on
 	tsc
 	sec
-	sbc	#L503
+	sbc	#L470
 	tcs
 	phd
 	tcd
@@ -13466,65 +12998,65 @@ pxMutexHolder_0	set	3
 ;        traceENTER_xTaskPriorityDisinherit( pxMutexHolder );
 pxTCB_1	set	0
 xReturn_1	set	4
-	lda	<L503+pxMutexHolder_0
-	sta	<L504+pxTCB_1
-	lda	<L503+pxMutexHolder_0+2
-	sta	<L504+pxTCB_1+2
-	stz	<L504+xReturn_1
+	lda	<L470+pxMutexHolder_0
+	sta	<L471+pxTCB_1
+	lda	<L470+pxMutexHolder_0+2
+	sta	<L471+pxTCB_1+2
+	stz	<L471+xReturn_1
 ;
 ;        if( pxMutexHolder != NULL )
 ;        {
-	lda	<L503+pxMutexHolder_0
-	ora	<L503+pxMutexHolder_0+2
+	lda	<L470+pxMutexHolder_0
+	ora	<L470+pxMutexHolder_0+2
 	bne	*+5
-	brl	L10892
+	brl	L10816
 ;            /* A task can only have an inherited priority if it holds the mutex.
 ;             * If the mutex is held by a task then it cannot be given from an
 ;             * interrupt, and if a mutex is given by the holding task then it must
 ;             * be the running state task. */
 ;            configASSERT( pxTCB == pxCurrentTCB );
-	lda	<L504+pxTCB_1
+	lda	<L471+pxTCB_1
 	cmp	|_~pxCurrentTCB	; volatile
-	bne	L506
-	lda	<L504+pxTCB_1+2
+	bne	L473
+	lda	<L471+pxTCB_1+2
 	cmp	|_~pxCurrentTCB+2	; volatile
-L506:
-	beq	L10862
-L10866:
-	bra	L10866
-L10862:
+L473:
+	beq	L10786
+L10790:
+	bra	L10790
+L10786:
 ;            configASSERT( pxTCB->uxMutexesHeld );
 	ldy	#$44
-	lda	[<L504+pxTCB_1],Y
-	bne	L10869
-L10873:
-	bra	L10873
-L10869:
+	lda	[<L471+pxTCB_1],Y
+	bne	L10793
+L10797:
+	bra	L10797
+L10793:
 ;            ( pxTCB->uxMutexesHeld )--;
 	clc
 	lda	#$ffff
 	ldy	#$44
-	adc	[<L504+pxTCB_1],Y
-	sta	[<L504+pxTCB_1],Y
+	adc	[<L471+pxTCB_1],Y
+	sta	[<L471+pxTCB_1],Y
 ;
 ;            /* Has the holder of the mutex inherited the priority of another
 ;             * task? */
 ;            if( pxTCB->uxPriority != pxTCB->uxBasePriority )
 ;            {
 	ldy	#$2c
-	lda	[<L504+pxTCB_1],Y
+	lda	[<L471+pxTCB_1],Y
 	ldy	#$42
-	cmp	[<L504+pxTCB_1],Y
+	cmp	[<L471+pxTCB_1],Y
 	bne	*+5
-	brl	L10892
+	brl	L10816
 ;                /* Only disinherit if no other mutexes are held. */
 ;                if( pxTCB->uxMutexesHeld == ( UBaseType_t ) 0 )
 ;                {
 	iny
 	iny
-	lda	[<L504+pxTCB_1],Y
+	lda	[<L471+pxTCB_1],Y
 	beq	*+5
-	brl	L10892
+	brl	L10816
 ;                    /* A task can only have an inherited priority if it holds
 ;                     * the mutex.  If the mutex is held by a task then it cannot be
 ;                     * given from an interrupt, and if a mutex is given by the
@@ -13534,31 +13066,31 @@ L10869:
 ;                    {
 	lda	#$4
 	clc
-	adc	<L504+pxTCB_1
+	adc	<L471+pxTCB_1
 	sta	<R0
 	lda	#$0
-	adc	<L504+pxTCB_1+2
+	adc	<L471+pxTCB_1+2
 	pha
 	pei	<R0
 	jsr	_~uxListRemove
 	tax
-	beq	L10879
+	beq	L10803
 ;                        portRESET_READY_PRIORITY( pxTCB->uxPriority, uxTopReadyPriority );
 ;                    }
 ;                    else
 ;                    {
 ;                        mtCOVERAGE_TEST_MARKER();
 ;                    }
-L10879:
+L10803:
 ;
 ;                    /* Disinherit the priority before adding the task into the
 ;                     * new  ready list. */
 ;                    traceTASK_PRIORITY_DISINHERIT( pxTCB, pxTCB->uxBasePriority );
 ;                    pxTCB->uxPriority = pxTCB->uxBasePriority;
 	ldy	#$42
-	lda	[<L504+pxTCB_1],Y
+	lda	[<L471+pxTCB_1],Y
 	ldy	#$2c
-	sta	[<L504+pxTCB_1],Y
+	sta	[<L471+pxTCB_1],Y
 ;
 ;                    /* Reset the event list item value.  It cannot be in use for
 ;                     * any other purpose if this task is running, and it must be
@@ -13575,22 +13107,22 @@ L10879:
 	sta	<R1+2
 	lda	<R1
 	ldy	#$18
-	sta	[<L504+pxTCB_1],Y
+	sta	[<L471+pxTCB_1],Y
 	lda	<R1+2
 	iny
 	iny
-	sta	[<L504+pxTCB_1],Y
+	sta	[<L471+pxTCB_1],Y
 ;                    prvAddTaskToReadyList( pxTCB );
 	lda	|_~uxTopReadyPriority	; volatile
 	ldy	#$2c
-	cmp	[<L504+pxTCB_1],Y
-	bcs	L10889
-	lda	[<L504+pxTCB_1],Y
+	cmp	[<L471+pxTCB_1],Y
+	bcs	L10813
+	lda	[<L471+pxTCB_1],Y
 	sta	|_~uxTopReadyPriority	; volatile
-L10889:
+L10813:
 pxIndex_2	set	6
 	ldy	#$2c
-	lda	[<L504+pxTCB_1],Y
+	lda	[<L471+pxTCB_1],Y
 	ldx	#<$12
 	xref	_~~mul
 	jsr	_~~mul
@@ -13602,40 +13134,40 @@ pxIndex_2	set	6
 	adc	<R0
 	sta	<R2
 	lda	(<R2)
-	sta	<L504+pxIndex_2
+	sta	<L471+pxIndex_2
 	ldy	#$2
 	lda	(<R2),Y
-	sta	<L504+pxIndex_2+2
-	lda	<L504+pxIndex_2
+	sta	<L471+pxIndex_2+2
+	lda	<L471+pxIndex_2
 	ldy	#$8
-	sta	[<L504+pxTCB_1],Y
-	lda	<L504+pxIndex_2+2
+	sta	[<L471+pxTCB_1],Y
+	lda	<L471+pxIndex_2+2
 	iny
 	iny
-	sta	[<L504+pxTCB_1],Y
+	sta	[<L471+pxTCB_1],Y
 	dey
 	dey
-	lda	[<L504+pxIndex_2],Y
+	lda	[<L471+pxIndex_2],Y
 	ldy	#$c
-	sta	[<L504+pxTCB_1],Y
+	sta	[<L471+pxTCB_1],Y
 	dey
 	dey
-	lda	[<L504+pxIndex_2],Y
+	lda	[<L471+pxIndex_2],Y
 	ldy	#$e
-	sta	[<L504+pxTCB_1],Y
+	sta	[<L471+pxTCB_1],Y
 	ldy	#$8
-	lda	[<L504+pxIndex_2],Y
+	lda	[<L471+pxIndex_2],Y
 	sta	<R0
 	iny
 	iny
-	lda	[<L504+pxIndex_2],Y
+	lda	[<L471+pxIndex_2],Y
 	sta	<R0+2
 	lda	#$4
 	clc
-	adc	<L504+pxTCB_1
+	adc	<L471+pxTCB_1
 	sta	<R1
 	lda	#$0
-	adc	<L504+pxTCB_1+2
+	adc	<L471+pxTCB_1+2
 	sta	<R1+2
 	lda	<R1
 	ldy	#$4
@@ -13646,21 +13178,21 @@ pxIndex_2	set	6
 	sta	[<R0],Y
 	lda	#$4
 	clc
-	adc	<L504+pxTCB_1
+	adc	<L471+pxTCB_1
 	sta	<R0
 	lda	#$0
-	adc	<L504+pxTCB_1+2
+	adc	<L471+pxTCB_1+2
 	sta	<R0+2
 	lda	<R0
 	iny
 	iny
-	sta	[<L504+pxIndex_2],Y
+	sta	[<L471+pxIndex_2],Y
 	lda	<R0+2
 	iny
 	iny
-	sta	[<L504+pxIndex_2],Y
+	sta	[<L471+pxIndex_2],Y
 	ldy	#$2c
-	lda	[<L504+pxTCB_1],Y
+	lda	[<L471+pxTCB_1],Y
 	ldx	#<$12
 	xref	_~~mul
 	jsr	_~~mul
@@ -13672,19 +13204,19 @@ pxIndex_2	set	6
 	sta	<R0+2
 	lda	<R0
 	ldy	#$14
-	sta	[<L504+pxTCB_1],Y
+	sta	[<L471+pxTCB_1],Y
 	lda	<R0+2
 	iny
 	iny
-	sta	[<L504+pxTCB_1],Y
+	sta	[<L471+pxTCB_1],Y
 	ldy	#$2c
-	lda	[<L504+pxTCB_1],Y
+	lda	[<L471+pxTCB_1],Y
 	ldx	#<$12
 	xref	_~~mul
 	jsr	_~~mul
 	sta	<R0
 	ldy	#$2c
-	lda	[<L504+pxTCB_1],Y
+	lda	[<L471+pxTCB_1],Y
 	ldx	#<$12
 	xref	_~~mul
 	jsr	_~~mul
@@ -13714,24 +13246,24 @@ pxIndex_2	set	6
 ;                     * a task is waiting on it or not. */
 ;                    xReturn = pdTRUE;
 	lda	#$1
-	sta	<L504+xReturn_1
+	sta	<L471+xReturn_1
 ;                }
 ;                else
 ;        }
 ;        else
-L10892:
+L10816:
 ;
 ;        traceRETURN_xTaskPriorityDisinherit( xReturn );
 ;
 ;        return xReturn;
-	lda	<L504+xReturn_1
+	lda	<L471+xReturn_1
 	tay
-	lda	<L503+1
-	sta	<L503+1+4
+	lda	<L470+1
+	sta	<L470+1+4
 	pld
 	tsc
 	clc
-	adc	#L503+4
+	adc	#L470+4
 	tcs
 	tya
 	rts
@@ -13747,8 +13279,8 @@ L10892:
 ;            mtCOVERAGE_TEST_MARKER();
 ;        }
 ;    }
-L503	equ	22
-L504	equ	13
+L470	equ	22
+L471	equ	13
 	ends
 	efunc
 ;
@@ -13768,7 +13300,7 @@ _~vTaskPriorityDisinheritAfterTimeout:
 	longi	on
 	tsc
 	sec
-	sbc	#L514
+	sbc	#L481
 	tcs
 	phd
 	tcd
@@ -13783,28 +13315,28 @@ pxTCB_1	set	0
 uxPriorityUsedOnEntry_1	set	4
 uxPriorityToUse_1	set	6
 uxOnlyOneMutexHeld_1	set	8
-	lda	<L514+pxMutexHolder_0
-	sta	<L515+pxTCB_1
-	lda	<L514+pxMutexHolder_0+2
-	sta	<L515+pxTCB_1+2
+	lda	<L481+pxMutexHolder_0
+	sta	<L482+pxTCB_1
+	lda	<L481+pxMutexHolder_0+2
+	sta	<L482+pxTCB_1+2
 	lda	#$1
-	sta	<L515+uxOnlyOneMutexHeld_1
+	sta	<L482+uxOnlyOneMutexHeld_1
 ;
 ;        if( pxMutexHolder != NULL )
 ;        {
-	lda	<L514+pxMutexHolder_0
-	ora	<L514+pxMutexHolder_0+2
+	lda	<L481+pxMutexHolder_0
+	ora	<L481+pxMutexHolder_0+2
 	bne	*+5
-	brl	L531
+	brl	L498
 ;            /* If pxMutexHolder is not NULL then the holder must hold at least
 ;             * one mutex. */
 ;            configASSERT( pxTCB->uxMutexesHeld );
 	ldy	#$44
-	lda	[<L515+pxTCB_1],Y
-	bne	L10894
-L10898:
-	bra	L10898
-L10894:
+	lda	[<L482+pxTCB_1],Y
+	bne	L10818
+L10822:
+	bra	L10822
+L10818:
 ;
 ;            /* Determine the priority to which the priority of the task that
 ;             * holds the mutex should be set.  This will be the greater of the
@@ -13813,31 +13345,31 @@ L10894:
 ;            if( pxTCB->uxBasePriority < uxHighestPriorityWaitingTask )
 ;            {
 	ldy	#$42
-	lda	[<L515+pxTCB_1],Y
-	cmp	<L514+uxHighestPriorityWaitingTask_0
-	bcs	L10901
+	lda	[<L482+pxTCB_1],Y
+	cmp	<L481+uxHighestPriorityWaitingTask_0
+	bcs	L10825
 ;                uxPriorityToUse = uxHighestPriorityWaitingTask;
-	lda	<L514+uxHighestPriorityWaitingTask_0
-	bra	L20060
+	lda	<L481+uxHighestPriorityWaitingTask_0
+	bra	L20049
 ;            }
 ;            else
-L10901:
+L10825:
 ;            {
 ;                uxPriorityToUse = pxTCB->uxBasePriority;
 	ldy	#$42
-	lda	[<L515+pxTCB_1],Y
-L20060:
-	sta	<L515+uxPriorityToUse_1
+	lda	[<L482+pxTCB_1],Y
+L20049:
+	sta	<L482+uxPriorityToUse_1
 ;            }
 ;
 ;            /* Does the priority need to change? */
 ;            if( pxTCB->uxPriority != uxPriorityToUse )
 ;            {
 	ldy	#$2c
-	lda	[<L515+pxTCB_1],Y
-	cmp	<L515+uxPriorityToUse_1
+	lda	[<L482+pxTCB_1],Y
+	cmp	<L482+uxPriorityToUse_1
 	bne	*+5
-	brl	L531
+	brl	L498
 ;                /* Only disinherit if no other mutexes are held.  This is a
 ;                 * simplification in the priority inheritance implementation.  If
 ;                 * the task that holds the mutex is also holding other mutexes then
@@ -13845,24 +13377,24 @@ L20060:
 ;                if( pxTCB->uxMutexesHeld == uxOnlyOneMutexHeld )
 ;                {
 	ldy	#$44
-	lda	[<L515+pxTCB_1],Y
+	lda	[<L482+pxTCB_1],Y
 	cmp	#<$1
 	beq	*+5
-	brl	L531
+	brl	L498
 ;                    /* If a task has timed out because it already holds the
 ;                     * mutex it was trying to obtain then it cannot of inherited
 ;                     * its own priority. */
 ;                    configASSERT( pxTCB != pxCurrentTCB );
-	lda	<L515+pxTCB_1
+	lda	<L482+pxTCB_1
 	cmp	|_~pxCurrentTCB	; volatile
-	bne	L521
-	lda	<L515+pxTCB_1+2
+	bne	L488
+	lda	<L482+pxTCB_1+2
 	cmp	|_~pxCurrentTCB+2	; volatile
-L521:
-	bne	L10905
-L10909:
-	bra	L10909
-L10905:
+L488:
+	bne	L10829
+L10833:
+	bra	L10833
+L10829:
 ;
 ;                    /* Disinherit the priority, remembering the previous
 ;                     * priority to facilitate determining the subject task's
@@ -13870,22 +13402,22 @@ L10905:
 ;                    traceTASK_PRIORITY_DISINHERIT( pxTCB, uxPriorityToUse );
 ;                    uxPriorityUsedOnEntry = pxTCB->uxPriority;
 	ldy	#$2c
-	lda	[<L515+pxTCB_1],Y
-	sta	<L515+uxPriorityUsedOnEntry_1
+	lda	[<L482+pxTCB_1],Y
+	sta	<L482+uxPriorityUsedOnEntry_1
 ;                    pxTCB->uxPriority = uxPriorityToUse;
-	lda	<L515+uxPriorityToUse_1
-	sta	[<L515+pxTCB_1],Y
+	lda	<L482+uxPriorityToUse_1
+	sta	[<L482+pxTCB_1],Y
 ;
 ;                    /* Only reset the event list item value if the value is not
 ;                     * being used for anything else. */
 ;                    if( ( listGET_LIST_ITEM_VALUE( &( pxTCB->xEventListItem ) ) & taskEVENT_LIST_ITEM_VALUE_IN_USE ) == ( ( TickType_t ) 0U ) )
 ;                    {
 	ldy	#$1a
-	lda	[<L515+pxTCB_1],Y
+	lda	[<L482+pxTCB_1],Y
 	and	#^$80000000
-	bne	L10913
+	bne	L10837
 ;                        listSET_LIST_ITEM_VALUE( &( pxTCB->xEventListItem ), ( TickType_t ) configMAX_PRIORITIES - ( TickType_t ) uxPriorityToUse );
-	lda	<L515+uxPriorityToUse_1
+	lda	<L482+uxPriorityToUse_1
 	sta	<R0
 	stz	<R0+2
 	sec
@@ -13898,17 +13430,17 @@ L10905:
 	lda	<R1
 	dey
 	dey
-	sta	[<L515+pxTCB_1],Y
+	sta	[<L482+pxTCB_1],Y
 	lda	<R1+2
 	iny
 	iny
-	sta	[<L515+pxTCB_1],Y
+	sta	[<L482+pxTCB_1],Y
 ;                    }
 ;                    else
 ;                    {
 ;                        mtCOVERAGE_TEST_MARKER();
 ;                    }
-L10913:
+L10837:
 ;
 ;                    /* If the running task is not the task that holds the mutex
 ;                     * then the task that holds the mutex could be in either the
@@ -13918,7 +13450,7 @@ L10913:
 ;                     * Ready list per priority. */
 ;                    if( listIS_CONTAINED_WITHIN( &( pxReadyTasksLists[ uxPriorityUsedOnEntry ] ), &( pxTCB->xStateListItem ) ) != pdFALSE )
 ;                    {
-	lda	<L515+uxPriorityUsedOnEntry_1
+	lda	<L482+uxPriorityUsedOnEntry_1
 	ldx	#<$12
 	xref	_~~mul
 	jsr	_~~mul
@@ -13930,35 +13462,35 @@ L10913:
 	sta	<R0+2
 	lda	<R0
 	ldy	#$14
-	cmp	[<L515+pxTCB_1],Y
-	bne	L525
+	cmp	[<L482+pxTCB_1],Y
+	bne	L492
 	lda	<R0+2
 	iny
 	iny
-	cmp	[<L515+pxTCB_1],Y
-L525:
-	bne	L524
+	cmp	[<L482+pxTCB_1],Y
+L492:
+	bne	L491
 	lda	#$1
-	bra	L527
-L524:
+	bra	L494
+L491:
 	lda	#$0
-L527:
+L494:
 	tax
 	bne	*+5
-	brl	L531
+	brl	L498
 ;                        if( uxListRemove( &( pxTCB->xStateListItem ) ) == ( UBaseType_t ) 0 )
 ;                        {
 	lda	#$4
 	clc
-	adc	<L515+pxTCB_1
+	adc	<L482+pxTCB_1
 	sta	<R0
 	lda	#$0
-	adc	<L515+pxTCB_1+2
+	adc	<L482+pxTCB_1+2
 	pha
 	pei	<R0
 	jsr	_~uxListRemove
 	tax
-	beq	L10922
+	beq	L10846
 ;                            /* It is known that the task is in its ready list so
 ;                             * there is no need to check again and the port level
 ;                             * reset macro can be called directly. */
@@ -13970,17 +13502,17 @@ L527:
 ;                        }
 ;
 ;                        prvAddTaskToReadyList( pxTCB );
-L10922:
+L10846:
 	lda	|_~uxTopReadyPriority	; volatile
 	ldy	#$2c
-	cmp	[<L515+pxTCB_1],Y
-	bcs	L10926
-	lda	[<L515+pxTCB_1],Y
+	cmp	[<L482+pxTCB_1],Y
+	bcs	L10850
+	lda	[<L482+pxTCB_1],Y
 	sta	|_~uxTopReadyPriority	; volatile
-L10926:
+L10850:
 pxIndex_2	set	10
 	ldy	#$2c
-	lda	[<L515+pxTCB_1],Y
+	lda	[<L482+pxTCB_1],Y
 	ldx	#<$12
 	xref	_~~mul
 	jsr	_~~mul
@@ -13992,40 +13524,40 @@ pxIndex_2	set	10
 	adc	<R0
 	sta	<R2
 	lda	(<R2)
-	sta	<L515+pxIndex_2
+	sta	<L482+pxIndex_2
 	ldy	#$2
 	lda	(<R2),Y
-	sta	<L515+pxIndex_2+2
-	lda	<L515+pxIndex_2
+	sta	<L482+pxIndex_2+2
+	lda	<L482+pxIndex_2
 	ldy	#$8
-	sta	[<L515+pxTCB_1],Y
-	lda	<L515+pxIndex_2+2
+	sta	[<L482+pxTCB_1],Y
+	lda	<L482+pxIndex_2+2
 	iny
 	iny
-	sta	[<L515+pxTCB_1],Y
+	sta	[<L482+pxTCB_1],Y
 	dey
 	dey
-	lda	[<L515+pxIndex_2],Y
+	lda	[<L482+pxIndex_2],Y
 	ldy	#$c
-	sta	[<L515+pxTCB_1],Y
+	sta	[<L482+pxTCB_1],Y
 	dey
 	dey
-	lda	[<L515+pxIndex_2],Y
+	lda	[<L482+pxIndex_2],Y
 	ldy	#$e
-	sta	[<L515+pxTCB_1],Y
+	sta	[<L482+pxTCB_1],Y
 	ldy	#$8
-	lda	[<L515+pxIndex_2],Y
+	lda	[<L482+pxIndex_2],Y
 	sta	<R0
 	iny
 	iny
-	lda	[<L515+pxIndex_2],Y
+	lda	[<L482+pxIndex_2],Y
 	sta	<R0+2
 	lda	#$4
 	clc
-	adc	<L515+pxTCB_1
+	adc	<L482+pxTCB_1
 	sta	<R1
 	lda	#$0
-	adc	<L515+pxTCB_1+2
+	adc	<L482+pxTCB_1+2
 	sta	<R1+2
 	lda	<R1
 	ldy	#$4
@@ -14036,21 +13568,21 @@ pxIndex_2	set	10
 	sta	[<R0],Y
 	lda	#$4
 	clc
-	adc	<L515+pxTCB_1
+	adc	<L482+pxTCB_1
 	sta	<R0
 	lda	#$0
-	adc	<L515+pxTCB_1+2
+	adc	<L482+pxTCB_1+2
 	sta	<R0+2
 	lda	<R0
 	iny
 	iny
-	sta	[<L515+pxIndex_2],Y
+	sta	[<L482+pxIndex_2],Y
 	lda	<R0+2
 	iny
 	iny
-	sta	[<L515+pxIndex_2],Y
+	sta	[<L482+pxIndex_2],Y
 	ldy	#$2c
-	lda	[<L515+pxTCB_1],Y
+	lda	[<L482+pxTCB_1],Y
 	ldx	#<$12
 	xref	_~~mul
 	jsr	_~~mul
@@ -14062,19 +13594,19 @@ pxIndex_2	set	10
 	sta	<R0+2
 	lda	<R0
 	ldy	#$14
-	sta	[<L515+pxTCB_1],Y
+	sta	[<L482+pxTCB_1],Y
 	lda	<R0+2
 	iny
 	iny
-	sta	[<L515+pxTCB_1],Y
+	sta	[<L482+pxTCB_1],Y
 	ldy	#$2c
-	lda	[<L515+pxTCB_1],Y
+	lda	[<L482+pxTCB_1],Y
 	ldx	#<$12
 	xref	_~~mul
 	jsr	_~~mul
 	sta	<R0
 	ldy	#$2c
-	lda	[<L515+pxTCB_1],Y
+	lda	[<L482+pxTCB_1],Y
 	ldx	#<$12
 	xref	_~~mul
 	jsr	_~~mul
@@ -14097,13 +13629,13 @@ pxIndex_2	set	10
 ;                    else
 ;            }
 ;            else
-L531:
-	lda	<L514+1
-	sta	<L514+1+6
+L498:
+	lda	<L481+1
+	sta	<L481+1+6
 	pld
 	tsc
 	clc
-	adc	#L514+6
+	adc	#L481+6
 	tcs
 	rts
 ;                    {
@@ -14125,8 +13657,8 @@ L531:
 ;
 ;        traceRETURN_vTaskPriorityDisinheritAfterTimeout();
 ;    }
-L514	equ	26
-L515	equ	13
+L481	equ	26
+L482	equ	13
 	ends
 	efunc
 ;
@@ -14835,7 +14367,7 @@ _~uxTaskResetEventItemValue:
 	longi	on
 	tsc
 	sec
-	sbc	#L532
+	sbc	#L499
 	tcs
 	phd
 	tcd
@@ -14851,11 +14383,11 @@ uxReturn_1	set	0
 	sta	<R0+2
 	ldy	#$18
 	lda	[<R0],Y
-	sta	<L533+uxReturn_1
+	sta	<L500+uxReturn_1
 	iny
 	iny
 	lda	[<R0],Y
-	sta	<L533+uxReturn_1+2
+	sta	<L500+uxReturn_1+2
 ;
 ;    /* Reset the event list item to its normal value - so it can be used with
 ;     * queues and semaphores. */
@@ -14890,19 +14422,19 @@ uxReturn_1	set	0
 ;    traceRETURN_uxTaskResetEventItemValue( uxReturn );
 ;
 ;    return uxReturn;
-	ldx	<L533+uxReturn_1+2
-	lda	<L533+uxReturn_1
+	ldx	<L500+uxReturn_1+2
+	lda	<L500+uxReturn_1
 	tay
 	pld
 	tsc
 	clc
-	adc	#L532
+	adc	#L499
 	tcs
 	tya
 	rts
 ;}
-L532	equ	16
-L533	equ	13
+L499	equ	16
+L500	equ	13
 	ends
 	efunc
 ;/*-----------------------------------------------------------*/
@@ -14919,7 +14451,7 @@ _~pvTaskIncrementMutexHeldCount:
 	longi	on
 	tsc
 	sec
-	sbc	#L535
+	sbc	#L502
 	tcs
 	phd
 	tcd
@@ -14930,41 +14462,41 @@ pxTCB_1	set	0
 ;
 ;        pxTCB = pxCurrentTCB;
 	lda	|_~pxCurrentTCB	; volatile
-	sta	<L536+pxTCB_1
+	sta	<L503+pxTCB_1
 	lda	|_~pxCurrentTCB+2	; volatile
-	sta	<L536+pxTCB_1+2
+	sta	<L503+pxTCB_1+2
 ;
 ;        /* If xSemaphoreCreateMutex() is called before any tasks have been created
 ;         * then pxCurrentTCB will be NULL. */
 ;        if( pxTCB != NULL )
 ;        {
-	lda	<L536+pxTCB_1
-	ora	<L536+pxTCB_1+2
-	beq	L10931
+	lda	<L503+pxTCB_1
+	ora	<L503+pxTCB_1+2
+	beq	L10855
 ;            ( pxTCB->uxMutexesHeld )++;
 	ldy	#$44
-	lda	[<L536+pxTCB_1],Y
+	lda	[<L503+pxTCB_1],Y
 	ina
-	sta	[<L536+pxTCB_1],Y
+	sta	[<L503+pxTCB_1],Y
 ;        }
 ;
 ;        traceRETURN_pvTaskIncrementMutexHeldCount( pxTCB );
-L10931:
+L10855:
 ;
 ;        return pxTCB;
-	ldx	<L536+pxTCB_1+2
-	lda	<L536+pxTCB_1
+	ldx	<L503+pxTCB_1+2
+	lda	<L503+pxTCB_1
 	tay
 	pld
 	tsc
 	clc
-	adc	#L535
+	adc	#L502
 	tcs
 	tya
 	rts
 ;    }
-L535	equ	4
-L536	equ	1
+L502	equ	4
+L503	equ	1
 	ends
 	efunc
 ;
@@ -14985,7 +14517,7 @@ _~ulTaskGenericNotifyTake:
 	longi	on
 	tsc
 	sec
-	sbc	#L539
+	sbc	#L506
 	tcs
 	phd
 	tcd
@@ -14999,21 +14531,21 @@ xTicksToWait_0	set	7
 ulReturn_1	set	0
 xAlreadyYielded_1	set	4
 xShouldBlock_1	set	6
-	stz	<L540+xShouldBlock_1
+	stz	<L507+xShouldBlock_1
 ;
 ;        configASSERT( uxIndexToWaitOn < configTASK_NOTIFICATION_ARRAY_ENTRIES );
-	lda	<L539+uxIndexToWaitOn_0
+	lda	<L506+uxIndexToWaitOn_0
 	cmp	#<$1
-	bcc	L10932
-L10936:
-	bra	L10936
-L10932:
+	bcc	L10856
+L10860:
+	bra	L10860
+L10856:
 ;
 ;        /* If the notification count is zero, and if we are willing to wait for a
 ;         * notification, then block the task and wait. */
 ;        if( ( pxCurrentTCB->ulNotifiedValue[ uxIndexToWaitOn ] == 0U ) && ( xTicksToWait > ( TickType_t ) 0 ) )
 ;        {
-	lda	<L539+uxIndexToWaitOn_0
+	lda	<L506+uxIndexToWaitOn_0
 	sta	<R1
 	stz	<R1+2
 	pei	<R1+2
@@ -15041,12 +14573,12 @@ L10932:
 	ldy	#$2
 	ora	[<R3],Y
 	beq	*+5
-	brl	L10953
+	brl	L10877
 	lda	#$0
-	cmp	<L539+xTicksToWait_0
-	sbc	<L539+xTicksToWait_0+2
+	cmp	<L506+xTicksToWait_0
+	sbc	<L506+xTicksToWait_0+2
 	bcc	*+5
-	brl	L10953
+	brl	L10877
 ;            /* We suspend the scheduler here as prvAddCurrentTaskToDelayedList is a
 ;             * non-deterministic operation. */
 ;            vTaskSuspendAll();
@@ -15061,7 +14593,7 @@ L10932:
 ;                    /* Only block if the notification count is not already non-zero. */
 ;                    if( pxCurrentTCB->ulNotifiedValue[ uxIndexToWaitOn ] == 0U )
 ;                    {
-	lda	<L539+uxIndexToWaitOn_0
+	lda	<L506+uxIndexToWaitOn_0
 	sta	<R1
 	stz	<R1+2
 	pei	<R1+2
@@ -15088,7 +14620,7 @@ L10932:
 	lda	[<R3]
 	ldy	#$2
 	ora	[<R3],Y
-	bne	L10946
+	bne	L10870
 ;                        /* Mark this task as waiting for a notification. */
 ;                        pxCurrentTCB->ucNotifyState[ uxIndexToWaitOn ] = taskWAITING_NOTIFICATION;
 	lda	|_~pxCurrentTCB	; volatile
@@ -15097,7 +14629,7 @@ L10932:
 	sta	<R0+2
 	lda	#$4a
 	clc
-	adc	<L539+uxIndexToWaitOn_0
+	adc	<L506+uxIndexToWaitOn_0
 	tay
 	sep	#$20
 	longa	off
@@ -15109,7 +14641,7 @@ L10932:
 ;                        /* Arrange to wait for a notification. */
 ;                        xShouldBlock = pdTRUE;
 	lda	#$1
-	sta	<L540+xShouldBlock_1
+	sta	<L507+xShouldBlock_1
 ;                    }
 ;                    else
 ;                    {
@@ -15117,41 +14649,41 @@ L10932:
 ;                    }
 ;                }
 ;                taskEXIT_CRITICAL();
-L10946:
+L10870:
 ;
 ;                /* We are now out of the critical section but the scheduler is still
 ;                 * suspended, so we are safe to do non-deterministic operations such
 ;                 * as prvAddCurrentTaskToDelayedList. */
 ;                if( xShouldBlock == pdTRUE )
 ;                {
-	lda	<L540+xShouldBlock_1
+	lda	<L507+xShouldBlock_1
 	cmp	#<$1
-	bne	L10949
+	bne	L10873
 ;                    traceTASK_NOTIFY_TAKE_BLOCK( uxIndexToWaitOn );
 ;                    prvAddCurrentTaskToDelayedList( xTicksToWait, pdTRUE );
 	pea	#<$1
-	pei	<L539+xTicksToWait_0+2
-	pei	<L539+xTicksToWait_0
+	pei	<L506+xTicksToWait_0+2
+	pei	<L506+xTicksToWait_0
 	jsr	_~prvAddCurrentTaskToDelayedList
 ;                }
 ;                else
 ;                {
 ;                    mtCOVERAGE_TEST_MARKER();
 ;                }
-L10949:
+L10873:
 ;            }
 ;            xAlreadyYielded = xTaskResumeAll();
 	jsr	_~xTaskResumeAll
-	sta	<L540+xAlreadyYielded_1
+	sta	<L507+xAlreadyYielded_1
 ;
 ;            /* Force a reschedule if xTaskResumeAll has not already done so. */
 ;            if( ( xShouldBlock == pdTRUE ) && ( xAlreadyYielded == pdFALSE ) )
 ;            {
-	lda	<L540+xShouldBlock_1
+	lda	<L507+xShouldBlock_1
 	cmp	#<$1
-	bne	L10953
-	lda	<L540+xAlreadyYielded_1
-	bne	L10953
+	bne	L10877
+	lda	<L507+xAlreadyYielded_1
+	bne	L10877
 ;                taskYIELD_WITHIN_API();
 	jsr	_~vPortYield
 ;            }
@@ -15162,11 +14694,11 @@ L10949:
 ;        }
 ;
 ;        taskENTER_CRITICAL();
-L10953:
+L10877:
 ;        {
 ;            traceTASK_NOTIFY_TAKE( uxIndexToWaitOn );
 ;            ulReturn = pxCurrentTCB->ulNotifiedValue[ uxIndexToWaitOn ];
-	lda	<L539+uxIndexToWaitOn_0
+	lda	<L506+uxIndexToWaitOn_0
 	sta	<R1
 	stz	<R1+2
 	pei	<R1+2
@@ -15191,22 +14723,22 @@ L10953:
 	adc	<R0+2
 	sta	<R3+2
 	lda	[<R3]
-	sta	<L540+ulReturn_1
+	sta	<L507+ulReturn_1
 	ldy	#$2
 	lda	[<R3],Y
-	sta	<L540+ulReturn_1+2
+	sta	<L507+ulReturn_1+2
 ;
 ;            if( ulReturn != 0U )
 ;            {
-	lda	<L540+ulReturn_1
-	ora	<L540+ulReturn_1+2
-	beq	L10958
+	lda	<L507+ulReturn_1
+	ora	<L507+ulReturn_1+2
+	beq	L10882
 ;                if( xClearCountOnExit != pdFALSE )
 ;                {
-	lda	<L539+xClearCountOnExit_0
-	beq	L10956
+	lda	<L506+xClearCountOnExit_0
+	beq	L10880
 ;                    pxCurrentTCB->ulNotifiedValue[ uxIndexToWaitOn ] = ( uint32_t ) 0U;
-	lda	<L539+uxIndexToWaitOn_0
+	lda	<L506+uxIndexToWaitOn_0
 	sta	<R1
 	stz	<R1+2
 	pei	<R1+2
@@ -15232,12 +14764,12 @@ L10953:
 	sta	<R3+2
 	lda	#$0
 	sta	[<R3]
-L20062:
+L20051:
 	ldy	#$2
 	sta	[<R3],Y
 ;                }
 ;                else
-L10958:
+L10882:
 ;
 ;            pxCurrentTCB->ucNotifyState[ uxIndexToWaitOn ] = taskNOT_WAITING_NOTIFICATION;
 	lda	|_~pxCurrentTCB	; volatile
@@ -15246,7 +14778,7 @@ L10958:
 	sta	<R0+2
 	lda	#$4a
 	clc
-	adc	<L539+uxIndexToWaitOn_0
+	adc	<L506+uxIndexToWaitOn_0
 	tay
 	sep	#$20
 	longa	off
@@ -15260,22 +14792,22 @@ L10958:
 ;        traceRETURN_ulTaskGenericNotifyTake( ulReturn );
 ;
 ;        return ulReturn;
-	ldx	<L540+ulReturn_1+2
-	lda	<L540+ulReturn_1
+	ldx	<L507+ulReturn_1+2
+	lda	<L507+ulReturn_1
 	tay
-	lda	<L539+1
-	sta	<L539+1+8
+	lda	<L506+1
+	sta	<L506+1+8
 	pld
 	tsc
 	clc
-	adc	#L539+8
+	adc	#L506+8
 	tcs
 	tya
 	rts
-L10956:
+L10880:
 ;                {
 ;                    pxCurrentTCB->ulNotifiedValue[ uxIndexToWaitOn ] = ulReturn - ( uint32_t ) 1;
-	lda	<L539+uxIndexToWaitOn_0
+	lda	<L506+uxIndexToWaitOn_0
 	sta	<R1
 	stz	<R1+2
 	pei	<R1+2
@@ -15301,15 +14833,15 @@ L10956:
 	sta	<R3+2
 	lda	#$ffff
 	clc
-	adc	<L540+ulReturn_1
+	adc	<L507+ulReturn_1
 	sta	<R0
 	lda	#$ffff
-	adc	<L540+ulReturn_1+2
+	adc	<L507+ulReturn_1+2
 	sta	<R0+2
 	lda	<R0
 	sta	[<R3]
 	lda	<R0+2
-	bra	L20062
+	bra	L20051
 ;                }
 ;            }
 ;            else
@@ -15317,8 +14849,8 @@ L10956:
 ;                mtCOVERAGE_TEST_MARKER();
 ;            }
 ;    }
-L539	equ	24
-L540	equ	17
+L506	equ	24
+L507	equ	17
 	ends
 	efunc
 ;
@@ -15341,7 +14873,7 @@ _~xTaskGenericNotifyWait:
 	longi	on
 	tsc
 	sec
-	sbc	#L551
+	sbc	#L518
 	tcs
 	phd
 	tcd
@@ -15356,15 +14888,15 @@ xTicksToWait_0	set	17
 xReturn_1	set	0
 xAlreadyYielded_1	set	2
 xShouldBlock_1	set	4
-	stz	<L552+xShouldBlock_1
+	stz	<L519+xShouldBlock_1
 ;
 ;        configASSERT( uxIndexToWaitOn < configTASK_NOTIFICATION_ARRAY_ENTRIES );
-	lda	<L551+uxIndexToWaitOn_0
+	lda	<L518+uxIndexToWaitOn_0
 	cmp	#<$1
-	bcc	L10962
-L10966:
-	bra	L10966
-L10962:
+	bcc	L10886
+L10890:
+	bra	L10890
+L10886:
 ;
 ;        /* If the task hasn't received a notification, and if we are willing to wait
 ;         * for it, then block the task and wait. */
@@ -15376,7 +14908,7 @@ L10962:
 	sta	<R0+2
 	lda	#$4a
 	clc
-	adc	<L551+uxIndexToWaitOn_0
+	adc	<L518+uxIndexToWaitOn_0
 	tay
 	sep	#$20
 	longa	off
@@ -15385,12 +14917,12 @@ L10962:
 	rep	#$20
 	longa	on
 	bne	*+5
-	brl	L10983
+	brl	L10907
 	lda	#$0
-	cmp	<L551+xTicksToWait_0
-	sbc	<L551+xTicksToWait_0+2
+	cmp	<L518+xTicksToWait_0
+	sbc	<L518+xTicksToWait_0+2
 	bcc	*+5
-	brl	L10983
+	brl	L10907
 ;            /* We suspend the scheduler here as prvAddCurrentTaskToDelayedList is a
 ;             * non-deterministic operation. */
 ;            vTaskSuspendAll();
@@ -15410,7 +14942,7 @@ L10962:
 	sta	<R0+2
 	lda	#$4a
 	clc
-	adc	<L551+uxIndexToWaitOn_0
+	adc	<L518+uxIndexToWaitOn_0
 	tay
 	sep	#$20
 	longa	off
@@ -15418,12 +14950,12 @@ L10962:
 	cmp	#<$2
 	rep	#$20
 	longa	on
-	beq	L10976
+	beq	L10900
 ;                        /* Clear bits in the task's notification value as bits may get
 ;                         * set by the notifying task or interrupt. This can be used
 ;                         * to clear the value to zero. */
 ;                        pxCurrentTCB->ulNotifiedValue[ uxIndexToWaitOn ] &= ~ulBitsToClearOnEntry;
-	lda	<L551+uxIndexToWaitOn_0
+	lda	<L518+uxIndexToWaitOn_0
 	sta	<R1
 	stz	<R1+2
 	pei	<R1+2
@@ -15447,10 +14979,10 @@ L10962:
 	lda	|_~pxCurrentTCB+2	; volatile
 	adc	<R2+2
 	sta	<R0+2
-	lda	<L551+ulBitsToClearOnEntry_0
+	lda	<L518+ulBitsToClearOnEntry_0
 	eor	#<$ffffffff
 	sta	<R3
-	lda	<L551+ulBitsToClearOnEntry_0+2
+	lda	<L518+ulBitsToClearOnEntry_0+2
 	eor	#^$ffffffff
 	sta	<R3+2
 	lda	<R3
@@ -15469,7 +15001,7 @@ L10962:
 	sta	<R0+2
 	lda	#$4a
 	clc
-	adc	<L551+uxIndexToWaitOn_0
+	adc	<L518+uxIndexToWaitOn_0
 	tay
 	sep	#$20
 	longa	off
@@ -15481,7 +15013,7 @@ L10962:
 ;                        /* Arrange to wait for a notification. */
 ;                        xShouldBlock = pdTRUE;
 	lda	#$1
-	sta	<L552+xShouldBlock_1
+	sta	<L519+xShouldBlock_1
 ;                    }
 ;                    else
 ;                    {
@@ -15489,41 +15021,41 @@ L10962:
 ;                    }
 ;                }
 ;                taskEXIT_CRITICAL();
-L10976:
+L10900:
 ;
 ;                /* We are now out of the critical section but the scheduler is still
 ;                 * suspended, so we are safe to do non-deterministic operations such
 ;                 * as prvAddCurrentTaskToDelayedList. */
 ;                if( xShouldBlock == pdTRUE )
 ;                {
-	lda	<L552+xShouldBlock_1
+	lda	<L519+xShouldBlock_1
 	cmp	#<$1
-	bne	L10979
+	bne	L10903
 ;                    traceTASK_NOTIFY_WAIT_BLOCK( uxIndexToWaitOn );
 ;                    prvAddCurrentTaskToDelayedList( xTicksToWait, pdTRUE );
 	pea	#<$1
-	pei	<L551+xTicksToWait_0+2
-	pei	<L551+xTicksToWait_0
+	pei	<L518+xTicksToWait_0+2
+	pei	<L518+xTicksToWait_0
 	jsr	_~prvAddCurrentTaskToDelayedList
 ;                }
 ;                else
 ;                {
 ;                    mtCOVERAGE_TEST_MARKER();
 ;                }
-L10979:
+L10903:
 ;            }
 ;            xAlreadyYielded = xTaskResumeAll();
 	jsr	_~xTaskResumeAll
-	sta	<L552+xAlreadyYielded_1
+	sta	<L519+xAlreadyYielded_1
 ;
 ;            /* Force a reschedule if xTaskResumeAll has not already done so. */
 ;            if( ( xShouldBlock == pdTRUE ) && ( xAlreadyYielded == pdFALSE ) )
 ;            {
-	lda	<L552+xShouldBlock_1
+	lda	<L519+xShouldBlock_1
 	cmp	#<$1
-	bne	L10983
-	lda	<L552+xAlreadyYielded_1
-	bne	L10983
+	bne	L10907
+	lda	<L519+xAlreadyYielded_1
+	bne	L10907
 ;                taskYIELD_WITHIN_API();
 	jsr	_~vPortYield
 ;            }
@@ -15534,19 +15066,19 @@ L10979:
 ;        }
 ;
 ;        taskENTER_CRITICAL();
-L10983:
+L10907:
 ;        {
 ;            traceTASK_NOTIFY_WAIT( uxIndexToWaitOn );
 ;
 ;            if( pulNotificationValue != NULL )
 ;            {
-	lda	<L551+pulNotificationValue_0
-	ora	<L551+pulNotificationValue_0+2
-	beq	L10985
+	lda	<L518+pulNotificationValue_0
+	ora	<L518+pulNotificationValue_0+2
+	beq	L10909
 ;                /* Output the current notification value, which may or may not
 ;                 * have changed. */
 ;                *pulNotificationValue = pxCurrentTCB->ulNotifiedValue[ uxIndexToWaitOn ];
-	lda	<L551+uxIndexToWaitOn_0
+	lda	<L518+uxIndexToWaitOn_0
 	sta	<R1
 	stz	<R1+2
 	pei	<R1+2
@@ -15571,10 +15103,10 @@ L10983:
 	adc	<R0+2
 	sta	<R3+2
 	lda	[<R3]
-	sta	[<L551+pulNotificationValue_0]
+	sta	[<L518+pulNotificationValue_0]
 	ldy	#$2
 	lda	[<R3],Y
-	sta	[<L551+pulNotificationValue_0],Y
+	sta	[<L518+pulNotificationValue_0],Y
 ;            }
 ;
 ;            /* If ucNotifyState is set then either the task never entered the
@@ -15582,7 +15114,7 @@ L10983:
 ;             * task unblocked because of a notification.  Otherwise the task
 ;             * unblocked because of a timeout. */
 ;            if( pxCurrentTCB->ucNotifyState[ uxIndexToWaitOn ] != taskNOTIFICATION_RECEIVED )
-L10985:
+L10909:
 ;            {
 	lda	|_~pxCurrentTCB	; volatile
 	sta	<R0
@@ -15590,7 +15122,7 @@ L10985:
 	sta	<R0+2
 	lda	#$4a
 	clc
-	adc	<L551+uxIndexToWaitOn_0
+	adc	<L518+uxIndexToWaitOn_0
 	tay
 	sep	#$20
 	longa	off
@@ -15598,19 +15130,19 @@ L10985:
 	cmp	#<$2
 	rep	#$20
 	longa	on
-	beq	L10986
+	beq	L10910
 ;                /* A notification was not received. */
 ;                xReturn = pdFALSE;
-	stz	<L552+xReturn_1
+	stz	<L519+xReturn_1
 ;            }
 ;            else
-	bra	L10987
-L10986:
+	bra	L10911
+L10910:
 ;            {
 ;                /* A notification was already pending or a notification was
 ;                 * received while the task was waiting. */
 ;                pxCurrentTCB->ulNotifiedValue[ uxIndexToWaitOn ] &= ~ulBitsToClearOnExit;
-	lda	<L551+uxIndexToWaitOn_0
+	lda	<L518+uxIndexToWaitOn_0
 	sta	<R1
 	stz	<R1+2
 	pei	<R1+2
@@ -15634,10 +15166,10 @@ L10986:
 	lda	|_~pxCurrentTCB+2	; volatile
 	adc	<R2+2
 	sta	<R0+2
-	lda	<L551+ulBitsToClearOnExit_0
+	lda	<L518+ulBitsToClearOnExit_0
 	eor	#<$ffffffff
 	sta	<R3
-	lda	<L551+ulBitsToClearOnExit_0+2
+	lda	<L518+ulBitsToClearOnExit_0+2
 	eor	#^$ffffffff
 	sta	<R3+2
 	lda	<R3
@@ -15649,9 +15181,9 @@ L10986:
 	sta	[<R0],Y
 ;                xReturn = pdTRUE;
 	lda	#$1
-	sta	<L552+xReturn_1
+	sta	<L519+xReturn_1
 ;            }
-L10987:
+L10911:
 ;
 ;            pxCurrentTCB->ucNotifyState[ uxIndexToWaitOn ] = taskNOT_WAITING_NOTIFICATION;
 	lda	|_~pxCurrentTCB	; volatile
@@ -15660,7 +15192,7 @@ L10987:
 	sta	<R0+2
 	lda	#$4a
 	clc
-	adc	<L551+uxIndexToWaitOn_0
+	adc	<L518+uxIndexToWaitOn_0
 	tay
 	sep	#$20
 	longa	off
@@ -15674,20 +15206,20 @@ L10987:
 ;        traceRETURN_xTaskGenericNotifyWait( xReturn );
 ;
 ;        return xReturn;
-	lda	<L552+xReturn_1
+	lda	<L519+xReturn_1
 	tay
-	lda	<L551+1
-	sta	<L551+1+18
+	lda	<L518+1
+	sta	<L518+1+18
 	pld
 	tsc
 	clc
-	adc	#L551+18
+	adc	#L518+18
 	tcs
 	tya
 	rts
 ;    }
-L551	equ	22
-L552	equ	17
+L518	equ	22
+L519	equ	17
 	ends
 	efunc
 ;
@@ -15710,7 +15242,7 @@ _~xTaskGenericNotify:
 	longi	on
 	tsc
 	sec
-	sbc	#L563
+	sbc	#L530
 	tcs
 	phd
 	tcd
@@ -15728,37 +15260,37 @@ pxTCB_1	set	0
 xReturn_1	set	4
 ucOriginalNotifyState_1	set	6
 	lda	#$1
-	sta	<L564+xReturn_1
+	sta	<L531+xReturn_1
 ;
 ;        configASSERT( uxIndexToNotify < configTASK_NOTIFICATION_ARRAY_ENTRIES );
-	lda	<L563+uxIndexToNotify_0
+	lda	<L530+uxIndexToNotify_0
 	cmp	#<$1
-	bcc	L10991
-L10995:
-	bra	L10995
-L10991:
+	bcc	L10915
+L10919:
+	bra	L10919
+L10915:
 ;        configASSERT( xTaskToNotify );
-	lda	<L563+xTaskToNotify_0
-	ora	<L563+xTaskToNotify_0+2
-	bne	L10998
-L11002:
-	bra	L11002
-L10998:
+	lda	<L530+xTaskToNotify_0
+	ora	<L530+xTaskToNotify_0+2
+	bne	L10922
+L10926:
+	bra	L10926
+L10922:
 ;        pxTCB = xTaskToNotify;
-	lda	<L563+xTaskToNotify_0
-	sta	<L564+pxTCB_1
-	lda	<L563+xTaskToNotify_0+2
-	sta	<L564+pxTCB_1+2
+	lda	<L530+xTaskToNotify_0
+	sta	<L531+pxTCB_1
+	lda	<L530+xTaskToNotify_0+2
+	sta	<L531+pxTCB_1+2
 ;
 ;        taskENTER_CRITICAL();
 ;        {
 ;            if( pulPreviousNotificationValue != NULL )
 ;            {
-	lda	<L563+pulPreviousNotificationValue_0
-	ora	<L563+pulPreviousNotificationValue_0+2
-	beq	L11008
+	lda	<L530+pulPreviousNotificationValue_0
+	ora	<L530+pulPreviousNotificationValue_0+2
+	beq	L10932
 ;                *pulPreviousNotificationValue = pxTCB->ulNotifiedValue[ uxIndexToNotify ];
-	lda	<L563+uxIndexToNotify_0
+	lda	<L530+uxIndexToNotify_0
 	sta	<R1
 	stz	<R1+2
 	pei	<R1+2
@@ -15770,10 +15302,10 @@ L10998:
 	stx	<R0+2
 	lda	#$46
 	clc
-	adc	<L564+pxTCB_1
+	adc	<L531+pxTCB_1
 	sta	<R2
 	lda	#$0
-	adc	<L564+pxTCB_1+2
+	adc	<L531+pxTCB_1+2
 	sta	<R2+2
 	lda	<R2
 	clc
@@ -15783,54 +15315,54 @@ L10998:
 	adc	<R0+2
 	sta	<R3+2
 	lda	[<R3]
-	sta	[<L563+pulPreviousNotificationValue_0]
+	sta	[<L530+pulPreviousNotificationValue_0]
 	ldy	#$2
 	lda	[<R3],Y
-	sta	[<L563+pulPreviousNotificationValue_0],Y
+	sta	[<L530+pulPreviousNotificationValue_0],Y
 ;            }
 ;
 ;            ucOriginalNotifyState = pxTCB->ucNotifyState[ uxIndexToNotify ];
-L11008:
+L10932:
 	lda	#$4a
 	clc
-	adc	<L563+uxIndexToNotify_0
+	adc	<L530+uxIndexToNotify_0
 	tay
 	sep	#$20
 	longa	off
-	lda	[<L564+pxTCB_1],Y
-	sta	<L564+ucOriginalNotifyState_1
+	lda	[<L531+pxTCB_1],Y
+	sta	<L531+ucOriginalNotifyState_1
 	rep	#$20
 	longa	on
 ;
 ;            pxTCB->ucNotifyState[ uxIndexToNotify ] = taskNOTIFICATION_RECEIVED;
 	lda	#$4a
 	clc
-	adc	<L563+uxIndexToNotify_0
+	adc	<L530+uxIndexToNotify_0
 	tay
 	sep	#$20
 	longa	off
 	lda	#$2
-	sta	[<L564+pxTCB_1],Y
+	sta	[<L531+pxTCB_1],Y
 	rep	#$20
 	longa	on
 ;
 ;            switch( eAction )
-	lda	<L563+eAction_0
+	lda	<L530+eAction_0
 	xref	_~~fsw
 	jsr	_~~fsw
 	dw	0
 	dw	5
-	dw	L11018-1
-	dw	L11010-1
-	dw	L11011-1
-	dw	L11012-1
-	dw	L11013-1
-	dw	L11014-1
+	dw	L10942-1
+	dw	L10934-1
+	dw	L10935-1
+	dw	L10936-1
+	dw	L10937-1
+	dw	L10938-1
 ;            {
 ;                case eSetBits:
-L11011:
+L10935:
 ;                    pxTCB->ulNotifiedValue[ uxIndexToNotify ] |= ulValue;
-	lda	<L563+uxIndexToNotify_0
+	lda	<L530+uxIndexToNotify_0
 	sta	<R1
 	stz	<R1+2
 	pei	<R1+2
@@ -15847,24 +15379,24 @@ L11011:
 	lda	#$0
 	adc	<R0+2
 	sta	<R2+2
-	lda	<L564+pxTCB_1
+	lda	<L531+pxTCB_1
 	clc
 	adc	<R2
 	sta	<R0
-	lda	<L564+pxTCB_1+2
+	lda	<L531+pxTCB_1+2
 	adc	<R2+2
 	sta	<R0+2
-	lda	<L563+ulValue_0
+	lda	<L530+ulValue_0
 	ora	[<R0]
 	sta	[<R0]
-	lda	<L563+ulValue_0+2
+	lda	<L530+ulValue_0+2
 	ldy	#$2
 	ora	[<R0],Y
 	sta	[<R0],Y
 ;                    break;
 ;
 ;                    break;
-L11010:
+L10934:
 ;
 ;            traceTASK_NOTIFY( uxIndexToNotify );
 ;
@@ -15874,101 +15406,101 @@ L11010:
 ;            {
 	sep	#$20
 	longa	off
-	lda	<L564+ucOriginalNotifyState_1
+	lda	<L531+ucOriginalNotifyState_1
 	cmp	#<$1
 	rep	#$20
 	longa	on
 	beq	*+5
-	brl	L11055
+	brl	L10979
 ;            }
 ;                listREMOVE_ITEM( &( pxTCB->xStateListItem ) );
 pxList_2	set	7
 	ldy	#$14
-	lda	[<L564+pxTCB_1],Y
-	sta	<L564+pxList_2
+	lda	[<L531+pxTCB_1],Y
+	sta	<L531+pxList_2
 	iny
 	iny
-	lda	[<L564+pxTCB_1],Y
-	sta	<L564+pxList_2+2
+	lda	[<L531+pxTCB_1],Y
+	sta	<L531+pxList_2+2
 	ldy	#$8
-	lda	[<L564+pxTCB_1],Y
+	lda	[<L531+pxTCB_1],Y
 	sta	<R0
 	iny
 	iny
-	lda	[<L564+pxTCB_1],Y
+	lda	[<L531+pxTCB_1],Y
 	sta	<R0+2
 	iny
 	iny
-	lda	[<L564+pxTCB_1],Y
+	lda	[<L531+pxTCB_1],Y
 	ldy	#$8
 	sta	[<R0],Y
 	ldy	#$e
-	lda	[<L564+pxTCB_1],Y
+	lda	[<L531+pxTCB_1],Y
 	ldy	#$a
 	sta	[<R0],Y
 	iny
 	iny
-	lda	[<L564+pxTCB_1],Y
+	lda	[<L531+pxTCB_1],Y
 	sta	<R0
 	iny
 	iny
-	lda	[<L564+pxTCB_1],Y
+	lda	[<L531+pxTCB_1],Y
 	sta	<R0+2
 	ldy	#$8
-	lda	[<L564+pxTCB_1],Y
+	lda	[<L531+pxTCB_1],Y
 	ldy	#$4
 	sta	[<R0],Y
 	ldy	#$a
-	lda	[<L564+pxTCB_1],Y
+	lda	[<L531+pxTCB_1],Y
 	ldy	#$6
 	sta	[<R0],Y
 	lda	#$4
 	clc
-	adc	<L564+pxTCB_1
+	adc	<L531+pxTCB_1
 	sta	<R0
 	lda	#$0
-	adc	<L564+pxTCB_1+2
+	adc	<L531+pxTCB_1+2
 	sta	<R0+2
 	ldy	#$2
-	lda	[<L564+pxList_2],Y
+	lda	[<L531+pxList_2],Y
 	cmp	<R0
-	bne	L571
+	bne	L538
 	iny
 	iny
-	lda	[<L564+pxList_2],Y
+	lda	[<L531+pxList_2],Y
 	cmp	<R0+2
-L571:
-	bne	L11030
+L538:
+	bne	L10954
 	ldy	#$c
-	lda	[<L564+pxTCB_1],Y
+	lda	[<L531+pxTCB_1],Y
 	ldy	#$2
-	sta	[<L564+pxList_2],Y
+	sta	[<L531+pxList_2],Y
 	ldy	#$e
-	lda	[<L564+pxTCB_1],Y
+	lda	[<L531+pxTCB_1],Y
 	ldy	#$4
-	sta	[<L564+pxList_2],Y
-L11030:
+	sta	[<L531+pxList_2],Y
+L10954:
 	lda	#$0
 	ldy	#$14
-	sta	[<L564+pxTCB_1],Y
+	sta	[<L531+pxTCB_1],Y
 	iny
 	iny
-	sta	[<L564+pxTCB_1],Y
+	sta	[<L531+pxTCB_1],Y
 	lda	#$ffff
 	clc
-	adc	[<L564+pxList_2]
-	sta	[<L564+pxList_2]
+	adc	[<L531+pxList_2]
+	sta	[<L531+pxList_2]
 ;                prvAddTaskToReadyList( pxTCB );
 	lda	|_~uxTopReadyPriority	; volatile
 	ldy	#$2c
-	cmp	[<L564+pxTCB_1],Y
-	bcs	L11040
-	lda	[<L564+pxTCB_1],Y
+	cmp	[<L531+pxTCB_1],Y
+	bcs	L10964
+	lda	[<L531+pxTCB_1],Y
 	sta	|_~uxTopReadyPriority	; volatile
-L11040:
+L10964:
 pxIndex_3	set	7
 	ldy	#$2c
-	lda	[<L564+pxTCB_1],Y
+	lda	[<L531+pxTCB_1],Y
 	ldx	#<$12
 	xref	_~~mul
 	jsr	_~~mul
@@ -15980,40 +15512,40 @@ pxIndex_3	set	7
 	adc	<R0
 	sta	<R2
 	lda	(<R2)
-	sta	<L564+pxIndex_3
+	sta	<L531+pxIndex_3
 	ldy	#$2
 	lda	(<R2),Y
-	sta	<L564+pxIndex_3+2
-	lda	<L564+pxIndex_3
+	sta	<L531+pxIndex_3+2
+	lda	<L531+pxIndex_3
 	ldy	#$8
-	sta	[<L564+pxTCB_1],Y
-	lda	<L564+pxIndex_3+2
+	sta	[<L531+pxTCB_1],Y
+	lda	<L531+pxIndex_3+2
 	iny
 	iny
-	sta	[<L564+pxTCB_1],Y
+	sta	[<L531+pxTCB_1],Y
 	dey
 	dey
-	lda	[<L564+pxIndex_3],Y
+	lda	[<L531+pxIndex_3],Y
 	ldy	#$c
-	sta	[<L564+pxTCB_1],Y
+	sta	[<L531+pxTCB_1],Y
 	dey
 	dey
-	lda	[<L564+pxIndex_3],Y
+	lda	[<L531+pxIndex_3],Y
 	ldy	#$e
-	sta	[<L564+pxTCB_1],Y
+	sta	[<L531+pxTCB_1],Y
 	ldy	#$8
-	lda	[<L564+pxIndex_3],Y
+	lda	[<L531+pxIndex_3],Y
 	sta	<R0
 	iny
 	iny
-	lda	[<L564+pxIndex_3],Y
+	lda	[<L531+pxIndex_3],Y
 	sta	<R0+2
 	lda	#$4
 	clc
-	adc	<L564+pxTCB_1
+	adc	<L531+pxTCB_1
 	sta	<R1
 	lda	#$0
-	adc	<L564+pxTCB_1+2
+	adc	<L531+pxTCB_1+2
 	sta	<R1+2
 	lda	<R1
 	ldy	#$4
@@ -16024,21 +15556,21 @@ pxIndex_3	set	7
 	sta	[<R0],Y
 	lda	#$4
 	clc
-	adc	<L564+pxTCB_1
+	adc	<L531+pxTCB_1
 	sta	<R0
 	lda	#$0
-	adc	<L564+pxTCB_1+2
+	adc	<L531+pxTCB_1+2
 	sta	<R0+2
 	lda	<R0
 	iny
 	iny
-	sta	[<L564+pxIndex_3],Y
+	sta	[<L531+pxIndex_3],Y
 	lda	<R0+2
 	iny
 	iny
-	sta	[<L564+pxIndex_3],Y
+	sta	[<L531+pxIndex_3],Y
 	ldy	#$2c
-	lda	[<L564+pxTCB_1],Y
+	lda	[<L531+pxTCB_1],Y
 	ldx	#<$12
 	xref	_~~mul
 	jsr	_~~mul
@@ -16050,19 +15582,19 @@ pxIndex_3	set	7
 	sta	<R0+2
 	lda	<R0
 	ldy	#$14
-	sta	[<L564+pxTCB_1],Y
+	sta	[<L531+pxTCB_1],Y
 	lda	<R0+2
 	iny
 	iny
-	sta	[<L564+pxTCB_1],Y
+	sta	[<L531+pxTCB_1],Y
 	ldy	#$2c
-	lda	[<L564+pxTCB_1],Y
+	lda	[<L531+pxTCB_1],Y
 	ldx	#<$12
 	xref	_~~mul
 	jsr	_~~mul
 	sta	<R0
 	ldy	#$2c
-	lda	[<L564+pxTCB_1],Y
+	lda	[<L531+pxTCB_1],Y
 	ldx	#<$12
 	xref	_~~mul
 	jsr	_~~mul
@@ -16075,19 +15607,19 @@ pxIndex_3	set	7
 ;                /* The task should not have been on an event list. */
 ;                configASSERT( listLIST_ITEM_CONTAINER( &( pxTCB->xEventListItem ) ) == NULL );
 	ldy	#$28
-	lda	[<L564+pxTCB_1],Y
+	lda	[<L531+pxTCB_1],Y
 	iny
 	iny
-	ora	[<L564+pxTCB_1],Y
+	ora	[<L531+pxTCB_1],Y
 	bne	*+5
-	brl	L11050
-L11045:
-	bra	L11045
+	brl	L10974
+L10969:
+	bra	L10969
 ;
 ;                case eIncrement:
-L11012:
+L10936:
 ;                    ( pxTCB->ulNotifiedValue[ uxIndexToNotify ] )++;
-	lda	<L563+uxIndexToNotify_0
+	lda	<L530+uxIndexToNotify_0
 	sta	<R1
 	stz	<R1+2
 	pei	<R1+2
@@ -16099,10 +15631,10 @@ L11012:
 	stx	<R0+2
 	lda	#$46
 	clc
-	adc	<L564+pxTCB_1
+	adc	<L531+pxTCB_1
 	sta	<R2
 	lda	#$0
-	adc	<L564+pxTCB_1+2
+	adc	<L531+pxTCB_1+2
 	sta	<R2+2
 	lda	<R2
 	clc
@@ -16118,16 +15650,16 @@ L11012:
 	lda	#$0
 	ldy	#$2
 	adc	[<R3],Y
-L20064:
+L20053:
 	ldy	#$2
 	sta	[<R3],Y
 ;                    break;
-	brl	L11010
+	brl	L10934
 ;
 ;                case eSetValueWithOverwrite:
-L11013:
+L10937:
 ;                    pxTCB->ulNotifiedValue[ uxIndexToNotify ] = ulValue;
-	lda	<L563+uxIndexToNotify_0
+	lda	<L530+uxIndexToNotify_0
 	sta	<R1
 	stz	<R1+2
 	pei	<R1+2
@@ -16139,10 +15671,10 @@ L11013:
 	stx	<R0+2
 	lda	#$46
 	clc
-	adc	<L564+pxTCB_1
+	adc	<L531+pxTCB_1
 	sta	<R2
 	lda	#$0
-	adc	<L564+pxTCB_1+2
+	adc	<L531+pxTCB_1+2
 	sta	<R2+2
 	lda	<R2
 	clc
@@ -16151,35 +15683,35 @@ L11013:
 	lda	<R2+2
 	adc	<R0+2
 	sta	<R3+2
-	lda	<L563+ulValue_0
+	lda	<L530+ulValue_0
 	sta	[<R3]
-	lda	<L563+ulValue_0+2
+	lda	<L530+ulValue_0+2
 ;                    break;
-	bra	L20064
+	bra	L20053
 ;
 ;                case eSetValueWithoutOverwrite:
-L11014:
+L10938:
 ;
 ;                    if( ucOriginalNotifyState != taskNOTIFICATION_RECEIVED )
 ;                    {
 	sep	#$20
 	longa	off
-	lda	<L564+ucOriginalNotifyState_1
+	lda	<L531+ucOriginalNotifyState_1
 	cmp	#<$2
 	rep	#$20
 	longa	on
-	bne	L11013
+	bne	L10937
 ;                        pxTCB->ulNotifiedValue[ uxIndexToNotify ] = ulValue;
 ;                    }
 ;                    else
 ;                    {
 ;                        /* The value could not be written to the task. */
 ;                        xReturn = pdFAIL;
-	stz	<L564+xReturn_1
+	stz	<L531+xReturn_1
 ;                    }
 ;
 ;                    break;
-	brl	L11010
+	brl	L10934
 ;
 ;                case eNoAction:
 ;
@@ -16188,7 +15720,7 @@ L11014:
 ;                    break;
 ;
 ;                default:
-L11018:
+L10942:
 ;
 ;                    /* Should not get here if all enums are handled.
 ;                     * Artificially force an assert by testing a value the
@@ -16197,9 +15729,9 @@ L11018:
 	lda	|_~xTickCount	; volatile
 	ora	|_~xTickCount+2	; volatile
 	bne	*+5
-	brl	L11010
-L11023:
-	bra	L11023
+	brl	L10934
+L10947:
+	bra	L10947
 ;
 ;                #if ( configUSE_TICKLESS_IDLE != 0 )
 ;                {
@@ -16220,29 +15752,29 @@ L11023:
 ;                /* Check if the notified task has a priority above the currently
 ;                 * executing task. */
 ;                taskYIELD_ANY_CORE_IF_USING_PREEMPTION( pxTCB );
-L11050:
+L10974:
 	lda	|_~pxCurrentTCB	; volatile
 	sta	<R0
 	lda	|_~pxCurrentTCB+2	; volatile
 	sta	<R0+2
 	ldy	#$2c
 	lda	[<R0],Y
-	cmp	[<L564+pxTCB_1],Y
-	bcs	L11055
+	cmp	[<L531+pxTCB_1],Y
+	bcs	L10979
 	jsr	_~vPortYield
-L11055:
+L10979:
 ;
 ;        traceRETURN_xTaskGenericNotify( xReturn );
 ;
 ;        return xReturn;
-	lda	<L564+xReturn_1
+	lda	<L531+xReturn_1
 	tay
-	lda	<L563+1
-	sta	<L563+1+16
+	lda	<L530+1
+	sta	<L530+1+16
 	pld
 	tsc
 	clc
-	adc	#L563+16
+	adc	#L530+16
 	tcs
 	tya
 	rts
@@ -16254,8 +15786,8 @@ L11055:
 ;        }
 ;        taskEXIT_CRITICAL();
 ;    }
-L563	equ	27
-L564	equ	17
+L530	equ	27
+L531	equ	17
 	ends
 	efunc
 ;
@@ -16279,7 +15811,7 @@ _~xTaskGenericNotifyFromISR:
 	longi	on
 	tsc
 	sec
-	sbc	#L577
+	sbc	#L544
 	tcs
 	phd
 	tcd
@@ -16300,22 +15832,22 @@ ucOriginalNotifyState_1	set	4
 xReturn_1	set	5
 uxSavedInterruptStatus_1	set	7
 	lda	#$1
-	sta	<L578+xReturn_1
+	sta	<L545+xReturn_1
 ;
 ;        configASSERT( xTaskToNotify );
-	lda	<L577+xTaskToNotify_0
-	ora	<L577+xTaskToNotify_0+2
-	bne	L11057
-L11061:
-	bra	L11061
-L11057:
+	lda	<L544+xTaskToNotify_0
+	ora	<L544+xTaskToNotify_0+2
+	bne	L10981
+L10985:
+	bra	L10985
+L10981:
 ;        configASSERT( uxIndexToNotify < configTASK_NOTIFICATION_ARRAY_ENTRIES );
-	lda	<L577+uxIndexToNotify_0
+	lda	<L544+uxIndexToNotify_0
 	cmp	#<$1
-	bcc	L11064
-L11068:
-	bra	L11068
-L11064:
+	bcc	L10988
+L10992:
+	bra	L10992
+L10988:
 ;
 ;        /* RTOS ports that support interrupt nesting have the concept of a
 ;         * maximum  system call (or maximum API call) interrupt priority.
@@ -16336,24 +15868,24 @@ L11064:
 ;        portASSERT_IF_INTERRUPT_PRIORITY_INVALID();
 ;
 ;        pxTCB = xTaskToNotify;
-	lda	<L577+xTaskToNotify_0
-	sta	<L578+pxTCB_1
-	lda	<L577+xTaskToNotify_0+2
-	sta	<L578+pxTCB_1+2
+	lda	<L544+xTaskToNotify_0
+	sta	<L545+pxTCB_1
+	lda	<L544+xTaskToNotify_0+2
+	sta	<L545+pxTCB_1+2
 ;
 ;        /* MISRA Ref 4.7.1 [Return value shall be checked] */
 ;        /* More details at: https://github.com/FreeRTOS/FreeRTOS-Kernel/blob/main/MISRA.md#dir-47 */
 ;        /* coverity[misra_c_2012_directive_4_7_violation] */
 ;        uxSavedInterruptStatus = ( UBaseType_t ) taskENTER_CRITICAL_FROM_ISR();
-	stz	<L578+uxSavedInterruptStatus_1
+	stz	<L545+uxSavedInterruptStatus_1
 ;        {
 ;            if( pulPreviousNotificationValue != NULL )
 ;            {
-	lda	<L577+pulPreviousNotificationValue_0
-	ora	<L577+pulPreviousNotificationValue_0+2
-	beq	L11071
+	lda	<L544+pulPreviousNotificationValue_0
+	ora	<L544+pulPreviousNotificationValue_0+2
+	beq	L10995
 ;                *pulPreviousNotificationValue = pxTCB->ulNotifiedValue[ uxIndexToNotify ];
-	lda	<L577+uxIndexToNotify_0
+	lda	<L544+uxIndexToNotify_0
 	sta	<R1
 	stz	<R1+2
 	pei	<R1+2
@@ -16365,10 +15897,10 @@ L11064:
 	stx	<R0+2
 	lda	#$46
 	clc
-	adc	<L578+pxTCB_1
+	adc	<L545+pxTCB_1
 	sta	<R2
 	lda	#$0
-	adc	<L578+pxTCB_1+2
+	adc	<L545+pxTCB_1+2
 	sta	<R2+2
 	lda	<R2
 	clc
@@ -16378,53 +15910,53 @@ L11064:
 	adc	<R0+2
 	sta	<R3+2
 	lda	[<R3]
-	sta	[<L577+pulPreviousNotificationValue_0]
+	sta	[<L544+pulPreviousNotificationValue_0]
 	ldy	#$2
 	lda	[<R3],Y
-	sta	[<L577+pulPreviousNotificationValue_0],Y
+	sta	[<L544+pulPreviousNotificationValue_0],Y
 ;            }
 ;
 ;            ucOriginalNotifyState = pxTCB->ucNotifyState[ uxIndexToNotify ];
-L11071:
+L10995:
 	lda	#$4a
 	clc
-	adc	<L577+uxIndexToNotify_0
+	adc	<L544+uxIndexToNotify_0
 	tay
 	sep	#$20
 	longa	off
-	lda	[<L578+pxTCB_1],Y
-	sta	<L578+ucOriginalNotifyState_1
+	lda	[<L545+pxTCB_1],Y
+	sta	<L545+ucOriginalNotifyState_1
 	rep	#$20
 	longa	on
 ;            pxTCB->ucNotifyState[ uxIndexToNotify ] = taskNOTIFICATION_RECEIVED;
 	lda	#$4a
 	clc
-	adc	<L577+uxIndexToNotify_0
+	adc	<L544+uxIndexToNotify_0
 	tay
 	sep	#$20
 	longa	off
 	lda	#$2
-	sta	[<L578+pxTCB_1],Y
+	sta	[<L545+pxTCB_1],Y
 	rep	#$20
 	longa	on
 ;
 ;            switch( eAction )
-	lda	<L577+eAction_0
+	lda	<L544+eAction_0
 	xref	_~~fsw
 	jsr	_~~fsw
 	dw	0
 	dw	5
-	dw	L11081-1
-	dw	L11073-1
-	dw	L11074-1
-	dw	L11075-1
-	dw	L11076-1
-	dw	L11077-1
+	dw	L11005-1
+	dw	L10997-1
+	dw	L10998-1
+	dw	L10999-1
+	dw	L11000-1
+	dw	L11001-1
 ;            {
 ;                case eSetBits:
-L11074:
+L10998:
 ;                    pxTCB->ulNotifiedValue[ uxIndexToNotify ] |= ulValue;
-	lda	<L577+uxIndexToNotify_0
+	lda	<L544+uxIndexToNotify_0
 	sta	<R1
 	stz	<R1+2
 	pei	<R1+2
@@ -16441,23 +15973,23 @@ L11074:
 	lda	#$0
 	adc	<R0+2
 	sta	<R2+2
-	lda	<L578+pxTCB_1
+	lda	<L545+pxTCB_1
 	clc
 	adc	<R2
 	sta	<R0
-	lda	<L578+pxTCB_1+2
+	lda	<L545+pxTCB_1+2
 	adc	<R2+2
 	sta	<R0+2
-	lda	<L577+ulValue_0
+	lda	<L544+ulValue_0
 	ora	[<R0]
 	sta	[<R0]
-	lda	<L577+ulValue_0+2
+	lda	<L544+ulValue_0+2
 	ldy	#$2
 	ora	[<R0],Y
 	sta	[<R0],Y
 ;                    break;
 ;                    break;
-L11073:
+L10997:
 ;
 ;            traceTASK_NOTIFY_FROM_ISR( uxIndexToNotify );
 ;
@@ -16467,29 +15999,29 @@ L11073:
 ;            {
 	sep	#$20
 	longa	off
-	lda	<L578+ucOriginalNotifyState_1
+	lda	<L545+ucOriginalNotifyState_1
 	cmp	#<$1
 	rep	#$20
 	longa	on
 	beq	*+5
-	brl	L11089
+	brl	L11013
 ;            }
 ;                /* The task should not have been on an event list. */
 ;                configASSERT( listLIST_ITEM_CONTAINER( &( pxTCB->xEventListItem ) ) == NULL );
 	ldy	#$28
-	lda	[<L578+pxTCB_1],Y
+	lda	[<L545+pxTCB_1],Y
 	iny
 	iny
-	ora	[<L578+pxTCB_1],Y
+	ora	[<L545+pxTCB_1],Y
 	bne	*+5
-	brl	L11090
-L11094:
-	bra	L11094
+	brl	L11014
+L11018:
+	bra	L11018
 ;
 ;                case eIncrement:
-L11075:
+L10999:
 ;                    ( pxTCB->ulNotifiedValue[ uxIndexToNotify ] )++;
-	lda	<L577+uxIndexToNotify_0
+	lda	<L544+uxIndexToNotify_0
 	sta	<R1
 	stz	<R1+2
 	pei	<R1+2
@@ -16501,10 +16033,10 @@ L11075:
 	stx	<R0+2
 	lda	#$46
 	clc
-	adc	<L578+pxTCB_1
+	adc	<L545+pxTCB_1
 	sta	<R2
 	lda	#$0
-	adc	<L578+pxTCB_1+2
+	adc	<L545+pxTCB_1+2
 	sta	<R2+2
 	lda	<R2
 	clc
@@ -16520,16 +16052,16 @@ L11075:
 	lda	#$0
 	ldy	#$2
 	adc	[<R3],Y
-L20093:
+L20082:
 	ldy	#$2
 	sta	[<R3],Y
 ;                    break;
-	bra	L11073
+	bra	L10997
 ;
 ;                case eSetValueWithOverwrite:
-L11076:
+L11000:
 ;                    pxTCB->ulNotifiedValue[ uxIndexToNotify ] = ulValue;
-	lda	<L577+uxIndexToNotify_0
+	lda	<L544+uxIndexToNotify_0
 	sta	<R1
 	stz	<R1+2
 	pei	<R1+2
@@ -16541,10 +16073,10 @@ L11076:
 	stx	<R0+2
 	lda	#$46
 	clc
-	adc	<L578+pxTCB_1
+	adc	<L545+pxTCB_1
 	sta	<R2
 	lda	#$0
-	adc	<L578+pxTCB_1+2
+	adc	<L545+pxTCB_1+2
 	sta	<R2+2
 	lda	<R2
 	clc
@@ -16553,35 +16085,35 @@ L11076:
 	lda	<R2+2
 	adc	<R0+2
 	sta	<R3+2
-	lda	<L577+ulValue_0
+	lda	<L544+ulValue_0
 	sta	[<R3]
-	lda	<L577+ulValue_0+2
+	lda	<L544+ulValue_0+2
 ;                    break;
-	bra	L20093
+	bra	L20082
 ;
 ;                case eSetValueWithoutOverwrite:
-L11077:
+L11001:
 ;
 ;                    if( ucOriginalNotifyState != taskNOTIFICATION_RECEIVED )
 ;                    {
 	sep	#$20
 	longa	off
-	lda	<L578+ucOriginalNotifyState_1
+	lda	<L545+ucOriginalNotifyState_1
 	cmp	#<$2
 	rep	#$20
 	longa	on
-	bne	L11076
+	bne	L11000
 ;                        pxTCB->ulNotifiedValue[ uxIndexToNotify ] = ulValue;
 ;                    }
 ;                    else
 ;                    {
 ;                        /* The value could not be written to the task. */
 ;                        xReturn = pdFAIL;
-	stz	<L578+xReturn_1
+	stz	<L545+xReturn_1
 ;                    }
 ;
 ;                    break;
-	brl	L11073
+	brl	L10997
 ;
 ;                case eNoAction:
 ;
@@ -16590,7 +16122,7 @@ L11077:
 ;                    break;
 ;
 ;                default:
-L11081:
+L11005:
 ;
 ;                    /* Should not get here if all enums are handled.
 ;                     * Artificially force an assert by testing a value the
@@ -16599,104 +16131,104 @@ L11081:
 	lda	|_~xTickCount	; volatile
 	ora	|_~xTickCount+2	; volatile
 	bne	*+5
-	brl	L11073
-L11086:
-	bra	L11086
-L11090:
+	brl	L10997
+L11010:
+	bra	L11010
+L11014:
 ;
 ;                if( uxSchedulerSuspended == ( UBaseType_t ) 0U )
 ;                {
 	lda	|_~uxSchedulerSuspended	; volatile
 	beq	*+5
-	brl	L11115
+	brl	L11039
 ;                    listREMOVE_ITEM( &( pxTCB->xStateListItem ) );
 pxList_2	set	9
 	ldy	#$14
-	lda	[<L578+pxTCB_1],Y
-	sta	<L578+pxList_2
+	lda	[<L545+pxTCB_1],Y
+	sta	<L545+pxList_2
 	iny
 	iny
-	lda	[<L578+pxTCB_1],Y
-	sta	<L578+pxList_2+2
+	lda	[<L545+pxTCB_1],Y
+	sta	<L545+pxList_2+2
 	ldy	#$8
-	lda	[<L578+pxTCB_1],Y
+	lda	[<L545+pxTCB_1],Y
 	sta	<R0
 	iny
 	iny
-	lda	[<L578+pxTCB_1],Y
+	lda	[<L545+pxTCB_1],Y
 	sta	<R0+2
 	iny
 	iny
-	lda	[<L578+pxTCB_1],Y
+	lda	[<L545+pxTCB_1],Y
 	ldy	#$8
 	sta	[<R0],Y
 	ldy	#$e
-	lda	[<L578+pxTCB_1],Y
+	lda	[<L545+pxTCB_1],Y
 	ldy	#$a
 	sta	[<R0],Y
 	iny
 	iny
-	lda	[<L578+pxTCB_1],Y
+	lda	[<L545+pxTCB_1],Y
 	sta	<R0
 	iny
 	iny
-	lda	[<L578+pxTCB_1],Y
+	lda	[<L545+pxTCB_1],Y
 	sta	<R0+2
 	ldy	#$8
-	lda	[<L578+pxTCB_1],Y
+	lda	[<L545+pxTCB_1],Y
 	ldy	#$4
 	sta	[<R0],Y
 	ldy	#$a
-	lda	[<L578+pxTCB_1],Y
+	lda	[<L545+pxTCB_1],Y
 	ldy	#$6
 	sta	[<R0],Y
 	lda	#$4
 	clc
-	adc	<L578+pxTCB_1
+	adc	<L545+pxTCB_1
 	sta	<R0
 	lda	#$0
-	adc	<L578+pxTCB_1+2
+	adc	<L545+pxTCB_1+2
 	sta	<R0+2
 	ldy	#$2
-	lda	[<L578+pxList_2],Y
+	lda	[<L545+pxList_2],Y
 	cmp	<R0
-	bne	L587
+	bne	L554
 	iny
 	iny
-	lda	[<L578+pxList_2],Y
+	lda	[<L545+pxList_2],Y
 	cmp	<R0+2
-L587:
-	bne	L11101
+L554:
+	bne	L11025
 	ldy	#$c
-	lda	[<L578+pxTCB_1],Y
+	lda	[<L545+pxTCB_1],Y
 	ldy	#$2
-	sta	[<L578+pxList_2],Y
+	sta	[<L545+pxList_2],Y
 	ldy	#$e
-	lda	[<L578+pxTCB_1],Y
+	lda	[<L545+pxTCB_1],Y
 	ldy	#$4
-	sta	[<L578+pxList_2],Y
-L11101:
+	sta	[<L545+pxList_2],Y
+L11025:
 	lda	#$0
 	ldy	#$14
-	sta	[<L578+pxTCB_1],Y
+	sta	[<L545+pxTCB_1],Y
 	iny
 	iny
-	sta	[<L578+pxTCB_1],Y
+	sta	[<L545+pxTCB_1],Y
 	lda	#$ffff
 	clc
-	adc	[<L578+pxList_2]
-	sta	[<L578+pxList_2]
+	adc	[<L545+pxList_2]
+	sta	[<L545+pxList_2]
 ;                    prvAddTaskToReadyList( pxTCB );
 	lda	|_~uxTopReadyPriority	; volatile
 	ldy	#$2c
-	cmp	[<L578+pxTCB_1],Y
-	bcs	L11111
-	lda	[<L578+pxTCB_1],Y
+	cmp	[<L545+pxTCB_1],Y
+	bcs	L11035
+	lda	[<L545+pxTCB_1],Y
 	sta	|_~uxTopReadyPriority	; volatile
-L11111:
+L11035:
 pxIndex_3	set	9
 	ldy	#$2c
-	lda	[<L578+pxTCB_1],Y
+	lda	[<L545+pxTCB_1],Y
 	ldx	#<$12
 	xref	_~~mul
 	jsr	_~~mul
@@ -16708,40 +16240,40 @@ pxIndex_3	set	9
 	adc	<R0
 	sta	<R2
 	lda	(<R2)
-	sta	<L578+pxIndex_3
+	sta	<L545+pxIndex_3
 	ldy	#$2
 	lda	(<R2),Y
-	sta	<L578+pxIndex_3+2
-	lda	<L578+pxIndex_3
+	sta	<L545+pxIndex_3+2
+	lda	<L545+pxIndex_3
 	ldy	#$8
-	sta	[<L578+pxTCB_1],Y
-	lda	<L578+pxIndex_3+2
+	sta	[<L545+pxTCB_1],Y
+	lda	<L545+pxIndex_3+2
 	iny
 	iny
-	sta	[<L578+pxTCB_1],Y
+	sta	[<L545+pxTCB_1],Y
 	dey
 	dey
-	lda	[<L578+pxIndex_3],Y
+	lda	[<L545+pxIndex_3],Y
 	ldy	#$c
-	sta	[<L578+pxTCB_1],Y
+	sta	[<L545+pxTCB_1],Y
 	dey
 	dey
-	lda	[<L578+pxIndex_3],Y
+	lda	[<L545+pxIndex_3],Y
 	ldy	#$e
-	sta	[<L578+pxTCB_1],Y
+	sta	[<L545+pxTCB_1],Y
 	ldy	#$8
-	lda	[<L578+pxIndex_3],Y
+	lda	[<L545+pxIndex_3],Y
 	sta	<R0
 	iny
 	iny
-	lda	[<L578+pxIndex_3],Y
+	lda	[<L545+pxIndex_3],Y
 	sta	<R0+2
 	lda	#$4
 	clc
-	adc	<L578+pxTCB_1
+	adc	<L545+pxTCB_1
 	sta	<R1
 	lda	#$0
-	adc	<L578+pxTCB_1+2
+	adc	<L545+pxTCB_1+2
 	sta	<R1+2
 	lda	<R1
 	ldy	#$4
@@ -16752,21 +16284,21 @@ pxIndex_3	set	9
 	sta	[<R0],Y
 	lda	#$4
 	clc
-	adc	<L578+pxTCB_1
+	adc	<L545+pxTCB_1
 	sta	<R0
 	lda	#$0
-	adc	<L578+pxTCB_1+2
+	adc	<L545+pxTCB_1+2
 	sta	<R0+2
 	lda	<R0
 	iny
 	iny
-	sta	[<L578+pxIndex_3],Y
+	sta	[<L545+pxIndex_3],Y
 	lda	<R0+2
 	iny
 	iny
-	sta	[<L578+pxIndex_3],Y
+	sta	[<L545+pxIndex_3],Y
 	ldy	#$2c
-	lda	[<L578+pxTCB_1],Y
+	lda	[<L545+pxTCB_1],Y
 	ldx	#<$12
 	xref	_~~mul
 	jsr	_~~mul
@@ -16778,19 +16310,19 @@ pxIndex_3	set	9
 	sta	<R0+2
 	lda	<R0
 	ldy	#$14
-	sta	[<L578+pxTCB_1],Y
+	sta	[<L545+pxTCB_1],Y
 	lda	<R0+2
 	iny
 	iny
-	sta	[<L578+pxTCB_1],Y
+	sta	[<L545+pxTCB_1],Y
 	ldy	#$2c
-	lda	[<L578+pxTCB_1],Y
+	lda	[<L545+pxTCB_1],Y
 	ldx	#<$12
 	xref	_~~mul
 	jsr	_~~mul
 	sta	<R0
 	ldy	#$2c
-	lda	[<L578+pxTCB_1],Y
+	lda	[<L545+pxTCB_1],Y
 	ldx	#<$12
 	xref	_~~mul
 	jsr	_~~mul
@@ -16817,45 +16349,45 @@ pxIndex_3	set	9
 ;                    #endif
 ;                }
 ;                else
-	brl	L11112
+	brl	L11036
 ;                {
 ;                    /* The delayed and ready lists cannot be accessed, so hold
 ;                     * this task pending until the scheduler is resumed. */
 ;                    listINSERT_END( &( xPendingReadyList ), &( pxTCB->xEventListItem ) );
-L11115:
+L11039:
 pxIndex_4	set	9
 	lda	|_~xPendingReadyList+2
-	sta	<L578+pxIndex_4
+	sta	<L545+pxIndex_4
 	lda	|_~xPendingReadyList+2+2
-	sta	<L578+pxIndex_4+2
-	lda	<L578+pxIndex_4
+	sta	<L545+pxIndex_4+2
+	lda	<L545+pxIndex_4
 	ldy	#$1c
-	sta	[<L578+pxTCB_1],Y
-	lda	<L578+pxIndex_4+2
+	sta	[<L545+pxTCB_1],Y
+	lda	<L545+pxIndex_4+2
 	iny
 	iny
-	sta	[<L578+pxTCB_1],Y
+	sta	[<L545+pxTCB_1],Y
 	ldy	#$8
-	lda	[<L578+pxIndex_4],Y
+	lda	[<L545+pxIndex_4],Y
 	ldy	#$20
-	sta	[<L578+pxTCB_1],Y
+	sta	[<L545+pxTCB_1],Y
 	ldy	#$a
-	lda	[<L578+pxIndex_4],Y
+	lda	[<L545+pxIndex_4],Y
 	ldy	#$22
-	sta	[<L578+pxTCB_1],Y
+	sta	[<L545+pxTCB_1],Y
 	ldy	#$8
-	lda	[<L578+pxIndex_4],Y
+	lda	[<L545+pxIndex_4],Y
 	sta	<R0
 	iny
 	iny
-	lda	[<L578+pxIndex_4],Y
+	lda	[<L545+pxIndex_4],Y
 	sta	<R0+2
 	lda	#$18
 	clc
-	adc	<L578+pxTCB_1
+	adc	<L545+pxTCB_1
 	sta	<R1
 	lda	#$0
-	adc	<L578+pxTCB_1+2
+	adc	<L545+pxTCB_1+2
 	sta	<R1+2
 	lda	<R1
 	ldy	#$4
@@ -16866,19 +16398,19 @@ pxIndex_4	set	9
 	sta	[<R0],Y
 	lda	#$18
 	clc
-	adc	<L578+pxTCB_1
+	adc	<L545+pxTCB_1
 	sta	<R0
 	lda	#$0
-	adc	<L578+pxTCB_1+2
+	adc	<L545+pxTCB_1+2
 	sta	<R0+2
 	lda	<R0
 	iny
 	iny
-	sta	[<L578+pxIndex_4],Y
+	sta	[<L545+pxIndex_4],Y
 	lda	<R0+2
 	iny
 	iny
-	sta	[<L578+pxIndex_4],Y
+	sta	[<L545+pxIndex_4],Y
 	lda	#<_~xPendingReadyList
 	sta	<R0
 	xref	_BEG_DATA
@@ -16886,14 +16418,14 @@ pxIndex_4	set	9
 	sta	<R0+2
 	lda	<R0
 	ldy	#$28
-	sta	[<L578+pxTCB_1],Y
+	sta	[<L545+pxTCB_1],Y
 	lda	<R0+2
 	iny
 	iny
-	sta	[<L578+pxTCB_1],Y
+	sta	[<L545+pxTCB_1],Y
 	inc	|_~xPendingReadyList
 ;                }
-L11112:
+L11036:
 ;
 ;                #if ( configNUMBER_OF_CORES == 1 )
 ;                {
@@ -16905,43 +16437,43 @@ L11112:
 	sta	<R0+2
 	ldy	#$2c
 	lda	[<R0],Y
-	cmp	[<L578+pxTCB_1],Y
-	bcs	L11089
+	cmp	[<L545+pxTCB_1],Y
+	bcs	L11013
 ;                        /* The notified task has a priority above the currently
 ;                         * executing task so a yield is required. */
 ;                        if( pxHigherPriorityTaskWoken != NULL )
 ;                        {
-	lda	<L577+pxHigherPriorityTaskWoken_0
-	ora	<L577+pxHigherPriorityTaskWoken_0+2
-	beq	L11117
+	lda	<L544+pxHigherPriorityTaskWoken_0
+	ora	<L544+pxHigherPriorityTaskWoken_0+2
+	beq	L11041
 ;                            *pxHigherPriorityTaskWoken = pdTRUE;
 	lda	#$1
-	sta	[<L577+pxHigherPriorityTaskWoken_0]
+	sta	[<L544+pxHigherPriorityTaskWoken_0]
 ;                        }
 ;
 ;                        /* Mark that a yield is pending in case the user is not
 ;                         * using the "xHigherPriorityTaskWoken" parameter to an ISR
 ;                         * safe FreeRTOS function. */
 ;                        xYieldPendings[ 0 ] = pdTRUE;
-L11117:
+L11041:
 	lda	#$1
 	sta	|_~xYieldPendings	; volatile
 ;                    }
 ;                    else
-L11089:
+L11013:
 ;        taskEXIT_CRITICAL_FROM_ISR( uxSavedInterruptStatus );
 ;
 ;        traceRETURN_xTaskGenericNotifyFromISR( xReturn );
 ;
 ;        return xReturn;
-	lda	<L578+xReturn_1
+	lda	<L545+xReturn_1
 	tay
-	lda	<L577+1
-	sta	<L577+1+20
+	lda	<L544+1
+	sta	<L544+1+20
 	pld
 	tsc
 	clc
-	adc	#L577+20
+	adc	#L544+20
 	tcs
 	tya
 	rts
@@ -16969,8 +16501,8 @@ L11089:
 ;            }
 ;        }
 ;    }
-L577	equ	29
-L578	equ	17
+L544	equ	29
+L545	equ	17
 	ends
 	efunc
 ;
@@ -16991,7 +16523,7 @@ _~vTaskGenericNotifyGiveFromISR:
 	longi	on
 	tsc
 	sec
-	sbc	#L593
+	sbc	#L560
 	tcs
 	phd
 	tcd
@@ -17008,19 +16540,19 @@ ucOriginalNotifyState_1	set	4
 uxSavedInterruptStatus_1	set	5
 ;
 ;        configASSERT( xTaskToNotify );
-	lda	<L593+xTaskToNotify_0
-	ora	<L593+xTaskToNotify_0+2
-	bne	L11119
-L11123:
-	bra	L11123
-L11119:
+	lda	<L560+xTaskToNotify_0
+	ora	<L560+xTaskToNotify_0+2
+	bne	L11043
+L11047:
+	bra	L11047
+L11043:
 ;        configASSERT( uxIndexToNotify < configTASK_NOTIFICATION_ARRAY_ENTRIES );
-	lda	<L593+uxIndexToNotify_0
+	lda	<L560+uxIndexToNotify_0
 	cmp	#<$1
-	bcc	L11126
-L11130:
-	bra	L11130
-L11126:
+	bcc	L11050
+L11054:
+	bra	L11054
+L11050:
 ;
 ;        /* RTOS ports that support interrupt nesting have the concept of a
 ;         * maximum  system call (or maximum API call) interrupt priority.
@@ -17041,44 +16573,44 @@ L11126:
 ;        portASSERT_IF_INTERRUPT_PRIORITY_INVALID();
 ;
 ;        pxTCB = xTaskToNotify;
-	lda	<L593+xTaskToNotify_0
-	sta	<L594+pxTCB_1
-	lda	<L593+xTaskToNotify_0+2
-	sta	<L594+pxTCB_1+2
+	lda	<L560+xTaskToNotify_0
+	sta	<L561+pxTCB_1
+	lda	<L560+xTaskToNotify_0+2
+	sta	<L561+pxTCB_1+2
 ;
 ;        /* MISRA Ref 4.7.1 [Return value shall be checked] */
 ;        /* More details at: https://github.com/FreeRTOS/FreeRTOS-Kernel/blob/main/MISRA.md#dir-47 */
 ;        /* coverity[misra_c_2012_directive_4_7_violation] */
 ;        uxSavedInterruptStatus = ( UBaseType_t ) taskENTER_CRITICAL_FROM_ISR();
-	stz	<L594+uxSavedInterruptStatus_1
+	stz	<L561+uxSavedInterruptStatus_1
 ;        {
 ;            ucOriginalNotifyState = pxTCB->ucNotifyState[ uxIndexToNotify ];
 	lda	#$4a
 	clc
-	adc	<L593+uxIndexToNotify_0
+	adc	<L560+uxIndexToNotify_0
 	tay
 	sep	#$20
 	longa	off
-	lda	[<L594+pxTCB_1],Y
-	sta	<L594+ucOriginalNotifyState_1
+	lda	[<L561+pxTCB_1],Y
+	sta	<L561+ucOriginalNotifyState_1
 	rep	#$20
 	longa	on
 ;            pxTCB->ucNotifyState[ uxIndexToNotify ] = taskNOTIFICATION_RECEIVED;
 	lda	#$4a
 	clc
-	adc	<L593+uxIndexToNotify_0
+	adc	<L560+uxIndexToNotify_0
 	tay
 	sep	#$20
 	longa	off
 	lda	#$2
-	sta	[<L594+pxTCB_1],Y
+	sta	[<L561+pxTCB_1],Y
 	rep	#$20
 	longa	on
 ;
 ;            /* 'Giving' is equivalent to incrementing a count in a counting
 ;             * semaphore. */
 ;            ( pxTCB->ulNotifiedValue[ uxIndexToNotify ] )++;
-	lda	<L593+uxIndexToNotify_0
+	lda	<L560+uxIndexToNotify_0
 	sta	<R1
 	stz	<R1+2
 	pei	<R1+2
@@ -17090,10 +16622,10 @@ L11126:
 	stx	<R0+2
 	lda	#$46
 	clc
-	adc	<L594+pxTCB_1
+	adc	<L561+pxTCB_1
 	sta	<R2
 	lda	#$0
-	adc	<L594+pxTCB_1+2
+	adc	<L561+pxTCB_1+2
 	sta	<R2+2
 	lda	<R2
 	clc
@@ -17119,117 +16651,117 @@ L11126:
 ;            {
 	sep	#$20
 	longa	off
-	lda	<L594+ucOriginalNotifyState_1
+	lda	<L561+ucOriginalNotifyState_1
 	cmp	#<$1
 	rep	#$20
 	longa	on
 	beq	*+5
-	brl	L605
+	brl	L572
 ;                /* The task should not have been on an event list. */
 ;                configASSERT( listLIST_ITEM_CONTAINER( &( pxTCB->xEventListItem ) ) == NULL );
 	ldy	#$28
-	lda	[<L594+pxTCB_1],Y
+	lda	[<L561+pxTCB_1],Y
 	iny
 	iny
-	ora	[<L594+pxTCB_1],Y
-	beq	L11134
-L11138:
-	bra	L11138
-L11134:
+	ora	[<L561+pxTCB_1],Y
+	beq	L11058
+L11062:
+	bra	L11062
+L11058:
 ;
 ;                if( uxSchedulerSuspended == ( UBaseType_t ) 0U )
 ;                {
 	lda	|_~uxSchedulerSuspended	; volatile
 	beq	*+5
-	brl	L11159
+	brl	L11083
 ;                    listREMOVE_ITEM( &( pxTCB->xStateListItem ) );
 pxList_2	set	7
 	ldy	#$14
-	lda	[<L594+pxTCB_1],Y
-	sta	<L594+pxList_2
+	lda	[<L561+pxTCB_1],Y
+	sta	<L561+pxList_2
 	iny
 	iny
-	lda	[<L594+pxTCB_1],Y
-	sta	<L594+pxList_2+2
+	lda	[<L561+pxTCB_1],Y
+	sta	<L561+pxList_2+2
 	ldy	#$8
-	lda	[<L594+pxTCB_1],Y
+	lda	[<L561+pxTCB_1],Y
 	sta	<R0
 	iny
 	iny
-	lda	[<L594+pxTCB_1],Y
+	lda	[<L561+pxTCB_1],Y
 	sta	<R0+2
 	iny
 	iny
-	lda	[<L594+pxTCB_1],Y
+	lda	[<L561+pxTCB_1],Y
 	ldy	#$8
 	sta	[<R0],Y
 	ldy	#$e
-	lda	[<L594+pxTCB_1],Y
+	lda	[<L561+pxTCB_1],Y
 	ldy	#$a
 	sta	[<R0],Y
 	iny
 	iny
-	lda	[<L594+pxTCB_1],Y
+	lda	[<L561+pxTCB_1],Y
 	sta	<R0
 	iny
 	iny
-	lda	[<L594+pxTCB_1],Y
+	lda	[<L561+pxTCB_1],Y
 	sta	<R0+2
 	ldy	#$8
-	lda	[<L594+pxTCB_1],Y
+	lda	[<L561+pxTCB_1],Y
 	ldy	#$4
 	sta	[<R0],Y
 	ldy	#$a
-	lda	[<L594+pxTCB_1],Y
+	lda	[<L561+pxTCB_1],Y
 	ldy	#$6
 	sta	[<R0],Y
 	lda	#$4
 	clc
-	adc	<L594+pxTCB_1
+	adc	<L561+pxTCB_1
 	sta	<R0
 	lda	#$0
-	adc	<L594+pxTCB_1+2
+	adc	<L561+pxTCB_1+2
 	sta	<R0+2
 	ldy	#$2
-	lda	[<L594+pxList_2],Y
+	lda	[<L561+pxList_2],Y
 	cmp	<R0
-	bne	L600
+	bne	L567
 	iny
 	iny
-	lda	[<L594+pxList_2],Y
+	lda	[<L561+pxList_2],Y
 	cmp	<R0+2
-L600:
-	bne	L11145
+L567:
+	bne	L11069
 	ldy	#$c
-	lda	[<L594+pxTCB_1],Y
+	lda	[<L561+pxTCB_1],Y
 	ldy	#$2
-	sta	[<L594+pxList_2],Y
+	sta	[<L561+pxList_2],Y
 	ldy	#$e
-	lda	[<L594+pxTCB_1],Y
+	lda	[<L561+pxTCB_1],Y
 	ldy	#$4
-	sta	[<L594+pxList_2],Y
-L11145:
+	sta	[<L561+pxList_2],Y
+L11069:
 	lda	#$0
 	ldy	#$14
-	sta	[<L594+pxTCB_1],Y
+	sta	[<L561+pxTCB_1],Y
 	iny
 	iny
-	sta	[<L594+pxTCB_1],Y
+	sta	[<L561+pxTCB_1],Y
 	lda	#$ffff
 	clc
-	adc	[<L594+pxList_2]
-	sta	[<L594+pxList_2]
+	adc	[<L561+pxList_2]
+	sta	[<L561+pxList_2]
 ;                    prvAddTaskToReadyList( pxTCB );
 	lda	|_~uxTopReadyPriority	; volatile
 	ldy	#$2c
-	cmp	[<L594+pxTCB_1],Y
-	bcs	L11155
-	lda	[<L594+pxTCB_1],Y
+	cmp	[<L561+pxTCB_1],Y
+	bcs	L11079
+	lda	[<L561+pxTCB_1],Y
 	sta	|_~uxTopReadyPriority	; volatile
-L11155:
+L11079:
 pxIndex_3	set	7
 	ldy	#$2c
-	lda	[<L594+pxTCB_1],Y
+	lda	[<L561+pxTCB_1],Y
 	ldx	#<$12
 	xref	_~~mul
 	jsr	_~~mul
@@ -17241,40 +16773,40 @@ pxIndex_3	set	7
 	adc	<R0
 	sta	<R2
 	lda	(<R2)
-	sta	<L594+pxIndex_3
+	sta	<L561+pxIndex_3
 	ldy	#$2
 	lda	(<R2),Y
-	sta	<L594+pxIndex_3+2
-	lda	<L594+pxIndex_3
+	sta	<L561+pxIndex_3+2
+	lda	<L561+pxIndex_3
 	ldy	#$8
-	sta	[<L594+pxTCB_1],Y
-	lda	<L594+pxIndex_3+2
+	sta	[<L561+pxTCB_1],Y
+	lda	<L561+pxIndex_3+2
 	iny
 	iny
-	sta	[<L594+pxTCB_1],Y
+	sta	[<L561+pxTCB_1],Y
 	dey
 	dey
-	lda	[<L594+pxIndex_3],Y
+	lda	[<L561+pxIndex_3],Y
 	ldy	#$c
-	sta	[<L594+pxTCB_1],Y
+	sta	[<L561+pxTCB_1],Y
 	dey
 	dey
-	lda	[<L594+pxIndex_3],Y
+	lda	[<L561+pxIndex_3],Y
 	ldy	#$e
-	sta	[<L594+pxTCB_1],Y
+	sta	[<L561+pxTCB_1],Y
 	ldy	#$8
-	lda	[<L594+pxIndex_3],Y
+	lda	[<L561+pxIndex_3],Y
 	sta	<R0
 	iny
 	iny
-	lda	[<L594+pxIndex_3],Y
+	lda	[<L561+pxIndex_3],Y
 	sta	<R0+2
 	lda	#$4
 	clc
-	adc	<L594+pxTCB_1
+	adc	<L561+pxTCB_1
 	sta	<R1
 	lda	#$0
-	adc	<L594+pxTCB_1+2
+	adc	<L561+pxTCB_1+2
 	sta	<R1+2
 	lda	<R1
 	ldy	#$4
@@ -17285,21 +16817,21 @@ pxIndex_3	set	7
 	sta	[<R0],Y
 	lda	#$4
 	clc
-	adc	<L594+pxTCB_1
+	adc	<L561+pxTCB_1
 	sta	<R0
 	lda	#$0
-	adc	<L594+pxTCB_1+2
+	adc	<L561+pxTCB_1+2
 	sta	<R0+2
 	lda	<R0
 	iny
 	iny
-	sta	[<L594+pxIndex_3],Y
+	sta	[<L561+pxIndex_3],Y
 	lda	<R0+2
 	iny
 	iny
-	sta	[<L594+pxIndex_3],Y
+	sta	[<L561+pxIndex_3],Y
 	ldy	#$2c
-	lda	[<L594+pxTCB_1],Y
+	lda	[<L561+pxTCB_1],Y
 	ldx	#<$12
 	xref	_~~mul
 	jsr	_~~mul
@@ -17311,19 +16843,19 @@ pxIndex_3	set	7
 	sta	<R0+2
 	lda	<R0
 	ldy	#$14
-	sta	[<L594+pxTCB_1],Y
+	sta	[<L561+pxTCB_1],Y
 	lda	<R0+2
 	iny
 	iny
-	sta	[<L594+pxTCB_1],Y
+	sta	[<L561+pxTCB_1],Y
 	ldy	#$2c
-	lda	[<L594+pxTCB_1],Y
+	lda	[<L561+pxTCB_1],Y
 	ldx	#<$12
 	xref	_~~mul
 	jsr	_~~mul
 	sta	<R0
 	ldy	#$2c
-	lda	[<L594+pxTCB_1],Y
+	lda	[<L561+pxTCB_1],Y
 	ldx	#<$12
 	xref	_~~mul
 	jsr	_~~mul
@@ -17350,45 +16882,45 @@ pxIndex_3	set	7
 ;                    #endif
 ;                }
 ;                else
-	brl	L11156
+	brl	L11080
 ;                {
 ;                    /* The delayed and ready lists cannot be accessed, so hold
 ;                     * this task pending until the scheduler is resumed. */
 ;                    listINSERT_END( &( xPendingReadyList ), &( pxTCB->xEventListItem ) );
-L11159:
+L11083:
 pxIndex_4	set	7
 	lda	|_~xPendingReadyList+2
-	sta	<L594+pxIndex_4
+	sta	<L561+pxIndex_4
 	lda	|_~xPendingReadyList+2+2
-	sta	<L594+pxIndex_4+2
-	lda	<L594+pxIndex_4
+	sta	<L561+pxIndex_4+2
+	lda	<L561+pxIndex_4
 	ldy	#$1c
-	sta	[<L594+pxTCB_1],Y
-	lda	<L594+pxIndex_4+2
+	sta	[<L561+pxTCB_1],Y
+	lda	<L561+pxIndex_4+2
 	iny
 	iny
-	sta	[<L594+pxTCB_1],Y
+	sta	[<L561+pxTCB_1],Y
 	ldy	#$8
-	lda	[<L594+pxIndex_4],Y
+	lda	[<L561+pxIndex_4],Y
 	ldy	#$20
-	sta	[<L594+pxTCB_1],Y
+	sta	[<L561+pxTCB_1],Y
 	ldy	#$a
-	lda	[<L594+pxIndex_4],Y
+	lda	[<L561+pxIndex_4],Y
 	ldy	#$22
-	sta	[<L594+pxTCB_1],Y
+	sta	[<L561+pxTCB_1],Y
 	ldy	#$8
-	lda	[<L594+pxIndex_4],Y
+	lda	[<L561+pxIndex_4],Y
 	sta	<R0
 	iny
 	iny
-	lda	[<L594+pxIndex_4],Y
+	lda	[<L561+pxIndex_4],Y
 	sta	<R0+2
 	lda	#$18
 	clc
-	adc	<L594+pxTCB_1
+	adc	<L561+pxTCB_1
 	sta	<R1
 	lda	#$0
-	adc	<L594+pxTCB_1+2
+	adc	<L561+pxTCB_1+2
 	sta	<R1+2
 	lda	<R1
 	ldy	#$4
@@ -17399,19 +16931,19 @@ pxIndex_4	set	7
 	sta	[<R0],Y
 	lda	#$18
 	clc
-	adc	<L594+pxTCB_1
+	adc	<L561+pxTCB_1
 	sta	<R0
 	lda	#$0
-	adc	<L594+pxTCB_1+2
+	adc	<L561+pxTCB_1+2
 	sta	<R0+2
 	lda	<R0
 	iny
 	iny
-	sta	[<L594+pxIndex_4],Y
+	sta	[<L561+pxIndex_4],Y
 	lda	<R0+2
 	iny
 	iny
-	sta	[<L594+pxIndex_4],Y
+	sta	[<L561+pxIndex_4],Y
 	lda	#<_~xPendingReadyList
 	sta	<R0
 	xref	_BEG_DATA
@@ -17419,14 +16951,14 @@ pxIndex_4	set	7
 	sta	<R0+2
 	lda	<R0
 	ldy	#$28
-	sta	[<L594+pxTCB_1],Y
+	sta	[<L561+pxTCB_1],Y
 	lda	<R0+2
 	iny
 	iny
-	sta	[<L594+pxTCB_1],Y
+	sta	[<L561+pxTCB_1],Y
 	inc	|_~xPendingReadyList
 ;                }
-L11156:
+L11080:
 ;
 ;                #if ( configNUMBER_OF_CORES == 1 )
 ;                {
@@ -17438,25 +16970,25 @@ L11156:
 	sta	<R0+2
 	ldy	#$2c
 	lda	[<R0],Y
-	cmp	[<L594+pxTCB_1],Y
-	bcs	L605
+	cmp	[<L561+pxTCB_1],Y
+	bcs	L572
 ;                        /* The notified task has a priority above the currently
 ;                         * executing task so a yield is required. */
 ;                        if( pxHigherPriorityTaskWoken != NULL )
 ;                        {
-	lda	<L593+pxHigherPriorityTaskWoken_0
-	ora	<L593+pxHigherPriorityTaskWoken_0+2
-	beq	L11161
+	lda	<L560+pxHigherPriorityTaskWoken_0
+	ora	<L560+pxHigherPriorityTaskWoken_0+2
+	beq	L11085
 ;                            *pxHigherPriorityTaskWoken = pdTRUE;
 	lda	#$1
-	sta	[<L593+pxHigherPriorityTaskWoken_0]
+	sta	[<L560+pxHigherPriorityTaskWoken_0]
 ;                        }
 ;
 ;                        /* Mark that a yield is pending in case the user is not
 ;                         * using the "xHigherPriorityTaskWoken" parameter in an ISR
 ;                         * safe FreeRTOS function. */
 ;                        xYieldPendings[ 0 ] = pdTRUE;
-L11161:
+L11085:
 	lda	#$1
 	sta	|_~xYieldPendings	; volatile
 ;                    }
@@ -17488,17 +17020,17 @@ L11161:
 ;
 ;        traceRETURN_vTaskGenericNotifyGiveFromISR();
 ;    }
-L605:
-	lda	<L593+1
-	sta	<L593+1+10
+L572:
+	lda	<L560+1
+	sta	<L560+1+10
 	pld
 	tsc
 	clc
-	adc	#L593+10
+	adc	#L560+10
 	tcs
 	rts
-L593	equ	27
-L594	equ	17
+L560	equ	27
+L561	equ	17
 	ends
 	efunc
 ;
@@ -17518,7 +17050,7 @@ _~xTaskGenericNotifyStateClear:
 	longi	on
 	tsc
 	sec
-	sbc	#L606
+	sbc	#L573
 	tcs
 	phd
 	tcd
@@ -17532,96 +17064,96 @@ pxTCB_1	set	0
 xReturn_1	set	4
 ;
 ;        configASSERT( uxIndexToClear < configTASK_NOTIFICATION_ARRAY_ENTRIES );
-	lda	<L606+uxIndexToClear_0
+	lda	<L573+uxIndexToClear_0
 	cmp	#<$1
-	bcc	L11163
-L11167:
-	bra	L11167
-L11163:
+	bcc	L11087
+L11091:
+	bra	L11091
+L11087:
 ;
 ;        /* If null is passed in here then it is the calling task that is having
 ;         * its notification state cleared. */
 ;        pxTCB = prvGetTCBFromHandle( xTask );
-	lda	<L606+xTask_0
-	ora	<L606+xTask_0+2
-	bne	L609
+	lda	<L573+xTask_0
+	ora	<L573+xTask_0+2
+	bne	L576
 	ldx	|_~pxCurrentTCB+2	; volatile
 	lda	|_~pxCurrentTCB	; volatile
-	bra	L611
-L609:
-	ldx	<L606+xTask_0+2
-	lda	<L606+xTask_0
-L611:
+	bra	L578
+L576:
+	ldx	<L573+xTask_0+2
+	lda	<L573+xTask_0
+L578:
 	stx	<R0+2
-	sta	<L607+pxTCB_1
+	sta	<L574+pxTCB_1
 	lda	<R0+2
-	sta	<L607+pxTCB_1+2
+	sta	<L574+pxTCB_1+2
 ;        configASSERT( pxTCB != NULL );
-	lda	<L607+pxTCB_1
-	ora	<L607+pxTCB_1+2
-	bne	L11178
-L11174:
-	bra	L11174
+	lda	<L574+pxTCB_1
+	ora	<L574+pxTCB_1+2
+	bne	L11102
+L11098:
+	bra	L11098
 ;
 ;        taskENTER_CRITICAL();
-L11178:
+L11102:
 ;        {
 ;            if( pxTCB->ucNotifyState[ uxIndexToClear ] == taskNOTIFICATION_RECEIVED )
 ;            {
 	lda	#$4a
 	clc
-	adc	<L606+uxIndexToClear_0
+	adc	<L573+uxIndexToClear_0
 	tay
 	sep	#$20
 	longa	off
-	lda	[<L607+pxTCB_1],Y
+	lda	[<L574+pxTCB_1],Y
 	cmp	#<$2
 	rep	#$20
 	longa	on
-	bne	L11180
+	bne	L11104
 ;                pxTCB->ucNotifyState[ uxIndexToClear ] = taskNOT_WAITING_NOTIFICATION;
 	lda	#$4a
 	clc
-	adc	<L606+uxIndexToClear_0
+	adc	<L573+uxIndexToClear_0
 	tay
 	sep	#$20
 	longa	off
 	lda	#$0
-	sta	[<L607+pxTCB_1],Y
+	sta	[<L574+pxTCB_1],Y
 	rep	#$20
 	longa	on
 ;                xReturn = pdPASS;
 	lda	#$1
-	sta	<L607+xReturn_1
+	sta	<L574+xReturn_1
 ;            }
 ;            else
-	bra	L11183
-L11180:
+	bra	L11107
+L11104:
 ;            {
 ;                xReturn = pdFAIL;
-	stz	<L607+xReturn_1
+	stz	<L574+xReturn_1
 ;            }
 ;        }
 ;        taskEXIT_CRITICAL();
-L11183:
+L11107:
 ;
 ;        traceRETURN_xTaskGenericNotifyStateClear( xReturn );
 ;
 ;        return xReturn;
-	lda	<L607+xReturn_1
+	lda	<L574+xReturn_1
 	tay
-	lda	<L606+1
-	sta	<L606+1+6
+	lda	<L573+1
+	sta	<L573+1+6
 	pld
 	tsc
 	clc
-	adc	#L606+6
+	adc	#L573+6
 	tcs
 	tya
 	rts
 ;    }
-L606	equ	10
-L607	equ	5
+L573	equ	10
+L574	equ	5
 	ends
 	efunc
 ;
@@ -17642,7 +17174,7 @@ _~ulTaskGenericNotifyValueClear:
 	longi	on
 	tsc
 	sec
-	sbc	#L615
+	sbc	#L582
 	tcs
 	phd
 	tcd
@@ -17657,44 +17189,44 @@ pxTCB_1	set	0
 ulReturn_1	set	4
 ;
 ;        configASSERT( uxIndexToClear < configTASK_NOTIFICATION_ARRAY_ENTRIES );
-	lda	<L615+uxIndexToClear_0
+	lda	<L582+uxIndexToClear_0
 	cmp	#<$1
-	bcc	L11185
-L11189:
-	bra	L11189
-L11185:
+	bcc	L11109
+L11113:
+	bra	L11113
+L11109:
 ;
 ;        /* If null is passed in here then it is the calling task that is having
 ;         * its notification state cleared. */
 ;        pxTCB = prvGetTCBFromHandle( xTask );
-	lda	<L615+xTask_0
-	ora	<L615+xTask_0+2
-	bne	L618
+	lda	<L582+xTask_0
+	ora	<L582+xTask_0+2
+	bne	L585
 	ldx	|_~pxCurrentTCB+2	; volatile
 	lda	|_~pxCurrentTCB	; volatile
-	bra	L620
-L618:
-	ldx	<L615+xTask_0+2
-	lda	<L615+xTask_0
-L620:
+	bra	L587
+L585:
+	ldx	<L582+xTask_0+2
+	lda	<L582+xTask_0
+L587:
 	stx	<R0+2
-	sta	<L616+pxTCB_1
+	sta	<L583+pxTCB_1
 	lda	<R0+2
-	sta	<L616+pxTCB_1+2
+	sta	<L583+pxTCB_1+2
 ;        configASSERT( pxTCB != NULL );
-	lda	<L616+pxTCB_1
-	ora	<L616+pxTCB_1+2
-	bne	L11200
-L11196:
-	bra	L11196
+	lda	<L583+pxTCB_1
+	ora	<L583+pxTCB_1+2
+	bne	L11124
+L11120:
+	bra	L11120
 ;
 ;        taskENTER_CRITICAL();
-L11200:
+L11124:
 ;        {
 ;            /* Return the notification as it was before the bits were cleared,
 ;             * then clear the bit mask. */
 ;            ulReturn = pxTCB->ulNotifiedValue[ uxIndexToClear ];
-	lda	<L615+uxIndexToClear_0
+	lda	<L582+uxIndexToClear_0
 	sta	<R1
 	stz	<R1+2
 	pei	<R1+2
@@ -17706,10 +17238,10 @@ L11200:
 	stx	<R0+2
 	lda	#$46
 	clc
-	adc	<L616+pxTCB_1
+	adc	<L583+pxTCB_1
 	sta	<R2
 	lda	#$0
-	adc	<L616+pxTCB_1+2
+	adc	<L583+pxTCB_1+2
 	sta	<R2+2
 	lda	<R2
 	clc
@@ -17719,12 +17251,12 @@ L11200:
 	adc	<R0+2
 	sta	<R3+2
 	lda	[<R3]
-	sta	<L616+ulReturn_1
+	sta	<L583+ulReturn_1
 	ldy	#$2
 	lda	[<R3],Y
-	sta	<L616+ulReturn_1+2
+	sta	<L583+ulReturn_1+2
 ;            pxTCB->ulNotifiedValue[ uxIndexToClear ] &= ~ulBitsToClear;
-	lda	<L615+uxIndexToClear_0
+	lda	<L582+uxIndexToClear_0
 	sta	<R1
 	stz	<R1+2
 	pei	<R1+2
@@ -17741,17 +17273,17 @@ L11200:
 	lda	#$0
 	adc	<R0+2
 	sta	<R2+2
-	lda	<L616+pxTCB_1
+	lda	<L583+pxTCB_1
 	clc
 	adc	<R2
 	sta	<R0
-	lda	<L616+pxTCB_1+2
+	lda	<L583+pxTCB_1+2
 	adc	<R2+2
 	sta	<R0+2
-	lda	<L615+ulBitsToClear_0
+	lda	<L582+ulBitsToClear_0
 	eor	#<$ffffffff
 	sta	<R3
-	lda	<L615+ulBitsToClear_0+2
+	lda	<L582+ulBitsToClear_0+2
 	eor	#^$ffffffff
 	sta	<R3+2
 	lda	<R3
@@ -17767,21 +17299,21 @@ L11200:
 ;        traceRETURN_ulTaskGenericNotifyValueClear( ulReturn );
 ;
 ;        return ulReturn;
-	ldx	<L616+ulReturn_1+2
-	lda	<L616+ulReturn_1
+	ldx	<L583+ulReturn_1+2
+	lda	<L583+ulReturn_1
 	tay
-	lda	<L615+1
-	sta	<L615+1+10
+	lda	<L582+1
+	sta	<L582+1+10
 	pld
 	tsc
 	clc
-	adc	#L615+10
+	adc	#L582+10
 	tcs
 	tya
 	rts
 ;    }
-L615	equ	24
-L616	equ	17
+L582	equ	24
+L583	equ	17
 	ends
 	efunc
 ;
@@ -17964,7 +17496,7 @@ _~prvAddCurrentTaskToDelayedList:
 	longi	on
 	tsc
 	sec
-	sbc	#L623
+	sbc	#L590
 	tcs
 	phd
 	tcd
@@ -17992,17 +17524,17 @@ xConstTickCount_1	set	4
 pxDelayedList_1	set	8
 pxOverflowDelayedList_1	set	12
 	lda	|_~xTickCount	; volatile
-	sta	<L624+xConstTickCount_1
+	sta	<L591+xConstTickCount_1
 	lda	|_~xTickCount+2	; volatile
-	sta	<L624+xConstTickCount_1+2
+	sta	<L591+xConstTickCount_1+2
 	lda	|_~pxDelayedTaskList	; volatile
-	sta	<L624+pxDelayedList_1
+	sta	<L591+pxDelayedList_1
 	lda	|_~pxDelayedTaskList+2	; volatile
-	sta	<L624+pxDelayedList_1+2
+	sta	<L591+pxDelayedList_1+2
 	lda	|_~pxOverflowDelayedTaskList	; volatile
-	sta	<L624+pxOverflowDelayedList_1
+	sta	<L591+pxOverflowDelayedList_1
 	lda	|_~pxOverflowDelayedTaskList+2	; volatile
-	sta	<L624+pxOverflowDelayedList_1+2
+	sta	<L591+pxOverflowDelayedList_1+2
 ;    {
 	lda	#$4
 	clc
@@ -18014,7 +17546,7 @@ pxOverflowDelayedList_1	set	12
 	pei	<R0
 	jsr	_~uxListRemove
 	tax
-	beq	L11206
+	beq	L11130
 ;        /* The current task must be in a ready list, so there is no need to
 ;         * check, and the port reset macro can be called directly. */
 ;        portRESET_READY_PRIORITY( pxCurrentTCB->uxPriority, uxTopReadyPriority );
@@ -18023,40 +17555,40 @@ pxOverflowDelayedList_1	set	12
 ;    {
 ;        mtCOVERAGE_TEST_MARKER();
 ;    }
-L11206:
+L11130:
 ;
 ;    #if ( INCLUDE_vTaskSuspend == 1 )
 ;    {
 ;        if( ( xTicksToWait == portMAX_DELAY ) && ( xCanBlockIndefinitely != pdFALSE ) )
 ;        {
-	lda	<L623+xTicksToWait_0
+	lda	<L590+xTicksToWait_0
 	cmp	#<$ffffffff
-	bne	L626
-	lda	<L623+xTicksToWait_0+2
+	bne	L593
+	lda	<L590+xTicksToWait_0+2
 	cmp	#^$ffffffff
-L626:
+L593:
 	beq	*+5
-	brl	L11207
-	lda	<L623+xCanBlockIndefinitely_0
+	brl	L11131
+	lda	<L590+xCanBlockIndefinitely_0
 	bne	*+5
-	brl	L11207
+	brl	L11131
 ;            /* Add the task to the suspended task list instead of a delayed task
 ;             * list to ensure it is not woken by a timing event.  It will block
 ;             * indefinitely. */
 ;            listINSERT_END( &xSuspendedTaskList, &( pxCurrentTCB->xStateListItem ) );
 pxIndex_2	set	16
 	lda	|_~xSuspendedTaskList+2
-	sta	<L624+pxIndex_2
+	sta	<L591+pxIndex_2
 	lda	|_~xSuspendedTaskList+2+2
-	sta	<L624+pxIndex_2+2
+	sta	<L591+pxIndex_2+2
 	lda	|_~pxCurrentTCB	; volatile
 	sta	<R0
 	lda	|_~pxCurrentTCB+2	; volatile
 	sta	<R0+2
-	lda	<L624+pxIndex_2
+	lda	<L591+pxIndex_2
 	ldy	#$8
 	sta	[<R0],Y
-	lda	<L624+pxIndex_2+2
+	lda	<L591+pxIndex_2+2
 	iny
 	iny
 	sta	[<R0],Y
@@ -18066,20 +17598,20 @@ pxIndex_2	set	16
 	sta	<R0+2
 	dey
 	dey
-	lda	[<L624+pxIndex_2],Y
+	lda	[<L591+pxIndex_2],Y
 	ldy	#$c
 	sta	[<R0],Y
 	dey
 	dey
-	lda	[<L624+pxIndex_2],Y
+	lda	[<L591+pxIndex_2],Y
 	ldy	#$e
 	sta	[<R0],Y
 	ldy	#$8
-	lda	[<L624+pxIndex_2],Y
+	lda	[<L591+pxIndex_2],Y
 	sta	<R0
 	iny
 	iny
-	lda	[<L624+pxIndex_2],Y
+	lda	[<L591+pxIndex_2],Y
 	sta	<R0+2
 	lda	#$4
 	clc
@@ -18105,11 +17637,11 @@ pxIndex_2	set	16
 	lda	<R0
 	iny
 	iny
-	sta	[<L624+pxIndex_2],Y
+	sta	[<L591+pxIndex_2],Y
 	lda	<R0+2
 	iny
 	iny
-	sta	[<L624+pxIndex_2],Y
+	sta	[<L591+pxIndex_2],Y
 	lda	|_~pxCurrentTCB	; volatile
 	sta	<R0
 	lda	|_~pxCurrentTCB+2	; volatile
@@ -18129,28 +17661,28 @@ pxIndex_2	set	16
 	inc	|_~xSuspendedTaskList
 ;        }
 ;        else
-L631:
-	lda	<L623+1
-	sta	<L623+1+6
+L598:
+	lda	<L590+1
+	sta	<L590+1+6
 	pld
 	tsc
 	clc
-	adc	#L623+6
+	adc	#L590+6
 	tcs
 	rts
-L11207:
+L11131:
 ;        {
 ;            /* Calculate the time at which the task should be woken if the event
 ;             * does not occur.  This may overflow but this doesn't matter, the
 ;             * kernel will manage it correctly. */
 ;            xTimeToWake = xConstTickCount + xTicksToWait;
-	lda	<L624+xConstTickCount_1
+	lda	<L591+xConstTickCount_1
 	clc
-	adc	<L623+xTicksToWait_0
-	sta	<L624+xTimeToWake_1
-	lda	<L624+xConstTickCount_1+2
-	adc	<L623+xTicksToWait_0+2
-	sta	<L624+xTimeToWake_1+2
+	adc	<L590+xTicksToWait_0
+	sta	<L591+xTimeToWake_1
+	lda	<L591+xConstTickCount_1+2
+	adc	<L590+xTicksToWait_0+2
+	sta	<L591+xTimeToWake_1+2
 ;
 ;            /* The list item will be inserted in wake time order. */
 ;            listSET_LIST_ITEM_VALUE( &( pxCurrentTCB->xStateListItem ), xTimeToWake );
@@ -18158,21 +17690,21 @@ L11207:
 	sta	<R0
 	lda	|_~pxCurrentTCB+2	; volatile
 	sta	<R0+2
-	lda	<L624+xTimeToWake_1
+	lda	<L591+xTimeToWake_1
 	ldy	#$4
 	sta	[<R0],Y
-	lda	<L624+xTimeToWake_1+2
+	lda	<L591+xTimeToWake_1+2
 	iny
 	iny
 	sta	[<R0],Y
 ;
 ;            if( xTimeToWake < xConstTickCount )
 ;            {
-	lda	<L624+xTimeToWake_1
-	cmp	<L624+xConstTickCount_1
-	lda	<L624+xTimeToWake_1+2
-	sbc	<L624+xConstTickCount_1+2
-	bcs	L11212
+	lda	<L591+xTimeToWake_1
+	cmp	<L591+xConstTickCount_1
+	lda	<L591+xTimeToWake_1+2
+	sbc	<L591+xConstTickCount_1+2
+	bcs	L11136
 ;                /* Wake time has overflowed.  Place this item in the overflow
 ;                 * list. */
 ;                traceMOVED_TASK_TO_OVERFLOW_DELAYED_LIST();
@@ -18185,13 +17717,13 @@ L11207:
 	adc	|_~pxCurrentTCB+2	; volatile
 	pha
 	pei	<R0
-	pei	<L624+pxOverflowDelayedList_1+2
-	pei	<L624+pxOverflowDelayedList_1
+	pei	<L591+pxOverflowDelayedList_1+2
+	pei	<L591+pxOverflowDelayedList_1
 	jsr	_~vListInsert
 ;            }
 ;            else
-	bra	L631
-L11212:
+	bra	L598
+L11136:
 ;            {
 ;                /* The wake time has not overflowed, so the current block list
 ;                 * is used. */
@@ -18205,8 +17737,8 @@ L11212:
 	adc	|_~pxCurrentTCB+2	; volatile
 	pha
 	pei	<R0
-	pei	<L624+pxDelayedList_1+2
-	pei	<L624+pxDelayedList_1
+	pei	<L591+pxDelayedList_1+2
+	pei	<L591+pxDelayedList_1
 	jsr	_~vListInsert
 ;
 ;                /* If the task entering the blocked state was placed at the
@@ -18214,19 +17746,19 @@ L11212:
 ;                 * needs to be updated too. */
 ;                if( xTimeToWake < xNextTaskUnblockTime )
 ;                {
-	lda	<L624+xTimeToWake_1
+	lda	<L591+xTimeToWake_1
 	cmp	|_~xNextTaskUnblockTime	; volatile
-	lda	<L624+xTimeToWake_1+2
+	lda	<L591+xTimeToWake_1+2
 	sbc	|_~xNextTaskUnblockTime+2	; volatile
-	bcs	L631
+	bcs	L598
 ;                    xNextTaskUnblockTime = xTimeToWake;
-	lda	<L624+xTimeToWake_1
+	lda	<L591+xTimeToWake_1
 	sta	|_~xNextTaskUnblockTime	; volatile
-	lda	<L624+xTimeToWake_1+2
+	lda	<L591+xTimeToWake_1+2
 	sta	|_~xNextTaskUnblockTime+2	; volatile
 ;                }
 ;                else
-	brl	L631
+	brl	L598
 ;                {
 ;                    mtCOVERAGE_TEST_MARKER();
 ;                }
@@ -18273,8 +17805,8 @@ L11212:
 ;    }
 ;    #endif /* INCLUDE_vTaskSuspend */
 ;}
-L623	equ	28
-L624	equ	9
+L590	equ	28
+L591	equ	9
 	ends
 	efunc
 ;/*-----------------------------------------------------------*/
@@ -18334,69 +17866,13 @@ L624	equ	9
 ;                                        StackType_t ** ppxIdleTaskStackBuffer,
 ;                                        configSTACK_DEPTH_TYPE * puxIdleTaskStackSize )
 ;    {
-	code
-	xdef	_~vApplicationGetIdleTaskMemory
-	func
-_~vApplicationGetIdleTaskMemory:
-	longa	on
-	longi	on
-	tsc
-	sec
-	sbc	#L632
-	tcs
-	phd
-	tcd
-ppxIdleTaskTCBBuffer_0	set	3
-ppxIdleTaskStackBuffer_0	set	7
-puxIdleTaskStackSize_0	set	11
 ;        static StaticTask_t xIdleTaskTCB;
 ;        static StackType_t uxIdleTaskStack[ configMINIMAL_STACK_SIZE ];
 ;
 ;        *ppxIdleTaskTCBBuffer = &( xIdleTaskTCB );
-	lda	#<L11216
-	sta	<R0
-	xref	_BEG_DATA
-	lda	#_BEG_DATA>>16
-	sta	<R0+2
-	lda	<R0
-	sta	[<L632+ppxIdleTaskTCBBuffer_0]
-	lda	<R0+2
-	ldy	#$2
-	sta	[<L632+ppxIdleTaskTCBBuffer_0],Y
 ;        *ppxIdleTaskStackBuffer = &( uxIdleTaskStack[ 0 ] );
-	lda	#<L11217
-	sta	<R0
-	xref	_BEG_DATA
-	lda	#_BEG_DATA>>16
-	sta	<R0+2
-	lda	<R0
-	sta	[<L632+ppxIdleTaskStackBuffer_0]
-	lda	<R0+2
-	sta	[<L632+ppxIdleTaskStackBuffer_0],Y
 ;        *puxIdleTaskStackSize = configMINIMAL_STACK_SIZE;
-	lda	#$80
-	sta	[<L632+puxIdleTaskStackSize_0]
 ;    }
-	lda	<L632+1
-	sta	<L632+1+12
-	pld
-	tsc
-	clc
-	adc	#L632+12
-	tcs
-	rts
-L632	equ	4
-L633	equ	5
-	ends
-	efunc
-	udata
-L11216:
-	ds	76
-	ends
-	udata
-L11217:
-	ds	256
-	ends
 ;
 ;    #if ( configNUMBER_OF_CORES > 1 )
 ;
@@ -18431,69 +17907,13 @@ L11217:
 ;                                         StackType_t ** ppxTimerTaskStackBuffer,
 ;                                         configSTACK_DEPTH_TYPE * puxTimerTaskStackSize )
 ;    {
-	code
-	xdef	_~vApplicationGetTimerTaskMemory
-	func
-_~vApplicationGetTimerTaskMemory:
-	longa	on
-	longi	on
-	tsc
-	sec
-	sbc	#L635
-	tcs
-	phd
-	tcd
-ppxTimerTaskTCBBuffer_0	set	3
-ppxTimerTaskStackBuffer_0	set	7
-puxTimerTaskStackSize_0	set	11
 ;        static StaticTask_t xTimerTaskTCB;
 ;        static StackType_t uxTimerTaskStack[ configTIMER_TASK_STACK_DEPTH ];
 ;
 ;        *ppxTimerTaskTCBBuffer = &( xTimerTaskTCB );
-	lda	#<L11218
-	sta	<R0
-	xref	_BEG_DATA
-	lda	#_BEG_DATA>>16
-	sta	<R0+2
-	lda	<R0
-	sta	[<L635+ppxTimerTaskTCBBuffer_0]
-	lda	<R0+2
-	ldy	#$2
-	sta	[<L635+ppxTimerTaskTCBBuffer_0],Y
 ;        *ppxTimerTaskStackBuffer = &( uxTimerTaskStack[ 0 ] );
-	lda	#<L11219
-	sta	<R0
-	xref	_BEG_DATA
-	lda	#_BEG_DATA>>16
-	sta	<R0+2
-	lda	<R0
-	sta	[<L635+ppxTimerTaskStackBuffer_0]
-	lda	<R0+2
-	sta	[<L635+ppxTimerTaskStackBuffer_0],Y
 ;        *puxTimerTaskStackSize = configTIMER_TASK_STACK_DEPTH;
-	lda	#$80
-	sta	[<L635+puxTimerTaskStackSize_0]
 ;    }
-	lda	<L635+1
-	sta	<L635+1+12
-	pld
-	tsc
-	clc
-	adc	#L635+12
-	tcs
-	rts
-L635	equ	4
-L636	equ	5
-	ends
-	efunc
-	udata
-L11218:
-	ds	76
-	ends
-	udata
-L11219:
-	ds	256
-	ends
 ;
 ;#endif /* #if ( ( configSUPPORT_STATIC_ALLOCATION == 1 ) && ( configKERNEL_PROVIDED_STATIC_MEMORY == 1 ) && ( portUSING_MPU_WRAPPERS == 0 ) && ( configUSE_TIMERS == 1 ) ) */
 ;/*-----------------------------------------------------------*/
@@ -18513,7 +17933,7 @@ _~vTaskResetState:
 	longi	on
 	tsc
 	sec
-	sbc	#L638
+	sbc	#L599
 	tcs
 	phd
 	tcd
@@ -18557,21 +17977,21 @@ xCoreID_1	set	0
 	stz	|_~xPendedTicks+2	; volatile
 ;
 ;    for( xCoreID = 0; xCoreID < configNUMBER_OF_CORES; xCoreID++ )
-	stz	<L639+xCoreID_1
-L11222:
+	stz	<L600+xCoreID_1
+L11142:
 ;    {
 ;        xYieldPendings[ xCoreID ] = pdFALSE;
-	lda	<L639+xCoreID_1
+	lda	<L600+xCoreID_1
 	asl	A
 	tax
 	lda	#$0
 	sta	|_~xYieldPendings,X
 ;    }
-	inc	<L639+xCoreID_1
-	lda	<L639+xCoreID_1
-	bmi	L11222
+	inc	<L600+xCoreID_1
+	lda	<L600+xCoreID_1
+	bmi	L11142
 	dea
-	bmi	L11222
+	bmi	L11142
 ;
 ;    xNumOfOverflows = ( BaseType_t ) 0;
 	stz	|_~xNumOfOverflows	; volatile
@@ -18597,17 +18017,15 @@ L11222:
 	pld
 	tsc
 	clc
-	adc	#L638
+	adc	#L599
 	tcs
 	rts
-L638	equ	6
-L639	equ	5
+L599	equ	6
+L600	equ	5
 	ends
 	efunc
 ;/*-----------------------------------------------------------*/
 ;
-	xref	_~xTimerCreateTimerTask
-	xref	_~xTimerGetTimerDaemonTaskHandle
 	xref	_~vApplicationStackOverflowHook
 	xref	_~uxListRemove
 	xref	_~vListInsertEnd

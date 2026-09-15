@@ -1,4 +1,4 @@
-  Mon Sep 14 2026 18:41                                                                                                    Page 1
+  Tue Sep 15 2026 17:44                                                                                                    Page 1
 
 
                                                ***************************************
@@ -59,7 +59,7 @@
     50                        ; * task.h is included from an application file. */
     51                        ;#define MPU_WRAPPERS_INCLUDED_FROM_API_FILE
     52                        ;
-  Mon Sep 14 2026 18:41                                                                                                    Page 2
+  Tue Sep 15 2026 17:44                                                                                                    Page 2
 
 
     53                        ;#include "FreeRTOS.h"
@@ -120,7 +120,7 @@
    102                        ;	  extern uint8_t *ucHeapStack;
    103                        ;#else
    104                        ;    PRIVILEGED_DATA static uint8_t ucHeapStack[ configTOTAL_HEAP_SIZE_STACK ];
-  Mon Sep 14 2026 18:41                                                                                                    Page 3
+  Tue Sep 15 2026 17:44                                                                                                    Page 3
 
 
    105                        ;#endif /* configAPPLICATION_ALLOCATED_STACK */
@@ -181,7 +181,7 @@
    158                        ; * Called automatically to setup the required heap structures the first time
    159                        ; * pvPortMalloc() is called.
    160                        ; */
-  Mon Sep 14 2026 18:41                                                                                                    Page 4
+  Tue Sep 15 2026 17:44                                                                                                    Page 4
 
 
    161                        ;static void prvHeapInit( void ) PRIVILEGED_FUNCTION;
@@ -242,7 +242,7 @@
    215 00:0000: 3B           	tsc
    216 00:0001: 38           	sec
    217 00:0002: E9 08 00     	sbc	#L2
-  Mon Sep 14 2026 18:41                                                                                                    Page 5
+  Tue Sep 15 2026 17:44                                                                                                    Page 5
 
 
    218 00:0005: 1B           	tcs
@@ -303,7 +303,7 @@
    273                        ;	*debug_char = ' ';
    274 00:0063: AD xx xx     	lda	|_~debug_char
    275 00:0066: 85 01        	sta	<R0
-  Mon Sep 14 2026 18:41                                                                                                    Page 6
+  Tue Sep 15 2026 17:44                                                                                                    Page 6
 
 
    276 00:0068: AD xx xx     	lda	|_~debug_char+2
@@ -364,7 +364,7 @@
    331                        	longa	on
    332                        ;	*debug_hex = (char)((unsigned long)i);
    333 00:00AF: AD xx xx     	lda	|_~debug_hex
-  Mon Sep 14 2026 18:41                                                                                                    Page 7
+  Tue Sep 15 2026 17:44                                                                                                    Page 7
 
 
    334 00:00B2: 85 01        	sta	<R0
@@ -425,7 +425,7 @@
    389                        ;    void * pvReturn = NULL;
    390                        ;    size_t xAdditionalRequiredSize;
    391                        ;    size_t xAllocatedBlockSize = 0;
-  Mon Sep 14 2026 18:41                                                                                                    Page 8
+  Tue Sep 15 2026 17:44                                                                                                    Page 8
 
 
    392                        ;	
@@ -486,7 +486,7 @@
    446                        ;            else
    447                        ;            {
    448                        ;                mtCOVERAGE_TEST_MARKER();
-  Mon Sep 14 2026 18:41                                                                                                    Page 9
+  Tue Sep 15 2026 17:44                                                                                                    Page 9
 
 
    449                        ;            }
@@ -547,7 +547,7 @@
    504                        ;                 * one of adequate size is found. */
    505                        ;				 
    506                        ;				//debug_word(xWantedSize);
-  Mon Sep 14 2026 18:41                                                                                                    Page 10
+  Tue Sep 15 2026 17:44                                                                                                    Page 10
 
 
    507                        ;				
@@ -608,7 +608,7 @@
    561                        ;                    pxBlock = heapPROTECT_BLOCK_POINTER( pxBlock->pxNextFreeBlock );
    562 00:01A0: A7 05        	lda	[<L9+pxBlock_1]
    563 00:01A2: 85 01        	sta	<R0
-  Mon Sep 14 2026 18:41                                                                                                    Page 11
+  Tue Sep 15 2026 17:44                                                                                                    Page 11
 
 
    564 00:01A4: B7 05        	lda	[<L9+pxBlock_1],Y
@@ -669,7 +669,7 @@
    618 00:0201: A5 13        	lda	<L9+pvReturn_1+2
    619 00:0203: ED xx xx     	sbc	|_~ucHeapStack+2
    620 00:0206: 90 1B        	bcc	L10034
-  Mon Sep 14 2026 18:41                                                                                                    Page 12
+  Tue Sep 15 2026 17:44                                                                                                    Page 12
 
 
    621 00:0208: A9 FF DF     	lda	#$dfff
@@ -730,7 +730,7 @@
    675 00:024B: A5 1B        	lda	<L8+xWantedSize_0
    676 00:024D: 85 01        	sta	<R0
    677 00:024F: 64 03        	stz	<R0+2
-  Mon Sep 14 2026 18:41                                                                                                    Page 13
+  Tue Sep 15 2026 17:44                                                                                                    Page 13
 
 
    678 00:0251: A5 05        	lda	<L9+pxBlock_1
@@ -791,7 +791,7 @@
    730 00:028C: A0 04 00     	ldy	#$4
    731 00:028F: B7 05        	lda	[<L9+pxBlock_1],Y
    732 00:0291: 85 17        	sta	<L9+xAllocatedBlockSize_1
-  Mon Sep 14 2026 18:41                                                                                                    Page 14
+  Tue Sep 15 2026 17:44                                                                                                    Page 14
 
 
    733                        ;
@@ -852,7 +852,7 @@
    788 00:02BB: A5 19        	lda	<L8+1
    789 00:02BD: 85 1B        	sta	<L8+1+2
    790 00:02BF: 2B           	pld
-  Mon Sep 14 2026 18:41                                                                                                    Page 15
+  Tue Sep 15 2026 17:44                                                                                                    Page 15
 
 
    791 00:02C0: 3B           	tsc
@@ -913,7 +913,7 @@
    846             00000003   pv_0	set	3
    847                        ;    uint8_t * puc = ( uint8_t * ) pv;
    848                        ;    BlockLink_t * pxLink;
-  Mon Sep 14 2026 18:41                                                                                                    Page 16
+  Tue Sep 15 2026 17:44                                                                                                    Page 16
 
 
    849                        ;
@@ -974,7 +974,7 @@
    904 00:0332: 29 00 80     	and	#<$8000
    905 00:0335: D0 02        	bne	L10073
    906                        L10077:
-  Mon Sep 14 2026 18:41                                                                                                    Page 17
+  Tue Sep 15 2026 17:44                                                                                                    Page 17
 
 
    907 00:0337: 80 FE        	bra	L10077
@@ -1035,7 +1035,7 @@
    961 00:037E: B7 11        	lda	[<L36+pxLink_1],Y
    962 00:0380: 85 01        	sta	<R0
    963 00:0382: 64 03        	stz	<R0+2
-  Mon Sep 14 2026 18:41                                                                                                    Page 18
+  Tue Sep 15 2026 17:44                                                                                                    Page 18
 
 
    964 00:0384: A9 FA FF     	lda	#$fffa
@@ -1096,7 +1096,7 @@
   1019 00:03D6: 60           	rts
   1020                        ;            {
   1021                        ;                mtCOVERAGE_TEST_MARKER();
-  Mon Sep 14 2026 18:41                                                                                                    Page 19
+  Tue Sep 15 2026 17:44                                                                                                    Page 19
 
 
   1022                        ;            }
@@ -1157,7 +1157,7 @@
   1077                        _~xPortResetHeapMinimumEverFreeHeapSizeStack:
   1078                        	longa	on
   1079                        	longi	on
-  Mon Sep 14 2026 18:41                                                                                                    Page 20
+  Tue Sep 15 2026 17:44                                                                                                    Page 20
 
 
   1080                        ;    xMinimumEverFreeBytesRemaining = xFreeBytesRemaining;
@@ -1218,7 +1218,7 @@
   1135 00:03FA: A9 FF FF     	lda	#$ffff
   1136 00:03FD: A6 0B        	ldx	<L60+xNum_0
   1137                        	xref	_~~udv
-  Mon Sep 14 2026 18:41                                                                                                    Page 21
+  Tue Sep 15 2026 17:44                                                                                                    Page 21
 
 
   1138 00:03FF: 20 xx xx     	jsr	_~~udv
@@ -1279,7 +1279,7 @@
   1193                        	func
   1194                        _~prvHeapInit:
   1195                        	longa	on
-  Mon Sep 14 2026 18:41                                                                                                    Page 22
+  Tue Sep 15 2026 17:44                                                                                                    Page 22
 
 
   1196                        	longi	on
@@ -1340,7 +1340,7 @@
   1251 00:046A: 65 09        	adc	<L68+uxStartAddress_1
   1252 00:046C: 85 0D        	sta	<L68+uxEndAddress_1
   1253 00:046E: A5 03        	lda	<R0+2
-  Mon Sep 14 2026 18:41                                                                                                    Page 23
+  Tue Sep 15 2026 17:44                                                                                                    Page 23
 
 
   1254 00:0470: 65 0B        	adc	<L68+uxStartAddress_1+2
@@ -1401,7 +1401,7 @@
   1308 00:04CF: A5 01        	lda	<R0
   1309 00:04D1: C8           	iny
   1310 00:04D2: C8           	iny
-  Mon Sep 14 2026 18:41                                                                                                    Page 24
+  Tue Sep 15 2026 17:44                                                                                                    Page 24
 
 
   1311 00:04D3: 97 05        	sta	[<L68+pxFirstFreeBlock_1],Y
@@ -1462,7 +1462,7 @@
   1365 00:0500: 85 09        	sta	<L71+pxIterator_1
   1366                        	xref	_BEG_DATA
   1367 00:0502: A9 xx xx     	lda	#_BEG_DATA>>16
-  Mon Sep 14 2026 18:41                                                                                                    Page 25
+  Tue Sep 15 2026 17:44                                                                                                    Page 25
 
 
   1368 00:0505: 80 11        	bra	L20000
@@ -1523,7 +1523,7 @@
   1423 00:0564: 80 FE        	bra	L10104
   1424                        ;    }
   1425                        ;
-  Mon Sep 14 2026 18:41                                                                                                    Page 26
+  Tue Sep 15 2026 17:44                                                                                                    Page 26
 
 
   1426                        ;    /* Do the block being inserted, and the block it is being inserted after
@@ -1584,7 +1584,7 @@
   1481                        ;     * make a contiguous block of memory? */
   1482                        ;    puc = ( uint8_t * ) pxBlockToInsert;
   1483 00:05B1: A5 13        	lda	<L70+pxBlockToInsert_0
-  Mon Sep 14 2026 18:41                                                                                                    Page 27
+  Tue Sep 15 2026 17:44                                                                                                    Page 27
 
 
   1484 00:05B3: 85 0D        	sta	<L71+puc_1
@@ -1645,7 +1645,7 @@
   1537 00:060C: C8           	iny
   1538 00:060D: 77 01        	adc	[<R0],Y
   1539 00:060F: 87 05        	sta	[<R1]
-  Mon Sep 14 2026 18:41                                                                                                    Page 28
+  Tue Sep 15 2026 17:44                                                                                                    Page 28
 
 
   1540                        ;            pxBlockToInsert->pxNextFreeBlock = heapPROTECT_BLOCK_POINTER( pxIterator->pxNextFreeBlock
@@ -1706,7 +1706,7 @@
   1594                        ;    }
   1595                        ;    else
   1596                        ;    {
-  Mon Sep 14 2026 18:41                                                                                                    Page 29
+  Tue Sep 15 2026 17:44                                                                                                    Page 29
 
 
   1597                        ;        mtCOVERAGE_TEST_MARKER();
@@ -1767,7 +1767,7 @@
   1652                        ;        if( pxBlock != NULL )
   1653                        ;        {
   1654 00:067C: A5 05        	lda	<L88+pxBlock_1
-  Mon Sep 14 2026 18:41                                                                                                    Page 30
+  Tue Sep 15 2026 17:44                                                                                                    Page 30
 
 
   1655 00:067E: 05 07        	ora	<L88+pxBlock_1+2
@@ -1828,7 +1828,7 @@
   1710 00:06BF: D0 C3        	bne	L20004
   1711                        ;        }
   1712                        ;    }
-  Mon Sep 14 2026 18:41                                                                                                    Page 31
+  Tue Sep 15 2026 17:44                                                                                                    Page 31
 
 
   1713                        L10115:
@@ -1889,7 +1889,7 @@
   1768 00:0714: A5 01        	lda	<R0
   1769 00:0716: A0 14 00     	ldy	#$14
   1770 00:0719: 97 11        	sta	[<L87+pxHeapStats_0],Y
-  Mon Sep 14 2026 18:41                                                                                                    Page 32
+  Tue Sep 15 2026 17:44                                                                                                    Page 32
 
 
   1771 00:071B: A5 03        	lda	<R0+2
@@ -1950,7 +1950,7 @@
   1826                        	longa	on
   1827                        	longi	on
   1828                        ;    pxEnd = NULL;
-  Mon Sep 14 2026 18:41                                                                                                    Page 33
+  Tue Sep 15 2026 17:44                                                                                                    Page 33
 
 
   1829 00:0754: 9C xx xx     	stz	|_~pxEnd

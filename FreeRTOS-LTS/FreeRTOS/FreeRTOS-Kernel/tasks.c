@@ -31,6 +31,7 @@ extern volatile char* debug_hex;
 
 static void debug_ptr(void *p) {
 	*debug_hex = (char)((unsigned long)p >> 16);
+	*debug_char = ':';
 	*debug_hex = (char)((unsigned long)p >> 8);
 	*debug_hex = (char)((unsigned long)p & 0xff);
 	*debug_char = ' ';
@@ -1695,8 +1696,6 @@ STATIC void prvAddNewTaskToReadyList( TCB_t * pxNewTCB ) PRIVILEGED_FUNCTION;
             /* More details at: https://github.com/FreeRTOS/FreeRTOS-Kernel/blob/main/MISRA.md#rule-115 */
             /* coverity[misra_c_2012_rule_11_5_violation] */
             pxStack = ( StackType_t * ) pvPortMallocStack( ( ( ( size_t ) uxStackDepth ) * sizeof( StackType_t ) ) );
-
-			//debug_ptr(pxStack);
 			
             if( pxStack != NULL )
             {
@@ -1706,7 +1705,6 @@ STATIC void prvAddNewTaskToReadyList( TCB_t * pxNewTCB ) PRIVILEGED_FUNCTION;
                 /* coverity[misra_c_2012_rule_11_5_violation] */
                 pxNewTCB = ( TCB_t * ) pvPortMalloc( sizeof( TCB_t ) );
 
-				//debug_ptr(pxNewTCB);
                 if( pxNewTCB != NULL )
                 {
                     ( void ) memset( ( void * ) pxNewTCB, 0x00, sizeof( TCB_t ) );
@@ -1740,8 +1738,6 @@ STATIC void prvAddNewTaskToReadyList( TCB_t * pxNewTCB ) PRIVILEGED_FUNCTION;
 
             prvInitialiseNewTask( pxTaskCode, pcName, uxStackDepth, pvParameters, uxPriority, pxCreatedTask, pxNewTCB, NULL );
         }
-
-		debug_ptr(pxNewTCB);
 		
         return pxNewTCB;
     }
@@ -1779,7 +1775,7 @@ STATIC void prvAddNewTaskToReadyList( TCB_t * pxNewTCB ) PRIVILEGED_FUNCTION;
         }
 
         traceRETURN_xTaskCreate( xReturn );
-
+		
         return xReturn;
     }
 /*-----------------------------------------------------------*/
@@ -1919,7 +1915,7 @@ STATIC void prvInitialiseNewTask( TaskFunction_t pxTaskCode,
     {
         mtCOVERAGE_TEST_MARKER();
     }
-
+	
     /* This is used as an array index so must ensure it's not too large. */
     configASSERT( uxPriority < configMAX_PRIORITIES );
 
@@ -1967,7 +1963,7 @@ STATIC void prvInitialiseNewTask( TaskFunction_t pxTaskCode,
         configINIT_TLS_BLOCK( pxNewTCB->xTLSBlock, pxTopOfStack );
     }
     #endif
-
+	
     /* Initialize the TCB stack to look as if the task was already running,
      * but had been interrupted by the scheduler.  The return address is set
      * to the start of the task function. Once the stack has been initialised
@@ -2000,7 +1996,7 @@ STATIC void prvInitialiseNewTask( TaskFunction_t pxTaskCode,
         /* If the port has capability to detect stack overflow,
          * pass the stack end address to the stack initialization
          * function as well. */
-		 
+		
         #if ( portHAS_STACK_OVERFLOW_CHECKING == 1 )
         {
             #if ( portSTACK_GROWTH < 0 )
@@ -2020,13 +2016,8 @@ STATIC void prvInitialiseNewTask( TaskFunction_t pxTaskCode,
         #endif /* portHAS_STACK_OVERFLOW_CHECKING */
 
         #if ( portSTACK_GROWTH < 0 )
-        {
-			//debug_ptr(pxTopOfStack);
-			//debug_ptr((void *)pxNewTCB->pxTopOfStack);
-			//debug_word(uxStackDepth);
-			
+        {			
             configASSERT( ( ( portPOINTER_SIZE_TYPE ) ( pxTopOfStack - pxNewTCB->pxTopOfStack ) ) < ( ( portPOINTER_SIZE_TYPE ) uxStackDepth ) );
-			//debug_ptr(pxTopOfStack);
         }
         #else /* portSTACK_GROWTH */
         {
@@ -2059,6 +2050,10 @@ STATIC void prvInitialiseNewTask( TaskFunction_t pxTaskCode,
     {
         mtCOVERAGE_TEST_MARKER();
     }
+	
+	debug_ptr((void *)0xcafe);
+	debug_ptr(pxTopOfStack);
+	debug_ptr(pxNewTCB->pxStack);
 }
 /*-----------------------------------------------------------*/
 

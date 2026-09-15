@@ -1,4 +1,4 @@
-  Mon Sep 14 2026 18:41                                                                                                    Page 1
+  Tue Sep 15 2026 17:44                                                                                                    Page 1
 
 
                                                ***************************************
@@ -59,7 +59,7 @@
     50                        ;/*-----------------------------------------------------------
     51                        ;* PUBLIC LIST API documented in list.h
     52                        ;*----------------------------------------------------------*/
-  Mon Sep 14 2026 18:41                                                                                                    Page 2
+  Tue Sep 15 2026 17:44                                                                                                    Page 2
 
 
     53                        ;
@@ -120,7 +120,7 @@
    108 00:0033: 65 07        	adc	<L2+pxList_0
    109 00:0035: 85 01        	sta	<R0
    110 00:0037: A9 00 00     	lda	#$0
-  Mon Sep 14 2026 18:41                                                                                                    Page 3
+  Tue Sep 15 2026 17:44                                                                                                    Page 3
 
 
    111 00:003A: 65 09        	adc	<L2+pxList_0+2
@@ -181,7 +181,7 @@
    166             00000004   L2	equ	4
    167             00000005   L3	equ	5
    168                        	ends
-  Mon Sep 14 2026 18:41                                                                                                    Page 4
+  Tue Sep 15 2026 17:44                                                                                                    Page 4
 
 
    169                        	efunc
@@ -242,7 +242,7 @@
    224                        	func
    225                        _~vListInsertEnd:
    226                        	longa	on
-  Mon Sep 14 2026 18:41                                                                                                    Page 5
+  Tue Sep 15 2026 17:44                                                                                                    Page 5
 
 
    227                        	longi	on
@@ -303,7 +303,7 @@
    282 00:00C7: C8           	iny
    283 00:00C8: C8           	iny
    284 00:00C9: B7 05        	lda	[<L9+pxIndex_1],Y
-  Mon Sep 14 2026 18:41                                                                                                    Page 6
+  Tue Sep 15 2026 17:44                                                                                                    Page 6
 
 
    285 00:00CB: 85 03        	sta	<R0+2
@@ -364,7 +364,7 @@
    340                        _~vListInsert:
    341                        	longa	on
    342                        	longi	on
-  Mon Sep 14 2026 18:41                                                                                                    Page 7
+  Tue Sep 15 2026 17:44                                                                                                    Page 7
 
 
    343 00:0104: 3B           	tsc
@@ -425,7 +425,7 @@
    398                        ;    pxNewListItem->pxNext = pxIterator->pxNext;
    399 00:0132: A0 04 00     	ldy	#$4
    400 00:0135: B7 05        	lda	[<L12+pxIterator_1],Y
-  Mon Sep 14 2026 18:41                                                                                                    Page 8
+  Tue Sep 15 2026 17:44                                                                                                    Page 8
 
 
    401 00:0137: 97 13        	sta	[<L11+pxNewListItem_0],Y
@@ -486,7 +486,7 @@
    456                        ;
    457                        ;    traceRETURN_vListInsert();
    458                        ;}
-  Mon Sep 14 2026 18:41                                                                                                    Page 9
+  Tue Sep 15 2026 17:44                                                                                                    Page 9
 
 
    459 00:0182: A5 0D        	lda	<L11+1
@@ -547,7 +547,7 @@
    513 00:01A5: C8           	iny
    514 00:01A6: B7 05        	lda	[<L12+pxIterator_1],Y
    515 00:01A8: 85 03        	sta	<R0+2
-  Mon Sep 14 2026 18:41                                                                                                    Page 10
+  Tue Sep 15 2026 17:44                                                                                                    Page 10
 
 
    516 00:01AA: A5 01        	lda	<R0
@@ -608,7 +608,7 @@
    571                        ;
    572                        ;    pxItemToRemove->pxNext->pxPrevious = pxItemToRemove->pxPrevious;
    573 00:01E4: A0 04 00     	ldy	#$4
-  Mon Sep 14 2026 18:41                                                                                                    Page 11
+  Tue Sep 15 2026 17:44                                                                                                    Page 11
 
 
    574 00:01E7: B7 0B        	lda	[<L17+pxItemToRemove_0],Y
@@ -669,7 +669,7 @@
    629 00:0239: 97 05        	sta	[<L18+pxList_1],Y
    630                        ;    }
    631                        ;    else
-  Mon Sep 14 2026 18:41                                                                                                    Page 12
+  Tue Sep 15 2026 17:44                                                                                                    Page 12
 
 
    632                        ;    {

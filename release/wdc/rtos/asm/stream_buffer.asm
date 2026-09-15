@@ -574,25 +574,6 @@ L3	equ	5
 ;                                                           StreamBufferCallbackFunction_t pxSendCompletedCallback,
 ;                                                           StreamBufferCallbackFunction_t pxReceiveCompletedCallback )
 ;    {
-	code
-	xdef	_~xStreamBufferGenericCreateStatic
-	func
-_~xStreamBufferGenericCreateStatic:
-	longa	on
-	longi	on
-	tsc
-	sec
-	sbc	#L14
-	tcs
-	phd
-	tcd
-xBufferSizeBytes_0	set	3
-xTriggerLevelBytes_0	set	5
-xStreamBufferType_0	set	7
-pucStreamBufferStorageArea_0	set	9
-pxStaticStreamBuffer_0	set	13
-pxSendCompletedCallback_0	set	17
-pxReceiveCompletedCallback_0	set	19
 ;        /* MISRA Ref 11.3.1 [Misaligned access] */
 ;        /* More details at: https://github.com/FreeRTOS/FreeRTOS-Kernel/blob/main/MISRA.md#rule-113 */
 ;        /* coverity[misra_c_2012_rule_11_3_violation] */
@@ -601,45 +582,16 @@ pxReceiveCompletedCallback_0	set	19
 ;        uint8_t ucFlags;
 ;
 ;        traceENTER_xStreamBufferGenericCreateStatic( xBufferSizeBytes, xTriggerLevelBytes, xStreamBufferType, pucStreamBufferStorageArea, pxStaticStreamBuffer, pxSendCompletedCallback, pxReceiveCompletedCallback );
-pxStreamBuffer_1	set	0
-xReturn_1	set	4
-ucFlags_1	set	8
-	lda	<L14+pxStaticStreamBuffer_0
-	sta	<L15+pxStreamBuffer_1
-	lda	<L14+pxStaticStreamBuffer_0+2
-	sta	<L15+pxStreamBuffer_1+2
 ;
 ;        configASSERT( pucStreamBufferStorageArea );
-	lda	<L14+pucStreamBufferStorageArea_0
-	ora	<L14+pucStreamBufferStorageArea_0+2
-	bne	L10038
-L10042:
-	bra	L10042
-L10038:
 ;        configASSERT( pxStaticStreamBuffer );
-	lda	<L14+pxStaticStreamBuffer_0
-	ora	<L14+pxStaticStreamBuffer_0+2
-	bne	L10045
-L10049:
-	bra	L10049
-L10045:
 ;        configASSERT( xTriggerLevelBytes <= xBufferSizeBytes );
-	lda	<L14+xBufferSizeBytes_0
-	cmp	<L14+xTriggerLevelBytes_0
-	bcs	L10052
-L10056:
-	bra	L10056
-L10052:
 ;
 ;        /* A trigger level of 0 would cause a waiting task to unblock even when
 ;         * the buffer was empty. */
 ;        if( xTriggerLevelBytes == ( size_t ) 0 )
 ;        {
-	lda	<L14+xTriggerLevelBytes_0
-	bne	L10059
 ;            xTriggerLevelBytes = ( size_t ) 1;
-	lda	#$1
-	sta	<L14+xTriggerLevelBytes_0
 ;        }
 ;
 ;        /* In case the stream buffer is going to be used as a message buffer
@@ -648,60 +600,22 @@ L10052:
 ;         * to hold at least one message. */
 ;
 ;        if( xStreamBufferType == sbTYPE_MESSAGE_BUFFER )
-L10059:
 ;        {
-	lda	<L14+xStreamBufferType_0
-	cmp	#<$1
-	bne	L10060
 ;            /* Statically allocated message buffer. */
 ;            ucFlags = sbFLAGS_IS_MESSAGE_BUFFER | sbFLAGS_IS_STATICALLY_ALLOCATED;
-	sep	#$20
-	longa	off
-	lda	#$3
-	sta	<L15+ucFlags_1
-	rep	#$20
-	longa	on
 ;            configASSERT( xBufferSizeBytes > sbBYTES_TO_STORE_MESSAGE_LENGTH );
-	lda	#$2
-	cmp	<L14+xBufferSizeBytes_0
-	bcc	L10068
-L10065:
-	bra	L10065
 ;        }
 ;        else if( xStreamBufferType == sbTYPE_STREAM_BATCHING_BUFFER )
-L10060:
 ;        {
-	lda	<L14+xStreamBufferType_0
-	cmp	#<$2
-	bne	L10069
 ;            /* Statically allocated batching buffer. */
 ;            ucFlags = sbFLAGS_IS_BATCHING_BUFFER | sbFLAGS_IS_STATICALLY_ALLOCATED;
-	sep	#$20
-	longa	off
-	lda	#$6
-	sta	<L15+ucFlags_1
-	rep	#$20
-	longa	on
 ;            configASSERT( xBufferSizeBytes > 0 );
-	lda	#$0
-	cmp	<L14+xBufferSizeBytes_0
-	bcc	L10068
-L10074:
-	bra	L10074
 ;        }
 ;        else
-L10069:
 ;        {
 ;            /* Statically allocated stream buffer. */
 ;            ucFlags = sbFLAGS_IS_STATICALLY_ALLOCATED;
-	sep	#$20
-	longa	off
-	lda	#$2
-	sta	<L15+ucFlags_1
-	rep	#$20
-	longa	on
 ;        }
-L10068:
 ;
 ;        #if ( configASSERT_DEFINED == 1 )
 ;        {
@@ -710,25 +624,11 @@ L10068:
 ;             * message buffer structure. */
 ;            volatile size_t xSize = sizeof( StaticStreamBuffer_t );
 ;            configASSERT( xSize == sizeof( StreamBuffer_t ) );
-xSize_2	set	9
-	lda	#$17
-	sta	<L15+xSize_2
-	cmp	#<$17
-	beq	L10078
-L10082:
-	bra	L10082
-L10078:
 ;        }
 ;        #endif /* configASSERT_DEFINED */
 ;
 ;        if( ( pucStreamBufferStorageArea != NULL ) && ( pxStaticStreamBuffer != NULL ) )
 ;        {
-	lda	<L14+pucStreamBufferStorageArea_0
-	ora	<L14+pucStreamBufferStorageArea_0+2
-	beq	L10085
-	lda	<L14+pxStaticStreamBuffer_0
-	ora	<L14+pxStaticStreamBuffer_0+2
-	beq	L10085
 ;            prvInitialiseNewStreamBuffer( pxStreamBuffer,
 ;                                          pucStreamBufferStorageArea,
 ;                                          xBufferSizeBytes,
@@ -736,34 +636,10 @@ L10078:
 ;                                          ucFlags,
 ;                                          pxSendCompletedCallback,
 ;                                          pxReceiveCompletedCallback );
-	pei	<L14+pxReceiveCompletedCallback_0
-	pei	<L14+pxSendCompletedCallback_0
-	pei	<L15+ucFlags_1
-	pei	<L14+xTriggerLevelBytes_0
-	pei	<L14+xBufferSizeBytes_0
-	pei	<L14+pucStreamBufferStorageArea_0+2
-	pei	<L14+pucStreamBufferStorageArea_0
-	pei	<L15+pxStreamBuffer_1+2
-	pei	<L15+pxStreamBuffer_1
-	jsr	_~prvInitialiseNewStreamBuffer
 ;
 ;            /* Remember this was statically allocated in case it is ever deleted
 ;             * again. */
 ;            pxStreamBuffer->ucFlags |= sbFLAGS_IS_STATICALLY_ALLOCATED;
-	lda	#$14
-	clc
-	adc	<L15+pxStreamBuffer_1
-	sta	<R0
-	lda	#$0
-	adc	<L15+pxStreamBuffer_1+2
-	sta	<R0+2
-	sep	#$20
-	longa	off
-	lda	[<R0]
-	ora	#<$2
-	sta	[<R0]
-	rep	#$20
-	longa	on
 ;
 ;            traceSTREAM_BUFFER_CREATE( pxStreamBuffer, xStreamBufferType );
 ;
@@ -771,42 +647,17 @@ L10078:
 ;            /* More details at: https://github.com/FreeRTOS/FreeRTOS-Kernel/blob/main/MISRA.md#rule-113 */
 ;            /* coverity[misra_c_2012_rule_11_3_violation] */
 ;            xReturn = ( StreamBufferHandle_t ) pxStaticStreamBuffer;
-	lda	<L14+pxStaticStreamBuffer_0
-	sta	<L15+xReturn_1
-	lda	<L14+pxStaticStreamBuffer_0+2
-	sta	<L15+xReturn_1+2
 ;        }
 ;        else
-	bra	L10086
-L10085:
 ;        {
 ;            xReturn = NULL;
-	stz	<L15+xReturn_1
-	stz	<L15+xReturn_1+2
 ;            traceSTREAM_BUFFER_CREATE_STATIC_FAILED( xReturn, xStreamBufferType );
 ;        }
-L10086:
 ;
 ;        traceRETURN_xStreamBufferGenericCreateStatic( xReturn );
 ;
 ;        return xReturn;
-	ldx	<L15+xReturn_1+2
-	lda	<L15+xReturn_1
-	tay
-	lda	<L14+1
-	sta	<L14+1+18
-	pld
-	tsc
-	clc
-	adc	#L14+18
-	tcs
-	tya
-	rts
 ;    }
-L14	equ	15
-L15	equ	5
-	ends
-	efunc
 ;    #endif /* ( configSUPPORT_STATIC_ALLOCATION == 1 ) */
 ;/*-----------------------------------------------------------*/
 ;
@@ -815,113 +666,33 @@ L15	equ	5
 ;                                              uint8_t ** ppucStreamBufferStorageArea,
 ;                                              StaticStreamBuffer_t ** ppxStaticStreamBuffer )
 ;    {
-	code
-	xdef	_~xStreamBufferGetStaticBuffers
-	func
-_~xStreamBufferGetStaticBuffers:
-	longa	on
-	longi	on
-	tsc
-	sec
-	sbc	#L28
-	tcs
-	phd
-	tcd
-xStreamBuffer_0	set	3
-ppucStreamBufferStorageArea_0	set	7
-ppxStaticStreamBuffer_0	set	11
 ;        BaseType_t xReturn;
 ;        StreamBuffer_t * const pxStreamBuffer = xStreamBuffer;
 ;
 ;        traceENTER_xStreamBufferGetStaticBuffers( xStreamBuffer, ppucStreamBufferStorageArea, ppxStaticStreamBuffer );
-xReturn_1	set	0
-pxStreamBuffer_1	set	2
-	lda	<L28+xStreamBuffer_0
-	sta	<L29+pxStreamBuffer_1
-	lda	<L28+xStreamBuffer_0+2
-	sta	<L29+pxStreamBuffer_1+2
 ;
 ;        configASSERT( pxStreamBuffer );
-	lda	<L29+pxStreamBuffer_1
-	ora	<L29+pxStreamBuffer_1+2
-	bne	L10087
-L10091:
-	bra	L10091
-L10087:
 ;        configASSERT( ppucStreamBufferStorageArea );
-	lda	<L28+ppucStreamBufferStorageArea_0
-	ora	<L28+ppucStreamBufferStorageArea_0+2
-	bne	L10094
-L10098:
-	bra	L10098
-L10094:
 ;        configASSERT( ppxStaticStreamBuffer );
-	lda	<L28+ppxStaticStreamBuffer_0
-	ora	<L28+ppxStaticStreamBuffer_0+2
-	bne	L10101
-L10105:
-	bra	L10105
-L10101:
 ;
 ;        if( ( pxStreamBuffer->ucFlags & sbFLAGS_IS_STATICALLY_ALLOCATED ) != ( uint8_t ) 0 )
 ;        {
-	sep	#$20
-	longa	off
-	ldy	#$14
-	lda	[<L29+pxStreamBuffer_1],Y
-	and	#<$2
-	rep	#$20
-	longa	on
-	beq	L10108
 ;            *ppucStreamBufferStorageArea = pxStreamBuffer->pucBuffer;
-	ldy	#$10
-	lda	[<L29+pxStreamBuffer_1],Y
-	sta	[<L28+ppucStreamBufferStorageArea_0]
-	iny
-	iny
-	lda	[<L29+pxStreamBuffer_1],Y
-	ldy	#$2
-	sta	[<L28+ppucStreamBufferStorageArea_0],Y
 ;            /* MISRA Ref 11.3.1 [Misaligned access] */
 ;            /* More details at: https://github.com/FreeRTOS/FreeRTOS-Kernel/blob/main/MISRA.md#rule-113 */
 ;            /* coverity[misra_c_2012_rule_11_3_violation] */
 ;            *ppxStaticStreamBuffer = ( StaticStreamBuffer_t * ) pxStreamBuffer;
-	lda	<L29+pxStreamBuffer_1
-	sta	[<L28+ppxStaticStreamBuffer_0]
-	lda	<L29+pxStreamBuffer_1+2
-	sta	[<L28+ppxStaticStreamBuffer_0],Y
 ;            xReturn = pdTRUE;
-	lda	#$1
-	sta	<L29+xReturn_1
 ;        }
 ;        else
-	bra	L10109
-L10108:
 ;        {
 ;            xReturn = pdFALSE;
-	stz	<L29+xReturn_1
 ;        }
-L10109:
 ;
 ;        traceRETURN_xStreamBufferGetStaticBuffers( xReturn );
 ;
 ;        return xReturn;
-	lda	<L29+xReturn_1
-	tay
-	lda	<L28+1
-	sta	<L28+1+12
-	pld
-	tsc
-	clc
-	adc	#L28+12
-	tcs
-	tya
-	rts
 ;    }
-L28	equ	6
-L29	equ	1
-	ends
-	efunc
 ;    #endif /* configSUPPORT_STATIC_ALLOCATION */
 ;/*-----------------------------------------------------------*/
 ;
@@ -935,7 +706,7 @@ _~vStreamBufferDelete:
 	longi	on
 	tsc
 	sec
-	sbc	#L35
+	sbc	#L14
 	tcs
 	phd
 	tcd
@@ -944,18 +715,18 @@ xStreamBuffer_0	set	3
 ;
 ;    traceENTER_vStreamBufferDelete( xStreamBuffer );
 pxStreamBuffer_1	set	0
-	lda	<L35+xStreamBuffer_0
-	sta	<L36+pxStreamBuffer_1
-	lda	<L35+xStreamBuffer_0+2
-	sta	<L36+pxStreamBuffer_1+2
+	lda	<L14+xStreamBuffer_0
+	sta	<L15+pxStreamBuffer_1
+	lda	<L14+xStreamBuffer_0+2
+	sta	<L15+pxStreamBuffer_1+2
 ;
 ;    configASSERT( pxStreamBuffer );
-	lda	<L36+pxStreamBuffer_1
-	ora	<L36+pxStreamBuffer_1+2
-	bne	L10110
-L10114:
-	bra	L10114
-L10110:
+	lda	<L15+pxStreamBuffer_1
+	ora	<L15+pxStreamBuffer_1+2
+	bne	L10038
+L10042:
+	bra	L10042
+L10038:
 ;
 ;    traceSTREAM_BUFFER_DELETE( xStreamBuffer );
 ;
@@ -964,18 +735,18 @@ L10110:
 	sep	#$20
 	longa	off
 	ldy	#$14
-	lda	[<L36+pxStreamBuffer_1],Y
+	lda	[<L15+pxStreamBuffer_1],Y
 	and	#<$2
 	rep	#$20
 	longa	on
-	bne	L10117
+	bne	L10045
 ;        #if ( configSUPPORT_DYNAMIC_ALLOCATION == 1 )
 ;        {
 ;            /* Both the structure and the buffer were allocated using a single call
 ;            * to pvPortMalloc(), hence only one call to vPortFree() is required. */
 ;            vPortFree( ( void * ) pxStreamBuffer );
-	pei	<L36+pxStreamBuffer_1+2
-	pei	<L36+pxStreamBuffer_1
+	pei	<L15+pxStreamBuffer_1+2
+	pei	<L15+pxStreamBuffer_1
 	jsr	_~vPortFree
 ;        }
 ;        #else
@@ -987,32 +758,32 @@ L10110:
 ;        #endif
 ;    }
 ;    else
-	bra	L39
-L10117:
+	bra	L18
+L10045:
 ;    {
 ;        /* The structure and buffer were not allocated dynamically and cannot be
 ;         * freed - just scrub the structure so future use will assert. */
 ;        ( void ) memset( pxStreamBuffer, 0x00, sizeof( StreamBuffer_t ) );
 	pea	#<$17
 	pea	#<$0
-	pei	<L36+pxStreamBuffer_1+2
-	pei	<L36+pxStreamBuffer_1
+	pei	<L15+pxStreamBuffer_1+2
+	pei	<L15+pxStreamBuffer_1
 	jsr	_~memset
 ;    }
 ;
 ;    traceRETURN_vStreamBufferDelete();
 ;}
-L39:
-	lda	<L35+1
-	sta	<L35+1+4
+L18:
+	lda	<L14+1
+	sta	<L14+1+4
 	pld
 	tsc
 	clc
-	adc	#L35+4
+	adc	#L14+4
 	tcs
 	rts
-L35	equ	8
-L36	equ	5
+L14	equ	8
+L15	equ	5
 	ends
 	efunc
 ;/*-----------------------------------------------------------*/
@@ -1027,7 +798,7 @@ _~xStreamBufferReset:
 	longi	on
 	tsc
 	sec
-	sbc	#L40
+	sbc	#L19
 	tcs
 	phd
 	tcd
@@ -1043,14 +814,14 @@ pxStreamBuffer_1	set	0
 xReturn_1	set	4
 pxSendCallback_1	set	6
 pxReceiveCallback_1	set	8
-	lda	<L40+xStreamBuffer_0
-	sta	<L41+pxStreamBuffer_1
-	lda	<L40+xStreamBuffer_0+2
-	sta	<L41+pxStreamBuffer_1+2
-	stz	<L41+xReturn_1
-	stz	<L41+pxSendCallback_1
+	lda	<L19+xStreamBuffer_0
+	sta	<L20+pxStreamBuffer_1
+	lda	<L19+xStreamBuffer_0+2
+	sta	<L20+pxStreamBuffer_1+2
+	stz	<L20+xReturn_1
+	stz	<L20+pxSendCallback_1
 ;	pxReceiveCallback = (StreamBufferCallbackFunction_t)0;
-	stz	<L41+pxReceiveCallback_1
+	stz	<L20+pxReceiveCallback_1
 ;	
 ;    #if ( configUSE_TRACE_FACILITY == 1 )
 ;        UBaseType_t uxStreamBufferNumber;
@@ -1059,11 +830,11 @@ pxReceiveCallback_1	set	8
 ;    traceENTER_xStreamBufferReset( xStreamBuffer );
 ;
 ;    configASSERT( pxStreamBuffer );
-	lda	<L41+pxStreamBuffer_1
-	ora	<L41+pxStreamBuffer_1+2
-	bne	L10127
-L10123:
-	bra	L10123
+	lda	<L20+pxStreamBuffer_1
+	ora	<L20+pxStreamBuffer_1+2
+	bne	L10055
+L10051:
+	bra	L10051
 ;
 ;    #if ( configUSE_TRACE_FACILITY == 1 )
 ;    {
@@ -1075,23 +846,23 @@ L10123:
 ;
 ;    /* Can only reset a message buffer if there are no tasks blocked on it. */
 ;    taskENTER_CRITICAL();
-L10127:
+L10055:
 ;    {
 ;        if( ( pxStreamBuffer->xTaskWaitingToReceive == NULL ) && ( pxStreamBuffer->xTaskWaitingToSend == NULL ) )
 ;        {
 	ldy	#$8
-	lda	[<L41+pxStreamBuffer_1],Y
+	lda	[<L20+pxStreamBuffer_1],Y
 	iny
 	iny
-	ora	[<L41+pxStreamBuffer_1],Y
-	bne	L10131
+	ora	[<L20+pxStreamBuffer_1],Y
+	bne	L10059
 	iny
 	iny
-	lda	[<L41+pxStreamBuffer_1],Y
+	lda	[<L20+pxStreamBuffer_1],Y
 	iny
 	iny
-	ora	[<L41+pxStreamBuffer_1],Y
-	bne	L10131
+	ora	[<L20+pxStreamBuffer_1],Y
+	bne	L10059
 ;            #if ( configUSE_SB_COMPLETED_CALLBACK == 1 )
 ;            {
 ;                pxSendCallback = pxStreamBuffer->pxSendCompletedCallback;
@@ -1106,27 +877,27 @@ L10127:
 ;                                          pxStreamBuffer->ucFlags,
 ;                                          pxSendCallback,
 ;                                          pxReceiveCallback );
-	pei	<L41+pxReceiveCallback_1
-	pei	<L41+pxSendCallback_1
+	pei	<L20+pxReceiveCallback_1
+	pei	<L20+pxSendCallback_1
 	ldy	#$14
-	lda	[<L41+pxStreamBuffer_1],Y
+	lda	[<L20+pxStreamBuffer_1],Y
 	pha
 	ldy	#$6
-	lda	[<L41+pxStreamBuffer_1],Y
+	lda	[<L20+pxStreamBuffer_1],Y
 	pha
 	dey
 	dey
-	lda	[<L41+pxStreamBuffer_1],Y
+	lda	[<L20+pxStreamBuffer_1],Y
 	pha
 	ldy	#$12
-	lda	[<L41+pxStreamBuffer_1],Y
+	lda	[<L20+pxStreamBuffer_1],Y
 	pha
 	dey
 	dey
-	lda	[<L41+pxStreamBuffer_1],Y
+	lda	[<L20+pxStreamBuffer_1],Y
 	pha
-	pei	<L41+pxStreamBuffer_1+2
-	pei	<L41+pxStreamBuffer_1
+	pei	<L20+pxStreamBuffer_1+2
+	pei	<L20+pxStreamBuffer_1
 	jsr	_~prvInitialiseNewStreamBuffer
 ;
 ;            #if ( configUSE_TRACE_FACILITY == 1 )
@@ -1139,29 +910,29 @@ L10127:
 ;
 ;            xReturn = pdPASS;
 	lda	#$1
-	sta	<L41+xReturn_1
+	sta	<L20+xReturn_1
 ;        }
 ;    }
 ;    taskEXIT_CRITICAL();
-L10131:
+L10059:
 ;
 ;    traceRETURN_xStreamBufferReset( xReturn );
 ;
 ;    return xReturn;
-	lda	<L41+xReturn_1
+	lda	<L20+xReturn_1
 	tay
-	lda	<L40+1
-	sta	<L40+1+4
+	lda	<L19+1
+	sta	<L19+1+4
 	pld
 	tsc
 	clc
-	adc	#L40+4
+	adc	#L19+4
 	tcs
 	tya
 	rts
 ;}
-L40	equ	10
-L41	equ	1
+L19	equ	10
+L20	equ	1
 	ends
 	efunc
 ;/*-----------------------------------------------------------*/
@@ -1176,7 +947,7 @@ _~xStreamBufferResetFromISR:
 	longi	on
 	tsc
 	sec
-	sbc	#L46
+	sbc	#L25
 	tcs
 	phd
 	tcd
@@ -1197,21 +968,21 @@ xReturn_1	set	4
 pxSendCallback_1	set	6
 pxReceiveCallback_1	set	8
 uxSavedInterruptStatus_1	set	10
-	lda	<L46+xStreamBuffer_0
-	sta	<L47+pxStreamBuffer_1
-	lda	<L46+xStreamBuffer_0+2
-	sta	<L47+pxStreamBuffer_1+2
-	stz	<L47+xReturn_1
-	stz	<L47+pxSendCallback_1
-	stz	<L47+pxReceiveCallback_1
+	lda	<L25+xStreamBuffer_0
+	sta	<L26+pxStreamBuffer_1
+	lda	<L25+xStreamBuffer_0+2
+	sta	<L26+pxStreamBuffer_1+2
+	stz	<L26+xReturn_1
+	stz	<L26+pxSendCallback_1
+	stz	<L26+pxReceiveCallback_1
 ;
 ;    configASSERT( pxStreamBuffer );
-	lda	<L47+pxStreamBuffer_1
-	ora	<L47+pxStreamBuffer_1+2
-	bne	L10133
-L10137:
-	bra	L10137
-L10133:
+	lda	<L26+pxStreamBuffer_1
+	ora	<L26+pxStreamBuffer_1+2
+	bne	L10061
+L10065:
+	bra	L10065
+L10061:
 ;
 ;    #if ( configUSE_TRACE_FACILITY == 1 )
 ;    {
@@ -1226,23 +997,23 @@ L10133:
 ;    /* More details at: https://github.com/FreeRTOS/FreeRTOS-Kernel/blob/main/MISRA.md#dir-47 */
 ;    /* coverity[misra_c_2012_directive_4_7_violation] */
 ;    uxSavedInterruptStatus = taskENTER_CRITICAL_FROM_ISR();
-	stz	<L47+uxSavedInterruptStatus_1
+	stz	<L26+uxSavedInterruptStatus_1
 ;    {
 ;        if( ( pxStreamBuffer->xTaskWaitingToReceive == NULL ) && ( pxStreamBuffer->xTaskWaitingToSend == NULL ) )
 ;        {
 	ldy	#$8
-	lda	[<L47+pxStreamBuffer_1],Y
+	lda	[<L26+pxStreamBuffer_1],Y
 	iny
 	iny
-	ora	[<L47+pxStreamBuffer_1],Y
-	bne	L10140
+	ora	[<L26+pxStreamBuffer_1],Y
+	bne	L10068
 	iny
 	iny
-	lda	[<L47+pxStreamBuffer_1],Y
+	lda	[<L26+pxStreamBuffer_1],Y
 	iny
 	iny
-	ora	[<L47+pxStreamBuffer_1],Y
-	bne	L10140
+	ora	[<L26+pxStreamBuffer_1],Y
+	bne	L10068
 ;            #if ( configUSE_SB_COMPLETED_CALLBACK == 1 )
 ;            {
 ;                pxSendCallback = pxStreamBuffer->pxSendCompletedCallback;
@@ -1257,27 +1028,27 @@ L10133:
 ;                                          pxStreamBuffer->ucFlags,
 ;                                          pxSendCallback,
 ;                                          pxReceiveCallback );
-	pei	<L47+pxReceiveCallback_1
-	pei	<L47+pxSendCallback_1
+	pei	<L26+pxReceiveCallback_1
+	pei	<L26+pxSendCallback_1
 	ldy	#$14
-	lda	[<L47+pxStreamBuffer_1],Y
+	lda	[<L26+pxStreamBuffer_1],Y
 	pha
 	ldy	#$6
-	lda	[<L47+pxStreamBuffer_1],Y
+	lda	[<L26+pxStreamBuffer_1],Y
 	pha
 	dey
 	dey
-	lda	[<L47+pxStreamBuffer_1],Y
+	lda	[<L26+pxStreamBuffer_1],Y
 	pha
 	ldy	#$12
-	lda	[<L47+pxStreamBuffer_1],Y
+	lda	[<L26+pxStreamBuffer_1],Y
 	pha
 	dey
 	dey
-	lda	[<L47+pxStreamBuffer_1],Y
+	lda	[<L26+pxStreamBuffer_1],Y
 	pha
-	pei	<L47+pxStreamBuffer_1+2
-	pei	<L47+pxStreamBuffer_1
+	pei	<L26+pxStreamBuffer_1+2
+	pei	<L26+pxStreamBuffer_1
 	jsr	_~prvInitialiseNewStreamBuffer
 ;
 ;            #if ( configUSE_TRACE_FACILITY == 1 )
@@ -1290,29 +1061,29 @@ L10133:
 ;
 ;            xReturn = pdPASS;
 	lda	#$1
-	sta	<L47+xReturn_1
+	sta	<L26+xReturn_1
 ;        }
 ;    }
-L10140:
+L10068:
 ;    taskEXIT_CRITICAL_FROM_ISR( uxSavedInterruptStatus );
 ;
 ;    traceRETURN_xStreamBufferResetFromISR( xReturn );
 ;
 ;    return xReturn;
-	lda	<L47+xReturn_1
+	lda	<L26+xReturn_1
 	tay
-	lda	<L46+1
-	sta	<L46+1+4
+	lda	<L25+1
+	sta	<L25+1+4
 	pld
 	tsc
 	clc
-	adc	#L46+4
+	adc	#L25+4
 	tcs
 	tya
 	rts
 ;}
-L46	equ	12
-L47	equ	1
+L25	equ	12
+L26	equ	1
 	ends
 	efunc
 ;/*-----------------------------------------------------------*/
@@ -1328,7 +1099,7 @@ _~xStreamBufferSetTriggerLevel:
 	longi	on
 	tsc
 	sec
-	sbc	#L52
+	sbc	#L31
 	tcs
 	phd
 	tcd
@@ -1340,73 +1111,73 @@ xTriggerLevel_0	set	7
 ;    traceENTER_xStreamBufferSetTriggerLevel( xStreamBuffer, xTriggerLevel );
 pxStreamBuffer_1	set	0
 xReturn_1	set	4
-	lda	<L52+xStreamBuffer_0
-	sta	<L53+pxStreamBuffer_1
-	lda	<L52+xStreamBuffer_0+2
-	sta	<L53+pxStreamBuffer_1+2
+	lda	<L31+xStreamBuffer_0
+	sta	<L32+pxStreamBuffer_1
+	lda	<L31+xStreamBuffer_0+2
+	sta	<L32+pxStreamBuffer_1+2
 ;
 ;    configASSERT( pxStreamBuffer );
-	lda	<L53+pxStreamBuffer_1
-	ora	<L53+pxStreamBuffer_1+2
-	bne	L10141
-L10145:
-	bra	L10145
-L10141:
+	lda	<L32+pxStreamBuffer_1
+	ora	<L32+pxStreamBuffer_1+2
+	bne	L10069
+L10073:
+	bra	L10073
+L10069:
 ;
 ;    /* It is not valid for the trigger level to be 0. */
 ;    if( xTriggerLevel == ( size_t ) 0 )
 ;    {
-	lda	<L52+xTriggerLevel_0
-	bne	L10148
+	lda	<L31+xTriggerLevel_0
+	bne	L10076
 ;        xTriggerLevel = ( size_t ) 1;
 	lda	#$1
-	sta	<L52+xTriggerLevel_0
+	sta	<L31+xTriggerLevel_0
 ;    }
 ;
 ;    /* The trigger level is the number of bytes that must be in the stream
 ;     * buffer before a task that is waiting for data is unblocked. */
 ;    if( xTriggerLevel < pxStreamBuffer->xLength )
-L10148:
+L10076:
 ;    {
-	lda	<L52+xTriggerLevel_0
+	lda	<L31+xTriggerLevel_0
 	ldy	#$4
-	cmp	[<L53+pxStreamBuffer_1],Y
-	bcs	L10149
+	cmp	[<L32+pxStreamBuffer_1],Y
+	bcs	L10077
 ;        pxStreamBuffer->xTriggerLevelBytes = xTriggerLevel;
-	lda	<L52+xTriggerLevel_0
+	lda	<L31+xTriggerLevel_0
 	iny
 	iny
-	sta	[<L53+pxStreamBuffer_1],Y
+	sta	[<L32+pxStreamBuffer_1],Y
 ;        xReturn = pdPASS;
 	lda	#$1
-	sta	<L53+xReturn_1
+	sta	<L32+xReturn_1
 ;    }
 ;    else
-	bra	L10150
-L10149:
+	bra	L10078
+L10077:
 ;    {
 ;        xReturn = pdFALSE;
-	stz	<L53+xReturn_1
+	stz	<L32+xReturn_1
 ;    }
-L10150:
+L10078:
 ;
 ;    traceRETURN_xStreamBufferSetTriggerLevel( xReturn );
 ;
 ;    return xReturn;
-	lda	<L53+xReturn_1
+	lda	<L32+xReturn_1
 	tay
-	lda	<L52+1
-	sta	<L52+1+6
+	lda	<L31+1
+	sta	<L31+1+6
 	pld
 	tsc
 	clc
-	adc	#L52+6
+	adc	#L31+6
 	tcs
 	tya
 	rts
 ;}
-L52	equ	6
-L53	equ	1
+L31	equ	6
+L32	equ	1
 	ends
 	efunc
 ;/*-----------------------------------------------------------*/
@@ -1421,7 +1192,7 @@ _~xStreamBufferSpacesAvailable:
 	longi	on
 	tsc
 	sec
-	sbc	#L58
+	sbc	#L37
 	tcs
 	phd
 	tcd
@@ -1434,83 +1205,83 @@ xStreamBuffer_0	set	3
 pxStreamBuffer_1	set	0
 xSpace_1	set	4
 xOriginalTail_1	set	6
-	lda	<L58+xStreamBuffer_0
-	sta	<L59+pxStreamBuffer_1
-	lda	<L58+xStreamBuffer_0+2
-	sta	<L59+pxStreamBuffer_1+2
+	lda	<L37+xStreamBuffer_0
+	sta	<L38+pxStreamBuffer_1
+	lda	<L37+xStreamBuffer_0+2
+	sta	<L38+pxStreamBuffer_1+2
 ;
 ;    configASSERT( pxStreamBuffer );
-	lda	<L59+pxStreamBuffer_1
-	ora	<L59+pxStreamBuffer_1+2
-	bne	L10160
-L10155:
-	bra	L10155
+	lda	<L38+pxStreamBuffer_1
+	ora	<L38+pxStreamBuffer_1+2
+	bne	L10088
+L10083:
+	bra	L10083
 ;
 ;    /* The code below reads xTail and then xHead.  This is safe if the stream
 ;     * buffer is updated once between the two reads - but not if the stream buffer
 ;     * is updated more than once between the two reads - hence the loop. */
 ;    do
-L10160:
+L10088:
 ;    {
 ;        xOriginalTail = pxStreamBuffer->xTail;
-	lda	[<L59+pxStreamBuffer_1]
-	sta	<L59+xOriginalTail_1
+	lda	[<L38+pxStreamBuffer_1]
+	sta	<L38+xOriginalTail_1
 ;        xSpace = pxStreamBuffer->xLength + pxStreamBuffer->xTail;
 	clc
 	ldy	#$4
-	lda	[<L59+pxStreamBuffer_1],Y
-	adc	[<L59+pxStreamBuffer_1]
-	sta	<L59+xSpace_1
+	lda	[<L38+pxStreamBuffer_1],Y
+	adc	[<L38+pxStreamBuffer_1]
+	sta	<L38+xSpace_1
 ;        xSpace -= pxStreamBuffer->xHead;
 	sec
 	dey
 	dey
-	sbc	[<L59+pxStreamBuffer_1],Y
-	sta	<L59+xSpace_1
+	sbc	[<L38+pxStreamBuffer_1],Y
+	sta	<L38+xSpace_1
 ;    } while( xOriginalTail != pxStreamBuffer->xTail );
-	lda	<L59+xOriginalTail_1
-	cmp	[<L59+pxStreamBuffer_1]
-	bne	L10160
+	lda	<L38+xOriginalTail_1
+	cmp	[<L38+pxStreamBuffer_1]
+	bne	L10088
 ;
 ;    xSpace -= ( size_t ) 1;
-	dec	<L59+xSpace_1
+	dec	<L38+xSpace_1
 ;
 ;    if( xSpace >= pxStreamBuffer->xLength )
 ;    {
-	lda	<L59+xSpace_1
+	lda	<L38+xSpace_1
 	iny
 	iny
-	cmp	[<L59+pxStreamBuffer_1],Y
-	bcc	L10162
+	cmp	[<L38+pxStreamBuffer_1],Y
+	bcc	L10090
 ;        xSpace -= pxStreamBuffer->xLength;
 	sec
-	lda	<L59+xSpace_1
-	sbc	[<L59+pxStreamBuffer_1],Y
-	sta	<L59+xSpace_1
+	lda	<L38+xSpace_1
+	sbc	[<L38+pxStreamBuffer_1],Y
+	sta	<L38+xSpace_1
 ;    }
 ;    else
 ;    {
 ;        mtCOVERAGE_TEST_MARKER();
 ;    }
-L10162:
+L10090:
 ;
 ;    traceRETURN_xStreamBufferSpacesAvailable( xSpace );
 ;
 ;    return xSpace;
-	lda	<L59+xSpace_1
+	lda	<L38+xSpace_1
 	tay
-	lda	<L58+1
-	sta	<L58+1+4
+	lda	<L37+1
+	sta	<L37+1+4
 	pld
 	tsc
 	clc
-	adc	#L58+4
+	adc	#L37+4
 	tcs
 	tya
 	rts
 ;}
-L58	equ	8
-L59	equ	1
+L37	equ	8
+L38	equ	1
 	ends
 	efunc
 ;/*-----------------------------------------------------------*/
@@ -1525,7 +1296,7 @@ _~xStreamBufferBytesAvailable:
 	longi	on
 	tsc
 	sec
-	sbc	#L64
+	sbc	#L43
 	tcs
 	phd
 	tcd
@@ -1536,41 +1307,41 @@ xStreamBuffer_0	set	3
 ;    traceENTER_xStreamBufferBytesAvailable( xStreamBuffer );
 pxStreamBuffer_1	set	0
 xReturn_1	set	4
-	lda	<L64+xStreamBuffer_0
-	sta	<L65+pxStreamBuffer_1
-	lda	<L64+xStreamBuffer_0+2
-	sta	<L65+pxStreamBuffer_1+2
+	lda	<L43+xStreamBuffer_0
+	sta	<L44+pxStreamBuffer_1
+	lda	<L43+xStreamBuffer_0+2
+	sta	<L44+pxStreamBuffer_1+2
 ;
 ;    configASSERT( pxStreamBuffer );
-	lda	<L65+pxStreamBuffer_1
-	ora	<L65+pxStreamBuffer_1+2
-	bne	L10163
-L10167:
-	bra	L10167
-L10163:
+	lda	<L44+pxStreamBuffer_1
+	ora	<L44+pxStreamBuffer_1+2
+	bne	L10091
+L10095:
+	bra	L10095
+L10091:
 ;
 ;    xReturn = prvBytesInBuffer( pxStreamBuffer );
-	pei	<L65+pxStreamBuffer_1+2
-	pei	<L65+pxStreamBuffer_1
+	pei	<L44+pxStreamBuffer_1+2
+	pei	<L44+pxStreamBuffer_1
 	jsr	_~prvBytesInBuffer
-	sta	<L65+xReturn_1
+	sta	<L44+xReturn_1
 ;
 ;    traceRETURN_xStreamBufferBytesAvailable( xReturn );
 ;
 ;    return xReturn;
 	tay
-	lda	<L64+1
-	sta	<L64+1+4
+	lda	<L43+1
+	sta	<L43+1+4
 	pld
 	tsc
 	clc
-	adc	#L64+4
+	adc	#L43+4
 	tcs
 	tya
 	rts
 ;}
-L64	equ	6
-L65	equ	1
+L43	equ	6
+L44	equ	1
 	ends
 	efunc
 ;/*-----------------------------------------------------------*/
@@ -1588,7 +1359,7 @@ _~xStreamBufferSend:
 	longi	on
 	tsc
 	sec
-	sbc	#L68
+	sbc	#L47
 	tcs
 	phd
 	tcd
@@ -1609,29 +1380,29 @@ xSpace_1	set	6
 xRequiredSpace_1	set	8
 xTimeOut_1	set	10
 xMaxReportedSpace_1	set	16
-	lda	<L68+xStreamBuffer_0
-	sta	<L69+pxStreamBuffer_1
-	lda	<L68+xStreamBuffer_0+2
-	sta	<L69+pxStreamBuffer_1+2
-	stz	<L69+xSpace_1
-	lda	<L68+xDataLengthBytes_0
-	sta	<L69+xRequiredSpace_1
-	stz	<L69+xMaxReportedSpace_1
+	lda	<L47+xStreamBuffer_0
+	sta	<L48+pxStreamBuffer_1
+	lda	<L47+xStreamBuffer_0+2
+	sta	<L48+pxStreamBuffer_1+2
+	stz	<L48+xSpace_1
+	lda	<L47+xDataLengthBytes_0
+	sta	<L48+xRequiredSpace_1
+	stz	<L48+xMaxReportedSpace_1
 ;
 ;    configASSERT( pvTxData );
-	lda	<L68+pvTxData_0
-	ora	<L68+pvTxData_0+2
-	bne	L10170
-L10174:
-	bra	L10174
-L10170:
+	lda	<L47+pvTxData_0
+	ora	<L47+pvTxData_0+2
+	bne	L10098
+L10102:
+	bra	L10102
+L10098:
 ;    configASSERT( pxStreamBuffer );
-	lda	<L69+pxStreamBuffer_1
-	ora	<L69+pxStreamBuffer_1+2
-	bne	L10177
-L10181:
-	bra	L10181
-L10177:
+	lda	<L48+pxStreamBuffer_1
+	ora	<L48+pxStreamBuffer_1+2
+	bne	L10105
+L10109:
+	bra	L10109
+L10105:
 ;
 ;    /* The maximum amount of space a stream buffer will ever report is its length
 ;     * minus 1. */
@@ -1639,8 +1410,8 @@ L10177:
 	clc
 	lda	#$ffff
 	ldy	#$4
-	adc	[<L69+pxStreamBuffer_1],Y
-	sta	<L69+xMaxReportedSpace_1
+	adc	[<L48+pxStreamBuffer_1],Y
+	sta	<L48+xMaxReportedSpace_1
 ;
 ;    /* This send function is used to write to both message buffers and stream
 ;     * buffers.  If this is a message buffer then the space needed must be
@@ -1651,67 +1422,67 @@ L10177:
 	sep	#$20
 	longa	off
 	ldy	#$14
-	lda	[<L69+pxStreamBuffer_1],Y
+	lda	[<L48+pxStreamBuffer_1],Y
 	and	#<$1
 	rep	#$20
 	longa	on
-	beq	L10184
+	beq	L10112
 ;        xRequiredSpace += sbBYTES_TO_STORE_MESSAGE_LENGTH;
-	inc	<L69+xRequiredSpace_1
-	inc	<L69+xRequiredSpace_1
+	inc	<L48+xRequiredSpace_1
+	inc	<L48+xRequiredSpace_1
 ;
 ;        /* Overflow? */
 ;        configASSERT( xRequiredSpace > xDataLengthBytes );
-	lda	<L68+xDataLengthBytes_0
-	cmp	<L69+xRequiredSpace_1
-	bcc	L10185
-L10189:
-	bra	L10189
-L10185:
+	lda	<L47+xDataLengthBytes_0
+	cmp	<L48+xRequiredSpace_1
+	bcc	L10113
+L10117:
+	bra	L10117
+L10113:
 ;
 ;        /* If this is a message buffer then it must be possible to write the
 ;         * whole message. */
 ;        if( xRequiredSpace > xMaxReportedSpace )
 ;        {
-	lda	<L69+xMaxReportedSpace_1
-	cmp	<L69+xRequiredSpace_1
-	bcs	L10194
+	lda	<L48+xMaxReportedSpace_1
+	cmp	<L48+xRequiredSpace_1
+	bcs	L10122
 ;            /* The message would not fit even if the entire buffer was empty,
 ;             * so don't wait for space. */
 ;            xTicksToWait = ( TickType_t ) 0;
-	stz	<L68+xTicksToWait_0
-	stz	<L68+xTicksToWait_0+2
+	stz	<L47+xTicksToWait_0
+	stz	<L47+xTicksToWait_0+2
 ;        }
 ;        else
-	bra	L10194
+	bra	L10122
 ;        {
 ;            mtCOVERAGE_TEST_MARKER();
 ;        }
 ;    }
 ;    else
-L10184:
+L10112:
 ;    {
 ;        /* If this is a stream buffer then it is acceptable to write only part
 ;         * of the message to the buffer.  Cap the length to the total length of
 ;         * the buffer. */
 ;        if( xRequiredSpace > xMaxReportedSpace )
 ;        {
-	lda	<L69+xMaxReportedSpace_1
-	cmp	<L69+xRequiredSpace_1
-	bcs	L10194
+	lda	<L48+xMaxReportedSpace_1
+	cmp	<L48+xRequiredSpace_1
+	bcs	L10122
 ;            xRequiredSpace = xMaxReportedSpace;
-	lda	<L69+xMaxReportedSpace_1
-	sta	<L69+xRequiredSpace_1
+	lda	<L48+xMaxReportedSpace_1
+	sta	<L48+xRequiredSpace_1
 ;        }
 ;        else
-L10194:
+L10122:
 ;
 ;    if( xTicksToWait != ( TickType_t ) 0 )
 ;    {
-	lda	<L68+xTicksToWait_0
-	ora	<L68+xTicksToWait_0+2
+	lda	<L47+xTicksToWait_0
+	ora	<L47+xTicksToWait_0+2
 	bne	*+5
-	brl	L10219
+	brl	L10147
 ;        {
 ;            mtCOVERAGE_TEST_MARKER();
 ;        }
@@ -1720,7 +1491,7 @@ L10194:
 	pea	#0
 	clc
 	tdc
-	adc	#<L69+xTimeOut_1
+	adc	#<L48+xTimeOut_1
 	pha
 	jsr	_~vTaskSetTimeOutState
 ;
@@ -1729,12 +1500,12 @@ L10194:
 ;            /* Wait until the required number of bytes are free in the message
 ;             * buffer. */
 ;            taskENTER_CRITICAL();
-	bra	L10202
+	bra	L10130
 L20002:
 ;                    /* Clear notification state as going to wait for space. */
 ;                    ( void ) xTaskNotifyStateClearIndexed( NULL, pxStreamBuffer->uxNotificationIndex );
 	ldy	#$15
-	lda	[<L69+pxStreamBuffer_1],Y
+	lda	[<L48+pxStreamBuffer_1],Y
 	pha
 	pea	#^$0
 	pea	#<$0
@@ -1744,30 +1515,30 @@ L20002:
 ;                    /* Should only be one writer. */
 ;                    configASSERT( pxStreamBuffer->xTaskWaitingToSend == NULL );
 	ldy	#$c
-	lda	[<L69+pxStreamBuffer_1],Y
+	lda	[<L48+pxStreamBuffer_1],Y
 	iny
 	iny
-	ora	[<L69+pxStreamBuffer_1],Y
-	beq	L10205
-L10209:
-	bra	L10209
-L10205:
+	ora	[<L48+pxStreamBuffer_1],Y
+	beq	L10133
+L10137:
+	bra	L10137
+L10133:
 ;                    pxStreamBuffer->xTaskWaitingToSend = xTaskGetCurrentTaskHandle();
 	jsr	_~xTaskGetCurrentTaskHandle
 	stx	<R0+2
 	ldy	#$c
-	sta	[<L69+pxStreamBuffer_1],Y
+	sta	[<L48+pxStreamBuffer_1],Y
 	lda	<R0+2
 	iny
 	iny
-	sta	[<L69+pxStreamBuffer_1],Y
+	sta	[<L48+pxStreamBuffer_1],Y
 ;                }
 ;                else
 ;
 ;            traceBLOCKING_ON_STREAM_BUFFER_SEND( xStreamBuffer );
 ;            ( void ) xTaskNotifyWaitIndexed( pxStreamBuffer->uxNotificationIndex, ( uint32_t ) 0, ( uint32_t ) 0, NULL, xTicksToWait );
-	pei	<L68+xTicksToWait_0+2
-	pei	<L68+xTicksToWait_0
+	pei	<L47+xTicksToWait_0+2
+	pei	<L47+xTicksToWait_0
 	pea	#^$0
 	pea	#<$0
 	pea	#^$0
@@ -1775,53 +1546,53 @@ L10205:
 	pea	#^$0
 	pea	#<$0
 	ldy	#$15
-	lda	[<L69+pxStreamBuffer_1],Y
+	lda	[<L48+pxStreamBuffer_1],Y
 	pha
 	jsr	_~xTaskGenericNotifyWait
 	sta	<R0
 ;            pxStreamBuffer->xTaskWaitingToSend = NULL;
 	lda	#$0
 	ldy	#$c
-	sta	[<L69+pxStreamBuffer_1],Y
+	sta	[<L48+pxStreamBuffer_1],Y
 	iny
 	iny
-	sta	[<L69+pxStreamBuffer_1],Y
+	sta	[<L48+pxStreamBuffer_1],Y
 ;        } while( xTaskCheckForTimeOut( &xTimeOut, &xTicksToWait ) == pdFALSE );
 	pea	#0
 	clc
 	tdc
-	adc	#<L68+xTicksToWait_0
+	adc	#<L47+xTicksToWait_0
 	pha
 	pea	#0
 	clc
 	tdc
-	adc	#<L69+xTimeOut_1
+	adc	#<L48+xTimeOut_1
 	pha
 	jsr	_~xTaskCheckForTimeOut
 	tax
-	bne	L10219
-L10202:
+	bne	L10147
+L10130:
 ;            {
 ;                xSpace = xStreamBufferSpacesAvailable( pxStreamBuffer );
-	pei	<L69+pxStreamBuffer_1+2
-	pei	<L69+pxStreamBuffer_1
+	pei	<L48+pxStreamBuffer_1+2
+	pei	<L48+pxStreamBuffer_1
 	jsr	_~xStreamBufferSpacesAvailable
-	sta	<L69+xSpace_1
+	sta	<L48+xSpace_1
 ;
 ;                if( xSpace < xRequiredSpace )
 ;                {
-	cmp	<L69+xRequiredSpace_1
+	cmp	<L48+xRequiredSpace_1
 	bcs	*+5
 	brl	L20002
 ;                {
 ;                    taskEXIT_CRITICAL();
 ;                    break;
-L10219:
+L10147:
 ;
 ;    if( xSpace == ( size_t ) 0 )
 ;    {
-	lda	<L69+xSpace_1
-	bne	L10221
+	lda	<L48+xSpace_1
+	bne	L10149
 ;                }
 ;            }
 ;            taskEXIT_CRITICAL();
@@ -1831,30 +1602,30 @@ L10219:
 ;        mtCOVERAGE_TEST_MARKER();
 ;    }
 ;        xSpace = xStreamBufferSpacesAvailable( pxStreamBuffer );
-	pei	<L69+pxStreamBuffer_1+2
-	pei	<L69+pxStreamBuffer_1
+	pei	<L48+pxStreamBuffer_1+2
+	pei	<L48+pxStreamBuffer_1
 	jsr	_~xStreamBufferSpacesAvailable
-	sta	<L69+xSpace_1
+	sta	<L48+xSpace_1
 ;    }
 ;    else
-L10221:
+L10149:
 ;
 ;    xReturn = prvWriteMessageToBuffer( pxStreamBuffer, pvTxData, xDataLengthBytes, xSpace, xRequiredSpace );
-	pei	<L69+xRequiredSpace_1
-	pei	<L69+xSpace_1
-	pei	<L68+xDataLengthBytes_0
-	pei	<L68+pvTxData_0+2
-	pei	<L68+pvTxData_0
-	pei	<L69+pxStreamBuffer_1+2
-	pei	<L69+pxStreamBuffer_1
+	pei	<L48+xRequiredSpace_1
+	pei	<L48+xSpace_1
+	pei	<L47+xDataLengthBytes_0
+	pei	<L47+pvTxData_0+2
+	pei	<L47+pvTxData_0
+	pei	<L48+pxStreamBuffer_1+2
+	pei	<L48+pxStreamBuffer_1
 	jsr	_~prvWriteMessageToBuffer
-	sta	<L69+xReturn_1
+	sta	<L48+xReturn_1
 ;
 ;    if( xReturn > ( size_t ) 0 )
 ;    {
 	lda	#$0
-	cmp	<L69+xReturn_1
-	bcs	L10226
+	cmp	<L48+xReturn_1
+	bcs	L10154
 ;    {
 ;        mtCOVERAGE_TEST_MARKER();
 ;    }
@@ -1863,63 +1634,63 @@ L10221:
 ;        /* Was a task waiting for the data? */
 ;        if( prvBytesInBufferMeetTriggerLevel( pxStreamBuffer, prvBytesInBuffer( pxStreamBuffer ) ) != pdFALSE )
 ;        {
-	pei	<L69+pxStreamBuffer_1+2
-	pei	<L69+pxStreamBuffer_1
+	pei	<L48+pxStreamBuffer_1+2
+	pei	<L48+pxStreamBuffer_1
 	jsr	_~prvBytesInBuffer
 	pha
-	pei	<L69+pxStreamBuffer_1+2
-	pei	<L69+pxStreamBuffer_1
+	pei	<L48+pxStreamBuffer_1+2
+	pei	<L48+pxStreamBuffer_1
 	jsr	_~prvBytesInBufferMeetTriggerLevel
 	tax
-	beq	L10226
+	beq	L10154
 ;            prvSEND_COMPLETED( pxStreamBuffer );
 	jsr	_~vTaskSuspendAll
 	ldy	#$8
-	lda	[<L69+pxStreamBuffer_1],Y
+	lda	[<L48+pxStreamBuffer_1],Y
 	iny
 	iny
-	ora	[<L69+pxStreamBuffer_1],Y
-	beq	L10224
+	ora	[<L48+pxStreamBuffer_1],Y
+	beq	L10152
 	pea	#^$0
 	pea	#<$0
 	pea	#<$0
 	pea	#^$0
 	pea	#<$0
 	ldy	#$15
-	lda	[<L69+pxStreamBuffer_1],Y
+	lda	[<L48+pxStreamBuffer_1],Y
 	pha
 	ldy	#$a
-	lda	[<L69+pxStreamBuffer_1],Y
+	lda	[<L48+pxStreamBuffer_1],Y
 	pha
 	dey
 	dey
-	lda	[<L69+pxStreamBuffer_1],Y
+	lda	[<L48+pxStreamBuffer_1],Y
 	pha
 	jsr	_~xTaskGenericNotify
 	sta	<R0
 	lda	#$0
 	ldy	#$8
-	sta	[<L69+pxStreamBuffer_1],Y
+	sta	[<L48+pxStreamBuffer_1],Y
 	iny
 	iny
-	sta	[<L69+pxStreamBuffer_1],Y
-L10224:
+	sta	[<L48+pxStreamBuffer_1],Y
+L10152:
 	jsr	_~xTaskResumeAll
 ;        }
 ;        else
-L10226:
+L10154:
 ;
 ;    traceRETURN_xStreamBufferSend( xReturn );
 ;
 ;    return xReturn;
-	lda	<L69+xReturn_1
+	lda	<L48+xReturn_1
 	tay
-	lda	<L68+1
-	sta	<L68+1+14
+	lda	<L47+1
+	sta	<L47+1+14
 	pld
 	tsc
 	clc
-	adc	#L68+14
+	adc	#L47+14
 	tcs
 	tya
 	rts
@@ -1933,8 +1704,8 @@ L10226:
 ;        traceSTREAM_BUFFER_SEND_FAILED( xStreamBuffer );
 ;    }
 ;}
-L68	equ	22
-L69	equ	5
+L47	equ	22
+L48	equ	5
 	ends
 	efunc
 ;/*-----------------------------------------------------------*/
@@ -1952,7 +1723,7 @@ _~xStreamBufferSendFromISR:
 	longi	on
 	tsc
 	sec
-	sbc	#L85
+	sbc	#L64
 	tcs
 	phd
 	tcd
@@ -1969,27 +1740,27 @@ pxStreamBuffer_1	set	0
 xReturn_1	set	4
 xSpace_1	set	6
 xRequiredSpace_1	set	8
-	lda	<L85+xStreamBuffer_0
-	sta	<L86+pxStreamBuffer_1
-	lda	<L85+xStreamBuffer_0+2
-	sta	<L86+pxStreamBuffer_1+2
-	lda	<L85+xDataLengthBytes_0
-	sta	<L86+xRequiredSpace_1
+	lda	<L64+xStreamBuffer_0
+	sta	<L65+pxStreamBuffer_1
+	lda	<L64+xStreamBuffer_0+2
+	sta	<L65+pxStreamBuffer_1+2
+	lda	<L64+xDataLengthBytes_0
+	sta	<L65+xRequiredSpace_1
 ;
 ;    configASSERT( pvTxData );
-	lda	<L85+pvTxData_0
-	ora	<L85+pvTxData_0+2
-	bne	L10227
-L10231:
-	bra	L10231
-L10227:
+	lda	<L64+pvTxData_0
+	ora	<L64+pvTxData_0+2
+	bne	L10155
+L10159:
+	bra	L10159
+L10155:
 ;    configASSERT( pxStreamBuffer );
-	lda	<L86+pxStreamBuffer_1
-	ora	<L86+pxStreamBuffer_1+2
-	bne	L10234
-L10238:
-	bra	L10238
-L10234:
+	lda	<L65+pxStreamBuffer_1
+	ora	<L65+pxStreamBuffer_1+2
+	bne	L10162
+L10166:
+	bra	L10166
+L10162:
 ;
 ;    /* This send function is used to write to both message buffers and stream
 ;     * buffers.  If this is a message buffer then the space needed must be
@@ -2000,115 +1771,115 @@ L10234:
 	sep	#$20
 	longa	off
 	ldy	#$14
-	lda	[<L86+pxStreamBuffer_1],Y
+	lda	[<L65+pxStreamBuffer_1],Y
 	and	#<$1
 	rep	#$20
 	longa	on
-	beq	L10249
+	beq	L10177
 ;        xRequiredSpace += sbBYTES_TO_STORE_MESSAGE_LENGTH;
-	inc	<L86+xRequiredSpace_1
-	inc	<L86+xRequiredSpace_1
+	inc	<L65+xRequiredSpace_1
+	inc	<L65+xRequiredSpace_1
 ;
 ;        /* Overflow? */
 ;        configASSERT( xRequiredSpace > xDataLengthBytes );
-	lda	<L85+xDataLengthBytes_0
-	cmp	<L86+xRequiredSpace_1
-	bcc	L10249
-L10246:
-	bra	L10246
+	lda	<L64+xDataLengthBytes_0
+	cmp	<L65+xRequiredSpace_1
+	bcc	L10177
+L10174:
+	bra	L10174
 ;    }
 ;    else
 ;    {
 ;        mtCOVERAGE_TEST_MARKER();
 ;    }
-L10249:
+L10177:
 ;
 ;    xSpace = xStreamBufferSpacesAvailable( pxStreamBuffer );
-	pei	<L86+pxStreamBuffer_1+2
-	pei	<L86+pxStreamBuffer_1
+	pei	<L65+pxStreamBuffer_1+2
+	pei	<L65+pxStreamBuffer_1
 	jsr	_~xStreamBufferSpacesAvailable
-	sta	<L86+xSpace_1
+	sta	<L65+xSpace_1
 ;    xReturn = prvWriteMessageToBuffer( pxStreamBuffer, pvTxData, xDataLengthBytes, xSpace, xRequiredSpace );
-	pei	<L86+xRequiredSpace_1
-	pei	<L86+xSpace_1
-	pei	<L85+xDataLengthBytes_0
-	pei	<L85+pvTxData_0+2
-	pei	<L85+pvTxData_0
-	pei	<L86+pxStreamBuffer_1+2
-	pei	<L86+pxStreamBuffer_1
+	pei	<L65+xRequiredSpace_1
+	pei	<L65+xSpace_1
+	pei	<L64+xDataLengthBytes_0
+	pei	<L64+pvTxData_0+2
+	pei	<L64+pvTxData_0
+	pei	<L65+pxStreamBuffer_1+2
+	pei	<L65+pxStreamBuffer_1
 	jsr	_~prvWriteMessageToBuffer
-	sta	<L86+xReturn_1
+	sta	<L65+xReturn_1
 ;
 ;    if( xReturn > ( size_t ) 0 )
 ;    {
 	lda	#$0
-	cmp	<L86+xReturn_1
-	bcs	L10257
+	cmp	<L65+xReturn_1
+	bcs	L10185
 ;        /* Was a task waiting for the data? */
 ;        if( prvBytesInBufferMeetTriggerLevel( pxStreamBuffer, prvBytesInBuffer( pxStreamBuffer ) ) != pdFALSE )
 ;        {
-	pei	<L86+pxStreamBuffer_1+2
-	pei	<L86+pxStreamBuffer_1
+	pei	<L65+pxStreamBuffer_1+2
+	pei	<L65+pxStreamBuffer_1
 	jsr	_~prvBytesInBuffer
 	pha
-	pei	<L86+pxStreamBuffer_1+2
-	pei	<L86+pxStreamBuffer_1
+	pei	<L65+pxStreamBuffer_1+2
+	pei	<L65+pxStreamBuffer_1
 	jsr	_~prvBytesInBufferMeetTriggerLevel
 	tax
-	beq	L10257
+	beq	L10185
 ;            /* MISRA Ref 4.7.1 [Return value shall be checked] */
 ;            /* More details at: https://github.com/FreeRTOS/FreeRTOS-Kernel/blob/main/MISRA.md#dir-47 */
 ;            /* coverity[misra_c_2012_directive_4_7_violation] */
 ;            prvSEND_COMPLETE_FROM_ISR( pxStreamBuffer, pxHigherPriorityTaskWoken );
 uxSavedInterruptStatus_2	set	10
-	stz	<L86+uxSavedInterruptStatus_2
+	stz	<L65+uxSavedInterruptStatus_2
 	ldy	#$8
-	lda	[<L86+pxStreamBuffer_1],Y
+	lda	[<L65+pxStreamBuffer_1],Y
 	iny
 	iny
-	ora	[<L86+pxStreamBuffer_1],Y
-	beq	L10257
-	pei	<L85+pxHigherPriorityTaskWoken_0+2
-	pei	<L85+pxHigherPriorityTaskWoken_0
+	ora	[<L65+pxStreamBuffer_1],Y
+	beq	L10185
+	pei	<L64+pxHigherPriorityTaskWoken_0+2
+	pei	<L64+pxHigherPriorityTaskWoken_0
 	pea	#^$0
 	pea	#<$0
 	pea	#<$0
 	pea	#^$0
 	pea	#<$0
 	ldy	#$15
-	lda	[<L86+pxStreamBuffer_1],Y
+	lda	[<L65+pxStreamBuffer_1],Y
 	pha
 	ldy	#$a
-	lda	[<L86+pxStreamBuffer_1],Y
+	lda	[<L65+pxStreamBuffer_1],Y
 	pha
 	dey
 	dey
-	lda	[<L86+pxStreamBuffer_1],Y
+	lda	[<L65+pxStreamBuffer_1],Y
 	pha
 	jsr	_~xTaskGenericNotifyFromISR
 	sta	<R0
 	lda	#$0
 	ldy	#$8
-	sta	[<L86+pxStreamBuffer_1],Y
+	sta	[<L65+pxStreamBuffer_1],Y
 	iny
 	iny
-	sta	[<L86+pxStreamBuffer_1],Y
+	sta	[<L65+pxStreamBuffer_1],Y
 ;        }
 ;        else
-L10257:
+L10185:
 ;
 ;    traceSTREAM_BUFFER_SEND_FROM_ISR( xStreamBuffer, xReturn );
 ;    traceRETURN_xStreamBufferSendFromISR( xReturn );
 ;
 ;    return xReturn;
-	lda	<L86+xReturn_1
+	lda	<L65+xReturn_1
 	tay
-	lda	<L85+1
-	sta	<L85+1+14
+	lda	<L64+1
+	sta	<L64+1+14
 	pld
 	tsc
 	clc
-	adc	#L85+14
+	adc	#L64+14
 	tcs
 	tya
 	rts
@@ -2121,8 +1892,8 @@ L10257:
 ;        mtCOVERAGE_TEST_MARKER();
 ;    }
 ;}
-L85	equ	16
-L86	equ	5
+L64	equ	16
+L65	equ	5
 	ends
 	efunc
 ;/*-----------------------------------------------------------*/
@@ -2140,7 +1911,7 @@ _~prvWriteMessageToBuffer:
 	longi	on
 	tsc
 	sec
-	sbc	#L95
+	sbc	#L74
 	tcs
 	phd
 	tcd
@@ -2156,118 +1927,118 @@ xRequiredSpace_0	set	15
 xNextHead_1	set	0
 xMessageLength_1	set	2
 	ldy	#$2
-	lda	[<L95+pxStreamBuffer_0],Y
-	sta	<L96+xNextHead_1
+	lda	[<L74+pxStreamBuffer_0],Y
+	sta	<L75+xNextHead_1
 ;    {
 	sep	#$20
 	longa	off
 	ldy	#$14
-	lda	[<L95+pxStreamBuffer_0],Y
+	lda	[<L74+pxStreamBuffer_0],Y
 	and	#<$1
 	rep	#$20
 	longa	on
-	beq	L10258
+	beq	L10186
 ;        /* This is a message buffer, as opposed to a stream buffer. */
 ;
 ;        /* Convert xDataLengthBytes to the message length type. */
 ;        xMessageLength = ( configMESSAGE_BUFFER_LENGTH_TYPE ) xDataLengthBytes;
-	lda	<L95+xDataLengthBytes_0
-	sta	<L96+xMessageLength_1
+	lda	<L74+xDataLengthBytes_0
+	sta	<L75+xMessageLength_1
 ;
 ;        /* Ensure the data length given fits within configMESSAGE_BUFFER_LENGTH_TYPE. */
 ;        configASSERT( ( size_t ) xMessageLength == xDataLengthBytes );
-	cmp	<L95+xDataLengthBytes_0
-	beq	L10259
-L10263:
-	bra	L10263
-L10259:
+	cmp	<L74+xDataLengthBytes_0
+	beq	L10187
+L10191:
+	bra	L10191
+L10187:
 ;
 ;        if( xSpace >= xRequiredSpace )
 ;        {
-	lda	<L95+xSpace_0
-	cmp	<L95+xRequiredSpace_0
-	bcc	L10266
+	lda	<L74+xSpace_0
+	cmp	<L74+xRequiredSpace_0
+	bcc	L10194
 ;            /* There is enough space to write both the message length and the message
 ;             * itself into the buffer.  Start by writing the length of the data, the data
 ;             * itself will be written later in this function. */
 ;            xNextHead = prvWriteBytesToBuffer( pxStreamBuffer, ( const uint8_t * ) &( xMessageLength ), sbBYTES_TO_STORE_MESSAGE_LENGTH, xNextHead );
-	pei	<L96+xNextHead_1
+	pei	<L75+xNextHead_1
 	pea	#<$2
 	pea	#0
 	clc
 	tdc
-	adc	#<L96+xMessageLength_1
+	adc	#<L75+xMessageLength_1
 	pha
-	pei	<L95+pxStreamBuffer_0+2
-	pei	<L95+pxStreamBuffer_0
+	pei	<L74+pxStreamBuffer_0+2
+	pei	<L74+pxStreamBuffer_0
 	jsr	_~prvWriteBytesToBuffer
-	sta	<L96+xNextHead_1
+	sta	<L75+xNextHead_1
 ;        }
 ;        else
-	bra	L10268
-L10266:
+	bra	L10196
+L10194:
 ;        {
 ;            /* Not enough space, so do not write data to the buffer. */
 ;            xDataLengthBytes = 0;
-	stz	<L95+xDataLengthBytes_0
+	stz	<L74+xDataLengthBytes_0
 ;        }
 ;    }
 ;    else
-	bra	L10268
-L10258:
+	bra	L10196
+L10186:
 ;    {
 ;        /* This is a stream buffer, as opposed to a message buffer, so writing a
 ;         * stream of bytes rather than discrete messages.  Plan to write as many
 ;         * bytes as possible. */
 ;        xDataLengthBytes = configMIN( xDataLengthBytes, xSpace );
-	lda	<L95+xDataLengthBytes_0
-	cmp	<L95+xSpace_0
-	bcs	L100
-	lda	<L95+xDataLengthBytes_0
-	bra	L102
-L100:
-	lda	<L95+xSpace_0
-L102:
-	sta	<L95+xDataLengthBytes_0
+	lda	<L74+xDataLengthBytes_0
+	cmp	<L74+xSpace_0
+	bcs	L79
+	lda	<L74+xDataLengthBytes_0
+	bra	L81
+L79:
+	lda	<L74+xSpace_0
+L81:
+	sta	<L74+xDataLengthBytes_0
 ;    }
-L10268:
+L10196:
 ;
 ;    if( xDataLengthBytes != ( size_t ) 0 )
 ;    {
-	lda	<L95+xDataLengthBytes_0
-	beq	L10269
+	lda	<L74+xDataLengthBytes_0
+	beq	L10197
 ;        /* Write the data to the buffer. */
 ;        /* MISRA Ref 11.5.5 [Void pointer assignment] */
 ;        /* More details at: https://github.com/FreeRTOS/FreeRTOS-Kernel/blob/main/MISRA.md#rule-115 */
 ;        /* coverity[misra_c_2012_rule_11_5_violation] */
 ;        pxStreamBuffer->xHead = prvWriteBytesToBuffer( pxStreamBuffer, ( const uint8_t * ) pvTxData, xDataLengthBytes, xNextHead );
-	pei	<L96+xNextHead_1
-	pei	<L95+xDataLengthBytes_0
-	pei	<L95+pvTxData_0+2
-	pei	<L95+pvTxData_0
-	pei	<L95+pxStreamBuffer_0+2
-	pei	<L95+pxStreamBuffer_0
+	pei	<L75+xNextHead_1
+	pei	<L74+xDataLengthBytes_0
+	pei	<L74+pvTxData_0+2
+	pei	<L74+pvTxData_0
+	pei	<L74+pxStreamBuffer_0+2
+	pei	<L74+pxStreamBuffer_0
 	jsr	_~prvWriteBytesToBuffer
 	ldy	#$2
-	sta	[<L95+pxStreamBuffer_0],Y
+	sta	[<L74+pxStreamBuffer_0],Y
 ;    }
 ;
 ;    return xDataLengthBytes;
-L10269:
-	lda	<L95+xDataLengthBytes_0
+L10197:
+	lda	<L74+xDataLengthBytes_0
 	tay
-	lda	<L95+1
-	sta	<L95+1+14
+	lda	<L74+1
+	sta	<L74+1+14
 	pld
 	tsc
 	clc
-	adc	#L95+14
+	adc	#L74+14
 	tcs
 	tya
 	rts
 ;}
-L95	equ	4
-L96	equ	1
+L74	equ	4
+L75	equ	1
 	ends
 	efunc
 ;/*-----------------------------------------------------------*/
@@ -2285,7 +2056,7 @@ _~xStreamBufferReceive:
 	longi	on
 	tsc
 	sec
-	sbc	#L105
+	sbc	#L84
 	tcs
 	phd
 	tcd
@@ -2301,6 +2072,434 @@ pxStreamBuffer_1	set	0
 xReceivedLength_1	set	4
 xBytesAvailable_1	set	6
 xBytesToStoreMessageLength_1	set	8
+	lda	<L84+xStreamBuffer_0
+	sta	<L85+pxStreamBuffer_1
+	lda	<L84+xStreamBuffer_0+2
+	sta	<L85+pxStreamBuffer_1+2
+	stz	<L85+xReceivedLength_1
+;
+;    configASSERT( pvRxData );
+	lda	<L84+pvRxData_0
+	ora	<L84+pvRxData_0+2
+	bne	L10198
+L10202:
+	bra	L10202
+L10198:
+;    configASSERT( pxStreamBuffer );
+	lda	<L85+pxStreamBuffer_1
+	ora	<L85+pxStreamBuffer_1+2
+	bne	L10205
+L10209:
+	bra	L10209
+L10205:
+;
+;    /* This receive function is used by both message buffers, which store
+;     * discrete messages, and stream buffers, which store a continuous stream of
+;     * bytes.  Discrete messages include an additional
+;     * sbBYTES_TO_STORE_MESSAGE_LENGTH bytes that hold the length of the
+;     * message. */
+;    if( ( pxStreamBuffer->ucFlags & sbFLAGS_IS_MESSAGE_BUFFER ) != ( uint8_t ) 0 )
+;    {
+	sep	#$20
+	longa	off
+	ldy	#$14
+	lda	[<L85+pxStreamBuffer_1],Y
+	and	#<$1
+	rep	#$20
+	longa	on
+	beq	L10212
+;        xBytesToStoreMessageLength = sbBYTES_TO_STORE_MESSAGE_LENGTH;
+	lda	#$2
+	bra	L20007
+L20009:
+;        /* Force task to block if the batching buffer contains less bytes than
+;         * the trigger level. */
+;        xBytesToStoreMessageLength = pxStreamBuffer->xTriggerLevelBytes;
+	ldy	#$6
+	lda	[<L85+pxStreamBuffer_1],Y
+;    }
+;    else
+L20007:
+	sta	<L85+xBytesToStoreMessageLength_1
+;    }
+;    else if( ( pxStreamBuffer->ucFlags & sbFLAGS_IS_BATCHING_BUFFER ) != ( uint8_t ) 0 )
+	bra	L10213
+L10212:
+;    {
+	sep	#$20
+	longa	off
+	ldy	#$14
+	lda	[<L85+pxStreamBuffer_1],Y
+	and	#<$4
+	rep	#$20
+	longa	on
+	bne	L20009
+;    {
+;        xBytesToStoreMessageLength = 0;
+	stz	<L85+xBytesToStoreMessageLength_1
+;    }
+L10213:
+;
+;    if( xTicksToWait != ( TickType_t ) 0 )
+;    {
+	lda	<L84+xTicksToWait_0
+	ora	<L84+xTicksToWait_0+2
+	beq	L10216
+;        /* Checking if there is data and clearing the notification state must be
+;         * performed atomically. */
+;        taskENTER_CRITICAL();
+;        {
+;            xBytesAvailable = prvBytesInBuffer( pxStreamBuffer );
+	pei	<L85+pxStreamBuffer_1+2
+	pei	<L85+pxStreamBuffer_1
+	jsr	_~prvBytesInBuffer
+	sta	<L85+xBytesAvailable_1
+;
+;            /* If this function was invoked by a message buffer read then
+;             * xBytesToStoreMessageLength holds the number of bytes used to hold
+;             * the length of the next discrete message.  If this function was
+;             * invoked by a stream buffer read then xBytesToStoreMessageLength will
+;             * be 0. If this function was invoked by a stream batch buffer read
+;             * then xBytesToStoreMessageLength will be xTriggerLevelBytes value
+;             * for the buffer.*/
+;            if( xBytesAvailable <= xBytesToStoreMessageLength )
+;            {
+	lda	<L85+xBytesToStoreMessageLength_1
+	cmp	<L85+xBytesAvailable_1
+	bcc	L10230
+;                /* Clear notification state as going to wait for data. */
+;                ( void ) xTaskNotifyStateClearIndexed( NULL, pxStreamBuffer->uxNotificationIndex );
+	ldy	#$15
+	lda	[<L85+pxStreamBuffer_1],Y
+	pha
+	pea	#^$0
+	pea	#<$0
+	jsr	_~xTaskGenericNotifyStateClear
+	sta	<R0
+;
+;                /* Should only be one reader. */
+;                configASSERT( pxStreamBuffer->xTaskWaitingToReceive == NULL );
+	ldy	#$8
+	lda	[<L85+pxStreamBuffer_1],Y
+	iny
+	iny
+	ora	[<L85+pxStreamBuffer_1],Y
+	beq	L10221
+L10225:
+	bra	L10225
+L10221:
+;                pxStreamBuffer->xTaskWaitingToReceive = xTaskGetCurrentTaskHandle();
+	jsr	_~xTaskGetCurrentTaskHandle
+	stx	<R0+2
+	ldy	#$8
+	sta	[<L85+pxStreamBuffer_1],Y
+	lda	<R0+2
+	iny
+	iny
+	sta	[<L85+pxStreamBuffer_1],Y
+;            }
+;            else
+;            {
+;                mtCOVERAGE_TEST_MARKER();
+;            }
+;        }
+;        taskEXIT_CRITICAL();
+L10230:
+;
+;        if( xBytesAvailable <= xBytesToStoreMessageLength )
+;        {
+	lda	<L85+xBytesToStoreMessageLength_1
+	cmp	<L85+xBytesAvailable_1
+	bcc	L10234
+;            /* Wait for data to be available. */
+;            traceBLOCKING_ON_STREAM_BUFFER_RECEIVE( xStreamBuffer );
+;            ( void ) xTaskNotifyWaitIndexed( pxStreamBuffer->uxNotificationIndex, ( uint32_t ) 0, ( uint32_t ) 0, NULL, xTicksToWait );
+	pei	<L84+xTicksToWait_0+2
+	pei	<L84+xTicksToWait_0
+	pea	#^$0
+	pea	#<$0
+	pea	#^$0
+	pea	#<$0
+	pea	#^$0
+	pea	#<$0
+	ldy	#$15
+	lda	[<L85+pxStreamBuffer_1],Y
+	pha
+	jsr	_~xTaskGenericNotifyWait
+	sta	<R0
+;            pxStreamBuffer->xTaskWaitingToReceive = NULL;
+	lda	#$0
+	ldy	#$8
+	sta	[<L85+pxStreamBuffer_1],Y
+	iny
+	iny
+	sta	[<L85+pxStreamBuffer_1],Y
+;
+;            /* Recheck the data available after blocking. */
+;            xBytesAvailable = prvBytesInBuffer( pxStreamBuffer );
+;        }
+;        else
+;        {
+;            mtCOVERAGE_TEST_MARKER();
+;        }
+;    }
+;    else
+L10216:
+;    {
+;        xBytesAvailable = prvBytesInBuffer( pxStreamBuffer );
+	pei	<L85+pxStreamBuffer_1+2
+	pei	<L85+pxStreamBuffer_1
+	jsr	_~prvBytesInBuffer
+	sta	<L85+xBytesAvailable_1
+;    }
+L10234:
+;
+;    /* Whether receiving a discrete message (where xBytesToStoreMessageLength
+;     * holds the number of bytes used to store the message length) or a stream of
+;     * bytes (where xBytesToStoreMessageLength is zero), the number of bytes
+;     * available must be greater than xBytesToStoreMessageLength to be able to
+;     * read bytes from the buffer. */
+;    if( xBytesAvailable > xBytesToStoreMessageLength )
+;    {
+	lda	<L85+xBytesToStoreMessageLength_1
+	cmp	<L85+xBytesAvailable_1
+	bcs	L10242
+;        xReceivedLength = prvReadMessageFromBuffer( pxStreamBuffer, pvRxData, xBufferLengthBytes, xBytesAvailable );
+	pei	<L85+xBytesAvailable_1
+	pei	<L84+xBufferLengthBytes_0
+	pei	<L84+pvRxData_0+2
+	pei	<L84+pvRxData_0
+	pei	<L85+pxStreamBuffer_1+2
+	pei	<L85+pxStreamBuffer_1
+	jsr	_~prvReadMessageFromBuffer
+	sta	<L85+xReceivedLength_1
+;
+;        /* Was a task waiting for space in the buffer? */
+;        if( xReceivedLength != ( size_t ) 0 )
+;        {
+	lda	<L85+xReceivedLength_1
+	beq	L10242
+;            traceSTREAM_BUFFER_RECEIVE( xStreamBuffer, xReceivedLength );
+;            prvRECEIVE_COMPLETED( xStreamBuffer );
+	jsr	_~vTaskSuspendAll
+	ldy	#$c
+	lda	[<L84+xStreamBuffer_0],Y
+	iny
+	iny
+	ora	[<L84+xStreamBuffer_0],Y
+	beq	L10240
+	pea	#^$0
+	pea	#<$0
+	pea	#<$0
+	pea	#^$0
+	pea	#<$0
+	ldy	#$15
+	lda	[<L84+xStreamBuffer_0],Y
+	pha
+	ldy	#$e
+	lda	[<L84+xStreamBuffer_0],Y
+	pha
+	dey
+	dey
+	lda	[<L84+xStreamBuffer_0],Y
+	pha
+	jsr	_~xTaskGenericNotify
+	sta	<R0
+	lda	#$0
+	ldy	#$c
+	sta	[<L84+xStreamBuffer_0],Y
+	iny
+	iny
+	sta	[<L84+xStreamBuffer_0],Y
+L10240:
+	jsr	_~xTaskResumeAll
+;        }
+;        else
+L10242:
+;
+;    traceRETURN_xStreamBufferReceive( xReceivedLength );
+;
+;    return xReceivedLength;
+	lda	<L85+xReceivedLength_1
+	tay
+	lda	<L84+1
+	sta	<L84+1+14
+	pld
+	tsc
+	clc
+	adc	#L84+14
+	tcs
+	tya
+	rts
+;        {
+;            mtCOVERAGE_TEST_MARKER();
+;        }
+;    }
+;    else
+;    {
+;        traceSTREAM_BUFFER_RECEIVE_FAILED( xStreamBuffer );
+;        mtCOVERAGE_TEST_MARKER();
+;    }
+;}
+L84	equ	14
+L85	equ	5
+	ends
+	efunc
+;/*-----------------------------------------------------------*/
+;
+;size_t xStreamBufferNextMessageLengthBytes( StreamBufferHandle_t xStreamBuffer )
+;{
+	code
+	xdef	_~xStreamBufferNextMessageLengthBytes
+	func
+_~xStreamBufferNextMessageLengthBytes:
+	longa	on
+	longi	on
+	tsc
+	sec
+	sbc	#L98
+	tcs
+	phd
+	tcd
+xStreamBuffer_0	set	3
+;    StreamBuffer_t * const pxStreamBuffer = xStreamBuffer;
+;    size_t xReturn, xBytesAvailable;
+;    configMESSAGE_BUFFER_LENGTH_TYPE xTempReturn;
+;
+;    traceENTER_xStreamBufferNextMessageLengthBytes( xStreamBuffer );
+pxStreamBuffer_1	set	0
+xReturn_1	set	4
+xBytesAvailable_1	set	6
+xTempReturn_1	set	8
+	lda	<L98+xStreamBuffer_0
+	sta	<L99+pxStreamBuffer_1
+	lda	<L98+xStreamBuffer_0+2
+	sta	<L99+pxStreamBuffer_1+2
+;
+;    configASSERT( pxStreamBuffer );
+	lda	<L99+pxStreamBuffer_1
+	ora	<L99+pxStreamBuffer_1+2
+	bne	L10243
+L10247:
+	bra	L10247
+L10243:
+;
+;    /* Ensure the stream buffer is being used as a message buffer. */
+;    if( ( pxStreamBuffer->ucFlags & sbFLAGS_IS_MESSAGE_BUFFER ) != ( uint8_t ) 0 )
+;    {
+	sep	#$20
+	longa	off
+	ldy	#$14
+	lda	[<L99+pxStreamBuffer_1],Y
+	and	#<$1
+	rep	#$20
+	longa	on
+	beq	L10250
+;        xBytesAvailable = prvBytesInBuffer( pxStreamBuffer );
+	pei	<L99+pxStreamBuffer_1+2
+	pei	<L99+pxStreamBuffer_1
+	jsr	_~prvBytesInBuffer
+	sta	<L99+xBytesAvailable_1
+;
+;        if( xBytesAvailable > sbBYTES_TO_STORE_MESSAGE_LENGTH )
+;        {
+	lda	#$2
+	cmp	<L99+xBytesAvailable_1
+	bcs	L10251
+;            /* The number of bytes available is greater than the number of bytes
+;             * required to hold the length of the next message, so another message
+;             * is available. */
+;            ( void ) prvReadBytesFromBuffer( pxStreamBuffer, ( uint8_t * ) &xTempReturn, sbBYTES_TO_STORE_MESSAGE_LENGTH, pxStreamBuffer->xTail );
+	lda	[<L99+pxStreamBuffer_1]
+	pha
+	pea	#<$2
+	pea	#0
+	clc
+	tdc
+	adc	#<L99+xTempReturn_1
+	pha
+	pei	<L99+pxStreamBuffer_1+2
+	pei	<L99+pxStreamBuffer_1
+	jsr	_~prvReadBytesFromBuffer
+	sta	<R0
+;            xReturn = ( size_t ) xTempReturn;
+	lda	<L99+xTempReturn_1
+	sta	<L99+xReturn_1
+;        }
+;        else
+	bra	L10260
+L10251:
+;        {
+;            /* The minimum amount of bytes in a message buffer is
+;             * ( sbBYTES_TO_STORE_MESSAGE_LENGTH + 1 ), so if xBytesAvailable is
+;             * less than sbBYTES_TO_STORE_MESSAGE_LENGTH the only other valid
+;             * value is 0. */
+;            configASSERT( xBytesAvailable == 0 );
+	lda	<L99+xBytesAvailable_1
+	beq	L10250
+L10257:
+	bra	L10257
+;            xReturn = 0;
+;        }
+;    }
+;    else
+L10250:
+;    {
+;        xReturn = 0;
+	stz	<L99+xReturn_1
+;    }
+L10260:
+;
+;    traceRETURN_xStreamBufferNextMessageLengthBytes( xReturn );
+;
+;    return xReturn;
+	lda	<L99+xReturn_1
+	tay
+	lda	<L98+1
+	sta	<L98+1+4
+	pld
+	tsc
+	clc
+	adc	#L98+4
+	tcs
+	tya
+	rts
+;}
+L98	equ	14
+L99	equ	5
+	ends
+	efunc
+;/*-----------------------------------------------------------*/
+;
+;size_t xStreamBufferReceiveFromISR( StreamBufferHandle_t xStreamBuffer,
+;                                    void * pvRxData,
+;                                    size_t xBufferLengthBytes,
+;                                    BaseType_t * const pxHigherPriorityTaskWoken )
+;{
+	code
+	xdef	_~xStreamBufferReceiveFromISR
+	func
+_~xStreamBufferReceiveFromISR:
+	longa	on
+	longi	on
+	tsc
+	sec
+	sbc	#L105
+	tcs
+	phd
+	tcd
+xStreamBuffer_0	set	3
+pvRxData_0	set	7
+xBufferLengthBytes_0	set	11
+pxHigherPriorityTaskWoken_0	set	13
+;    StreamBuffer_t * const pxStreamBuffer = xStreamBuffer;
+;    size_t xReceivedLength = 0, xBytesAvailable, xBytesToStoreMessageLength;
+;
+;    traceENTER_xStreamBufferReceiveFromISR( xStreamBuffer, pvRxData, xBufferLengthBytes, pxHigherPriorityTaskWoken );
+pxStreamBuffer_1	set	0
+xReceivedLength_1	set	4
+xBytesAvailable_1	set	6
+xBytesToStoreMessageLength_1	set	8
 	lda	<L105+xStreamBuffer_0
 	sta	<L106+pxStreamBuffer_1
 	lda	<L105+xStreamBuffer_0+2
@@ -2310,17 +2509,17 @@ xBytesToStoreMessageLength_1	set	8
 ;    configASSERT( pvRxData );
 	lda	<L105+pvRxData_0
 	ora	<L105+pvRxData_0+2
-	bne	L10270
-L10274:
-	bra	L10274
-L10270:
+	bne	L10261
+L10265:
+	bra	L10265
+L10261:
 ;    configASSERT( pxStreamBuffer );
 	lda	<L106+pxStreamBuffer_1
 	ora	<L106+pxStreamBuffer_1+2
-	bne	L10277
-L10281:
-	bra	L10281
-L10277:
+	bne	L10268
+L10272:
+	bra	L10272
+L10268:
 ;
 ;    /* This receive function is used by both message buffers, which store
 ;     * discrete messages, and stream buffers, which store a continuous stream of
@@ -2336,152 +2535,25 @@ L10277:
 	and	#<$1
 	rep	#$20
 	longa	on
-	beq	L10284
+	beq	L10275
 ;        xBytesToStoreMessageLength = sbBYTES_TO_STORE_MESSAGE_LENGTH;
 	lda	#$2
-	bra	L20007
-L20009:
-;        /* Force task to block if the batching buffer contains less bytes than
-;         * the trigger level. */
-;        xBytesToStoreMessageLength = pxStreamBuffer->xTriggerLevelBytes;
-	ldy	#$6
-	lda	[<L106+pxStreamBuffer_1],Y
-;    }
-;    else
-L20007:
 	sta	<L106+xBytesToStoreMessageLength_1
 ;    }
-;    else if( ( pxStreamBuffer->ucFlags & sbFLAGS_IS_BATCHING_BUFFER ) != ( uint8_t ) 0 )
-	bra	L10285
-L10284:
-;    {
-	sep	#$20
-	longa	off
-	ldy	#$14
-	lda	[<L106+pxStreamBuffer_1],Y
-	and	#<$4
-	rep	#$20
-	longa	on
-	bne	L20009
+;    else
+	bra	L10276
+L10275:
 ;    {
 ;        xBytesToStoreMessageLength = 0;
 	stz	<L106+xBytesToStoreMessageLength_1
 ;    }
-L10285:
+L10276:
 ;
-;    if( xTicksToWait != ( TickType_t ) 0 )
-;    {
-	lda	<L105+xTicksToWait_0
-	ora	<L105+xTicksToWait_0+2
-	beq	L10288
-;        /* Checking if there is data and clearing the notification state must be
-;         * performed atomically. */
-;        taskENTER_CRITICAL();
-;        {
-;            xBytesAvailable = prvBytesInBuffer( pxStreamBuffer );
+;    xBytesAvailable = prvBytesInBuffer( pxStreamBuffer );
 	pei	<L106+pxStreamBuffer_1+2
 	pei	<L106+pxStreamBuffer_1
 	jsr	_~prvBytesInBuffer
 	sta	<L106+xBytesAvailable_1
-;
-;            /* If this function was invoked by a message buffer read then
-;             * xBytesToStoreMessageLength holds the number of bytes used to hold
-;             * the length of the next discrete message.  If this function was
-;             * invoked by a stream buffer read then xBytesToStoreMessageLength will
-;             * be 0. If this function was invoked by a stream batch buffer read
-;             * then xBytesToStoreMessageLength will be xTriggerLevelBytes value
-;             * for the buffer.*/
-;            if( xBytesAvailable <= xBytesToStoreMessageLength )
-;            {
-	lda	<L106+xBytesToStoreMessageLength_1
-	cmp	<L106+xBytesAvailable_1
-	bcc	L10302
-;                /* Clear notification state as going to wait for data. */
-;                ( void ) xTaskNotifyStateClearIndexed( NULL, pxStreamBuffer->uxNotificationIndex );
-	ldy	#$15
-	lda	[<L106+pxStreamBuffer_1],Y
-	pha
-	pea	#^$0
-	pea	#<$0
-	jsr	_~xTaskGenericNotifyStateClear
-	sta	<R0
-;
-;                /* Should only be one reader. */
-;                configASSERT( pxStreamBuffer->xTaskWaitingToReceive == NULL );
-	ldy	#$8
-	lda	[<L106+pxStreamBuffer_1],Y
-	iny
-	iny
-	ora	[<L106+pxStreamBuffer_1],Y
-	beq	L10293
-L10297:
-	bra	L10297
-L10293:
-;                pxStreamBuffer->xTaskWaitingToReceive = xTaskGetCurrentTaskHandle();
-	jsr	_~xTaskGetCurrentTaskHandle
-	stx	<R0+2
-	ldy	#$8
-	sta	[<L106+pxStreamBuffer_1],Y
-	lda	<R0+2
-	iny
-	iny
-	sta	[<L106+pxStreamBuffer_1],Y
-;            }
-;            else
-;            {
-;                mtCOVERAGE_TEST_MARKER();
-;            }
-;        }
-;        taskEXIT_CRITICAL();
-L10302:
-;
-;        if( xBytesAvailable <= xBytesToStoreMessageLength )
-;        {
-	lda	<L106+xBytesToStoreMessageLength_1
-	cmp	<L106+xBytesAvailable_1
-	bcc	L10306
-;            /* Wait for data to be available. */
-;            traceBLOCKING_ON_STREAM_BUFFER_RECEIVE( xStreamBuffer );
-;            ( void ) xTaskNotifyWaitIndexed( pxStreamBuffer->uxNotificationIndex, ( uint32_t ) 0, ( uint32_t ) 0, NULL, xTicksToWait );
-	pei	<L105+xTicksToWait_0+2
-	pei	<L105+xTicksToWait_0
-	pea	#^$0
-	pea	#<$0
-	pea	#^$0
-	pea	#<$0
-	pea	#^$0
-	pea	#<$0
-	ldy	#$15
-	lda	[<L106+pxStreamBuffer_1],Y
-	pha
-	jsr	_~xTaskGenericNotifyWait
-	sta	<R0
-;            pxStreamBuffer->xTaskWaitingToReceive = NULL;
-	lda	#$0
-	ldy	#$8
-	sta	[<L106+pxStreamBuffer_1],Y
-	iny
-	iny
-	sta	[<L106+pxStreamBuffer_1],Y
-;
-;            /* Recheck the data available after blocking. */
-;            xBytesAvailable = prvBytesInBuffer( pxStreamBuffer );
-;        }
-;        else
-;        {
-;            mtCOVERAGE_TEST_MARKER();
-;        }
-;    }
-;    else
-L10288:
-;    {
-;        xBytesAvailable = prvBytesInBuffer( pxStreamBuffer );
-	pei	<L106+pxStreamBuffer_1+2
-	pei	<L106+pxStreamBuffer_1
-	jsr	_~prvBytesInBuffer
-	sta	<L106+xBytesAvailable_1
-;    }
-L10306:
 ;
 ;    /* Whether receiving a discrete message (where xBytesToStoreMessageLength
 ;     * holds the number of bytes used to store the message length) or a stream of
@@ -2492,7 +2564,7 @@ L10306:
 ;    {
 	lda	<L106+xBytesToStoreMessageLength_1
 	cmp	<L106+xBytesAvailable_1
-	bcs	L10314
+	bcs	L10284
 ;        xReceivedLength = prvReadMessageFromBuffer( pxStreamBuffer, pvRxData, xBufferLengthBytes, xBytesAvailable );
 	pei	<L106+xBytesAvailable_1
 	pei	<L105+xBufferLengthBytes_0
@@ -2507,46 +2579,50 @@ L10306:
 ;        if( xReceivedLength != ( size_t ) 0 )
 ;        {
 	lda	<L106+xReceivedLength_1
-	beq	L10314
-;            traceSTREAM_BUFFER_RECEIVE( xStreamBuffer, xReceivedLength );
-;            prvRECEIVE_COMPLETED( xStreamBuffer );
-	jsr	_~vTaskSuspendAll
+	beq	L10284
+;            /* MISRA Ref 4.7.1 [Return value shall be checked] */
+;            /* More details at: https://github.com/FreeRTOS/FreeRTOS-Kernel/blob/main/MISRA.md#dir-47 */
+;            /* coverity[misra_c_2012_directive_4_7_violation] */
+;            prvRECEIVE_COMPLETED_FROM_ISR( pxStreamBuffer, pxHigherPriorityTaskWoken );
+uxSavedInterruptStatus_2	set	10
+	stz	<L106+uxSavedInterruptStatus_2
 	ldy	#$c
-	lda	[<L105+xStreamBuffer_0],Y
+	lda	[<L106+pxStreamBuffer_1],Y
 	iny
 	iny
-	ora	[<L105+xStreamBuffer_0],Y
-	beq	L10312
+	ora	[<L106+pxStreamBuffer_1],Y
+	beq	L10284
+	pei	<L105+pxHigherPriorityTaskWoken_0+2
+	pei	<L105+pxHigherPriorityTaskWoken_0
 	pea	#^$0
 	pea	#<$0
 	pea	#<$0
 	pea	#^$0
 	pea	#<$0
 	ldy	#$15
-	lda	[<L105+xStreamBuffer_0],Y
+	lda	[<L106+pxStreamBuffer_1],Y
 	pha
 	ldy	#$e
-	lda	[<L105+xStreamBuffer_0],Y
+	lda	[<L106+pxStreamBuffer_1],Y
 	pha
 	dey
 	dey
-	lda	[<L105+xStreamBuffer_0],Y
+	lda	[<L106+pxStreamBuffer_1],Y
 	pha
-	jsr	_~xTaskGenericNotify
+	jsr	_~xTaskGenericNotifyFromISR
 	sta	<R0
 	lda	#$0
 	ldy	#$c
-	sta	[<L105+xStreamBuffer_0],Y
+	sta	[<L106+pxStreamBuffer_1],Y
 	iny
 	iny
-	sta	[<L105+xStreamBuffer_0],Y
-L10312:
-	jsr	_~xTaskResumeAll
+	sta	[<L106+pxStreamBuffer_1],Y
 ;        }
 ;        else
-L10314:
+L10284:
 ;
-;    traceRETURN_xStreamBufferReceive( xReceivedLength );
+;    traceSTREAM_BUFFER_RECEIVE_FROM_ISR( xStreamBuffer, xReceivedLength );
+;    traceRETURN_xStreamBufferReceiveFromISR( xReceivedLength );
 ;
 ;    return xReceivedLength;
 	lda	<L106+xReceivedLength_1
@@ -2566,316 +2642,11 @@ L10314:
 ;    }
 ;    else
 ;    {
-;        traceSTREAM_BUFFER_RECEIVE_FAILED( xStreamBuffer );
 ;        mtCOVERAGE_TEST_MARKER();
 ;    }
 ;}
-L105	equ	14
+L105	equ	16
 L106	equ	5
-	ends
-	efunc
-;/*-----------------------------------------------------------*/
-;
-;size_t xStreamBufferNextMessageLengthBytes( StreamBufferHandle_t xStreamBuffer )
-;{
-	code
-	xdef	_~xStreamBufferNextMessageLengthBytes
-	func
-_~xStreamBufferNextMessageLengthBytes:
-	longa	on
-	longi	on
-	tsc
-	sec
-	sbc	#L119
-	tcs
-	phd
-	tcd
-xStreamBuffer_0	set	3
-;    StreamBuffer_t * const pxStreamBuffer = xStreamBuffer;
-;    size_t xReturn, xBytesAvailable;
-;    configMESSAGE_BUFFER_LENGTH_TYPE xTempReturn;
-;
-;    traceENTER_xStreamBufferNextMessageLengthBytes( xStreamBuffer );
-pxStreamBuffer_1	set	0
-xReturn_1	set	4
-xBytesAvailable_1	set	6
-xTempReturn_1	set	8
-	lda	<L119+xStreamBuffer_0
-	sta	<L120+pxStreamBuffer_1
-	lda	<L119+xStreamBuffer_0+2
-	sta	<L120+pxStreamBuffer_1+2
-;
-;    configASSERT( pxStreamBuffer );
-	lda	<L120+pxStreamBuffer_1
-	ora	<L120+pxStreamBuffer_1+2
-	bne	L10315
-L10319:
-	bra	L10319
-L10315:
-;
-;    /* Ensure the stream buffer is being used as a message buffer. */
-;    if( ( pxStreamBuffer->ucFlags & sbFLAGS_IS_MESSAGE_BUFFER ) != ( uint8_t ) 0 )
-;    {
-	sep	#$20
-	longa	off
-	ldy	#$14
-	lda	[<L120+pxStreamBuffer_1],Y
-	and	#<$1
-	rep	#$20
-	longa	on
-	beq	L10322
-;        xBytesAvailable = prvBytesInBuffer( pxStreamBuffer );
-	pei	<L120+pxStreamBuffer_1+2
-	pei	<L120+pxStreamBuffer_1
-	jsr	_~prvBytesInBuffer
-	sta	<L120+xBytesAvailable_1
-;
-;        if( xBytesAvailable > sbBYTES_TO_STORE_MESSAGE_LENGTH )
-;        {
-	lda	#$2
-	cmp	<L120+xBytesAvailable_1
-	bcs	L10323
-;            /* The number of bytes available is greater than the number of bytes
-;             * required to hold the length of the next message, so another message
-;             * is available. */
-;            ( void ) prvReadBytesFromBuffer( pxStreamBuffer, ( uint8_t * ) &xTempReturn, sbBYTES_TO_STORE_MESSAGE_LENGTH, pxStreamBuffer->xTail );
-	lda	[<L120+pxStreamBuffer_1]
-	pha
-	pea	#<$2
-	pea	#0
-	clc
-	tdc
-	adc	#<L120+xTempReturn_1
-	pha
-	pei	<L120+pxStreamBuffer_1+2
-	pei	<L120+pxStreamBuffer_1
-	jsr	_~prvReadBytesFromBuffer
-	sta	<R0
-;            xReturn = ( size_t ) xTempReturn;
-	lda	<L120+xTempReturn_1
-	sta	<L120+xReturn_1
-;        }
-;        else
-	bra	L10332
-L10323:
-;        {
-;            /* The minimum amount of bytes in a message buffer is
-;             * ( sbBYTES_TO_STORE_MESSAGE_LENGTH + 1 ), so if xBytesAvailable is
-;             * less than sbBYTES_TO_STORE_MESSAGE_LENGTH the only other valid
-;             * value is 0. */
-;            configASSERT( xBytesAvailable == 0 );
-	lda	<L120+xBytesAvailable_1
-	beq	L10322
-L10329:
-	bra	L10329
-;            xReturn = 0;
-;        }
-;    }
-;    else
-L10322:
-;    {
-;        xReturn = 0;
-	stz	<L120+xReturn_1
-;    }
-L10332:
-;
-;    traceRETURN_xStreamBufferNextMessageLengthBytes( xReturn );
-;
-;    return xReturn;
-	lda	<L120+xReturn_1
-	tay
-	lda	<L119+1
-	sta	<L119+1+4
-	pld
-	tsc
-	clc
-	adc	#L119+4
-	tcs
-	tya
-	rts
-;}
-L119	equ	14
-L120	equ	5
-	ends
-	efunc
-;/*-----------------------------------------------------------*/
-;
-;size_t xStreamBufferReceiveFromISR( StreamBufferHandle_t xStreamBuffer,
-;                                    void * pvRxData,
-;                                    size_t xBufferLengthBytes,
-;                                    BaseType_t * const pxHigherPriorityTaskWoken )
-;{
-	code
-	xdef	_~xStreamBufferReceiveFromISR
-	func
-_~xStreamBufferReceiveFromISR:
-	longa	on
-	longi	on
-	tsc
-	sec
-	sbc	#L126
-	tcs
-	phd
-	tcd
-xStreamBuffer_0	set	3
-pvRxData_0	set	7
-xBufferLengthBytes_0	set	11
-pxHigherPriorityTaskWoken_0	set	13
-;    StreamBuffer_t * const pxStreamBuffer = xStreamBuffer;
-;    size_t xReceivedLength = 0, xBytesAvailable, xBytesToStoreMessageLength;
-;
-;    traceENTER_xStreamBufferReceiveFromISR( xStreamBuffer, pvRxData, xBufferLengthBytes, pxHigherPriorityTaskWoken );
-pxStreamBuffer_1	set	0
-xReceivedLength_1	set	4
-xBytesAvailable_1	set	6
-xBytesToStoreMessageLength_1	set	8
-	lda	<L126+xStreamBuffer_0
-	sta	<L127+pxStreamBuffer_1
-	lda	<L126+xStreamBuffer_0+2
-	sta	<L127+pxStreamBuffer_1+2
-	stz	<L127+xReceivedLength_1
-;
-;    configASSERT( pvRxData );
-	lda	<L126+pvRxData_0
-	ora	<L126+pvRxData_0+2
-	bne	L10333
-L10337:
-	bra	L10337
-L10333:
-;    configASSERT( pxStreamBuffer );
-	lda	<L127+pxStreamBuffer_1
-	ora	<L127+pxStreamBuffer_1+2
-	bne	L10340
-L10344:
-	bra	L10344
-L10340:
-;
-;    /* This receive function is used by both message buffers, which store
-;     * discrete messages, and stream buffers, which store a continuous stream of
-;     * bytes.  Discrete messages include an additional
-;     * sbBYTES_TO_STORE_MESSAGE_LENGTH bytes that hold the length of the
-;     * message. */
-;    if( ( pxStreamBuffer->ucFlags & sbFLAGS_IS_MESSAGE_BUFFER ) != ( uint8_t ) 0 )
-;    {
-	sep	#$20
-	longa	off
-	ldy	#$14
-	lda	[<L127+pxStreamBuffer_1],Y
-	and	#<$1
-	rep	#$20
-	longa	on
-	beq	L10347
-;        xBytesToStoreMessageLength = sbBYTES_TO_STORE_MESSAGE_LENGTH;
-	lda	#$2
-	sta	<L127+xBytesToStoreMessageLength_1
-;    }
-;    else
-	bra	L10348
-L10347:
-;    {
-;        xBytesToStoreMessageLength = 0;
-	stz	<L127+xBytesToStoreMessageLength_1
-;    }
-L10348:
-;
-;    xBytesAvailable = prvBytesInBuffer( pxStreamBuffer );
-	pei	<L127+pxStreamBuffer_1+2
-	pei	<L127+pxStreamBuffer_1
-	jsr	_~prvBytesInBuffer
-	sta	<L127+xBytesAvailable_1
-;
-;    /* Whether receiving a discrete message (where xBytesToStoreMessageLength
-;     * holds the number of bytes used to store the message length) or a stream of
-;     * bytes (where xBytesToStoreMessageLength is zero), the number of bytes
-;     * available must be greater than xBytesToStoreMessageLength to be able to
-;     * read bytes from the buffer. */
-;    if( xBytesAvailable > xBytesToStoreMessageLength )
-;    {
-	lda	<L127+xBytesToStoreMessageLength_1
-	cmp	<L127+xBytesAvailable_1
-	bcs	L10356
-;        xReceivedLength = prvReadMessageFromBuffer( pxStreamBuffer, pvRxData, xBufferLengthBytes, xBytesAvailable );
-	pei	<L127+xBytesAvailable_1
-	pei	<L126+xBufferLengthBytes_0
-	pei	<L126+pvRxData_0+2
-	pei	<L126+pvRxData_0
-	pei	<L127+pxStreamBuffer_1+2
-	pei	<L127+pxStreamBuffer_1
-	jsr	_~prvReadMessageFromBuffer
-	sta	<L127+xReceivedLength_1
-;
-;        /* Was a task waiting for space in the buffer? */
-;        if( xReceivedLength != ( size_t ) 0 )
-;        {
-	lda	<L127+xReceivedLength_1
-	beq	L10356
-;            /* MISRA Ref 4.7.1 [Return value shall be checked] */
-;            /* More details at: https://github.com/FreeRTOS/FreeRTOS-Kernel/blob/main/MISRA.md#dir-47 */
-;            /* coverity[misra_c_2012_directive_4_7_violation] */
-;            prvRECEIVE_COMPLETED_FROM_ISR( pxStreamBuffer, pxHigherPriorityTaskWoken );
-uxSavedInterruptStatus_2	set	10
-	stz	<L127+uxSavedInterruptStatus_2
-	ldy	#$c
-	lda	[<L127+pxStreamBuffer_1],Y
-	iny
-	iny
-	ora	[<L127+pxStreamBuffer_1],Y
-	beq	L10356
-	pei	<L126+pxHigherPriorityTaskWoken_0+2
-	pei	<L126+pxHigherPriorityTaskWoken_0
-	pea	#^$0
-	pea	#<$0
-	pea	#<$0
-	pea	#^$0
-	pea	#<$0
-	ldy	#$15
-	lda	[<L127+pxStreamBuffer_1],Y
-	pha
-	ldy	#$e
-	lda	[<L127+pxStreamBuffer_1],Y
-	pha
-	dey
-	dey
-	lda	[<L127+pxStreamBuffer_1],Y
-	pha
-	jsr	_~xTaskGenericNotifyFromISR
-	sta	<R0
-	lda	#$0
-	ldy	#$c
-	sta	[<L127+pxStreamBuffer_1],Y
-	iny
-	iny
-	sta	[<L127+pxStreamBuffer_1],Y
-;        }
-;        else
-L10356:
-;
-;    traceSTREAM_BUFFER_RECEIVE_FROM_ISR( xStreamBuffer, xReceivedLength );
-;    traceRETURN_xStreamBufferReceiveFromISR( xReceivedLength );
-;
-;    return xReceivedLength;
-	lda	<L127+xReceivedLength_1
-	tay
-	lda	<L126+1
-	sta	<L126+1+14
-	pld
-	tsc
-	clc
-	adc	#L126+14
-	tcs
-	tya
-	rts
-;        {
-;            mtCOVERAGE_TEST_MARKER();
-;        }
-;    }
-;    else
-;    {
-;        mtCOVERAGE_TEST_MARKER();
-;    }
-;}
-L126	equ	16
-L127	equ	5
 	ends
 	efunc
 ;/*-----------------------------------------------------------*/
@@ -2892,7 +2663,7 @@ _~prvReadMessageFromBuffer:
 	longi	on
 	tsc
 	sec
-	sbc	#L135
+	sbc	#L114
 	tcs
 	phd
 	tcd
@@ -2909,116 +2680,116 @@ xCount_1	set	0
 xNextMessageLength_1	set	2
 xTempNextMessageLength_1	set	4
 xNextTail_1	set	6
-	lda	[<L135+pxStreamBuffer_0]
-	sta	<L136+xNextTail_1
+	lda	[<L114+pxStreamBuffer_0]
+	sta	<L115+xNextTail_1
 ;    {
 	sep	#$20
 	longa	off
 	ldy	#$14
-	lda	[<L135+pxStreamBuffer_0],Y
+	lda	[<L114+pxStreamBuffer_0],Y
 	and	#<$1
 	rep	#$20
 	longa	on
-	beq	L10357
+	beq	L10285
 ;        /* A discrete message is being received.  First receive the length
 ;         * of the message. */
 ;        xNextTail = prvReadBytesFromBuffer( pxStreamBuffer, ( uint8_t * ) &xTempNextMessageLength, sbBYTES_TO_STORE_MESSAGE_LENGTH, xNextTail );
-	pei	<L136+xNextTail_1
+	pei	<L115+xNextTail_1
 	pea	#<$2
 	pea	#0
 	clc
 	tdc
-	adc	#<L136+xTempNextMessageLength_1
+	adc	#<L115+xTempNextMessageLength_1
 	pha
-	pei	<L135+pxStreamBuffer_0+2
-	pei	<L135+pxStreamBuffer_0
+	pei	<L114+pxStreamBuffer_0+2
+	pei	<L114+pxStreamBuffer_0
 	jsr	_~prvReadBytesFromBuffer
-	sta	<L136+xNextTail_1
+	sta	<L115+xNextTail_1
 ;        xNextMessageLength = ( size_t ) xTempNextMessageLength;
-	lda	<L136+xTempNextMessageLength_1
-	sta	<L136+xNextMessageLength_1
+	lda	<L115+xTempNextMessageLength_1
+	sta	<L115+xNextMessageLength_1
 ;
 ;        /* Reduce the number of bytes available by the number of bytes just
 ;         * read out. */
 ;        xBytesAvailable -= sbBYTES_TO_STORE_MESSAGE_LENGTH;
-	dec	<L135+xBytesAvailable_0
-	dec	<L135+xBytesAvailable_0
+	dec	<L114+xBytesAvailable_0
+	dec	<L114+xBytesAvailable_0
 ;
 ;        /* Check there is enough space in the buffer provided by the
 ;         * user. */
 ;        if( xNextMessageLength > xBufferLengthBytes )
 ;        {
-	lda	<L135+xBufferLengthBytes_0
-	cmp	<L136+xNextMessageLength_1
-	bcs	L10360
+	lda	<L114+xBufferLengthBytes_0
+	cmp	<L115+xNextMessageLength_1
+	bcs	L10288
 ;            /* The user has provided insufficient space to read the message. */
 ;            xNextMessageLength = 0;
-	stz	<L136+xNextMessageLength_1
+	stz	<L115+xNextMessageLength_1
 ;        }
 ;        else
-	bra	L10360
+	bra	L10288
 ;        {
 ;            mtCOVERAGE_TEST_MARKER();
 ;        }
 ;    }
 ;    else
-L10357:
+L10285:
 ;    {
 ;        /* A stream of bytes is being received (as opposed to a discrete
 ;         * message), so read as many bytes as possible. */
 ;        xNextMessageLength = xBufferLengthBytes;
-	lda	<L135+xBufferLengthBytes_0
-	sta	<L136+xNextMessageLength_1
+	lda	<L114+xBufferLengthBytes_0
+	sta	<L115+xNextMessageLength_1
 ;    }
-L10360:
+L10288:
 ;
 ;    /* Use the minimum of the wanted bytes and the available bytes. */
 ;    xCount = configMIN( xNextMessageLength, xBytesAvailable );
-	lda	<L136+xNextMessageLength_1
-	cmp	<L135+xBytesAvailable_0
-	bcs	L139
-	lda	<L136+xNextMessageLength_1
-	bra	L141
-L139:
-	lda	<L135+xBytesAvailable_0
-L141:
-	sta	<L136+xCount_1
+	lda	<L115+xNextMessageLength_1
+	cmp	<L114+xBytesAvailable_0
+	bcs	L118
+	lda	<L115+xNextMessageLength_1
+	bra	L120
+L118:
+	lda	<L114+xBytesAvailable_0
+L120:
+	sta	<L115+xCount_1
 ;
 ;    if( xCount != ( size_t ) 0 )
 ;    {
-	lda	<L136+xCount_1
-	beq	L10361
+	lda	<L115+xCount_1
+	beq	L10289
 ;        /* Read the actual data and update the tail to mark the data as officially consumed. */
 ;        /* MISRA Ref 11.5.5 [Void pointer assignment] */
 ;        /* More details at: https://github.com/FreeRTOS/FreeRTOS-Kernel/blob/main/MISRA.md#rule-115 */
 ;        /* coverity[misra_c_2012_rule_11_5_violation] */
 ;        pxStreamBuffer->xTail = prvReadBytesFromBuffer( pxStreamBuffer, ( uint8_t * ) pvRxData, xCount, xNextTail );
-	pei	<L136+xNextTail_1
-	pei	<L136+xCount_1
-	pei	<L135+pvRxData_0+2
-	pei	<L135+pvRxData_0
-	pei	<L135+pxStreamBuffer_0+2
-	pei	<L135+pxStreamBuffer_0
+	pei	<L115+xNextTail_1
+	pei	<L115+xCount_1
+	pei	<L114+pvRxData_0+2
+	pei	<L114+pvRxData_0
+	pei	<L114+pxStreamBuffer_0+2
+	pei	<L114+pxStreamBuffer_0
 	jsr	_~prvReadBytesFromBuffer
-	sta	[<L135+pxStreamBuffer_0]
+	sta	[<L114+pxStreamBuffer_0]
 ;    }
 ;
 ;    return xCount;
-L10361:
-	lda	<L136+xCount_1
+L10289:
+	lda	<L115+xCount_1
 	tay
-	lda	<L135+1
-	sta	<L135+1+12
+	lda	<L114+1
+	sta	<L114+1+12
 	pld
 	tsc
 	clc
-	adc	#L135+12
+	adc	#L114+12
 	tcs
 	tya
 	rts
 ;}
-L135	equ	8
-L136	equ	1
+L114	equ	8
+L115	equ	1
 	ends
 	efunc
 ;/*-----------------------------------------------------------*/
@@ -3033,7 +2804,7 @@ _~xStreamBufferIsEmpty:
 	longi	on
 	tsc
 	sec
-	sbc	#L144
+	sbc	#L123
 	tcs
 	phd
 	tcd
@@ -3046,60 +2817,60 @@ xStreamBuffer_0	set	3
 pxStreamBuffer_1	set	0
 xReturn_1	set	4
 xTail_1	set	6
-	lda	<L144+xStreamBuffer_0
-	sta	<L145+pxStreamBuffer_1
-	lda	<L144+xStreamBuffer_0+2
-	sta	<L145+pxStreamBuffer_1+2
+	lda	<L123+xStreamBuffer_0
+	sta	<L124+pxStreamBuffer_1
+	lda	<L123+xStreamBuffer_0+2
+	sta	<L124+pxStreamBuffer_1+2
 ;
 ;    configASSERT( pxStreamBuffer );
-	lda	<L145+pxStreamBuffer_1
-	ora	<L145+pxStreamBuffer_1+2
-	bne	L10362
-L10366:
-	bra	L10366
-L10362:
+	lda	<L124+pxStreamBuffer_1
+	ora	<L124+pxStreamBuffer_1+2
+	bne	L10290
+L10294:
+	bra	L10294
+L10290:
 ;
 ;    /* True if no bytes are available. */
 ;    xTail = pxStreamBuffer->xTail;
-	lda	[<L145+pxStreamBuffer_1]
-	sta	<L145+xTail_1
+	lda	[<L124+pxStreamBuffer_1]
+	sta	<L124+xTail_1
 ;
 ;    if( pxStreamBuffer->xHead == xTail )
 ;    {
 	ldy	#$2
-	lda	[<L145+pxStreamBuffer_1],Y
-	cmp	<L145+xTail_1
-	bne	L10369
+	lda	[<L124+pxStreamBuffer_1],Y
+	cmp	<L124+xTail_1
+	bne	L10297
 ;        xReturn = pdTRUE;
 	lda	#$1
-	sta	<L145+xReturn_1
+	sta	<L124+xReturn_1
 ;    }
 ;    else
-	bra	L10370
-L10369:
+	bra	L10298
+L10297:
 ;    {
 ;        xReturn = pdFALSE;
-	stz	<L145+xReturn_1
+	stz	<L124+xReturn_1
 ;    }
-L10370:
+L10298:
 ;
 ;    traceRETURN_xStreamBufferIsEmpty( xReturn );
 ;
 ;    return xReturn;
-	lda	<L145+xReturn_1
+	lda	<L124+xReturn_1
 	tay
-	lda	<L144+1
-	sta	<L144+1+4
+	lda	<L123+1
+	sta	<L123+1+4
 	pld
 	tsc
 	clc
-	adc	#L144+4
+	adc	#L123+4
 	tcs
 	tya
 	rts
 ;}
-L144	equ	8
-L145	equ	1
+L123	equ	8
+L124	equ	1
 	ends
 	efunc
 ;/*-----------------------------------------------------------*/
@@ -3114,7 +2885,7 @@ _~xStreamBufferIsFull:
 	longi	on
 	tsc
 	sec
-	sbc	#L149
+	sbc	#L128
 	tcs
 	phd
 	tcd
@@ -3127,18 +2898,18 @@ xStreamBuffer_0	set	3
 xReturn_1	set	0
 xBytesToStoreMessageLength_1	set	2
 pxStreamBuffer_1	set	4
-	lda	<L149+xStreamBuffer_0
-	sta	<L150+pxStreamBuffer_1
-	lda	<L149+xStreamBuffer_0+2
-	sta	<L150+pxStreamBuffer_1+2
+	lda	<L128+xStreamBuffer_0
+	sta	<L129+pxStreamBuffer_1
+	lda	<L128+xStreamBuffer_0+2
+	sta	<L129+pxStreamBuffer_1+2
 ;
 ;    configASSERT( pxStreamBuffer );
-	lda	<L150+pxStreamBuffer_1
-	ora	<L150+pxStreamBuffer_1+2
-	bne	L10371
-L10375:
-	bra	L10375
-L10371:
+	lda	<L129+pxStreamBuffer_1
+	ora	<L129+pxStreamBuffer_1+2
+	bne	L10299
+L10303:
+	bra	L10303
+L10299:
 ;
 ;    /* This generic version of the receive function is used by both message
 ;     * buffers, which store discrete messages, and stream buffers, which store a
@@ -3149,64 +2920,64 @@ L10371:
 	sep	#$20
 	longa	off
 	ldy	#$14
-	lda	[<L150+pxStreamBuffer_1],Y
+	lda	[<L129+pxStreamBuffer_1],Y
 	and	#<$1
 	rep	#$20
 	longa	on
-	beq	L10378
+	beq	L10306
 ;        xBytesToStoreMessageLength = sbBYTES_TO_STORE_MESSAGE_LENGTH;
 	lda	#$2
-	sta	<L150+xBytesToStoreMessageLength_1
+	sta	<L129+xBytesToStoreMessageLength_1
 ;    }
 ;    else
-	bra	L10379
-L10378:
+	bra	L10307
+L10306:
 ;    {
 ;        xBytesToStoreMessageLength = 0;
-	stz	<L150+xBytesToStoreMessageLength_1
+	stz	<L129+xBytesToStoreMessageLength_1
 ;    }
-L10379:
+L10307:
 ;
 ;    /* True if the available space equals zero. */
 ;    if( xStreamBufferSpacesAvailable( xStreamBuffer ) <= xBytesToStoreMessageLength )
 ;    {
-	pei	<L149+xStreamBuffer_0+2
-	pei	<L149+xStreamBuffer_0
+	pei	<L128+xStreamBuffer_0+2
+	pei	<L128+xStreamBuffer_0
 	jsr	_~xStreamBufferSpacesAvailable
 	sta	<R0
-	lda	<L150+xBytesToStoreMessageLength_1
+	lda	<L129+xBytesToStoreMessageLength_1
 	cmp	<R0
-	bcc	L10380
+	bcc	L10308
 ;        xReturn = pdTRUE;
 	lda	#$1
-	sta	<L150+xReturn_1
+	sta	<L129+xReturn_1
 ;    }
 ;    else
-	bra	L10381
-L10380:
+	bra	L10309
+L10308:
 ;    {
 ;        xReturn = pdFALSE;
-	stz	<L150+xReturn_1
+	stz	<L129+xReturn_1
 ;    }
-L10381:
+L10309:
 ;
 ;    traceRETURN_xStreamBufferIsFull( xReturn );
 ;
 ;    return xReturn;
-	lda	<L150+xReturn_1
+	lda	<L129+xReturn_1
 	tay
-	lda	<L149+1
-	sta	<L149+1+4
+	lda	<L128+1
+	sta	<L128+1+4
 	pld
 	tsc
 	clc
-	adc	#L149+4
+	adc	#L128+4
 	tcs
 	tya
 	rts
 ;}
-L149	equ	12
-L150	equ	5
+L128	equ	12
+L129	equ	5
 	ends
 	efunc
 ;/*-----------------------------------------------------------*/
@@ -3222,7 +2993,7 @@ _~xStreamBufferSendCompletedFromISR:
 	longi	on
 	tsc
 	sec
-	sbc	#L155
+	sbc	#L134
 	tcs
 	phd
 	tcd
@@ -3236,96 +3007,96 @@ pxHigherPriorityTaskWoken_0	set	7
 pxStreamBuffer_1	set	0
 xReturn_1	set	4
 uxSavedInterruptStatus_1	set	6
-	lda	<L155+xStreamBuffer_0
-	sta	<L156+pxStreamBuffer_1
-	lda	<L155+xStreamBuffer_0+2
-	sta	<L156+pxStreamBuffer_1+2
+	lda	<L134+xStreamBuffer_0
+	sta	<L135+pxStreamBuffer_1
+	lda	<L134+xStreamBuffer_0+2
+	sta	<L135+pxStreamBuffer_1+2
 ;
 ;    configASSERT( pxStreamBuffer );
-	lda	<L156+pxStreamBuffer_1
-	ora	<L156+pxStreamBuffer_1+2
-	bne	L10382
-L10386:
-	bra	L10386
-L10382:
+	lda	<L135+pxStreamBuffer_1
+	ora	<L135+pxStreamBuffer_1+2
+	bne	L10310
+L10314:
+	bra	L10314
+L10310:
 ;
 ;    /* MISRA Ref 4.7.1 [Return value shall be checked] */
 ;    /* More details at: https://github.com/FreeRTOS/FreeRTOS-Kernel/blob/main/MISRA.md#dir-47 */
 ;    /* coverity[misra_c_2012_directive_4_7_violation] */
 ;    uxSavedInterruptStatus = taskENTER_CRITICAL_FROM_ISR();
-	stz	<L156+uxSavedInterruptStatus_1
+	stz	<L135+uxSavedInterruptStatus_1
 ;    {
 ;        if( ( pxStreamBuffer )->xTaskWaitingToReceive != NULL )
 ;        {
 	ldy	#$8
-	lda	[<L156+pxStreamBuffer_1],Y
+	lda	[<L135+pxStreamBuffer_1],Y
 	iny
 	iny
-	ora	[<L156+pxStreamBuffer_1],Y
-	beq	L10389
+	ora	[<L135+pxStreamBuffer_1],Y
+	beq	L10317
 ;            ( void ) xTaskNotifyIndexedFromISR( ( pxStreamBuffer )->xTaskWaitingToReceive,
 ;                                                ( pxStreamBuffer )->uxNotificationIndex,
 ;                                                ( uint32_t ) 0,
 ;                                                eNoAction,
 ;                                                pxHigherPriorityTaskWoken );
-	pei	<L155+pxHigherPriorityTaskWoken_0+2
-	pei	<L155+pxHigherPriorityTaskWoken_0
+	pei	<L134+pxHigherPriorityTaskWoken_0+2
+	pei	<L134+pxHigherPriorityTaskWoken_0
 	pea	#^$0
 	pea	#<$0
 	pea	#<$0
 	pea	#^$0
 	pea	#<$0
 	ldy	#$15
-	lda	[<L156+pxStreamBuffer_1],Y
+	lda	[<L135+pxStreamBuffer_1],Y
 	pha
 	ldy	#$a
-	lda	[<L156+pxStreamBuffer_1],Y
+	lda	[<L135+pxStreamBuffer_1],Y
 	pha
 	dey
 	dey
-	lda	[<L156+pxStreamBuffer_1],Y
+	lda	[<L135+pxStreamBuffer_1],Y
 	pha
 	jsr	_~xTaskGenericNotifyFromISR
 	sta	<R0
 ;            ( pxStreamBuffer )->xTaskWaitingToReceive = NULL;
 	lda	#$0
 	ldy	#$8
-	sta	[<L156+pxStreamBuffer_1],Y
+	sta	[<L135+pxStreamBuffer_1],Y
 	iny
 	iny
-	sta	[<L156+pxStreamBuffer_1],Y
+	sta	[<L135+pxStreamBuffer_1],Y
 ;            xReturn = pdTRUE;
 	ina
-	sta	<L156+xReturn_1
+	sta	<L135+xReturn_1
 ;        }
 ;        else
-	bra	L10390
-L10389:
+	bra	L10318
+L10317:
 ;        {
 ;            xReturn = pdFALSE;
-	stz	<L156+xReturn_1
+	stz	<L135+xReturn_1
 ;        }
-L10390:
+L10318:
 ;    }
 ;    taskEXIT_CRITICAL_FROM_ISR( uxSavedInterruptStatus );
 ;
 ;    traceRETURN_xStreamBufferSendCompletedFromISR( xReturn );
 ;
 ;    return xReturn;
-	lda	<L156+xReturn_1
+	lda	<L135+xReturn_1
 	tay
-	lda	<L155+1
-	sta	<L155+1+8
+	lda	<L134+1
+	sta	<L134+1+8
 	pld
 	tsc
 	clc
-	adc	#L155+8
+	adc	#L134+8
 	tcs
 	tya
 	rts
 ;}
-L155	equ	12
-L156	equ	5
+L134	equ	12
+L135	equ	5
 	ends
 	efunc
 ;/*-----------------------------------------------------------*/
@@ -3341,7 +3112,7 @@ _~xStreamBufferReceiveCompletedFromISR:
 	longi	on
 	tsc
 	sec
-	sbc	#L160
+	sbc	#L139
 	tcs
 	phd
 	tcd
@@ -3355,96 +3126,96 @@ pxHigherPriorityTaskWoken_0	set	7
 pxStreamBuffer_1	set	0
 xReturn_1	set	4
 uxSavedInterruptStatus_1	set	6
-	lda	<L160+xStreamBuffer_0
-	sta	<L161+pxStreamBuffer_1
-	lda	<L160+xStreamBuffer_0+2
-	sta	<L161+pxStreamBuffer_1+2
+	lda	<L139+xStreamBuffer_0
+	sta	<L140+pxStreamBuffer_1
+	lda	<L139+xStreamBuffer_0+2
+	sta	<L140+pxStreamBuffer_1+2
 ;
 ;    configASSERT( pxStreamBuffer );
-	lda	<L161+pxStreamBuffer_1
-	ora	<L161+pxStreamBuffer_1+2
-	bne	L10391
-L10395:
-	bra	L10395
-L10391:
+	lda	<L140+pxStreamBuffer_1
+	ora	<L140+pxStreamBuffer_1+2
+	bne	L10319
+L10323:
+	bra	L10323
+L10319:
 ;
 ;    /* MISRA Ref 4.7.1 [Return value shall be checked] */
 ;    /* More details at: https://github.com/FreeRTOS/FreeRTOS-Kernel/blob/main/MISRA.md#dir-47 */
 ;    /* coverity[misra_c_2012_directive_4_7_violation] */
 ;    uxSavedInterruptStatus = taskENTER_CRITICAL_FROM_ISR();
-	stz	<L161+uxSavedInterruptStatus_1
+	stz	<L140+uxSavedInterruptStatus_1
 ;    {
 ;        if( ( pxStreamBuffer )->xTaskWaitingToSend != NULL )
 ;        {
 	ldy	#$c
-	lda	[<L161+pxStreamBuffer_1],Y
+	lda	[<L140+pxStreamBuffer_1],Y
 	iny
 	iny
-	ora	[<L161+pxStreamBuffer_1],Y
-	beq	L10398
+	ora	[<L140+pxStreamBuffer_1],Y
+	beq	L10326
 ;            ( void ) xTaskNotifyIndexedFromISR( ( pxStreamBuffer )->xTaskWaitingToSend,
 ;                                                ( pxStreamBuffer )->uxNotificationIndex,
 ;                                                ( uint32_t ) 0,
 ;                                                eNoAction,
 ;                                                pxHigherPriorityTaskWoken );
-	pei	<L160+pxHigherPriorityTaskWoken_0+2
-	pei	<L160+pxHigherPriorityTaskWoken_0
+	pei	<L139+pxHigherPriorityTaskWoken_0+2
+	pei	<L139+pxHigherPriorityTaskWoken_0
 	pea	#^$0
 	pea	#<$0
 	pea	#<$0
 	pea	#^$0
 	pea	#<$0
 	ldy	#$15
-	lda	[<L161+pxStreamBuffer_1],Y
+	lda	[<L140+pxStreamBuffer_1],Y
 	pha
 	ldy	#$e
-	lda	[<L161+pxStreamBuffer_1],Y
+	lda	[<L140+pxStreamBuffer_1],Y
 	pha
 	dey
 	dey
-	lda	[<L161+pxStreamBuffer_1],Y
+	lda	[<L140+pxStreamBuffer_1],Y
 	pha
 	jsr	_~xTaskGenericNotifyFromISR
 	sta	<R0
 ;            ( pxStreamBuffer )->xTaskWaitingToSend = NULL;
 	lda	#$0
 	ldy	#$c
-	sta	[<L161+pxStreamBuffer_1],Y
+	sta	[<L140+pxStreamBuffer_1],Y
 	iny
 	iny
-	sta	[<L161+pxStreamBuffer_1],Y
+	sta	[<L140+pxStreamBuffer_1],Y
 ;            xReturn = pdTRUE;
 	ina
-	sta	<L161+xReturn_1
+	sta	<L140+xReturn_1
 ;        }
 ;        else
-	bra	L10399
-L10398:
+	bra	L10327
+L10326:
 ;        {
 ;            xReturn = pdFALSE;
-	stz	<L161+xReturn_1
+	stz	<L140+xReturn_1
 ;        }
-L10399:
+L10327:
 ;    }
 ;    taskEXIT_CRITICAL_FROM_ISR( uxSavedInterruptStatus );
 ;
 ;    traceRETURN_xStreamBufferReceiveCompletedFromISR( xReturn );
 ;
 ;    return xReturn;
-	lda	<L161+xReturn_1
+	lda	<L140+xReturn_1
 	tay
-	lda	<L160+1
-	sta	<L160+1+8
+	lda	<L139+1
+	sta	<L139+1+8
 	pld
 	tsc
 	clc
-	adc	#L160+8
+	adc	#L139+8
 	tcs
 	tya
 	rts
 ;}
-L160	equ	12
-L161	equ	5
+L139	equ	12
+L140	equ	5
 	ends
 	efunc
 ;/*-----------------------------------------------------------*/
@@ -3461,7 +3232,7 @@ _~prvWriteBytesToBuffer:
 	longi	on
 	tsc
 	sec
-	sbc	#L165
+	sbc	#L144
 	tcs
 	phd
 	tcd
@@ -3474,11 +3245,11 @@ xHead_0	set	13
 ;    configASSERT( xCount > ( size_t ) 0 );
 xFirstLength_1	set	0
 	lda	#$0
-	cmp	<L165+xCount_0
-	bcc	L10400
-L10404:
-	bra	L10404
-L10400:
+	cmp	<L144+xCount_0
+	bcc	L10328
+L10332:
+	bra	L10332
+L10328:
 ;
 ;    /* Calculate the number of bytes that can be added in the first write -
 ;     * which may be less than the total number of bytes that need to be added if
@@ -3486,43 +3257,43 @@ L10400:
 ;    xFirstLength = configMIN( pxStreamBuffer->xLength - xHead, xCount );
 	sec
 	ldy	#$4
-	lda	[<L165+pxStreamBuffer_0],Y
-	sbc	<L165+xHead_0
-	cmp	<L165+xCount_0
-	bcs	L168
+	lda	[<L144+pxStreamBuffer_0],Y
+	sbc	<L144+xHead_0
+	cmp	<L144+xCount_0
+	bcs	L147
 	sec
-	lda	[<L165+pxStreamBuffer_0],Y
-	sbc	<L165+xHead_0
-	bra	L170
-L168:
-	lda	<L165+xCount_0
-L170:
-	sta	<L166+xFirstLength_1
+	lda	[<L144+pxStreamBuffer_0],Y
+	sbc	<L144+xHead_0
+	bra	L149
+L147:
+	lda	<L144+xCount_0
+L149:
+	sta	<L145+xFirstLength_1
 	clc
-	adc	<L165+xHead_0
+	adc	<L144+xHead_0
 	sta	<R0
 	ldy	#$4
-	lda	[<L165+pxStreamBuffer_0],Y
+	lda	[<L144+pxStreamBuffer_0],Y
 	cmp	<R0
-	bcs	L10407
-L10411:
-	bra	L10411
-L10407:
+	bcs	L10335
+L10339:
+	bra	L10339
+L10335:
 ;    ( void ) memcpy( ( void * ) ( &( pxStreamBuffer->pucBuffer[ xHead ] ) ), ( const void * ) pucData, xFirstLength );
-	pei	<L166+xFirstLength_1
-	pei	<L165+pucData_0+2
-	pei	<L165+pucData_0
-	lda	<L165+xHead_0
+	pei	<L145+xFirstLength_1
+	pei	<L144+pucData_0+2
+	pei	<L144+pucData_0
+	lda	<L144+xHead_0
 	sta	<R0
 	stz	<R0+2
 	clc
 	ldy	#$10
-	lda	[<L165+pxStreamBuffer_0],Y
+	lda	[<L144+pxStreamBuffer_0],Y
 	adc	<R0
 	sta	<R1
 	iny
 	iny
-	lda	[<L165+pxStreamBuffer_0],Y
+	lda	[<L144+pxStreamBuffer_0],Y
 	adc	<R0+2
 	pha
 	pei	<R1
@@ -3534,44 +3305,44 @@ L10407:
 ;     * written in the first write... */
 ;    if( xCount > xFirstLength )
 ;    {
-	lda	<L166+xFirstLength_1
-	cmp	<L165+xCount_0
-	bcs	L10422
+	lda	<L145+xFirstLength_1
+	cmp	<L144+xCount_0
+	bcs	L10350
 ;        /* ...then write the remaining bytes to the start of the buffer. */
 ;        configASSERT( ( xCount - xFirstLength ) <= pxStreamBuffer->xLength );
 	sec
-	lda	<L165+xCount_0
-	sbc	<L166+xFirstLength_1
+	lda	<L144+xCount_0
+	sbc	<L145+xFirstLength_1
 	sta	<R0
 	ldy	#$4
-	lda	[<L165+pxStreamBuffer_0],Y
+	lda	[<L144+pxStreamBuffer_0],Y
 	cmp	<R0
-	bcs	L10415
-L10419:
-	bra	L10419
-L10415:
+	bcs	L10343
+L10347:
+	bra	L10347
+L10343:
 ;        ( void ) memcpy( ( void * ) pxStreamBuffer->pucBuffer, ( const void * ) &( pucData[ xFirstLength ] ), xCount - xFirstLength );
 	sec
-	lda	<L165+xCount_0
-	sbc	<L166+xFirstLength_1
+	lda	<L144+xCount_0
+	sbc	<L145+xFirstLength_1
 	pha
-	lda	<L166+xFirstLength_1
+	lda	<L145+xFirstLength_1
 	sta	<R0
 	stz	<R0+2
-	lda	<L165+pucData_0
+	lda	<L144+pucData_0
 	clc
 	adc	<R0
 	sta	<R1
-	lda	<L165+pucData_0+2
+	lda	<L144+pucData_0+2
 	adc	<R0+2
 	pha
 	pei	<R1
 	ldy	#$12
-	lda	[<L165+pxStreamBuffer_0],Y
+	lda	[<L144+pxStreamBuffer_0],Y
 	pha
 	dey
 	dey
-	lda	[<L165+pxStreamBuffer_0],Y
+	lda	[<L144+pxStreamBuffer_0],Y
 	pha
 	jsr	_~memcpy
 	sta	<R0
@@ -3581,46 +3352,46 @@ L10415:
 ;    {
 ;        mtCOVERAGE_TEST_MARKER();
 ;    }
-L10422:
+L10350:
 ;
 ;    xHead += xCount;
-	lda	<L165+xHead_0
+	lda	<L144+xHead_0
 	clc
-	adc	<L165+xCount_0
-	sta	<L165+xHead_0
+	adc	<L144+xCount_0
+	sta	<L144+xHead_0
 ;
 ;    if( xHead >= pxStreamBuffer->xLength )
 ;    {
 	ldy	#$4
-	cmp	[<L165+pxStreamBuffer_0],Y
-	bcc	L10424
+	cmp	[<L144+pxStreamBuffer_0],Y
+	bcc	L10352
 ;        xHead -= pxStreamBuffer->xLength;
 	sec
-	lda	<L165+xHead_0
-	sbc	[<L165+pxStreamBuffer_0],Y
-	sta	<L165+xHead_0
+	lda	<L144+xHead_0
+	sbc	[<L144+pxStreamBuffer_0],Y
+	sta	<L144+xHead_0
 ;    }
 ;    else
 ;    {
 ;        mtCOVERAGE_TEST_MARKER();
 ;    }
-L10424:
+L10352:
 ;
 ;    return xHead;
-	lda	<L165+xHead_0
+	lda	<L144+xHead_0
 	tay
-	lda	<L165+1
-	sta	<L165+1+12
+	lda	<L144+1
+	sta	<L144+1+12
 	pld
 	tsc
 	clc
-	adc	#L165+12
+	adc	#L144+12
 	tcs
 	tya
 	rts
 ;}
-L165	equ	10
-L166	equ	9
+L144	equ	10
+L145	equ	9
 	ends
 	efunc
 ;/*-----------------------------------------------------------*/
@@ -3637,7 +3408,7 @@ _~prvReadBytesFromBuffer:
 	longi	on
 	tsc
 	sec
-	sbc	#L176
+	sbc	#L155
 	tcs
 	phd
 	tcd
@@ -3649,11 +3420,11 @@ xTail_0	set	13
 ;
 ;    configASSERT( xCount != ( size_t ) 0 );
 xFirstLength_1	set	0
-	lda	<L176+xCount_0
-	bne	L10425
-L10429:
-	bra	L10429
-L10425:
+	lda	<L155+xCount_0
+	bne	L10353
+L10357:
+	bra	L10357
+L10353:
 ;
 ;    /* Calculate the number of bytes that can be read - which may be
 ;     * less than the number wanted if the data wraps around to the start of
@@ -3661,58 +3432,58 @@ L10425:
 ;    xFirstLength = configMIN( pxStreamBuffer->xLength - xTail, xCount );
 	sec
 	ldy	#$4
-	lda	[<L176+pxStreamBuffer_0],Y
-	sbc	<L176+xTail_0
-	cmp	<L176+xCount_0
-	bcs	L179
+	lda	[<L155+pxStreamBuffer_0],Y
+	sbc	<L155+xTail_0
+	cmp	<L155+xCount_0
+	bcs	L158
 	sec
-	lda	[<L176+pxStreamBuffer_0],Y
-	sbc	<L176+xTail_0
-	bra	L181
-L179:
-	lda	<L176+xCount_0
-L181:
-	sta	<L177+xFirstLength_1
+	lda	[<L155+pxStreamBuffer_0],Y
+	sbc	<L155+xTail_0
+	bra	L160
+L158:
+	lda	<L155+xCount_0
+L160:
+	sta	<L156+xFirstLength_1
 ;
 ;    /* Obtain the number of bytes it is possible to obtain in the first
 ;     * read.  Asserts check bounds of read and write. */
 ;    configASSERT( xFirstLength <= xCount );
-	lda	<L176+xCount_0
-	cmp	<L177+xFirstLength_1
-	bcs	L10432
-L10436:
-	bra	L10436
-L10432:
+	lda	<L155+xCount_0
+	cmp	<L156+xFirstLength_1
+	bcs	L10360
+L10364:
+	bra	L10364
+L10360:
 ;    configASSERT( ( xTail + xFirstLength ) <= pxStreamBuffer->xLength );
-	lda	<L176+xTail_0
+	lda	<L155+xTail_0
 	clc
-	adc	<L177+xFirstLength_1
+	adc	<L156+xFirstLength_1
 	sta	<R0
 	ldy	#$4
-	lda	[<L176+pxStreamBuffer_0],Y
+	lda	[<L155+pxStreamBuffer_0],Y
 	cmp	<R0
-	bcs	L10439
-L10443:
-	bra	L10443
-L10439:
+	bcs	L10367
+L10371:
+	bra	L10371
+L10367:
 ;    ( void ) memcpy( ( void * ) pucData, ( const void * ) &( pxStreamBuffer->pucBuffer[ xTail ] ), xFirstLength );
-	pei	<L177+xFirstLength_1
-	lda	<L176+xTail_0
+	pei	<L156+xFirstLength_1
+	lda	<L155+xTail_0
 	sta	<R0
 	stz	<R0+2
 	clc
 	ldy	#$10
-	lda	[<L176+pxStreamBuffer_0],Y
+	lda	[<L155+pxStreamBuffer_0],Y
 	adc	<R0
 	sta	<R1
 	iny
 	iny
-	lda	[<L176+pxStreamBuffer_0],Y
+	lda	[<L155+pxStreamBuffer_0],Y
 	adc	<R0+2
 	pha
 	pei	<R1
-	pei	<L176+pucData_0+2
-	pei	<L176+pucData_0
+	pei	<L155+pucData_0+2
+	pei	<L155+pucData_0
 	jsr	_~memcpy
 	sta	<R0
 	stx	<R0+2
@@ -3721,30 +3492,30 @@ L10439:
 ;     * that could be read in the first read... */
 ;    if( xCount > xFirstLength )
 ;    {
-	lda	<L177+xFirstLength_1
-	cmp	<L176+xCount_0
-	bcs	L10447
+	lda	<L156+xFirstLength_1
+	cmp	<L155+xCount_0
+	bcs	L10375
 ;        /* ...then read the remaining bytes from the start of the buffer. */
 ;        ( void ) memcpy( ( void * ) &( pucData[ xFirstLength ] ), ( void * ) ( pxStreamBuffer->pucBuffer ), xCount - xFirstLength );
 	sec
-	lda	<L176+xCount_0
-	sbc	<L177+xFirstLength_1
+	lda	<L155+xCount_0
+	sbc	<L156+xFirstLength_1
 	pha
 	ldy	#$12
-	lda	[<L176+pxStreamBuffer_0],Y
+	lda	[<L155+pxStreamBuffer_0],Y
 	pha
 	dey
 	dey
-	lda	[<L176+pxStreamBuffer_0],Y
+	lda	[<L155+pxStreamBuffer_0],Y
 	pha
-	lda	<L177+xFirstLength_1
+	lda	<L156+xFirstLength_1
 	sta	<R0
 	stz	<R0+2
-	lda	<L176+pucData_0
+	lda	<L155+pucData_0
 	clc
 	adc	<R0
 	sta	<R1
-	lda	<L176+pucData_0+2
+	lda	<L155+pucData_0+2
 	adc	<R0+2
 	pha
 	pei	<R1
@@ -3756,43 +3527,43 @@ L10439:
 ;    {
 ;        mtCOVERAGE_TEST_MARKER();
 ;    }
-L10447:
+L10375:
 ;
 ;    /* Move the tail pointer to effectively remove the data read from the buffer. */
 ;    xTail += xCount;
-	lda	<L176+xTail_0
+	lda	<L155+xTail_0
 	clc
-	adc	<L176+xCount_0
-	sta	<L176+xTail_0
+	adc	<L155+xCount_0
+	sta	<L155+xTail_0
 ;
 ;    if( xTail >= pxStreamBuffer->xLength )
 ;    {
 	ldy	#$4
-	cmp	[<L176+pxStreamBuffer_0],Y
-	bcc	L10448
+	cmp	[<L155+pxStreamBuffer_0],Y
+	bcc	L10376
 ;        xTail -= pxStreamBuffer->xLength;
 	sec
-	lda	<L176+xTail_0
-	sbc	[<L176+pxStreamBuffer_0],Y
-	sta	<L176+xTail_0
+	lda	<L155+xTail_0
+	sbc	[<L155+pxStreamBuffer_0],Y
+	sta	<L155+xTail_0
 ;    }
 ;
 ;    return xTail;
-L10448:
-	lda	<L176+xTail_0
+L10376:
+	lda	<L155+xTail_0
 	tay
-	lda	<L176+1
-	sta	<L176+1+12
+	lda	<L155+1
+	sta	<L155+1+12
 	pld
 	tsc
 	clc
-	adc	#L176+12
+	adc	#L155+12
 	tcs
 	tya
 	rts
 ;}
-L176	equ	10
-L177	equ	9
+L155	equ	10
+L156	equ	9
 	ends
 	efunc
 ;/*-----------------------------------------------------------*/
@@ -3806,7 +3577,7 @@ _~prvBytesInBuffer:
 	longi	on
 	tsc
 	sec
-	sbc	#L187
+	sbc	#L166
 	tcs
 	phd
 	tcd
@@ -3818,49 +3589,49 @@ pxStreamBuffer_0	set	3
 xCount_1	set	0
 	clc
 	ldy	#$4
-	lda	[<L187+pxStreamBuffer_0],Y
+	lda	[<L166+pxStreamBuffer_0],Y
 	dey
 	dey
-	adc	[<L187+pxStreamBuffer_0],Y
-	sta	<L188+xCount_1
+	adc	[<L166+pxStreamBuffer_0],Y
+	sta	<L167+xCount_1
 ;    xCount -= pxStreamBuffer->xTail;
 	sec
-	sbc	[<L187+pxStreamBuffer_0]
-	sta	<L188+xCount_1
+	sbc	[<L166+pxStreamBuffer_0]
+	sta	<L167+xCount_1
 ;
 ;    if( xCount >= pxStreamBuffer->xLength )
 ;    {
 	iny
 	iny
-	cmp	[<L187+pxStreamBuffer_0],Y
-	bcc	L10450
+	cmp	[<L166+pxStreamBuffer_0],Y
+	bcc	L10378
 ;        xCount -= pxStreamBuffer->xLength;
 	sec
-	lda	<L188+xCount_1
-	sbc	[<L187+pxStreamBuffer_0],Y
-	sta	<L188+xCount_1
+	lda	<L167+xCount_1
+	sbc	[<L166+pxStreamBuffer_0],Y
+	sta	<L167+xCount_1
 ;    }
 ;    else
 ;    {
 ;        mtCOVERAGE_TEST_MARKER();
 ;    }
-L10450:
+L10378:
 ;
 ;    return xCount;
-	lda	<L188+xCount_1
+	lda	<L167+xCount_1
 	tay
-	lda	<L187+1
-	sta	<L187+1+4
+	lda	<L166+1
+	sta	<L166+1+4
 	pld
 	tsc
 	clc
-	adc	#L187+4
+	adc	#L166+4
 	tcs
 	tya
 	rts
 ;}
-L187	equ	2
-L188	equ	1
+L166	equ	2
+L167	equ	1
 	ends
 	efunc
 ;/*-----------------------------------------------------------*/
@@ -3875,7 +3646,7 @@ _~prvBytesInBufferMeetTriggerLevel:
 	longi	on
 	tsc
 	sec
-	sbc	#L191
+	sbc	#L170
 	tcs
 	phd
 	tcd
@@ -3885,39 +3656,39 @@ xBytesInBuffer_0	set	7
 ;
 ;    if( ( pxStreamBuffer->ucFlags & sbFLAGS_IS_BATCHING_BUFFER ) != ( uint8_t ) 0 )
 xReturn_1	set	0
-	stz	<L192+xReturn_1
+	stz	<L171+xReturn_1
 ;    {
 	sep	#$20
 	longa	off
 	ldy	#$14
-	lda	[<L191+pxStreamBuffer_0],Y
+	lda	[<L170+pxStreamBuffer_0],Y
 	and	#<$4
 	rep	#$20
 	longa	on
-	beq	L10451
+	beq	L10379
 ;        if( xBytesInBuffer > pxStreamBuffer->xTriggerLevelBytes )
 ;        {
 	ldy	#$6
-	lda	[<L191+pxStreamBuffer_0],Y
-	cmp	<L191+xBytesInBuffer_0
-	bcs	L10454
+	lda	[<L170+pxStreamBuffer_0],Y
+	cmp	<L170+xBytesInBuffer_0
+	bcs	L10382
 ;            xReturn = pdTRUE;
 L20011:
 	lda	#$1
-	sta	<L192+xReturn_1
+	sta	<L171+xReturn_1
 ;        }
 ;        else
-L10454:
+L10382:
 ;
 ;    return xReturn;
-	lda	<L192+xReturn_1
+	lda	<L171+xReturn_1
 	tay
-	lda	<L191+1
-	sta	<L191+1+6
+	lda	<L170+1
+	sta	<L170+1+6
 	pld
 	tsc
 	clc
-	adc	#L191+6
+	adc	#L170+6
 	tcs
 	tya
 	rts
@@ -3926,12 +3697,12 @@ L10454:
 ;        }
 ;    }
 ;    else if( xBytesInBuffer >= pxStreamBuffer->xTriggerLevelBytes )
-L10451:
+L10379:
 ;    {
-	lda	<L191+xBytesInBuffer_0
+	lda	<L170+xBytesInBuffer_0
 	ldy	#$6
-	cmp	[<L191+pxStreamBuffer_0],Y
-	bcc	L10454
+	cmp	[<L170+pxStreamBuffer_0],Y
+	bcc	L10382
 ;        xReturn = pdTRUE;
 	bra	L20011
 ;    }
@@ -3940,8 +3711,8 @@ L10451:
 ;        mtCOVERAGE_TEST_MARKER();
 ;    }
 ;}
-L191	equ	2
-L192	equ	1
+L170	equ	2
+L171	equ	1
 	ends
 	efunc
 ;/*-----------------------------------------------------------*/
@@ -3961,7 +3732,7 @@ _~prvInitialiseNewStreamBuffer:
 	longi	on
 	tsc
 	sec
-	sbc	#L197
+	sbc	#L176
 	tcs
 	phd
 	tcd
@@ -3982,59 +3753,59 @@ pxReceiveCompletedCallback_0	set	19
 ;         * result in confusion as to what is actually being observed. */
 ;        #define STREAM_BUFFER_BUFFER_WRITE_VALUE    ( 0x55 )
 ;        configASSERT( memset( pucBuffer, ( int ) STREAM_BUFFER_BUFFER_WRITE_VALUE, xBufferSizeBytes ) == pucBuffer );
-	pei	<L197+xBufferSizeBytes_0
+	pei	<L176+xBufferSizeBytes_0
 	pea	#<$55
-	pei	<L197+pucBuffer_0+2
-	pei	<L197+pucBuffer_0
+	pei	<L176+pucBuffer_0+2
+	pei	<L176+pucBuffer_0
 	jsr	_~memset
 	stx	<R0+2
-	cmp	<L197+pucBuffer_0
-	bne	L199
+	cmp	<L176+pucBuffer_0
+	bne	L178
 	lda	<R0+2
-	cmp	<L197+pucBuffer_0+2
-L199:
-	beq	L10457
-L10461:
-	bra	L10461
-L10457:
+	cmp	<L176+pucBuffer_0+2
+L178:
+	beq	L10385
+L10389:
+	bra	L10389
+L10385:
 ;    }
 ;    #endif
 ;
 ;    ( void ) memset( ( void * ) pxStreamBuffer, 0x00, sizeof( StreamBuffer_t ) );
 	pea	#<$17
 	pea	#<$0
-	pei	<L197+pxStreamBuffer_0+2
-	pei	<L197+pxStreamBuffer_0
+	pei	<L176+pxStreamBuffer_0+2
+	pei	<L176+pxStreamBuffer_0
 	jsr	_~memset
 ;    pxStreamBuffer->pucBuffer = pucBuffer;
-	lda	<L197+pucBuffer_0
+	lda	<L176+pucBuffer_0
 	ldy	#$10
-	sta	[<L197+pxStreamBuffer_0],Y
-	lda	<L197+pucBuffer_0+2
+	sta	[<L176+pxStreamBuffer_0],Y
+	lda	<L176+pucBuffer_0+2
 	iny
 	iny
-	sta	[<L197+pxStreamBuffer_0],Y
+	sta	[<L176+pxStreamBuffer_0],Y
 ;    pxStreamBuffer->xLength = xBufferSizeBytes;
-	lda	<L197+xBufferSizeBytes_0
+	lda	<L176+xBufferSizeBytes_0
 	ldy	#$4
-	sta	[<L197+pxStreamBuffer_0],Y
+	sta	[<L176+pxStreamBuffer_0],Y
 ;    pxStreamBuffer->xTriggerLevelBytes = xTriggerLevelBytes;
-	lda	<L197+xTriggerLevelBytes_0
+	lda	<L176+xTriggerLevelBytes_0
 	iny
 	iny
-	sta	[<L197+pxStreamBuffer_0],Y
+	sta	[<L176+pxStreamBuffer_0],Y
 ;    pxStreamBuffer->ucFlags = ucFlags;
 	sep	#$20
 	longa	off
-	lda	<L197+ucFlags_0
+	lda	<L176+ucFlags_0
 	ldy	#$14
-	sta	[<L197+pxStreamBuffer_0],Y
+	sta	[<L176+pxStreamBuffer_0],Y
 	rep	#$20
 	longa	on
 ;    pxStreamBuffer->uxNotificationIndex = tskDEFAULT_INDEX_TO_NOTIFY;
 	lda	#$0
 	iny
-	sta	[<L197+pxStreamBuffer_0],Y
+	sta	[<L176+pxStreamBuffer_0],Y
 ;    #if ( configUSE_SB_COMPLETED_CALLBACK == 1 )
 ;    {
 ;        pxStreamBuffer->pxSendCompletedCallback = pxSendCompletedCallback;
@@ -4054,16 +3825,16 @@ L10457:
 ;    }
 ;    #endif /* if ( configUSE_SB_COMPLETED_CALLBACK == 1 ) */
 ;}
-	lda	<L197+1
-	sta	<L197+1+18
+	lda	<L176+1
+	sta	<L176+1+18
 	pld
 	tsc
 	clc
-	adc	#L197+18
+	adc	#L176+18
 	tcs
 	rts
-L197	equ	4
-L198	equ	5
+L176	equ	4
+L177	equ	5
 	ends
 	efunc
 ;/*-----------------------------------------------------------*/
@@ -4078,7 +3849,7 @@ _~uxStreamBufferGetStreamBufferNotificationIndex:
 	longi	on
 	tsc
 	sec
-	sbc	#L202
+	sbc	#L181
 	tcs
 	phd
 	tcd
@@ -4087,37 +3858,37 @@ xStreamBuffer_0	set	3
 ;
 ;    traceENTER_uxStreamBufferGetStreamBufferNotificationIndex( xStreamBuffer );
 pxStreamBuffer_1	set	0
-	lda	<L202+xStreamBuffer_0
-	sta	<L203+pxStreamBuffer_1
-	lda	<L202+xStreamBuffer_0+2
-	sta	<L203+pxStreamBuffer_1+2
+	lda	<L181+xStreamBuffer_0
+	sta	<L182+pxStreamBuffer_1
+	lda	<L181+xStreamBuffer_0+2
+	sta	<L182+pxStreamBuffer_1+2
 ;
 ;    configASSERT( pxStreamBuffer );
-	lda	<L203+pxStreamBuffer_1
-	ora	<L203+pxStreamBuffer_1+2
-	bne	L10464
-L10468:
-	bra	L10468
-L10464:
+	lda	<L182+pxStreamBuffer_1
+	ora	<L182+pxStreamBuffer_1+2
+	bne	L10392
+L10396:
+	bra	L10396
+L10392:
 ;
 ;    traceRETURN_uxStreamBufferGetStreamBufferNotificationIndex( pxStreamBuffer->uxNotificationIndex );
 ;
 ;    return pxStreamBuffer->uxNotificationIndex;
 	ldy	#$15
-	lda	[<L203+pxStreamBuffer_1],Y
+	lda	[<L182+pxStreamBuffer_1],Y
 	tay
-	lda	<L202+1
-	sta	<L202+1+4
+	lda	<L181+1
+	sta	<L181+1+4
 	pld
 	tsc
 	clc
-	adc	#L202+4
+	adc	#L181+4
 	tcs
 	tya
 	rts
 ;}
-L202	equ	4
-L203	equ	1
+L181	equ	4
+L182	equ	1
 	ends
 	efunc
 ;/*-----------------------------------------------------------*/
@@ -4133,7 +3904,7 @@ _~vStreamBufferSetStreamBufferNotificationIndex:
 	longi	on
 	tsc
 	sec
-	sbc	#L206
+	sbc	#L185
 	tcs
 	phd
 	tcd
@@ -4143,65 +3914,65 @@ uxNotificationIndex_0	set	7
 ;
 ;    traceENTER_vStreamBufferSetStreamBufferNotificationIndex( xStreamBuffer, uxNotificationIndex );
 pxStreamBuffer_1	set	0
-	lda	<L206+xStreamBuffer_0
-	sta	<L207+pxStreamBuffer_1
-	lda	<L206+xStreamBuffer_0+2
-	sta	<L207+pxStreamBuffer_1+2
+	lda	<L185+xStreamBuffer_0
+	sta	<L186+pxStreamBuffer_1
+	lda	<L185+xStreamBuffer_0+2
+	sta	<L186+pxStreamBuffer_1+2
 ;
 ;    /* There should be no task waiting otherwise we'd never resume them. */
 ;    configASSERT( ( pxStreamBuffer != NULL ) && ( pxStreamBuffer->xTaskWaitingToReceive == NULL ) );
-	lda	<L207+pxStreamBuffer_1
-	ora	<L207+pxStreamBuffer_1+2
-	beq	L10475
+	lda	<L186+pxStreamBuffer_1
+	ora	<L186+pxStreamBuffer_1+2
+	beq	L10403
 	ldy	#$8
-	lda	[<L207+pxStreamBuffer_1],Y
+	lda	[<L186+pxStreamBuffer_1],Y
 	iny
 	iny
-	ora	[<L207+pxStreamBuffer_1],Y
-	beq	L10471
-L10475:
-	bra	L10475
-L10471:
+	ora	[<L186+pxStreamBuffer_1],Y
+	beq	L10399
+L10403:
+	bra	L10403
+L10399:
 ;    configASSERT( ( pxStreamBuffer != NULL ) && ( pxStreamBuffer->xTaskWaitingToSend == NULL ) );
-	lda	<L207+pxStreamBuffer_1
-	ora	<L207+pxStreamBuffer_1+2
-	beq	L10482
+	lda	<L186+pxStreamBuffer_1
+	ora	<L186+pxStreamBuffer_1+2
+	beq	L10410
 	ldy	#$c
-	lda	[<L207+pxStreamBuffer_1],Y
+	lda	[<L186+pxStreamBuffer_1],Y
 	iny
 	iny
-	ora	[<L207+pxStreamBuffer_1],Y
-	beq	L10478
-L10482:
-	bra	L10482
-L10478:
+	ora	[<L186+pxStreamBuffer_1],Y
+	beq	L10406
+L10410:
+	bra	L10410
+L10406:
 ;
 ;    /* Check that the task notification index is valid. */
 ;    configASSERT( uxNotificationIndex < configTASK_NOTIFICATION_ARRAY_ENTRIES );
-	lda	<L206+uxNotificationIndex_0
+	lda	<L185+uxNotificationIndex_0
 	cmp	#<$1
-	bcc	L10485
-L10489:
-	bra	L10489
-L10485:
+	bcc	L10413
+L10417:
+	bra	L10417
+L10413:
 ;
 ;    pxStreamBuffer->uxNotificationIndex = uxNotificationIndex;
-	lda	<L206+uxNotificationIndex_0
+	lda	<L185+uxNotificationIndex_0
 	ldy	#$15
-	sta	[<L207+pxStreamBuffer_1],Y
+	sta	[<L186+pxStreamBuffer_1],Y
 ;
 ;    traceRETURN_vStreamBufferSetStreamBufferNotificationIndex();
 ;}
-	lda	<L206+1
-	sta	<L206+1+6
+	lda	<L185+1
+	sta	<L185+1+6
 	pld
 	tsc
 	clc
-	adc	#L206+6
+	adc	#L185+6
 	tcs
 	rts
-L206	equ	4
-L207	equ	1
+L185	equ	4
+L186	equ	1
 	ends
 	efunc
 ;/*-----------------------------------------------------------*/

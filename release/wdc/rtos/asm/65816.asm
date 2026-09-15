@@ -762,23 +762,48 @@ _~shellTask:
 	phd
 	tcd
 pvParameters_0	set	3
-;	for(;;)
+;	char c = ' ';
+;	
+;	for(;;) {
+c_1	set	0
+	sep	#$20
+	longa	off
+	lda	#$20
+	sta	<L52+c_1
+	rep	#$20
+	longa	on
 L10016:
-;		printf("shellTask...\n");
-	pea	#^L50
-	pea	#<L50
-	pea	#6
-	jsr	_~printf
+;		*debug_char = c;
+	lda	|_~debug_char
+	sta	<R0
+	lda	|_~debug_char+2
+	sta	<R0+2
+	sep	#$20
+	longa	off
+	lda	<L52+c_1
+	sta	[<R0]
+;		c++;
+	inc	<L52+c_1
+;		if (c > 126) c = ' ';
+	lda	#$7e
+	cmp	<L52+c_1
+	rep	#$20
+	longa	on
+	bcs	L10016
+	sep	#$20
+	longa	off
+	lda	#$20
+	sta	<L52+c_1
+	rep	#$20
+	longa	on
+;	}
 	bra	L10016
+;		
 ;}
-L51	equ	0
-L52	equ	1
+L51	equ	5
+L52	equ	5
 	ends
 	efunc
-	data
-L50:
-	db	$73,$68,$65,$6C,$6C,$54,$61,$73,$6B,$2E,$2E,$2E,$0A,$00
-	ends
 ;
 ;int main (int argc, char ** argv) {
 	code
@@ -816,8 +841,8 @@ i_1	set	18
 	pea	#<$320
 	pei	<L55+pxHeapReg_1+2
 	pei	<L55+pxHeapReg_1
-	pea	#^L53
-	pea	#<L53
+	pea	#^L50
+	pea	#<L50
 	pea	#12
 	jsr	_~printf
 ;	
@@ -829,7 +854,7 @@ i_1	set	18
 ;	
 ;	for(i = 0; i < 99; i++) {
 	stz	<L55+i_1
-L10019:
+L10020:
 ;		reg.pucStartAddress = (char *)((i+2) * 0x010000U);
 	lda	#$2
 	clc
@@ -893,7 +918,7 @@ L57:
 	bvs	L58
 	eor	#$8000
 L58:
-	bpl	L10019
+	bpl	L10020
 ;	reg.pucStartAddress = NULL;
 	stz	<L55+reg_1
 	stz	<L55+reg_1+2
@@ -936,21 +961,21 @@ L60:
 ;
 ;	
 ;	printf("*** RTOS main \n");
-	pea	#^L53+17
-	pea	#<L53+17
+	pea	#^L50+17
+	pea	#<L50+17
 	pea	#6
 	jsr	_~printf
 ;	printf("*** RTOS vPortHeapResetState \n");
-	pea	#^L53+33
-	pea	#<L53+33
+	pea	#^L50+33
+	pea	#<L50+33
 	pea	#6
 	jsr	_~printf
 ;	vPortHeapResetState();
 	jsr	_~vPortHeapResetState
 ;
 ;	printf("*** RTOS vPortDefineHeapRegions \n");
-	pea	#^L53+64
-	pea	#<L53+64
+	pea	#^L50+64
+	pea	#<L50+64
 	pea	#6
 	jsr	_~printf
 ;	vPortDefineHeapRegions( pxHeapReg );
@@ -973,15 +998,20 @@ L60:
 	pea	#^$0
 	pea	#<$0
 	pea	#<$200
-	pea	#^L53+98
-	pea	#<L53+98
-	pea	#<_~shellTask
+	pea	#^L50+98
+	pea	#<L50+98
+	lda	#<_~shellTask
+	sta	<R0
+	xref	_BEG_DATA
+	lda	#_BEG_DATA>>16
+	pha
+	pei	<R0
 	jsr	_~xTaskCreate
 	sta	<L55+rc_1
 ;	printf("task create rc: %d\n", rc);
 	pha
-	pea	#^L53+104
-	pea	#<L53+104
+	pea	#^L50+104
+	pea	#<L50+104
 	pea	#8
 	jsr	_~printf
 ;	
@@ -989,11 +1019,11 @@ L60:
 ;	if (rc != pdPASS) {
 	lda	<L55+rc_1
 	cmp	#<$1
-	beq	L10020
+	beq	L10021
 ;		printf("shell could not be created rc: %d\n", rc);
 	pei	<L55+rc_1
-	pea	#^L53+124
-	pea	#<L53+124
+	pea	#^L50+124
+	pea	#<L50+124
 	pea	#8
 	jsr	_~printf
 ;		return pdPASS;
@@ -1014,7 +1044,7 @@ L62:
 ;	/* Start the scheduler so the tasks start executing. */
 ;
 ;	vTaskStartScheduler();
-L10020:
+L10021:
 	jsr	_~vTaskStartScheduler
 ;
 ;	/* If all is well then main() will never reach here as the scheduler will
@@ -1022,8 +1052,8 @@ L10020:
 ;	there was insufficient heap memory available for the idle task to be created.
 ;	Chapter 2 provides more information on heap memory management. */
 ;	printf("Error starting RTOS scheduler\n");
-	pea	#^L53+159
-	pea	#<L53+159
+	pea	#^L50+159
+	pea	#<L50+159
 	pea	#6
 	jsr	_~printf
 ;
@@ -1062,7 +1092,7 @@ L55	equ	13
 	ends
 	efunc
 	data
-L53:
+L50:
 	db	$70,$78,$48,$65,$61,$70,$52,$65,$67,$3A,$25,$70,$20,$25,$75
 	db	$0A,$00,$2A,$2A,$2A,$20,$52,$54,$4F,$53,$20,$6D,$61,$69,$6E
 	db	$20,$0A,$00,$2A,$2A,$2A,$20,$52,$54,$4F,$53,$20,$76,$50,$6F
