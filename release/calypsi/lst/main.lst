@@ -1,0 +1,136 @@
+###############################################################################
+#                                                                             #
+# Calypsi ISO C compiler for 65816                               version 5.18 #
+#                                                       13/Sep/2026  15:01:04 #
+# Command line: -O2 --code-model compact --data-model large -o                #
+#               C:\github\RS65816\release\calypsi\obj\main.o --list-file      #
+#               C:\github\RS65816\release\calypsi\lst\main.lst                #
+#               C:\github\RS65816\src\main.c                                  #
+#                                                                             #
+###############################################################################
+
+    \ 000000                      .rtmodel version,"1"
+    \ 000000                      .rtmodel codeModel,"compact"
+    \ 000000                      .rtmodel dataModel,"large"
+    \ 000000                      .rtmodel core,"65816"
+    \ 000000                      .rtmodel huge,"0"
+    \ 000000                      .rtmodel doubleSize,"32"
+    \ 000000                      .rtmodel target,"none-specified"
+    \ 000000                      .extern _Dp
+    \ 000000                      .extern _Vfp
+    \ 000000                      .extern monitor
+0001                  #include <stdio.h>
+0002                  #include <stdlib.h>
+0003                  #include <fcntl.h>
+0004                  #include "monitor.h"
+0005                  
+0006                  #ifdef __WDC__
+0007                  #include "wdc_misc.h"
+0008                  #endif
+0009                  
+0010                  #ifdef __CALYPSI__
+0011                  #include "calypsi_misc.h"
+0012                  #endif
+0013                  
+0014                  int main (int argc, char** argv) {
+    \ 000000                      .public main
+    \ 000000                      .section compactcode,text
+    \ 000000                      .public _Stub_close
+    \ 000000          _Stub_close:
+    \ 000000 a90000               lda     ##0
+    \ 000003 60                   rts
+    \ 000000                      .section compactcode,text
+    \ 000000                      .public _Stub_lseek
+    \ 000000          _Stub_lseek:
+    \ 000000 a90000               lda     ##0
+    \ 000003 aa                   tax
+    \ 000004 60                   rts
+    \ 000000                      .section compactcode,text
+    \ 000000                      .public _write
+    \ 000000 e220     _write:     sep     #32
+    \ 000002 8d00d8               sta     0xd800
+    \ 000005 c220                 rep     #32
+0015                  
+    \ 000007 60                   rts
+    \ 000000                      .section compactcode,text
+    \ 000000                      .public debug_byte
+    \ 000000 e220     debug_byte: sep     #32
+    \ 000002 8d01d8               sta     0xd801
+    \ 000005 c220                 rep     #32
+    \ 000007 60                   rts
+    \ 000000                      .section compactcode,text
+    \ 000000                      .public debug_word
+    \ 000000 5a       debug_word: phy
+    \ 000001 8301                 sta     1,s
+    \ 000003 a302                 lda     2,s
+    \ 000005 20....               jsr     .kbank debug_byte
+    \ 000008 a301                 lda     1,s
+    \ 00000a 20....               jsr     .kbank debug_byte
+    \ 00000d a92000               lda     ##32
+    \ 000010 20....               jsr     .kbank _write
+    \ 000013 7a                   ply
+    \ 000014 60                   rts
+    \ 000000                      .section compactcode,text
+    \ 000000                      .public _Stub_write
+    \ 000000          _Stub_write:
+    \ 000000 d4..                 pei     dp:.tiny (_Dp+8)
+    \ 000002 d4..                 pei     dp:.tiny (_Dp+10)
+    \ 000004 5a                   phy
+    \ 000005 a5..                 lda     dp:.tiny _Dp
+    \ 000007 85..                 sta     dp:.tiny (_Dp+8)
+    \ 000009 a5..                 lda     dp:.tiny (_Dp+2)
+    \ 00000b 85..                 sta     dp:.tiny (_Dp+10)
+    \ 00000d a5..                 lda     dp:.tiny (_Dp+4)
+    \ 00000f 8301                 sta     1,s
+    \ 000011 a301     `?L22`:     lda     1,s
+    \ 000013 d00b                 bne     `?L21`
+    \ 000015 a90000               lda     ##0
+    \ 000018 7a                   ply
+    \ 000019 7a                   ply
+    \ 00001a 84..                 sty     dp:.tiny (_Dp+10)
+    \ 00001c 7a                   ply
+    \ 00001d 84..                 sty     dp:.tiny (_Dp+8)
+    \ 00001f 60                   rts
+    \ 000020          `?L21`:
+    \ 000020 a7..                 lda     [.tiny (_Dp+8)]
+    \ 000022 20....               jsr     .kbank _write
+    \ 000025 e6..                 inc     dp:.tiny (_Dp+8)
+    \ 000027 a301                 lda     1,s
+    \ 000029 3a                   dec     a
+    \ 00002a 8301                 sta     1,s
+    \ 00002c 80e3                 bra     `?L22`
+    \ 000000                      .section compactcode,text
+    \ 000000          main:
+0016                  	void *p = (void *)0xff;
+0017                  	/*
+0018                  	setvbuf(stdout, NULL, _IONBF, 0);
+0019                  	setvbuf(stderr, NULL, _IONBF, 0);
+0020                  	setvbuf(stdin, NULL, _IONBF, 0);
+0021                  	*/
+0022                  	/*
+0023                  	fprintf(stderr, "Hallo Welt mit WDC nach stderr!\n");
+0024                      fprintf(stdout, "Hallo Welt mit WDC nach stdout!\n");
+0025                  
+0026                  	printf("heap_start: %p\n", heap_start);
+0027                      printf("size char: %d \n", sizeof(char));
+0028                      printf("size int: %d \n", sizeof(int));
+0029                      printf("size short: %d \n", sizeof(short));
+0030                      printf("size size_t: %d \n", sizeof(size_t));
+0031                      printf("size long: %d \n", sizeof(long));
+0032                      printf("size char*: %d \n", sizeof(char*));
+0033                  */
+0034                  	monitor();
+    \ 000000 20....               jsr     .kbank monitor
+0035                  	
+0036                      return 0;
+    \ 000003 a90000               lda     ##0
+0037                  }
+    \ 000006 60                   rts
+
+##########################
+#                        #
+# Memory sizes (decimal) #
+#                        #
+##########################
+
+Executable  (Text): 99 bytes

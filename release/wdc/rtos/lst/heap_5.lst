@@ -1,0 +1,2254 @@
+  Mon Sep 14 2026 18:41                                                                                                    Page 1
+
+
+                                               ***************************************
+                                               **      WDC 65C816 Macro Assembler   **
+                                               **                                   **
+                                               **     Version 3.49.1- Feb  6 2006    **
+                                               ***************************************
+
+     1                        ;:ts=8
+     2             00000001   R0	equ	1
+     3             00000005   R1	equ	5
+     4             00000009   R2	equ	9
+     5             0000000D   R3	equ	13
+     6                        ;/*
+     7                        ; * FreeRTOS Kernel V11.3.1
+     8                        ; * Copyright (C) 2021 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+     9                        ; *
+    10                        ; * SPDX-License-Identifier: MIT
+    11                        ; *
+    12                        ; * Permission is hereby granted, free of charge, to any person obtaining a copy of
+    13                        ; * this software and associated documentation files (the "Software"), to deal in
+    14                        ; * the Software without restriction, including without limitation the rights to
+    15                        ; * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+    16                        ; * the Software, and to permit persons to whom the Software is furnished to do so,
+    17                        ; * subject to the following conditions:
+    18                        ; *
+    19                        ; * The above copyright notice and this permission notice shall be included in all
+    20                        ; * copies or substantial portions of the Software.
+    21                        ; *
+    22                        ; * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    23                        ; * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+    24                        ; * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+    25                        ; * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+    26                        ; * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+    27                        ; * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+    28                        ; *
+    29                        ; * https://www.FreeRTOS.org
+    30                        ; * https://github.com/FreeRTOS
+    31                        ; *
+    32                        ; */
+    33                        ;
+    34                        ;/*
+    35                        ; * A sample implementation of pvPortMalloc() that allows the heap to be defined
+    36                        ; * across multiple non-contiguous blocks and combines (coalescences) adjacent
+    37                        ; * memory blocks as they are freed.
+    38                        ; *
+    39                        ; * See heap_1.c, heap_2.c, heap_3.c and heap_4.c for alternative
+    40                        ; * implementations, and the memory management pages of https://www.FreeRTOS.org
+    41                        ; * for more information.
+    42                        ; *
+    43                        ; * Usage notes:
+    44                        ; *
+    45                        ; * vPortDefineHeapRegions() ***must*** be called before pvPortMalloc().
+    46                        ; * pvPortMalloc() will be called if any task objects (tasks, queues, event
+    47                        ; * groups, etc.) are created, therefore vPortDefineHeapRegions() ***must*** be
+    48                        ; * called before any other objects are defined.
+    49                        ; *
+    50                        ; * vPortDefineHeapRegions() takes a single parameter.  The parameter is an array
+    51                        ; * of HeapRegion_t structures.  HeapRegion_t is defined in portable.h as
+    52                        ; *
+  Mon Sep 14 2026 18:41                                                                                                    Page 2
+
+
+    53                        ; * typedef struct HeapRegion
+    54                        ; * {
+    55                        ; *  uint8_t *pucStartAddress; << Start address of a block of memory that will be part of the heap.
+    56                        ; *  size_t xSizeInBytes;      << Size of the block of memory.
+    57                        ; * } HeapRegion_t;
+    58                        ; *
+    59                        ; * The array is terminated using a NULL zero sized region definition, and the
+    60                        ; * memory regions defined in the array ***must*** appear in address order from
+    61                        ; * low address to high address.  So the following is a valid example of how
+    62                        ; * to use the function.
+    63                        ; *
+    64                        ; * HeapRegion_t xHeapRegions[] =
+    65                        ; * {
+    66                        ; *  { ( uint8_t * ) 0x80000000UL, 0x10000 }, << Defines a block of 0x10000 bytes starting at address 
+                    0x80000000
+    67                        ; *  { ( uint8_t * ) 0x90000000UL, 0xa0000 }, << Defines a block of 0xa0000 bytes starting at address 
+                    of 0x90000000
+    68                        ; *  { NULL, 0 }                << Terminates the array.
+    69                        ; * };
+    70                        ; *
+    71                        ; * vPortDefineHeapRegions( xHeapRegions ); << Pass the array into vPortDefineHeapRegions().
+    72                        ; *
+    73                        ; * Note 0x80000000 is the lower address so appears in the array first.
+    74                        ; *
+    75                        ; */
+    76                        ;#include <stdlib.h>
+    77                        ;#include <string.h>
+    78                        ;
+    79                        ;/* Defining MPU_WRAPPERS_INCLUDED_FROM_API_FILE prevents task.h from redefining
+    80                        ; * all the API functions to use the MPU wrappers.  That should only be done when
+    81                        ; * task.h is included from an application file. */
+    82                        ;#define MPU_WRAPPERS_INCLUDED_FROM_API_FILE
+    83                        ;
+    84                        ;#include "FreeRTOS.h"
+    85                        ;#include "task.h"
+    86                        ;
+    87                        ;
+    88                        ;#undef MPU_WRAPPERS_INCLUDED_FROM_API_FILE
+    89                        ;
+    90                        ;#if ( configSUPPORT_DYNAMIC_ALLOCATION == 0 )
+    91                        ;    #error This file must not be used if configSUPPORT_DYNAMIC_ALLOCATION is 0
+    92                        ;#endif
+    93                        ;
+    94                        ;#ifndef configHEAP_CLEAR_MEMORY_ON_FREE
+    95                        ;    #define configHEAP_CLEAR_MEMORY_ON_FREE    0
+    96                        ;#endif
+    97                        ;
+    98                        ;/* Block sizes must not get too small. */
+    99                        ;#define heapMINIMUM_BLOCK_SIZE    ( ( size_t ) ( xHeapStructSize << 1 ) )
+   100                        ;
+   101                        ;/* Assumes 8bit bytes! */
+   102                        ;#define heapBITS_PER_BYTE         ( ( size_t ) 8 )
+   103                        ;
+   104                        ;/* Max value that fits in a size_t type. */
+   105                        ;#define heapSIZE_MAX              ( ~( ( size_t ) 0 ) )
+   106                        ;
+   107                        ;/* Check if multiplying a and b will result in overflow. */
+   108                        ;#define heapMULTIPLY_WILL_OVERFLOW( a, b )     ( ( ( a ) > 0 ) && ( ( b ) > ( heapSIZE_MAX / ( a ) ) 
+  Mon Sep 14 2026 18:41                                                                                                    Page 3
+
+
+                    ) )
+   109                        ;
+   110                        ;/* Check if adding a and b will result in overflow. */
+   111                        ;#define heapADD_WILL_OVERFLOW( a, b )          ( ( a ) > ( heapSIZE_MAX - ( b ) ) )
+   112                        ;
+   113                        ;/* Check if the subtraction operation ( a - b ) will result in underflow. */
+   114                        ;#define heapSUBTRACT_WILL_UNDERFLOW( a, b )    ( ( a ) < ( b ) )
+   115                        ;
+   116                        ;/* MSB of the xBlockSize member of an BlockLink_t structure is used to track
+   117                        ; * the allocation status of a block.  When MSB of the xBlockSize member of
+   118                        ; * an BlockLink_t structure is set then the block belongs to the application.
+   119                        ; * When the bit is free the block is still part of the free heap space. */
+   120                        ;#define heapBLOCK_ALLOCATED_BITMASK    ( ( ( unsigned long ) 1 ) << ( ( sizeof( unsigned long ) * hea
+                    pBITS_PER_BYTE ) - 1 ) )
+   121                        ;#define heapBLOCK_SIZE_IS_VALID( xBlockSize )    ( ( ( xBlockSize ) & heapBLOCK_ALLOCATED_BITMASK ) =
+                    = 0 )
+   122                        ;#define heapBLOCK_IS_ALLOCATED( pxBlock )        ( ( ( pxBlock->xBlockSize ) & heapBLOCK_ALLOCATED_BI
+                    TMASK ) != 0 )
+   123                        ;#define heapALLOCATE_BLOCK( pxBlock )            ( ( pxBlock->xBlockSize ) |= heapBLOCK_ALLOCATED_BIT
+                    MASK )
+   124                        ;#define heapFREE_BLOCK( pxBlock )                ( ( pxBlock->xBlockSize ) &= ~heapBLOCK_ALLOCATED_BI
+                    TMASK )
+   125                        ;
+   126                        ;/* Setting configENABLE_HEAP_PROTECTOR to 1 enables heap block pointers
+   127                        ; * protection using an application supplied canary value to catch heap
+   128                        ; * corruption should a heap buffer overflow occur.
+   129                        ; */
+   130                        ;#if ( configENABLE_HEAP_PROTECTOR == 1 )
+   131                        ;
+   132                        ;/* Macro to load/store BlockLink_t pointers to memory. By XORing the
+   133                        ; * pointers with a random canary value, heap overflows will result
+   134                        ; * in randomly unpredictable pointer values which will be caught by
+   135                        ; * heapVALIDATE_BLOCK_POINTER assert. */
+   136                        ;    #define heapPROTECT_BLOCK_POINTER( pxBlock )    ( ( BlockLink_t * ) ( ( ( portPOINTER_SIZE_TYPE )
+                     ( pxBlock ) ) ^ xHeapCanary ) )
+   137                        ;
+   138                        ;/* Assert that a heap block pointer is within the heap bounds.
+   139                        ; * Setting configVALIDATE_HEAP_BLOCK_POINTER to 1 enables customized heap block pointers
+   140                        ; * protection on heap_5. */
+   141                        ;    #ifndef configVALIDATE_HEAP_BLOCK_POINTER
+   142                        ;        #define heapVALIDATE_BLOCK_POINTER( pxBlock )                           \
+   143                        ;            configASSERT( ( pucHeapHighAddress != NULL ) &&                     \
+   144                        ;                          ( pucHeapLowAddress != NULL ) &&                      \
+   145                        ;                          ( ( uint8_t * ) ( pxBlock ) >= pucHeapLowAddress ) && \
+   146                        ;                          ( ( uint8_t * ) ( pxBlock ) < pucHeapHighAddress ) )
+   147                        ;    #else /* ifndef configVALIDATE_HEAP_BLOCK_POINTER */
+   148                        ;        #define heapVALIDATE_BLOCK_POINTER( pxBlock )                           \
+   149                        ;            configVALIDATE_HEAP_BLOCK_POINTER( pxBlock )
+   150                        ;    #endif /* configVALIDATE_HEAP_BLOCK_POINTER */
+   151                        ;
+   152                        ;#else /* if ( configENABLE_HEAP_PROTECTOR == 1 ) */
+   153                        ;
+   154                        ;    #define heapPROTECT_BLOCK_POINTER( pxBlock )    ( pxBlock )
+   155                        ;
+   156                        ;    #define heapVALIDATE_BLOCK_POINTER( pxBlock )
+   157                        ;
+   158                        ;#endif /* configENABLE_HEAP_PROTECTOR */
+   159                        ;
+  Mon Sep 14 2026 18:41                                                                                                    Page 4
+
+
+   160                        ;/*-----------------------------------------------------------*/
+   161                        ;
+   162                        ;/* Define the linked list structure.  This is used to link free blocks in order
+   163                        ; * of their memory address. */
+   164                        ;typedef struct A_BLOCK_LINK
+   165                        ;{
+   166                        ;    struct A_BLOCK_LINK * pxNextFreeBlock; /**< The next free block in the list. */
+   167                        ;    unsigned long xBlockSize;                     /**< The size of the free block. */
+   168                        ;} BlockLink_t;
+   169                        ;
+   170                        ;/*-----------------------------------------------------------*/
+   171                        ;
+   172                        ;/*
+   173                        ; * Inserts a block of memory that is being freed into the correct position in
+   174                        ; * the list of free memory blocks.  The block being freed will be merged with
+   175                        ; * the block in front it and/or the block behind it if the memory blocks are
+   176                        ; * adjacent to each other.
+   177                        ; */
+   178                        ;static void prvInsertBlockIntoFreeList( BlockLink_t * pxBlockToInsert ) PRIVILEGED_FUNCTION;
+   179                        ;void vPortDefineHeapRegions( const HeapRegion_t * const pxHeapRegions ) PRIVILEGED_FUNCTION;
+   180                        ;
+   181                        ;#if ( configENABLE_HEAP_PROTECTOR == 1 )
+   182                        ;
+   183                        ;/**
+   184                        ; * @brief Application provided function to get a random value to be used as canary.
+   185                        ; *
+   186                        ; * @param pxHeapCanary [out] Output parameter to return the canary value.
+   187                        ; */
+   188                        ;    extern void vApplicationGetRandomHeapCanary( portPOINTER_SIZE_TYPE * pxHeapCanary );
+   189                        ;#endif /* configENABLE_HEAP_PROTECTOR */
+   190                        ;
+   191                        ;/*-----------------------------------------------------------*/
+   192                        ;
+   193                        ;/* The size of the structure placed at the beginning of each allocated memory
+   194                        ; * block must by correctly byte aligned. */
+   195                        ;static const size_t xHeapStructSize = ( sizeof( BlockLink_t ) + ( ( size_t ) ( portBYTE_ALIGNMENT - 1
+                     ) ) ) & ~( ( size_t ) portBYTE_ALIGNMENT_MASK );
+   196                        	data
+   197                        _~xHeapStructSize:
+   198 00:0000: 08 00        	dw	$8
+   199 00:0002:              	ends
+   200                        ;
+   201                        ;/* Create a couple of list links to mark the start and end of the list. */
+   202                        ;PRIVILEGED_DATA static BlockLink_t xStart;
+   203                        ;PRIVILEGED_DATA static BlockLink_t * pxEnd = NULL;
+   204                        	data
+   205                        _~pxEnd:
+   206 00:0002: 00 00 00 00  	dl	$0
+   207 00:0006:              	ends
+   208                        ;
+   209                        ;/* Keeps track of the number of calls to allocate and free memory as well as the
+   210                        ; * number of free bytes remaining, but says nothing about fragmentation. */
+   211                        ;PRIVILEGED_DATA static unsigned long xFreeBytesRemaining = ( unsigned long ) 0U;
+   212                        	data
+   213                        _~xFreeBytesRemaining:
+   214 00:0006: 00 00 00 00  	dl	$0
+   215 00:000A:              	ends
+   216                        ;PRIVILEGED_DATA static unsigned long xMinimumEverFreeBytesRemaining = ( unsigned long ) 0U;
+  Mon Sep 14 2026 18:41                                                                                                    Page 5
+
+
+   217                        	data
+   218                        _~xMinimumEverFreeBytesRemaining:
+   219 00:000A: 00 00 00 00  	dl	$0
+   220 00:000E:              	ends
+   221                        ;PRIVILEGED_DATA static unsigned long xNumberOfSuccessfulAllocations = ( unsigned long ) 0U;
+   222                        	data
+   223                        _~xNumberOfSuccessfulAllocations:
+   224 00:000E: 00 00 00 00  	dl	$0
+   225 00:0012:              	ends
+   226                        ;PRIVILEGED_DATA static unsigned long xNumberOfSuccessfulFrees = ( unsigned long ) 0U;
+   227                        	data
+   228                        _~xNumberOfSuccessfulFrees:
+   229 00:0012: 00 00 00 00  	dl	$0
+   230 00:0016:              	ends
+   231                        ;
+   232                        ;#if ( configENABLE_HEAP_PROTECTOR == 1 )
+   233                        ;
+   234                        ;/* Canary value for protecting internal heap pointers. */
+   235                        ;    PRIVILEGED_DATA static portPOINTER_SIZE_TYPE xHeapCanary;
+   236                        ;
+   237                        ;/* Highest and lowest heap addresses used for heap block bounds checking. */
+   238                        ;    PRIVILEGED_DATA static uint8_t * pucHeapHighAddress = NULL;
+   239                        ;    PRIVILEGED_DATA static uint8_t * pucHeapLowAddress = NULL;
+   240                        ;
+   241                        ;#endif /* configENABLE_HEAP_PROTECTOR */
+   242                        ;
+   243                        ;/*-----------------------------------------------------------*/
+   244                        ;extern volatile char* debug_char;
+   245                        ;extern volatile char* debug_hex;
+   246                        ;/*-----------------------------------------------------------*/
+   247                        ;
+   248                        ;void * pvPortMalloc( size_t xWantedSize )
+   249                        ;{
+   250                        	code
+   251                        	xdef	_~pvPortMalloc
+   252                        	func
+   253                        _~pvPortMalloc:
+   254                        	longa	on
+   255                        	longi	on
+   256 00:0000: 3B           	tsc
+   257 00:0001: 38           	sec
+   258 00:0002: E9 20 00     	sbc	#L2
+   259 00:0005: 1B           	tcs
+   260 00:0006: 0B           	phd
+   261 00:0007: 5B           	tcd
+   262             00000003   xWantedSize_0	set	3
+   263                        ;    BlockLink_t * pxBlock;
+   264                        ;    BlockLink_t * pxPreviousBlock;
+   265                        ;    BlockLink_t * pxNewBlockLink;
+   266                        ;    void * pvReturn = NULL;
+   267                        ;    unsigned long xAdditionalRequiredSize;
+   268                        ;    unsigned long xAllocatedBlockSize = 0;
+   269                        ;
+   270                        ;    /* The heap must be initialised before the first call to
+   271                        ;     * pvPortMalloc(). */
+   272                        ;    configASSERT( pxEnd );
+   273             00000000   pxBlock_1	set	0
+   274             00000004   pxPreviousBlock_1	set	4
+  Mon Sep 14 2026 18:41                                                                                                    Page 6
+
+
+   275             00000008   pxNewBlockLink_1	set	8
+   276             0000000C   pvReturn_1	set	12
+   277             00000010   xAdditionalRequiredSize_1	set	16
+   278             00000014   xAllocatedBlockSize_1	set	20
+   279 00:0008: 64 15        	stz	<L3+pvReturn_1
+   280 00:000A: 64 17        	stz	<L3+pvReturn_1+2
+   281 00:000C: 64 1D        	stz	<L3+xAllocatedBlockSize_1
+   282 00:000E: 64 1F        	stz	<L3+xAllocatedBlockSize_1+2
+   283 00:0010: AD xx xx     	lda	|_~pxEnd
+   284 00:0013: 0D xx xx     	ora	|_~pxEnd+2
+   285 00:0016: D0 02        	bne	L10001
+   286                        L10005:
+   287 00:0018: 80 FE        	bra	L10005
+   288                        L10001:
+   289                        ;
+   290                        ;    if( xWantedSize > 0 )
+   291                        ;    {
+   292 00:001A: A9 00 00     	lda	#$0
+   293 00:001D: C5 23        	cmp	<L2+xWantedSize_0
+   294 00:001F: B0 24        	bcs	L10015
+   295                        ;        /* The wanted size must be increased so it can contain a BlockLink_t
+   296                        ;         * structure in addition to the requested amount of bytes. */
+   297                        ;        if( heapADD_WILL_OVERFLOW( xWantedSize, xHeapStructSize ) == 0 )
+   298                        ;        {
+   299 00:0021: A5 23        	lda	<L2+xWantedSize_0
+   300 00:0023: 85 01        	sta	<R0
+   301 00:0025: 64 03        	stz	<R0+2
+   302 00:0027: 38           	sec
+   303 00:0028: A9 F7 FF     	lda	#$fff7
+   304 00:002B: E5 01        	sbc	<R0
+   305 00:002D: A9 00 00     	lda	#$0
+   306 00:0030: E5 03        	sbc	<R0+2
+   307 00:0032: 70 03        	bvs	L6
+   308 00:0034: 49 00 80     	eor	#$8000
+   309                        L6:
+   310 00:0037: 10 0A        	bpl	L10009
+   311                        ;            xWantedSize += xHeapStructSize;
+   312 00:0039: A9 08 00     	lda	#$8
+   313 00:003C: 18           	clc
+   314 00:003D: 65 23        	adc	<L2+xWantedSize_0
+   315 00:003F: 85 23        	sta	<L2+xWantedSize_0
+   316                        ;
+   317                        ;            /* Ensure that blocks are always aligned to the required number
+   318                        ;             * of bytes. */
+   319                        ;            if( ( xWantedSize & portBYTE_ALIGNMENT_MASK ) != 0x00 )
+   320                        ;            {
+   321 00:0041: 80 02        	bra	L10015
+   322                        ;                /* Byte alignment required. */
+   323                        ;                xAdditionalRequiredSize = portBYTE_ALIGNMENT - ( xWantedSize & portBYTE_ALIGNMENT_MAS
+                    K );
+   324                        ;
+   325                        ;                if( heapADD_WILL_OVERFLOW( xWantedSize, xAdditionalRequiredSize ) == 0 )
+   326                        ;                {
+   327                        ;                    xWantedSize += xAdditionalRequiredSize;
+   328                        ;                }
+   329                        ;                else
+   330                        ;                {
+   331                        ;                    xWantedSize = 0;
+  Mon Sep 14 2026 18:41                                                                                                    Page 7
+
+
+   332                        ;                }
+   333                        ;            }
+   334                        ;            else
+   335                        ;            {
+   336                        ;                mtCOVERAGE_TEST_MARKER();
+   337                        ;            }
+   338                        ;        }
+   339                        ;        else
+   340                        L10009:
+   341                        ;        {
+   342                        ;            xWantedSize = 0;
+   343 00:0043: 64 23        	stz	<L2+xWantedSize_0
+   344                        ;        }
+   345                        ;    }
+   346                        ;    else
+   347                        ;    {
+   348                        ;        mtCOVERAGE_TEST_MARKER();
+   349                        ;    }
+   350                        L10015:
+   351                        ;
+   352                        ;    vTaskSuspendAll();
+   353 00:0045: 20 xx xx     	jsr	_~vTaskSuspendAll
+   354                        ;    {
+   355                        ;        /* Check the block size we are trying to allocate is not so large that the
+   356                        ;         * top bit is set.  The top bit of the block size member of the BlockLink_t
+   357                        ;         * structure is used to determine who owns the block - the application or
+   358                        ;         * the kernel, so it must be free. */
+   359                        ;        if( heapBLOCK_SIZE_IS_VALID( xWantedSize ) != 0 )
+   360                        ;        {
+   361 00:0048: A5 23        	lda	<L2+xWantedSize_0
+   362 00:004A: 85 01        	sta	<R0
+   363 00:004C: 64 03        	stz	<R0+2
+   364 00:004E: A5 03        	lda	<R0+2
+   365 00:0050: 29 00 80     	and	#^$80000000
+   366 00:0053: F0 03        	beq	*+5
+   367 00:0055: 82 92 01     	brl	L10042
+   368                        ;            if( ( xWantedSize > 0 ) && ( xWantedSize <= xFreeBytesRemaining ) )
+   369                        ;            {
+   370 00:0058: A9 00 00     	lda	#$0
+   371 00:005B: C5 23        	cmp	<L2+xWantedSize_0
+   372 00:005D: 90 03        	bcc	*+5
+   373 00:005F: 82 88 01     	brl	L10042
+   374 00:0062: A5 23        	lda	<L2+xWantedSize_0
+   375 00:0064: 85 01        	sta	<R0
+   376 00:0066: 64 03        	stz	<R0+2
+   377 00:0068: AD xx xx     	lda	|_~xFreeBytesRemaining
+   378 00:006B: C5 01        	cmp	<R0
+   379 00:006D: AD xx xx     	lda	|_~xFreeBytesRemaining+2
+   380 00:0070: E5 03        	sbc	<R0+2
+   381 00:0072: B0 03        	bcs	*+5
+   382 00:0074: 82 73 01     	brl	L10042
+   383                        ;                /* Traverse the list from the start (lowest address) block until
+   384                        ;                 * one of adequate size is found. */
+   385                        ;                pxPreviousBlock = &xStart;
+   386 00:0077: A9 xx xx     	lda	#<_~xStart
+   387 00:007A: 85 0D        	sta	<L3+pxPreviousBlock_1
+   388                        	xref	_BEG_DATA
+   389 00:007C: A9 xx xx     	lda	#_BEG_DATA>>16
+  Mon Sep 14 2026 18:41                                                                                                    Page 8
+
+
+   390 00:007F: 85 0F        	sta	<L3+pxPreviousBlock_1+2
+   391                        ;                pxBlock = heapPROTECT_BLOCK_POINTER( xStart.pxNextFreeBlock );
+   392 00:0081: AD xx xx     	lda	|_~xStart
+   393 00:0084: 85 09        	sta	<L3+pxBlock_1
+   394 00:0086: AD xx xx     	lda	|_~xStart+2
+   395 00:0089: 85 0B        	sta	<L3+pxBlock_1+2
+   396                        ;                heapVALIDATE_BLOCK_POINTER( pxBlock );
+   397                        ;
+   398                        ;                while( ( pxBlock->xBlockSize < xWantedSize ) && ( pxBlock->pxNextFreeBlock != heapPRO
+                    TECT_BLOCK_POINTER( NULL ) ) )
+   399 00:008B: 80 2F        	bra	L10018
+   400                        L20001:
+   401 00:008D: A7 09        	lda	[<L3+pxBlock_1]
+   402 00:008F: A0 02 00     	ldy	#$2
+   403 00:0092: 17 09        	ora	[<L3+pxBlock_1],Y
+   404 00:0094: F0 3B        	beq	L10019
+   405                        ;                {
+   406                        ;                    pxPreviousBlock = pxBlock;
+   407 00:0096: A5 09        	lda	<L3+pxBlock_1
+   408 00:0098: 85 0D        	sta	<L3+pxPreviousBlock_1
+   409 00:009A: A5 0B        	lda	<L3+pxBlock_1+2
+   410 00:009C: 85 0F        	sta	<L3+pxPreviousBlock_1+2
+   411                        ;                    pxBlock = heapPROTECT_BLOCK_POINTER( pxBlock->pxNextFreeBlock );
+   412 00:009E: A7 09        	lda	[<L3+pxBlock_1]
+   413 00:00A0: 85 01        	sta	<R0
+   414 00:00A2: B7 09        	lda	[<L3+pxBlock_1],Y
+   415 00:00A4: 85 03        	sta	<R0+2
+   416 00:00A6: A5 01        	lda	<R0
+   417 00:00A8: 85 09        	sta	<L3+pxBlock_1
+   418 00:00AA: A5 03        	lda	<R0+2
+   419 00:00AC: 85 0B        	sta	<L3+pxBlock_1+2
+   420                        ;
+   421                        ;                    /* pxEnd is the end marker of the free list. It is located at
+   422                        ;                     * pucHeapHighAddress and is not part of the usable heap, so it
+   423                        ;                     * must be excluded from the heap block pointer validation. */
+   424                        ;                    if( pxBlock != pxEnd )
+   425                        ;                    {
+   426 00:00AE: A5 09        	lda	<L3+pxBlock_1
+   427 00:00B0: CD xx xx     	cmp	|_~pxEnd
+   428 00:00B3: D0 05        	bne	L14
+   429 00:00B5: A5 0B        	lda	<L3+pxBlock_1+2
+   430 00:00B7: CD xx xx     	cmp	|_~pxEnd+2
+   431                        L14:
+   432 00:00BA: D0 00        	bne	L10018
+   433                        L10018:
+   434 00:00BC: A5 23        	lda	<L2+xWantedSize_0
+   435 00:00BE: 85 01        	sta	<R0
+   436 00:00C0: 64 03        	stz	<R0+2
+   437 00:00C2: A0 04 00     	ldy	#$4
+   438 00:00C5: B7 09        	lda	[<L3+pxBlock_1],Y
+   439 00:00C7: C5 01        	cmp	<R0
+   440 00:00C9: C8           	iny
+   441 00:00CA: C8           	iny
+   442 00:00CB: B7 09        	lda	[<L3+pxBlock_1],Y
+   443 00:00CD: E5 03        	sbc	<R0+2
+   444 00:00CF: 90 BC        	bcc	L20001
+   445                        ;                        heapVALIDATE_BLOCK_POINTER( pxBlock );
+   446                        ;                    }
+  Mon Sep 14 2026 18:41                                                                                                    Page 9
+
+
+   447                        ;                }
+   448                        L10019:
+   449                        ;
+   450                        ;                /* If the end marker was reached then a block of adequate size
+   451                        ;                 * was not found. */
+   452                        ;                if( pxBlock != pxEnd )
+   453                        ;                {
+   454 00:00D1: A5 09        	lda	<L3+pxBlock_1
+   455 00:00D3: CD xx xx     	cmp	|_~pxEnd
+   456 00:00D6: D0 05        	bne	L16
+   457 00:00D8: A5 0B        	lda	<L3+pxBlock_1+2
+   458 00:00DA: CD xx xx     	cmp	|_~pxEnd+2
+   459                        L16:
+   460 00:00DD: D0 03        	bne	*+5
+   461 00:00DF: 82 08 01     	brl	L10042
+   462                        ;                    /* Return the memory space pointed to - jumping over the
+   463                        ;                     * BlockLink_t structure at its start. */
+   464                        ;                    pvReturn = ( void * ) ( ( ( uint8_t * ) heapPROTECT_BLOCK_POINTER( pxPreviousBloc
+                    k->pxNextFreeBlock ) ) + xHeapStructSize );
+   465 00:00E2: A9 08 00     	lda	#$8
+   466 00:00E5: 18           	clc
+   467 00:00E6: 67 0D        	adc	[<L3+pxPreviousBlock_1]
+   468 00:00E8: 85 15        	sta	<L3+pvReturn_1
+   469 00:00EA: A9 00 00     	lda	#$0
+   470 00:00ED: A0 02 00     	ldy	#$2
+   471 00:00F0: 77 0D        	adc	[<L3+pxPreviousBlock_1],Y
+   472 00:00F2: 85 17        	sta	<L3+pvReturn_1+2
+   473                        ;                    heapVALIDATE_BLOCK_POINTER( pvReturn );
+   474                        ;
+   475                        ;                    /* This block is being returned for use so must be taken out
+   476                        ;                     * of the list of free blocks. */
+   477                        ;                    pxPreviousBlock->pxNextFreeBlock = pxBlock->pxNextFreeBlock;
+   478 00:00F4: A7 09        	lda	[<L3+pxBlock_1]
+   479 00:00F6: 87 0D        	sta	[<L3+pxPreviousBlock_1]
+   480 00:00F8: B7 09        	lda	[<L3+pxBlock_1],Y
+   481 00:00FA: 97 0D        	sta	[<L3+pxPreviousBlock_1],Y
+   482                        ;
+   483                        ;                    /* If the block is larger than required it can be split into
+   484                        ;                     * two. */
+   485                        ;                    configASSERT( heapSUBTRACT_WILL_UNDERFLOW( pxBlock->xBlockSize, xWantedSize ) == 
+                    0 );
+   486 00:00FC: A5 23        	lda	<L2+xWantedSize_0
+   487 00:00FE: 85 01        	sta	<R0
+   488 00:0100: 64 03        	stz	<R0+2
+   489 00:0102: C8           	iny
+   490 00:0103: C8           	iny
+   491 00:0104: B7 09        	lda	[<L3+pxBlock_1],Y
+   492 00:0106: C5 01        	cmp	<R0
+   493 00:0108: C8           	iny
+   494 00:0109: C8           	iny
+   495 00:010A: B7 09        	lda	[<L3+pxBlock_1],Y
+   496 00:010C: E5 03        	sbc	<R0+2
+   497 00:010E: B0 02        	bcs	L10022
+   498                        L10026:
+   499 00:0110: 80 FE        	bra	L10026
+   500                        L10022:
+   501                        ;
+   502                        ;                    if( ( pxBlock->xBlockSize - xWantedSize ) > heapMINIMUM_BLOCK_SIZE )
+  Mon Sep 14 2026 18:41                                                                                                    Page 10
+
+
+   503                        ;                    {
+   504 00:0112: A5 23        	lda	<L2+xWantedSize_0
+   505 00:0114: 85 01        	sta	<R0
+   506 00:0116: 64 03        	stz	<R0+2
+   507 00:0118: 38           	sec
+   508 00:0119: A0 04 00     	ldy	#$4
+   509 00:011C: B7 09        	lda	[<L3+pxBlock_1],Y
+   510 00:011E: E5 01        	sbc	<R0
+   511 00:0120: 85 05        	sta	<R1
+   512 00:0122: C8           	iny
+   513 00:0123: C8           	iny
+   514 00:0124: B7 09        	lda	[<L3+pxBlock_1],Y
+   515 00:0126: E5 03        	sbc	<R0+2
+   516 00:0128: 85 07        	sta	<R1+2
+   517 00:012A: A9 10 00     	lda	#$10
+   518 00:012D: C5 05        	cmp	<R1
+   519 00:012F: A9 00 00     	lda	#$0
+   520 00:0132: E5 07        	sbc	<R1+2
+   521 00:0134: B0 5B        	bcs	L10037
+   522                        ;                        /* This block is to be split into two.  Create a new
+   523                        ;                         * block following the number of bytes requested. The void
+   524                        ;                         * cast is used to prevent byte alignment warnings from the
+   525                        ;                         * compiler. */
+   526                        ;                        pxNewBlockLink = ( void * ) ( ( ( uint8_t * ) pxBlock ) + xWantedSize );
+   527 00:0136: A5 23        	lda	<L2+xWantedSize_0
+   528 00:0138: 85 01        	sta	<R0
+   529 00:013A: 64 03        	stz	<R0+2
+   530 00:013C: A5 09        	lda	<L3+pxBlock_1
+   531 00:013E: 18           	clc
+   532 00:013F: 65 01        	adc	<R0
+   533 00:0141: 85 11        	sta	<L3+pxNewBlockLink_1
+   534 00:0143: A5 0B        	lda	<L3+pxBlock_1+2
+   535 00:0145: 65 03        	adc	<R0+2
+   536 00:0147: 85 13        	sta	<L3+pxNewBlockLink_1+2
+   537                        ;                        configASSERT( ( ( ( uint32_t ) pxNewBlockLink ) & ( uint32_t ) portBYTE_ALIGN
+                    MENT_MASK ) == 0 );
+   538                        ;
+   539                        ;                        /* Calculate the sizes of two blocks split from the
+   540                        ;                         * single block. */
+   541                        ;                        pxNewBlockLink->xBlockSize = pxBlock->xBlockSize - xWantedSize;
+   542 00:0149: A5 23        	lda	<L2+xWantedSize_0
+   543 00:014B: 85 01        	sta	<R0
+   544 00:014D: 64 03        	stz	<R0+2
+   545 00:014F: 38           	sec
+   546 00:0150: 88           	dey
+   547 00:0151: 88           	dey
+   548 00:0152: B7 09        	lda	[<L3+pxBlock_1],Y
+   549 00:0154: E5 01        	sbc	<R0
+   550 00:0156: 85 05        	sta	<R1
+   551 00:0158: C8           	iny
+   552 00:0159: C8           	iny
+   553 00:015A: B7 09        	lda	[<L3+pxBlock_1],Y
+   554 00:015C: E5 03        	sbc	<R0+2
+   555 00:015E: 85 07        	sta	<R1+2
+   556 00:0160: A5 05        	lda	<R1
+   557 00:0162: 88           	dey
+   558 00:0163: 88           	dey
+   559 00:0164: 97 11        	sta	[<L3+pxNewBlockLink_1],Y
+  Mon Sep 14 2026 18:41                                                                                                    Page 11
+
+
+   560 00:0166: A5 07        	lda	<R1+2
+   561 00:0168: C8           	iny
+   562 00:0169: C8           	iny
+   563 00:016A: 97 11        	sta	[<L3+pxNewBlockLink_1],Y
+   564                        ;                        pxBlock->xBlockSize = xWantedSize;
+   565 00:016C: A5 23        	lda	<L2+xWantedSize_0
+   566 00:016E: 85 01        	sta	<R0
+   567 00:0170: 64 03        	stz	<R0+2
+   568 00:0172: A5 01        	lda	<R0
+   569 00:0174: 88           	dey
+   570 00:0175: 88           	dey
+   571 00:0176: 97 09        	sta	[<L3+pxBlock_1],Y
+   572 00:0178: A5 03        	lda	<R0+2
+   573 00:017A: C8           	iny
+   574 00:017B: C8           	iny
+   575 00:017C: 97 09        	sta	[<L3+pxBlock_1],Y
+   576                        ;
+   577                        ;                        /* Insert the new block into the list of free blocks. */
+   578                        ;                        pxNewBlockLink->pxNextFreeBlock = pxPreviousBlock->pxNextFreeBlock;
+   579 00:017E: A7 0D        	lda	[<L3+pxPreviousBlock_1]
+   580 00:0180: 87 11        	sta	[<L3+pxNewBlockLink_1]
+   581 00:0182: A0 02 00     	ldy	#$2
+   582 00:0185: B7 0D        	lda	[<L3+pxPreviousBlock_1],Y
+   583 00:0187: 97 11        	sta	[<L3+pxNewBlockLink_1],Y
+   584                        ;                        pxPreviousBlock->pxNextFreeBlock = heapPROTECT_BLOCK_POINTER( pxNewBlockLink 
+                    );
+   585 00:0189: A5 11        	lda	<L3+pxNewBlockLink_1
+   586 00:018B: 87 0D        	sta	[<L3+pxPreviousBlock_1]
+   587 00:018D: A5 13        	lda	<L3+pxNewBlockLink_1+2
+   588 00:018F: 97 0D        	sta	[<L3+pxPreviousBlock_1],Y
+   589                        ;                    }
+   590                        ;                    else
+   591                        L10037:
+   592                        ;
+   593                        ;                    xFreeBytesRemaining -= pxBlock->xBlockSize;
+   594 00:0191: 38           	sec
+   595 00:0192: AD xx xx     	lda	|_~xFreeBytesRemaining
+   596 00:0195: A0 04 00     	ldy	#$4
+   597 00:0198: F7 09        	sbc	[<L3+pxBlock_1],Y
+   598 00:019A: 8D xx xx     	sta	|_~xFreeBytesRemaining
+   599 00:019D: AD xx xx     	lda	|_~xFreeBytesRemaining+2
+   600 00:01A0: C8           	iny
+   601 00:01A1: C8           	iny
+   602 00:01A2: F7 09        	sbc	[<L3+pxBlock_1],Y
+   603 00:01A4: 8D xx xx     	sta	|_~xFreeBytesRemaining+2
+   604                        ;
+   605                        ;                    if( xFreeBytesRemaining < xMinimumEverFreeBytesRemaining )
+   606                        ;                    {
+   607 00:01A7: AD xx xx     	lda	|_~xFreeBytesRemaining
+   608 00:01AA: CD xx xx     	cmp	|_~xMinimumEverFreeBytesRemaining
+   609 00:01AD: AD xx xx     	lda	|_~xFreeBytesRemaining+2
+   610 00:01B0: ED xx xx     	sbc	|_~xMinimumEverFreeBytesRemaining+2
+   611 00:01B3: 90 4C        	bcc	L20
+   612                        L10039:
+   613                        ;
+   614                        ;                    xAllocatedBlockSize = pxBlock->xBlockSize;
+   615 00:01B5: A0 04 00     	ldy	#$4
+   616 00:01B8: B7 09        	lda	[<L3+pxBlock_1],Y
+  Mon Sep 14 2026 18:41                                                                                                    Page 12
+
+
+   617 00:01BA: 85 1D        	sta	<L3+xAllocatedBlockSize_1
+   618 00:01BC: C8           	iny
+   619 00:01BD: C8           	iny
+   620 00:01BE: B7 09        	lda	[<L3+pxBlock_1],Y
+   621 00:01C0: 85 1F        	sta	<L3+xAllocatedBlockSize_1+2
+   622                        ;
+   623                        ;                    /* The block is being returned - it is allocated and owned
+   624                        ;                     * by the application and has no "next" block. */
+   625                        ;                    heapALLOCATE_BLOCK( pxBlock );
+   626 00:01C2: A9 04 00     	lda	#$4
+   627 00:01C5: 18           	clc
+   628 00:01C6: 65 09        	adc	<L3+pxBlock_1
+   629 00:01C8: 85 01        	sta	<R0
+   630 00:01CA: A9 00 00     	lda	#$0
+   631 00:01CD: 65 0B        	adc	<L3+pxBlock_1+2
+   632 00:01CF: 85 03        	sta	<R0+2
+   633 00:01D1: A0 02 00     	ldy	#$2
+   634 00:01D4: B7 01        	lda	[<R0],Y
+   635 00:01D6: 09 00 80     	ora	#^$80000000
+   636 00:01D9: 97 01        	sta	[<R0],Y
+   637                        ;                    pxBlock->pxNextFreeBlock = heapPROTECT_BLOCK_POINTER( NULL );
+   638 00:01DB: A9 00 00     	lda	#$0
+   639 00:01DE: 87 09        	sta	[<L3+pxBlock_1]
+   640 00:01E0: 97 09        	sta	[<L3+pxBlock_1],Y
+   641                        ;                    xNumberOfSuccessfulAllocations++;
+   642 00:01E2: EE xx xx     	inc	|_~xNumberOfSuccessfulAllocations
+   643 00:01E5: D0 03        	bne	L10042
+   644 00:01E7: EE xx xx     	inc	|_~xNumberOfSuccessfulAllocations+2
+   645                        ;                }
+   646                        ;                else
+   647                        ;        }
+   648                        ;        else
+   649                        L10042:
+   650                        ;
+   651                        ;        traceMALLOC( pvReturn, xAllocatedBlockSize );
+   652                        ;
+   653                        ;        /* Prevent compiler warnings when trace macros are not used. */
+   654                        ;        ( void ) xAllocatedBlockSize;
+   655                        ;    }
+   656                        ;    ( void ) xTaskResumeAll();
+   657 00:01EA: 20 xx xx     	jsr	_~xTaskResumeAll
+   658                        ;
+   659                        ;    #if ( configUSE_MALLOC_FAILED_HOOK == 1 )
+   660                        ;    {
+   661                        ;        if( pvReturn == NULL )
+   662                        ;        {
+   663                        ;            vApplicationMallocFailedHook();
+   664                        ;        }
+   665                        ;        else
+   666                        ;        {
+   667                        ;            mtCOVERAGE_TEST_MARKER();
+   668                        ;        }
+   669                        ;    }
+   670                        ;    #endif /* if ( configUSE_MALLOC_FAILED_HOOK == 1 ) */
+   671                        ;
+   672                        ;    configASSERT( ( ( ( uint32_t ) pvReturn ) & ( uint32_t ) portBYTE_ALIGNMENT_MASK ) == 0 );
+   673                        ;    return pvReturn;
+   674 00:01ED: A6 17        	ldx	<L3+pvReturn_1+2
+  Mon Sep 14 2026 18:41                                                                                                    Page 13
+
+
+   675 00:01EF: A5 15        	lda	<L3+pvReturn_1
+   676 00:01F1: A8           	tay
+   677 00:01F2: A5 21        	lda	<L2+1
+   678 00:01F4: 85 23        	sta	<L2+1+2
+   679 00:01F6: 2B           	pld
+   680 00:01F7: 3B           	tsc
+   681 00:01F8: 18           	clc
+   682 00:01F9: 69 22 00     	adc	#L2+2
+   683 00:01FC: 1B           	tcs
+   684 00:01FD: 98           	tya
+   685 00:01FE: 60           	rts
+   686                        L10034:
+   687 00:01FF: 80 FE        	bra	L10034
+   688                        ;                    {
+   689                        ;                        mtCOVERAGE_TEST_MARKER();
+   690                        ;                    }
+   691                        L20:
+   692                        ;                        xMinimumEverFreeBytesRemaining = xFreeBytesRemaining;
+   693 00:0201: AD xx xx     	lda	|_~xFreeBytesRemaining
+   694 00:0204: 8D xx xx     	sta	|_~xMinimumEverFreeBytesRemaining
+   695 00:0207: AD xx xx     	lda	|_~xFreeBytesRemaining+2
+   696 00:020A: 8D xx xx     	sta	|_~xMinimumEverFreeBytesRemaining+2
+   697                        ;                    }
+   698                        ;                    else
+   699 00:020D: 80 A6        	bra	L10039
+   700                        ;                    {
+   701                        ;                        mtCOVERAGE_TEST_MARKER();
+   702                        ;                    }
+   703                        ;                {
+   704                        ;                    mtCOVERAGE_TEST_MARKER();
+   705                        ;                }
+   706                        ;            }
+   707                        ;            else
+   708                        ;            {
+   709                        ;                mtCOVERAGE_TEST_MARKER();
+   710                        ;            }
+   711                        ;        {
+   712                        ;            mtCOVERAGE_TEST_MARKER();
+   713                        ;        }
+   714                        L10047:
+   715 00:020F: 80 FE        	bra	L10047
+   716                        ;}
+   717             00000020   L2	equ	32
+   718             00000009   L3	equ	9
+   719                        	ends
+   720                        	efunc
+   721                        ;/*-----------------------------------------------------------*/
+   722                        ;
+   723                        ;void vPortFree( void * pv )
+   724                        ;{
+   725                        	code
+   726                        	xdef	_~vPortFree
+   727                        	func
+   728                        _~vPortFree:
+   729                        	longa	on
+   730                        	longi	on
+   731 00:0211: 3B           	tsc
+   732 00:0212: 38           	sec
+  Mon Sep 14 2026 18:41                                                                                                    Page 14
+
+
+   733 00:0213: E9 14 00     	sbc	#L23
+   734 00:0216: 1B           	tcs
+   735 00:0217: 0B           	phd
+   736 00:0218: 5B           	tcd
+   737             00000003   pv_0	set	3
+   738                        ;    uint8_t * puc = ( uint8_t * ) pv;
+   739                        ;    BlockLink_t * pxLink;
+   740                        ;
+   741                        ;    if( pv != NULL )
+   742             00000000   puc_1	set	0
+   743             00000004   pxLink_1	set	4
+   744 00:0219: A5 17        	lda	<L23+pv_0
+   745 00:021B: 85 0D        	sta	<L24+puc_1
+   746 00:021D: A5 19        	lda	<L23+pv_0+2
+   747 00:021F: 85 0F        	sta	<L24+puc_1+2
+   748                        ;    {
+   749 00:0221: A5 17        	lda	<L23+pv_0
+   750 00:0223: 05 19        	ora	<L23+pv_0+2
+   751 00:0225: D0 03        	bne	*+5
+   752 00:0227: 82 C7 00     	brl	L32
+   753                        ;        /* The memory being freed will have an BlockLink_t structure immediately
+   754                        ;         * before it. */
+   755                        ;        puc -= xHeapStructSize;
+   756 00:022A: A9 F8 FF     	lda	#$fff8
+   757 00:022D: 18           	clc
+   758 00:022E: 65 0D        	adc	<L24+puc_1
+   759 00:0230: 85 0D        	sta	<L24+puc_1
+   760 00:0232: A9 FF FF     	lda	#$ffff
+   761 00:0235: 65 0F        	adc	<L24+puc_1+2
+   762 00:0237: 85 0F        	sta	<L24+puc_1+2
+   763                        ;
+   764                        ;        /* This casting is to keep the compiler from issuing warnings. */
+   765                        ;        pxLink = ( void * ) puc;
+   766 00:0239: A5 0D        	lda	<L24+puc_1
+   767 00:023B: 85 11        	sta	<L24+pxLink_1
+   768 00:023D: A5 0F        	lda	<L24+puc_1+2
+   769 00:023F: 85 13        	sta	<L24+pxLink_1+2
+   770                        ;
+   771                        ;        heapVALIDATE_BLOCK_POINTER( pxLink );
+   772                        ;        configASSERT( heapBLOCK_IS_ALLOCATED( pxLink ) != 0 );
+   773 00:0241: A0 06 00     	ldy	#$6
+   774 00:0244: B7 11        	lda	[<L24+pxLink_1],Y
+   775 00:0246: 29 00 80     	and	#^$80000000
+   776 00:0249: D0 02        	bne	L10051
+   777                        L10055:
+   778 00:024B: 80 FE        	bra	L10055
+   779                        L10051:
+   780                        ;        configASSERT( pxLink->pxNextFreeBlock == heapPROTECT_BLOCK_POINTER( NULL ) );
+   781 00:024D: A7 11        	lda	[<L24+pxLink_1]
+   782 00:024F: A0 02 00     	ldy	#$2
+   783 00:0252: 17 11        	ora	[<L24+pxLink_1],Y
+   784 00:0254: F0 02        	beq	L10058
+   785                        L10062:
+   786 00:0256: 80 FE        	bra	L10062
+   787                        L10058:
+   788                        ;
+   789                        ;        if( heapBLOCK_IS_ALLOCATED( pxLink ) != 0 )
+   790                        ;        {
+  Mon Sep 14 2026 18:41                                                                                                    Page 15
+
+
+   791 00:0258: A0 06 00     	ldy	#$6
+   792 00:025B: B7 11        	lda	[<L24+pxLink_1],Y
+   793 00:025D: 29 00 80     	and	#^$80000000
+   794 00:0260: D0 03        	bne	*+5
+   795 00:0262: 82 8C 00     	brl	L32
+   796                        ;            if( pxLink->pxNextFreeBlock == heapPROTECT_BLOCK_POINTER( NULL ) )
+   797                        ;            {
+   798 00:0265: A7 11        	lda	[<L24+pxLink_1]
+   799 00:0267: A0 02 00     	ldy	#$2
+   800 00:026A: 17 11        	ora	[<L24+pxLink_1],Y
+   801 00:026C: F0 03        	beq	*+5
+   802 00:026E: 82 80 00     	brl	L32
+   803                        ;                /* The block is being returned to the heap - it is no longer
+   804                        ;                 * allocated. */
+   805                        ;                heapFREE_BLOCK( pxLink );
+   806 00:0271: A9 04 00     	lda	#$4
+   807 00:0274: 18           	clc
+   808 00:0275: 65 11        	adc	<L24+pxLink_1
+   809 00:0277: 85 01        	sta	<R0
+   810 00:0279: A9 00 00     	lda	#$0
+   811 00:027C: 65 13        	adc	<L24+pxLink_1+2
+   812 00:027E: 85 03        	sta	<R0+2
+   813 00:0280: B7 01        	lda	[<R0],Y
+   814 00:0282: 29 FF 7F     	and	#^$7fffffff
+   815 00:0285: 97 01        	sta	[<R0],Y
+   816                        ;                #if ( configHEAP_CLEAR_MEMORY_ON_FREE == 1 )
+   817                        ;                {
+   818                        ;                    /* Check for underflow as this can occur if xBlockSize is
+   819                        ;                     * overwritten in a heap block. */
+   820                        ;                    if( heapSUBTRACT_WILL_UNDERFLOW( pxLink->xBlockSize, xHeapStructSize ) == 0 )
+   821                        ;                    {
+   822 00:0287: C8           	iny
+   823 00:0288: C8           	iny
+   824 00:0289: B7 11        	lda	[<L24+pxLink_1],Y
+   825 00:028B: C9 08 00     	cmp	#<$8
+   826 00:028E: C8           	iny
+   827 00:028F: C8           	iny
+   828 00:0290: B7 11        	lda	[<L24+pxLink_1],Y
+   829 00:0292: E9 00 00     	sbc	#^$8
+   830 00:0295: 90 2F        	bcc	L10067
+   831                        ;                        ( void ) memset( puc + xHeapStructSize, 0, pxLink->xBlockSize - xHeapStructSi
+                    ze );
+   832 00:0297: 18           	clc
+   833 00:0298: A9 F8 FF     	lda	#$fff8
+   834 00:029B: 88           	dey
+   835 00:029C: 88           	dey
+   836 00:029D: 77 11        	adc	[<L24+pxLink_1],Y
+   837 00:029F: 85 01        	sta	<R0
+   838 00:02A1: A9 FF FF     	lda	#$ffff
+   839 00:02A4: C8           	iny
+   840 00:02A5: C8           	iny
+   841 00:02A6: 77 11        	adc	[<L24+pxLink_1],Y
+   842 00:02A8: 85 03        	sta	<R0+2
+   843 00:02AA: D4 01        	pei	<R0
+   844 00:02AC: F4 00 00     	pea	#<$0
+   845 00:02AF: A9 08 00     	lda	#$8
+   846 00:02B2: 18           	clc
+   847 00:02B3: 65 0D        	adc	<L24+puc_1
+  Mon Sep 14 2026 18:41                                                                                                    Page 16
+
+
+   848 00:02B5: 85 05        	sta	<R1
+   849 00:02B7: A9 00 00     	lda	#$0
+   850 00:02BA: 65 0F        	adc	<L24+puc_1+2
+   851 00:02BC: 48           	pha
+   852 00:02BD: D4 05        	pei	<R1
+   853 00:02BF: 20 xx xx     	jsr	_~memset
+   854 00:02C2: 85 09        	sta	<R2
+   855 00:02C4: 86 0B        	stx	<R2+2
+   856                        ;                    }
+   857                        ;                }
+   858                        L10067:
+   859                        ;                #endif
+   860                        ;
+   861                        ;                vTaskSuspendAll();
+   862 00:02C6: 20 xx xx     	jsr	_~vTaskSuspendAll
+   863                        ;                {
+   864                        ;                    /* Add this block to the list of free blocks. */
+   865                        ;                    xFreeBytesRemaining += pxLink->xBlockSize;
+   866 00:02C9: 18           	clc
+   867 00:02CA: AD xx xx     	lda	|_~xFreeBytesRemaining
+   868 00:02CD: A0 04 00     	ldy	#$4
+   869 00:02D0: 77 11        	adc	[<L24+pxLink_1],Y
+   870 00:02D2: 8D xx xx     	sta	|_~xFreeBytesRemaining
+   871 00:02D5: AD xx xx     	lda	|_~xFreeBytesRemaining+2
+   872 00:02D8: C8           	iny
+   873 00:02D9: C8           	iny
+   874 00:02DA: 77 11        	adc	[<L24+pxLink_1],Y
+   875 00:02DC: 8D xx xx     	sta	|_~xFreeBytesRemaining+2
+   876                        ;                    traceFREE( pv, pxLink->xBlockSize );
+   877                        ;                    prvInsertBlockIntoFreeList( ( ( BlockLink_t * ) pxLink ) );
+   878 00:02DF: D4 13        	pei	<L24+pxLink_1+2
+   879 00:02E1: D4 11        	pei	<L24+pxLink_1
+   880 00:02E3: 20 xx xx     	jsr	_~prvInsertBlockIntoFreeList
+   881                        ;                    xNumberOfSuccessfulFrees++;
+   882 00:02E6: EE xx xx     	inc	|_~xNumberOfSuccessfulFrees
+   883 00:02E9: D0 03        	bne	L31
+   884 00:02EB: EE xx xx     	inc	|_~xNumberOfSuccessfulFrees+2
+   885                        L31:
+   886                        ;                }
+   887                        ;                ( void ) xTaskResumeAll();
+   888 00:02EE: 20 xx xx     	jsr	_~xTaskResumeAll
+   889                        ;            }
+   890                        ;            else
+   891                        L32:
+   892 00:02F1: A5 15        	lda	<L23+1
+   893 00:02F3: 85 19        	sta	<L23+1+4
+   894 00:02F5: 2B           	pld
+   895 00:02F6: 3B           	tsc
+   896 00:02F7: 18           	clc
+   897 00:02F8: 69 18 00     	adc	#L23+4
+   898 00:02FB: 1B           	tcs
+   899 00:02FC: 60           	rts
+   900                        ;            {
+   901                        ;                mtCOVERAGE_TEST_MARKER();
+   902                        ;            }
+   903                        ;        }
+   904                        ;        else
+   905                        ;        {
+  Mon Sep 14 2026 18:41                                                                                                    Page 17
+
+
+   906                        ;            mtCOVERAGE_TEST_MARKER();
+   907                        ;        }
+   908                        ;    }
+   909                        ;}
+   910             00000014   L23	equ	20
+   911             0000000D   L24	equ	13
+   912                        	ends
+   913                        	efunc
+   914                        ;/*-----------------------------------------------------------*/
+   915                        ;
+   916                        ;size_t xPortGetFreeHeapSize( void )
+   917                        ;{
+   918                        	code
+   919                        	xdef	_~xPortGetFreeHeapSize
+   920                        	func
+   921                        _~xPortGetFreeHeapSize:
+   922                        	longa	on
+   923                        	longi	on
+   924                        ;    return xFreeBytesRemaining;
+   925 00:02FD: AD xx xx     	lda	|_~xFreeBytesRemaining
+   926 00:0300: 60           	rts
+   927                        ;}
+   928             00000000   L33	equ	0
+   929             00000001   L34	equ	1
+   930                        	ends
+   931                        	efunc
+   932                        ;/*-----------------------------------------------------------*/
+   933                        ;
+   934                        ;size_t xPortGetMinimumEverFreeHeapSize( void )
+   935                        ;{
+   936                        	code
+   937                        	xdef	_~xPortGetMinimumEverFreeHeapSize
+   938                        	func
+   939                        _~xPortGetMinimumEverFreeHeapSize:
+   940                        	longa	on
+   941                        	longi	on
+   942                        ;    return xMinimumEverFreeBytesRemaining;
+   943 00:0301: AD xx xx     	lda	|_~xMinimumEverFreeBytesRemaining
+   944 00:0304: 60           	rts
+   945                        ;}
+   946             00000000   L36	equ	0
+   947             00000001   L37	equ	1
+   948                        	ends
+   949                        	efunc
+   950                        ;/*-----------------------------------------------------------*/
+   951                        ;
+   952                        ;void xPortResetHeapMinimumEverFreeHeapSize( void )
+   953                        ;{
+   954                        	code
+   955                        	xdef	_~xPortResetHeapMinimumEverFreeHeapSize
+   956                        	func
+   957                        _~xPortResetHeapMinimumEverFreeHeapSize:
+   958                        	longa	on
+   959                        	longi	on
+   960                        ;    xMinimumEverFreeBytesRemaining = xFreeBytesRemaining;
+   961 00:0305: AD xx xx     	lda	|_~xFreeBytesRemaining
+   962 00:0308: 8D xx xx     	sta	|_~xMinimumEverFreeBytesRemaining
+   963 00:030B: AD xx xx     	lda	|_~xFreeBytesRemaining+2
+  Mon Sep 14 2026 18:41                                                                                                    Page 18
+
+
+   964 00:030E: 8D xx xx     	sta	|_~xMinimumEverFreeBytesRemaining+2
+   965                        ;}
+   966 00:0311: 60           	rts
+   967             00000000   L39	equ	0
+   968             00000001   L40	equ	1
+   969                        	ends
+   970                        	efunc
+   971                        ;/*-----------------------------------------------------------*/
+   972                        ;
+   973                        ;void * pvPortCalloc( size_t xNum,
+   974                        ;                     size_t xSize )
+   975                        ;{
+   976                        	code
+   977                        	xdef	_~pvPortCalloc
+   978                        	func
+   979                        _~pvPortCalloc:
+   980                        	longa	on
+   981                        	longi	on
+   982 00:0312: 3B           	tsc
+   983 00:0313: 38           	sec
+   984 00:0314: E9 08 00     	sbc	#L42
+   985 00:0317: 1B           	tcs
+   986 00:0318: 0B           	phd
+   987 00:0319: 5B           	tcd
+   988             00000003   xNum_0	set	3
+   989             00000005   xSize_0	set	5
+   990                        ;    void * pv = NULL;
+   991                        ;
+   992                        ;    if( heapMULTIPLY_WILL_OVERFLOW( xNum, xSize ) == 0 )
+   993             00000000   pv_1	set	0
+   994 00:031A: 64 05        	stz	<L43+pv_1
+   995 00:031C: 64 07        	stz	<L43+pv_1+2
+   996                        ;    {
+   997 00:031E: A9 00 00     	lda	#$0
+   998 00:0321: C5 0B        	cmp	<L42+xNum_0
+   999 00:0323: B0 0C        	bcs	L44
+  1000 00:0325: A9 FF FF     	lda	#$ffff
+  1001 00:0328: A6 0B        	ldx	<L42+xNum_0
+  1002                        	xref	_~~udv
+  1003 00:032A: 20 xx xx     	jsr	_~~udv
+  1004 00:032D: C5 0D        	cmp	<L42+xSize_0
+  1005 00:032F: 90 25        	bcc	L10070
+  1006                        L44:
+  1007                        ;        pv = pvPortMalloc( xNum * xSize );
+  1008 00:0331: A5 0B        	lda	<L42+xNum_0
+  1009 00:0333: A6 0D        	ldx	<L42+xSize_0
+  1010                        	xref	_~~mul
+  1011 00:0335: 20 xx xx     	jsr	_~~mul
+  1012 00:0338: 48           	pha
+  1013 00:0339: 20 xx xx     	jsr	_~pvPortMalloc
+  1014 00:033C: 85 05        	sta	<L43+pv_1
+  1015 00:033E: 86 07        	stx	<L43+pv_1+2
+  1016                        ;
+  1017                        ;        if( pv != NULL )
+  1018                        ;        {
+  1019 00:0340: 05 07        	ora	<L43+pv_1+2
+  1020 00:0342: F0 12        	beq	L10070
+  1021                        ;            ( void ) memset( pv, 0, xNum * xSize );
+  Mon Sep 14 2026 18:41                                                                                                    Page 19
+
+
+  1022 00:0344: A5 0B        	lda	<L42+xNum_0
+  1023 00:0346: A6 0D        	ldx	<L42+xSize_0
+  1024                        	xref	_~~mul
+  1025 00:0348: 20 xx xx     	jsr	_~~mul
+  1026 00:034B: 48           	pha
+  1027 00:034C: F4 00 00     	pea	#<$0
+  1028 00:034F: D4 07        	pei	<L43+pv_1+2
+  1029 00:0351: D4 05        	pei	<L43+pv_1
+  1030 00:0353: 20 xx xx     	jsr	_~memset
+  1031                        ;        }
+  1032                        ;    }
+  1033                        ;
+  1034                        ;    return pv;
+  1035                        L10070:
+  1036 00:0356: A6 07        	ldx	<L43+pv_1+2
+  1037 00:0358: A5 05        	lda	<L43+pv_1
+  1038 00:035A: A8           	tay
+  1039 00:035B: A5 09        	lda	<L42+1
+  1040 00:035D: 85 0D        	sta	<L42+1+4
+  1041 00:035F: 2B           	pld
+  1042 00:0360: 3B           	tsc
+  1043 00:0361: 18           	clc
+  1044 00:0362: 69 0C 00     	adc	#L42+4
+  1045 00:0365: 1B           	tcs
+  1046 00:0366: 98           	tya
+  1047 00:0367: 60           	rts
+  1048                        ;}
+  1049             00000008   L42	equ	8
+  1050             00000005   L43	equ	5
+  1051                        	ends
+  1052                        	efunc
+  1053                        ;/*-----------------------------------------------------------*/
+  1054                        ;
+  1055                        ;static void prvInsertBlockIntoFreeList( BlockLink_t * pxBlockToInsert ) /* PRIVILEGED_FUNCTION */
+  1056                        ;{
+  1057                        	code
+  1058                        	func
+  1059                        _~prvInsertBlockIntoFreeList:
+  1060                        	longa	on
+  1061                        	longi	on
+  1062 00:0368: 3B           	tsc
+  1063 00:0369: 38           	sec
+  1064 00:036A: E9 10 00     	sbc	#L49
+  1065 00:036D: 1B           	tcs
+  1066 00:036E: 0B           	phd
+  1067 00:036F: 5B           	tcd
+  1068             00000003   pxBlockToInsert_0	set	3
+  1069                        ;    BlockLink_t * pxIterator;
+  1070                        ;    uint8_t * puc;
+  1071                        ;
+  1072                        ;    /* Iterate through the list until a block is found that has a higher address
+  1073                        ;     * than the block being inserted. */
+  1074                        ;    for( pxIterator = &xStart; heapPROTECT_BLOCK_POINTER( pxIterator->pxNextFreeBlock ) < pxBlockToIn
+                    sert; pxIterator = heapPROTECT_BLOCK_POINTER( pxIterator->pxNextFreeBlock ) )
+  1075             00000000   pxIterator_1	set	0
+  1076             00000004   puc_1	set	4
+  1077 00:0370: A9 xx xx     	lda	#<_~xStart
+  1078 00:0373: 85 09        	sta	<L50+pxIterator_1
+  Mon Sep 14 2026 18:41                                                                                                    Page 20
+
+
+  1079                        	xref	_BEG_DATA
+  1080 00:0375: A9 xx xx     	lda	#_BEG_DATA>>16
+  1081 00:0378: 80 11        	bra	L20002
+  1082                        ;    {
+  1083                        ;        /* Nothing to do here, just iterate to the right position. */
+  1084                        ;    }
+  1085                        L10072:
+  1086 00:037A: A7 09        	lda	[<L50+pxIterator_1]
+  1087 00:037C: 85 01        	sta	<R0
+  1088 00:037E: A0 02 00     	ldy	#$2
+  1089 00:0381: B7 09        	lda	[<L50+pxIterator_1],Y
+  1090 00:0383: 85 03        	sta	<R0+2
+  1091 00:0385: A5 01        	lda	<R0
+  1092 00:0387: 85 09        	sta	<L50+pxIterator_1
+  1093 00:0389: A5 03        	lda	<R0+2
+  1094                        L20002:
+  1095 00:038B: 85 0B        	sta	<L50+pxIterator_1+2
+  1096 00:038D: A7 09        	lda	[<L50+pxIterator_1]
+  1097 00:038F: C5 13        	cmp	<L49+pxBlockToInsert_0
+  1098 00:0391: A0 02 00     	ldy	#$2
+  1099 00:0394: B7 09        	lda	[<L50+pxIterator_1],Y
+  1100 00:0396: E5 15        	sbc	<L49+pxBlockToInsert_0+2
+  1101 00:0398: 90 E0        	bcc	L10072
+  1102                        ;
+  1103                        ;    if( pxIterator != &xStart )
+  1104                        ;    {
+  1105 00:039A: A9 xx xx     	lda	#<_~xStart
+  1106 00:039D: 85 01        	sta	<R0
+  1107                        	xref	_BEG_DATA
+  1108 00:039F: A9 xx xx     	lda	#_BEG_DATA>>16
+  1109 00:03A2: 85 03        	sta	<R0+2
+  1110 00:03A4: A5 09        	lda	<L50+pxIterator_1
+  1111 00:03A6: C5 01        	cmp	<R0
+  1112 00:03A8: D0 04        	bne	L52
+  1113 00:03AA: A5 0B        	lda	<L50+pxIterator_1+2
+  1114 00:03AC: C5 03        	cmp	<R0+2
+  1115                        L52:
+  1116 00:03AE: F0 00        	beq	L10076
+  1117                        ;        heapVALIDATE_BLOCK_POINTER( pxIterator );
+  1118                        ;    }
+  1119                        ;
+  1120                        ;    /* Do the block being inserted, and the block it is being inserted after
+  1121                        ;     * make a contiguous block of memory? */
+  1122                        ;    puc = ( uint8_t * ) pxIterator;
+  1123                        L10076:
+  1124 00:03B0: A5 09        	lda	<L50+pxIterator_1
+  1125 00:03B2: 85 0D        	sta	<L50+puc_1
+  1126 00:03B4: A5 0B        	lda	<L50+pxIterator_1+2
+  1127 00:03B6: 85 0F        	sta	<L50+puc_1+2
+  1128                        ;
+  1129                        ;    if( ( puc + pxIterator->xBlockSize ) == ( uint8_t * ) pxBlockToInsert )
+  1130                        ;    {
+  1131 00:03B8: 18           	clc
+  1132 00:03B9: A5 0D        	lda	<L50+puc_1
+  1133 00:03BB: A0 04 00     	ldy	#$4
+  1134 00:03BE: 77 09        	adc	[<L50+pxIterator_1],Y
+  1135 00:03C0: 85 01        	sta	<R0
+  1136 00:03C2: A5 0F        	lda	<L50+puc_1+2
+  Mon Sep 14 2026 18:41                                                                                                    Page 21
+
+
+  1137 00:03C4: C8           	iny
+  1138 00:03C5: C8           	iny
+  1139 00:03C6: 77 09        	adc	[<L50+pxIterator_1],Y
+  1140 00:03C8: 85 03        	sta	<R0+2
+  1141 00:03CA: A5 13        	lda	<L49+pxBlockToInsert_0
+  1142 00:03CC: C5 01        	cmp	<R0
+  1143 00:03CE: D0 04        	bne	L54
+  1144 00:03D0: A5 15        	lda	<L49+pxBlockToInsert_0+2
+  1145 00:03D2: C5 03        	cmp	<R0+2
+  1146                        L54:
+  1147 00:03D4: D0 2F        	bne	L10078
+  1148                        ;        pxIterator->xBlockSize += pxBlockToInsert->xBlockSize;
+  1149 00:03D6: A9 04 00     	lda	#$4
+  1150 00:03D9: 18           	clc
+  1151 00:03DA: 65 09        	adc	<L50+pxIterator_1
+  1152 00:03DC: 85 01        	sta	<R0
+  1153 00:03DE: A9 00 00     	lda	#$0
+  1154 00:03E1: 65 0B        	adc	<L50+pxIterator_1+2
+  1155 00:03E3: 85 03        	sta	<R0+2
+  1156 00:03E5: 18           	clc
+  1157 00:03E6: A7 01        	lda	[<R0]
+  1158 00:03E8: A0 04 00     	ldy	#$4
+  1159 00:03EB: 77 13        	adc	[<L49+pxBlockToInsert_0],Y
+  1160 00:03ED: 87 01        	sta	[<R0]
+  1161 00:03EF: 88           	dey
+  1162 00:03F0: 88           	dey
+  1163 00:03F1: B7 01        	lda	[<R0],Y
+  1164 00:03F3: A0 06 00     	ldy	#$6
+  1165 00:03F6: 77 13        	adc	[<L49+pxBlockToInsert_0],Y
+  1166 00:03F8: A0 02 00     	ldy	#$2
+  1167 00:03FB: 97 01        	sta	[<R0],Y
+  1168                        ;        pxBlockToInsert = pxIterator;
+  1169 00:03FD: A5 09        	lda	<L50+pxIterator_1
+  1170 00:03FF: 85 13        	sta	<L49+pxBlockToInsert_0
+  1171 00:0401: A5 0B        	lda	<L50+pxIterator_1+2
+  1172 00:0403: 85 15        	sta	<L49+pxBlockToInsert_0+2
+  1173                        ;    }
+  1174                        ;    else
+  1175                        ;    {
+  1176                        ;        mtCOVERAGE_TEST_MARKER();
+  1177                        ;    }
+  1178                        L10078:
+  1179                        ;
+  1180                        ;    /* Do the block being inserted, and the block it is being inserted before
+  1181                        ;     * make a contiguous block of memory? */
+  1182                        ;    puc = ( uint8_t * ) pxBlockToInsert;
+  1183 00:0405: A5 13        	lda	<L49+pxBlockToInsert_0
+  1184 00:0407: 85 0D        	sta	<L50+puc_1
+  1185 00:0409: A5 15        	lda	<L49+pxBlockToInsert_0+2
+  1186 00:040B: 85 0F        	sta	<L50+puc_1+2
+  1187                        ;
+  1188                        ;    if( ( puc + pxBlockToInsert->xBlockSize ) == ( uint8_t * ) heapPROTECT_BLOCK_POINTER( pxIterator-
+                    >pxNextFreeBlock ) )
+  1189                        ;    {
+  1190 00:040D: 18           	clc
+  1191 00:040E: A5 0D        	lda	<L50+puc_1
+  1192 00:0410: A0 04 00     	ldy	#$4
+  1193 00:0413: 77 13        	adc	[<L49+pxBlockToInsert_0],Y
+  Mon Sep 14 2026 18:41                                                                                                    Page 22
+
+
+  1194 00:0415: 85 01        	sta	<R0
+  1195 00:0417: A5 0F        	lda	<L50+puc_1+2
+  1196 00:0419: C8           	iny
+  1197 00:041A: C8           	iny
+  1198 00:041B: 77 13        	adc	[<L49+pxBlockToInsert_0],Y
+  1199 00:041D: 85 03        	sta	<R0+2
+  1200 00:041F: A7 09        	lda	[<L50+pxIterator_1]
+  1201 00:0421: C5 01        	cmp	<R0
+  1202 00:0423: D0 07        	bne	L56
+  1203 00:0425: A0 02 00     	ldy	#$2
+  1204 00:0428: B7 09        	lda	[<L50+pxIterator_1],Y
+  1205 00:042A: C5 03        	cmp	<R0+2
+  1206                        L56:
+  1207 00:042C: D0 5C        	bne	L10079
+  1208                        ;        if( heapPROTECT_BLOCK_POINTER( pxIterator->pxNextFreeBlock ) != pxEnd )
+  1209                        ;        {
+  1210 00:042E: A7 09        	lda	[<L50+pxIterator_1]
+  1211 00:0430: CD xx xx     	cmp	|_~pxEnd
+  1212 00:0433: D0 08        	bne	L58
+  1213 00:0435: A0 02 00     	ldy	#$2
+  1214 00:0438: B7 09        	lda	[<L50+pxIterator_1],Y
+  1215 00:043A: CD xx xx     	cmp	|_~pxEnd+2
+  1216                        L58:
+  1217 00:043D: F0 41        	beq	L10080
+  1218                        ;            /* Form one big block from the two blocks. */
+  1219                        ;            pxBlockToInsert->xBlockSize += heapPROTECT_BLOCK_POINTER( pxIterator->pxNextFreeBlock )->
+                    xBlockSize;
+  1220 00:043F: A7 09        	lda	[<L50+pxIterator_1]
+  1221 00:0441: 85 01        	sta	<R0
+  1222 00:0443: A0 02 00     	ldy	#$2
+  1223 00:0446: B7 09        	lda	[<L50+pxIterator_1],Y
+  1224 00:0448: 85 03        	sta	<R0+2
+  1225 00:044A: A9 04 00     	lda	#$4
+  1226 00:044D: 18           	clc
+  1227 00:044E: 65 13        	adc	<L49+pxBlockToInsert_0
+  1228 00:0450: 85 05        	sta	<R1
+  1229 00:0452: A9 00 00     	lda	#$0
+  1230 00:0455: 65 15        	adc	<L49+pxBlockToInsert_0+2
+  1231 00:0457: 85 07        	sta	<R1+2
+  1232 00:0459: 18           	clc
+  1233 00:045A: A7 05        	lda	[<R1]
+  1234 00:045C: C8           	iny
+  1235 00:045D: C8           	iny
+  1236 00:045E: 77 01        	adc	[<R0],Y
+  1237 00:0460: 87 05        	sta	[<R1]
+  1238 00:0462: 88           	dey
+  1239 00:0463: 88           	dey
+  1240 00:0464: B7 05        	lda	[<R1],Y
+  1241 00:0466: A0 06 00     	ldy	#$6
+  1242 00:0469: 77 01        	adc	[<R0],Y
+  1243 00:046B: A0 02 00     	ldy	#$2
+  1244 00:046E: 97 05        	sta	[<R1],Y
+  1245                        ;            pxBlockToInsert->pxNextFreeBlock = heapPROTECT_BLOCK_POINTER( pxIterator->pxNextFreeBlock
+                     )->pxNextFreeBlock;
+  1246 00:0470: A7 09        	lda	[<L50+pxIterator_1]
+  1247 00:0472: 85 01        	sta	<R0
+  1248 00:0474: B7 09        	lda	[<L50+pxIterator_1],Y
+  1249 00:0476: 85 03        	sta	<R0+2
+  Mon Sep 14 2026 18:41                                                                                                    Page 23
+
+
+  1250 00:0478: A7 01        	lda	[<R0]
+  1251 00:047A: 87 13        	sta	[<L49+pxBlockToInsert_0]
+  1252 00:047C: B7 01        	lda	[<R0],Y
+  1253 00:047E: 80 13        	bra	L20004
+  1254                        ;        }
+  1255                        ;        else
+  1256                        L10080:
+  1257                        ;        {
+  1258                        ;            pxBlockToInsert->pxNextFreeBlock = heapPROTECT_BLOCK_POINTER( pxEnd );
+  1259 00:0480: AD xx xx     	lda	|_~pxEnd
+  1260 00:0483: 87 13        	sta	[<L49+pxBlockToInsert_0]
+  1261 00:0485: AD xx xx     	lda	|_~pxEnd+2
+  1262 00:0488: 80 09        	bra	L20004
+  1263                        ;        }
+  1264                        ;    }
+  1265                        ;    else
+  1266                        L10079:
+  1267                        ;    {
+  1268                        ;        pxBlockToInsert->pxNextFreeBlock = pxIterator->pxNextFreeBlock;
+  1269 00:048A: A7 09        	lda	[<L50+pxIterator_1]
+  1270 00:048C: 87 13        	sta	[<L49+pxBlockToInsert_0]
+  1271 00:048E: A0 02 00     	ldy	#$2
+  1272 00:0491: B7 09        	lda	[<L50+pxIterator_1],Y
+  1273                        L20004:
+  1274 00:0493: A0 02 00     	ldy	#$2
+  1275 00:0496: 97 13        	sta	[<L49+pxBlockToInsert_0],Y
+  1276                        ;    }
+  1277                        ;
+  1278                        ;    /* If the block being inserted plugged a gap, so was merged with the block
+  1279                        ;     * before and the block after, then it's pxNextFreeBlock pointer will have
+  1280                        ;     * already been set, and should not be set here as that would make it point
+  1281                        ;     * to itself. */
+  1282                        ;    if( pxIterator != pxBlockToInsert )
+  1283                        ;    {
+  1284 00:0498: A5 09        	lda	<L50+pxIterator_1
+  1285 00:049A: C5 13        	cmp	<L49+pxBlockToInsert_0
+  1286 00:049C: D0 04        	bne	L60
+  1287 00:049E: A5 0B        	lda	<L50+pxIterator_1+2
+  1288 00:04A0: C5 15        	cmp	<L49+pxBlockToInsert_0+2
+  1289                        L60:
+  1290 00:04A2: F0 0B        	beq	L62
+  1291                        ;        pxIterator->pxNextFreeBlock = heapPROTECT_BLOCK_POINTER( pxBlockToInsert );
+  1292 00:04A4: A5 13        	lda	<L49+pxBlockToInsert_0
+  1293 00:04A6: 87 09        	sta	[<L50+pxIterator_1]
+  1294 00:04A8: A5 15        	lda	<L49+pxBlockToInsert_0+2
+  1295 00:04AA: A0 02 00     	ldy	#$2
+  1296 00:04AD: 97 09        	sta	[<L50+pxIterator_1],Y
+  1297                        ;    }
+  1298                        ;    else
+  1299                        ;    {
+  1300                        ;        mtCOVERAGE_TEST_MARKER();
+  1301                        ;    }
+  1302                        ;}
+  1303                        L62:
+  1304 00:04AF: A5 11        	lda	<L49+1
+  1305 00:04B1: 85 15        	sta	<L49+1+4
+  1306 00:04B3: 2B           	pld
+  1307 00:04B4: 3B           	tsc
+  Mon Sep 14 2026 18:41                                                                                                    Page 24
+
+
+  1308 00:04B5: 18           	clc
+  1309 00:04B6: 69 14 00     	adc	#L49+4
+  1310 00:04B9: 1B           	tcs
+  1311 00:04BA: 60           	rts
+  1312             00000010   L49	equ	16
+  1313             00000009   L50	equ	9
+  1314                        	ends
+  1315                        	efunc
+  1316                        ;/*-----------------------------------------------------------*/
+  1317                        ;
+  1318                        ;static void debug_ptr(void *p) {
+  1319                        	code
+  1320                        	func
+  1321                        _~debug_ptr:
+  1322                        	longa	on
+  1323                        	longi	on
+  1324 00:04BB: 3B           	tsc
+  1325 00:04BC: 38           	sec
+  1326 00:04BD: E9 08 00     	sbc	#L63
+  1327 00:04C0: 1B           	tcs
+  1328 00:04C1: 0B           	phd
+  1329 00:04C2: 5B           	tcd
+  1330             00000003   p_0	set	3
+  1331                        ;	*debug_hex = (char)((unsigned long)p >> 16);
+  1332 00:04C3: AD xx xx     	lda	|_~debug_hex
+  1333 00:04C6: 85 01        	sta	<R0
+  1334 00:04C8: AD xx xx     	lda	|_~debug_hex+2
+  1335 00:04CB: 85 03        	sta	<R0+2
+  1336 00:04CD: D4 0D        	pei	<L63+p_0+2
+  1337 00:04CF: D4 0B        	pei	<L63+p_0
+  1338 00:04D1: A9 10 00     	lda	#$10
+  1339                        	xref	_~~llsr
+  1340 00:04D4: 20 xx xx     	jsr	_~~llsr
+  1341 00:04D7: 85 05        	sta	<R1
+  1342 00:04D9: 86 07        	stx	<R1+2
+  1343 00:04DB: E2 20        	sep	#$20
+  1344                        	longa	off
+  1345 00:04DD: A5 05        	lda	<R1
+  1346 00:04DF: 87 01        	sta	[<R0]
+  1347 00:04E1: C2 20        	rep	#$20
+  1348                        	longa	on
+  1349                        ;	*debug_hex = (char)((unsigned long)p >> 8);
+  1350 00:04E3: AD xx xx     	lda	|_~debug_hex
+  1351 00:04E6: 85 01        	sta	<R0
+  1352 00:04E8: AD xx xx     	lda	|_~debug_hex+2
+  1353 00:04EB: 85 03        	sta	<R0+2
+  1354 00:04ED: D4 0D        	pei	<L63+p_0+2
+  1355 00:04EF: D4 0B        	pei	<L63+p_0
+  1356 00:04F1: A9 08 00     	lda	#$8
+  1357                        	xref	_~~llsr
+  1358 00:04F4: 20 xx xx     	jsr	_~~llsr
+  1359 00:04F7: 85 05        	sta	<R1
+  1360 00:04F9: 86 07        	stx	<R1+2
+  1361 00:04FB: E2 20        	sep	#$20
+  1362                        	longa	off
+  1363 00:04FD: A5 05        	lda	<R1
+  1364 00:04FF: 87 01        	sta	[<R0]
+  1365 00:0501: C2 20        	rep	#$20
+  Mon Sep 14 2026 18:41                                                                                                    Page 25
+
+
+  1366                        	longa	on
+  1367                        ;	*debug_hex = (char)((unsigned long)p & 0xff);
+  1368 00:0503: AD xx xx     	lda	|_~debug_hex
+  1369 00:0506: 85 01        	sta	<R0
+  1370 00:0508: AD xx xx     	lda	|_~debug_hex+2
+  1371 00:050B: 85 03        	sta	<R0+2
+  1372 00:050D: A5 0B        	lda	<L63+p_0
+  1373 00:050F: 29 FF 00     	and	#<$ff
+  1374 00:0512: 85 05        	sta	<R1
+  1375 00:0514: 64 07        	stz	<R1+2
+  1376 00:0516: E2 20        	sep	#$20
+  1377                        	longa	off
+  1378 00:0518: A5 05        	lda	<R1
+  1379 00:051A: 87 01        	sta	[<R0]
+  1380 00:051C: C2 20        	rep	#$20
+  1381                        	longa	on
+  1382                        ;	*debug_char = ' ';
+  1383 00:051E: AD xx xx     	lda	|_~debug_char
+  1384 00:0521: 85 01        	sta	<R0
+  1385 00:0523: AD xx xx     	lda	|_~debug_char+2
+  1386 00:0526: 85 03        	sta	<R0+2
+  1387 00:0528: E2 20        	sep	#$20
+  1388                        	longa	off
+  1389 00:052A: A9 20        	lda	#$20
+  1390 00:052C: 87 01        	sta	[<R0]
+  1391 00:052E: C2 20        	rep	#$20
+  1392                        	longa	on
+  1393                        ;}
+  1394 00:0530: A5 09        	lda	<L63+1
+  1395 00:0532: 85 0D        	sta	<L63+1+4
+  1396 00:0534: 2B           	pld
+  1397 00:0535: 3B           	tsc
+  1398 00:0536: 18           	clc
+  1399 00:0537: 69 0C 00     	adc	#L63+4
+  1400 00:053A: 1B           	tcs
+  1401 00:053B: 60           	rts
+  1402             00000008   L63	equ	8
+  1403             00000009   L64	equ	9
+  1404                        	ends
+  1405                        	efunc
+  1406                        ;
+  1407                        ;static void debug_word(unsigned int i) {
+  1408                        	code
+  1409                        	func
+  1410                        _~debug_word:
+  1411                        	longa	on
+  1412                        	longi	on
+  1413 00:053C: 3B           	tsc
+  1414 00:053D: 38           	sec
+  1415 00:053E: E9 0C 00     	sbc	#L66
+  1416 00:0541: 1B           	tcs
+  1417 00:0542: 0B           	phd
+  1418 00:0543: 5B           	tcd
+  1419             00000003   i_0	set	3
+  1420                        ;	*debug_hex = (char)((unsigned long)i >> 8);
+  1421 00:0544: AD xx xx     	lda	|_~debug_hex
+  1422 00:0547: 85 01        	sta	<R0
+  1423 00:0549: AD xx xx     	lda	|_~debug_hex+2
+  Mon Sep 14 2026 18:41                                                                                                    Page 26
+
+
+  1424 00:054C: 85 03        	sta	<R0+2
+  1425 00:054E: A5 0F        	lda	<L66+i_0
+  1426 00:0550: 85 09        	sta	<R2
+  1427 00:0552: 64 0B        	stz	<R2+2
+  1428 00:0554: D4 0B        	pei	<R2+2
+  1429 00:0556: D4 09        	pei	<R2
+  1430 00:0558: A9 08 00     	lda	#$8
+  1431                        	xref	_~~llsr
+  1432 00:055B: 20 xx xx     	jsr	_~~llsr
+  1433 00:055E: 85 05        	sta	<R1
+  1434 00:0560: 86 07        	stx	<R1+2
+  1435 00:0562: E2 20        	sep	#$20
+  1436                        	longa	off
+  1437 00:0564: A5 05        	lda	<R1
+  1438 00:0566: 87 01        	sta	[<R0]
+  1439 00:0568: C2 20        	rep	#$20
+  1440                        	longa	on
+  1441                        ;	*debug_hex = (char)((unsigned long)i);
+  1442 00:056A: AD xx xx     	lda	|_~debug_hex
+  1443 00:056D: 85 01        	sta	<R0
+  1444 00:056F: AD xx xx     	lda	|_~debug_hex+2
+  1445 00:0572: 85 03        	sta	<R0+2
+  1446 00:0574: A5 0F        	lda	<L66+i_0
+  1447 00:0576: 85 05        	sta	<R1
+  1448 00:0578: 64 07        	stz	<R1+2
+  1449 00:057A: E2 20        	sep	#$20
+  1450                        	longa	off
+  1451 00:057C: A5 05        	lda	<R1
+  1452 00:057E: 87 01        	sta	[<R0]
+  1453 00:0580: C2 20        	rep	#$20
+  1454                        	longa	on
+  1455                        ;	*debug_char = ' ';
+  1456 00:0582: AD xx xx     	lda	|_~debug_char
+  1457 00:0585: 85 01        	sta	<R0
+  1458 00:0587: AD xx xx     	lda	|_~debug_char+2
+  1459 00:058A: 85 03        	sta	<R0+2
+  1460 00:058C: E2 20        	sep	#$20
+  1461                        	longa	off
+  1462 00:058E: A9 20        	lda	#$20
+  1463 00:0590: 87 01        	sta	[<R0]
+  1464 00:0592: C2 20        	rep	#$20
+  1465                        	longa	on
+  1466                        ;}
+  1467 00:0594: A5 0D        	lda	<L66+1
+  1468 00:0596: 85 0F        	sta	<L66+1+2
+  1469 00:0598: 2B           	pld
+  1470 00:0599: 3B           	tsc
+  1471 00:059A: 18           	clc
+  1472 00:059B: 69 0E 00     	adc	#L66+2
+  1473 00:059E: 1B           	tcs
+  1474 00:059F: 60           	rts
+  1475             0000000C   L66	equ	12
+  1476             0000000D   L67	equ	13
+  1477                        	ends
+  1478                        	efunc
+  1479                        ;
+  1480                        ;void vPortDefineHeapRegions( const HeapRegion_t * const pxHeapRegions ) /* PRIVILEGED_FUNCTION */
+  1481                        ;{
+  Mon Sep 14 2026 18:41                                                                                                    Page 27
+
+
+  1482                        	code
+  1483                        	xdef	_~vPortDefineHeapRegions
+  1484                        	func
+  1485                        _~vPortDefineHeapRegions:
+  1486                        	longa	on
+  1487                        	longi	on
+  1488 00:05A0: 3B           	tsc
+  1489 00:05A1: 38           	sec
+  1490 00:05A2: E9 26 00     	sbc	#L69
+  1491 00:05A5: 1B           	tcs
+  1492 00:05A6: 0B           	phd
+  1493 00:05A7: 5B           	tcd
+  1494             00000003   pxHeapRegions_0	set	3
+  1495                        ;    BlockLink_t * pxPreviousFreeBlock;
+  1496                        ;    portPOINTER_SIZE_TYPE xAlignedHeap;
+  1497                        ;    portPOINTER_SIZE_TYPE xAddress;
+  1498                        ;    const HeapRegion_t * pxHeapRegion;
+  1499                        ;    BlockLink_t * pxFirstFreeBlockInRegion;
+  1500                        ;    unsigned long xTotalRegionSize;
+  1501                        ;	unsigned long xTotalHeapSize;
+  1502                        ;    BaseType_t xDefinedRegions;
+  1503                        ;
+  1504                        ;	pxFirstFreeBlockInRegion = NULL;
+  1505             00000000   pxPreviousFreeBlock_1	set	0
+  1506             00000004   xAlignedHeap_1	set	4
+  1507             00000008   xAddress_1	set	8
+  1508             0000000C   pxHeapRegion_1	set	12
+  1509             00000010   pxFirstFreeBlockInRegion_1	set	16
+  1510             00000014   xTotalRegionSize_1	set	20
+  1511             00000018   xTotalHeapSize_1	set	24
+  1512             0000001C   xDefinedRegions_1	set	28
+  1513 00:05A8: 64 19        	stz	<L70+pxFirstFreeBlockInRegion_1
+  1514 00:05AA: 64 1B        	stz	<L70+pxFirstFreeBlockInRegion_1+2
+  1515                        ;	xTotalHeapSize = 0;
+  1516 00:05AC: 64 21        	stz	<L70+xTotalHeapSize_1
+  1517 00:05AE: 64 23        	stz	<L70+xTotalHeapSize_1+2
+  1518                        ;	xDefinedRegions = 0;
+  1519 00:05B0: 64 25        	stz	<L70+xDefinedRegions_1
+  1520                        ;	
+  1521                        ;    /* Can only call once! */
+  1522                        ;	
+  1523                        ;    configASSERT( pxEnd == NULL );
+  1524 00:05B2: AD xx xx     	lda	|_~pxEnd
+  1525 00:05B5: 0D xx xx     	ora	|_~pxEnd+2
+  1526 00:05B8: F0 02        	beq	L10085
+  1527                        L10089:
+  1528 00:05BA: 80 FE        	bra	L10089
+  1529                        L10085:
+  1530                        ;
+  1531                        ;    #if ( configENABLE_HEAP_PROTECTOR == 1 )
+  1532                        ;    {
+  1533                        ;        vApplicationGetRandomHeapCanary( &( xHeapCanary ) );
+  1534                        ;    }
+  1535                        ;    #endif
+  1536                        ;
+  1537                        ;    //pxHeapRegion = &( pxHeapRegions[ xDefinedRegions ] );
+  1538                        ;	pxHeapRegion = pxHeapRegions;
+  1539 00:05BC: A5 29        	lda	<L69+pxHeapRegions_0
+  Mon Sep 14 2026 18:41                                                                                                    Page 28
+
+
+  1540 00:05BE: 85 15        	sta	<L70+pxHeapRegion_1
+  1541 00:05C0: A5 2B        	lda	<L69+pxHeapRegions_0+2
+  1542                        L20005:
+  1543 00:05C2: 85 17        	sta	<L70+pxHeapRegion_1+2
+  1544                        ;	
+  1545                        ;    while( pxHeapRegion->xSizeInBytes > 0 )
+  1546 00:05C4: A9 00 00     	lda	#$0
+  1547 00:05C7: A0 04 00     	ldy	#$4
+  1548 00:05CA: D7 15        	cmp	[<L70+pxHeapRegion_1],Y
+  1549 00:05CC: C8           	iny
+  1550 00:05CD: C8           	iny
+  1551 00:05CE: F7 15        	sbc	[<L70+pxHeapRegion_1],Y
+  1552 00:05D0: 90 1F        	bcc	L20007
+  1553                        ;
+  1554                        ;    xMinimumEverFreeBytesRemaining = xTotalHeapSize;
+  1555 00:05D2: A5 21        	lda	<L70+xTotalHeapSize_1
+  1556 00:05D4: 8D xx xx     	sta	|_~xMinimumEverFreeBytesRemaining
+  1557 00:05D7: A5 23        	lda	<L70+xTotalHeapSize_1+2
+  1558 00:05D9: 8D xx xx     	sta	|_~xMinimumEverFreeBytesRemaining+2
+  1559                        ;    xFreeBytesRemaining = xTotalHeapSize;
+  1560 00:05DC: A5 21        	lda	<L70+xTotalHeapSize_1
+  1561 00:05DE: 8D xx xx     	sta	|_~xFreeBytesRemaining
+  1562 00:05E1: A5 23        	lda	<L70+xTotalHeapSize_1+2
+  1563 00:05E3: 8D xx xx     	sta	|_~xFreeBytesRemaining+2
+  1564                        ;
+  1565                        ;    /* Check something was actually defined before it is accessed. */
+  1566                        ;    configASSERT( xTotalHeapSize );
+  1567 00:05E6: A5 21        	lda	<L70+xTotalHeapSize_1
+  1568 00:05E8: 05 23        	ora	<L70+xTotalHeapSize_1+2
+  1569 00:05EA: F0 03        	beq	*+5
+  1570 00:05EC: 82 33 01     	brl	L79
+  1571                        L10116:
+  1572 00:05EF: 80 FE        	bra	L10116
+  1573                        L20007:
+  1574                        ;    {
+  1575                        ;		
+  1576                        ;        xTotalRegionSize = pxHeapRegion->xSizeInBytes;
+  1577 00:05F1: A0 04 00     	ldy	#$4
+  1578 00:05F4: B7 15        	lda	[<L70+pxHeapRegion_1],Y
+  1579 00:05F6: 85 1D        	sta	<L70+xTotalRegionSize_1
+  1580 00:05F8: C8           	iny
+  1581 00:05F9: C8           	iny
+  1582 00:05FA: B7 15        	lda	[<L70+pxHeapRegion_1],Y
+  1583 00:05FC: 85 1F        	sta	<L70+xTotalRegionSize_1+2
+  1584                        ;		
+  1585                        ;		/*
+  1586                        ;		debug_word(xDefinedRegions);
+  1587                        ;		debug_ptr(pxHeapRegion->pucStartAddress);
+  1588                        ;		debug_word(xTotalRegionSize);
+  1589                        ;		*/
+  1590                        ;		
+  1591                        ;        /* Ensure the heap region starts on a correctly aligned boundary. */
+  1592                        ;        xAddress = ( portPOINTER_SIZE_TYPE ) pxHeapRegion->pucStartAddress;
+  1593 00:05FE: A7 15        	lda	[<L70+pxHeapRegion_1]
+  1594 00:0600: 85 11        	sta	<L70+xAddress_1
+  1595 00:0602: A0 02 00     	ldy	#$2
+  1596 00:0605: B7 15        	lda	[<L70+pxHeapRegion_1],Y
+  1597 00:0607: 85 13        	sta	<L70+xAddress_1+2
+  Mon Sep 14 2026 18:41                                                                                                    Page 29
+
+
+  1598                        ;
+  1599                        ;        if( ( xAddress & portBYTE_ALIGNMENT_MASK ) != 0 )
+  1600                        ;        {
+  1601                        ;            xAddress += ( portBYTE_ALIGNMENT - 1 );
+  1602                        ;            xAddress &= ~( portPOINTER_SIZE_TYPE ) portBYTE_ALIGNMENT_MASK;
+  1603                        ;
+  1604                        ;            /* Adjust the size for the bytes lost to alignment. */
+  1605                        ;            xTotalRegionSize -= ( unsigned long ) ( xAddress - ( portPOINTER_SIZE_TYPE ) pxHeapRegion
+                    ->pucStartAddress );
+  1606                        ;        }
+  1607                        ;
+  1608                        ;        xAlignedHeap = xAddress;
+  1609 00:0609: A5 11        	lda	<L70+xAddress_1
+  1610 00:060B: 85 0D        	sta	<L70+xAlignedHeap_1
+  1611 00:060D: A5 13        	lda	<L70+xAddress_1+2
+  1612 00:060F: 85 0F        	sta	<L70+xAlignedHeap_1+2
+  1613                        ;
+  1614                        ;        /* Set xStart if it has not already been set. */
+  1615                        ;        if( xDefinedRegions == 0 )
+  1616                        ;        {
+  1617 00:0611: A5 25        	lda	<L70+xDefinedRegions_1
+  1618 00:0613: F0 03        	beq	*+5
+  1619 00:0615: 82 A8 00     	brl	L10095
+  1620                        ;            /* xStart is used to hold a pointer to the first item in the list of
+  1621                        ;             *  free blocks.  The void cast is used to prevent compiler warnings. */
+  1622                        ;            xStart.pxNextFreeBlock = ( BlockLink_t * ) heapPROTECT_BLOCK_POINTER( xAlignedHeap );
+  1623 00:0618: A5 0D        	lda	<L70+xAlignedHeap_1
+  1624 00:061A: 8D xx xx     	sta	|_~xStart
+  1625 00:061D: A5 0F        	lda	<L70+xAlignedHeap_1+2
+  1626 00:061F: 8D xx xx     	sta	|_~xStart+2
+  1627                        ;            xStart.xBlockSize = ( unsigned long ) 0;
+  1628 00:0622: 9C xx xx     	stz	|_~xStart+4
+  1629 00:0625: 9C xx xx     	stz	|_~xStart+4+2
+  1630                        ;        }
+  1631                        ;        else
+  1632                        L10096:
+  1633                        ;
+  1634                        ;        #if ( configENABLE_HEAP_PROTECTOR == 1 )
+  1635                        ;        {
+  1636                        ;            if( ( pucHeapLowAddress == NULL ) ||
+  1637                        ;                ( ( uint8_t * ) xAlignedHeap < pucHeapLowAddress ) )
+  1638                        ;            {
+  1639                        ;                pucHeapLowAddress = ( uint8_t * ) xAlignedHeap;
+  1640                        ;            }
+  1641                        ;        }
+  1642                        ;        #endif /* configENABLE_HEAP_PROTECTOR */
+  1643                        ;
+  1644                        ;        /* Remember the location of the end marker in the previous region, if
+  1645                        ;         * any. */
+  1646                        ;        pxPreviousFreeBlock = pxEnd;
+  1647 00:0628: AD xx xx     	lda	|_~pxEnd
+  1648 00:062B: 85 09        	sta	<L70+pxPreviousFreeBlock_1
+  1649 00:062D: AD xx xx     	lda	|_~pxEnd+2
+  1650 00:0630: 85 0B        	sta	<L70+pxPreviousFreeBlock_1+2
+  1651                        ;
+  1652                        ;        /* pxEnd is used to mark the end of the list of free blocks and is
+  1653                        ;         * inserted at the end of the region space. */
+  1654                        ;        xAddress = xAlignedHeap + ( portPOINTER_SIZE_TYPE ) xTotalRegionSize;
+  Mon Sep 14 2026 18:41                                                                                                    Page 30
+
+
+  1655 00:0632: A5 0D        	lda	<L70+xAlignedHeap_1
+  1656 00:0634: 18           	clc
+  1657 00:0635: 65 1D        	adc	<L70+xTotalRegionSize_1
+  1658 00:0637: 85 11        	sta	<L70+xAddress_1
+  1659 00:0639: A5 0F        	lda	<L70+xAlignedHeap_1+2
+  1660 00:063B: 65 1F        	adc	<L70+xTotalRegionSize_1+2
+  1661 00:063D: 85 13        	sta	<L70+xAddress_1+2
+  1662                        ;        xAddress -= ( portPOINTER_SIZE_TYPE ) xHeapStructSize;
+  1663 00:063F: A9 F8 FF     	lda	#$fff8
+  1664 00:0642: 18           	clc
+  1665 00:0643: 65 11        	adc	<L70+xAddress_1
+  1666 00:0645: 85 11        	sta	<L70+xAddress_1
+  1667 00:0647: A9 FF FF     	lda	#$ffff
+  1668 00:064A: 65 13        	adc	<L70+xAddress_1+2
+  1669 00:064C: 85 13        	sta	<L70+xAddress_1+2
+  1670                        ;        xAddress &= ~( ( portPOINTER_SIZE_TYPE ) portBYTE_ALIGNMENT_MASK );
+  1671 00:064E: A5 11        	lda	<L70+xAddress_1
+  1672 00:0650: 85 11        	sta	<L70+xAddress_1
+  1673 00:0652: A5 13        	lda	<L70+xAddress_1+2
+  1674 00:0654: 85 13        	sta	<L70+xAddress_1+2
+  1675                        ;        pxEnd = ( BlockLink_t * ) xAddress;
+  1676 00:0656: A5 11        	lda	<L70+xAddress_1
+  1677 00:0658: 8D xx xx     	sta	|_~pxEnd
+  1678 00:065B: A5 13        	lda	<L70+xAddress_1+2
+  1679 00:065D: 8D xx xx     	sta	|_~pxEnd+2
+  1680                        ;        pxEnd->xBlockSize = 0;
+  1681 00:0660: AD xx xx     	lda	|_~pxEnd
+  1682 00:0663: 85 01        	sta	<R0
+  1683 00:0665: AD xx xx     	lda	|_~pxEnd+2
+  1684 00:0668: 85 03        	sta	<R0+2
+  1685 00:066A: A9 00 00     	lda	#$0
+  1686 00:066D: A0 04 00     	ldy	#$4
+  1687 00:0670: 97 01        	sta	[<R0],Y
+  1688 00:0672: C8           	iny
+  1689 00:0673: C8           	iny
+  1690 00:0674: 97 01        	sta	[<R0],Y
+  1691                        ;        pxEnd->pxNextFreeBlock = heapPROTECT_BLOCK_POINTER( NULL );
+  1692 00:0676: AD xx xx     	lda	|_~pxEnd
+  1693 00:0679: 85 01        	sta	<R0
+  1694 00:067B: AD xx xx     	lda	|_~pxEnd+2
+  1695 00:067E: 85 03        	sta	<R0+2
+  1696 00:0680: A9 00 00     	lda	#$0
+  1697 00:0683: 87 01        	sta	[<R0]
+  1698 00:0685: A0 02 00     	ldy	#$2
+  1699 00:0688: 97 01        	sta	[<R0],Y
+  1700                        ;
+  1701                        ;        /* To start with there is a single free block in this region that is
+  1702                        ;         * sized to take up the entire heap region minus the space taken by the
+  1703                        ;         * free block structure. */
+  1704                        ;        pxFirstFreeBlockInRegion = ( BlockLink_t * ) xAlignedHeap;
+  1705 00:068A: A5 0D        	lda	<L70+xAlignedHeap_1
+  1706 00:068C: 85 19        	sta	<L70+pxFirstFreeBlockInRegion_1
+  1707 00:068E: A5 0F        	lda	<L70+xAlignedHeap_1+2
+  1708 00:0690: 85 1B        	sta	<L70+pxFirstFreeBlockInRegion_1+2
+  1709                        ;        pxFirstFreeBlockInRegion->xBlockSize = ( unsigned long ) ( xAddress - ( portPOINTER_SIZE_TYPE
+                     ) pxFirstFreeBlockInRegion );
+  1710 00:0692: 38           	sec
+  1711 00:0693: A5 11        	lda	<L70+xAddress_1
+  Mon Sep 14 2026 18:41                                                                                                    Page 31
+
+
+  1712 00:0695: E5 19        	sbc	<L70+pxFirstFreeBlockInRegion_1
+  1713 00:0697: 85 01        	sta	<R0
+  1714 00:0699: A5 13        	lda	<L70+xAddress_1+2
+  1715 00:069B: E5 1B        	sbc	<L70+pxFirstFreeBlockInRegion_1+2
+  1716 00:069D: 85 03        	sta	<R0+2
+  1717 00:069F: A5 01        	lda	<R0
+  1718 00:06A1: C8           	iny
+  1719 00:06A2: C8           	iny
+  1720 00:06A3: 97 19        	sta	[<L70+pxFirstFreeBlockInRegion_1],Y
+  1721 00:06A5: A5 03        	lda	<R0+2
+  1722 00:06A7: C8           	iny
+  1723 00:06A8: C8           	iny
+  1724 00:06A9: 97 19        	sta	[<L70+pxFirstFreeBlockInRegion_1],Y
+  1725                        ;        pxFirstFreeBlockInRegion->pxNextFreeBlock = heapPROTECT_BLOCK_POINTER( pxEnd );
+  1726 00:06AB: AD xx xx     	lda	|_~pxEnd
+  1727 00:06AE: 87 19        	sta	[<L70+pxFirstFreeBlockInRegion_1]
+  1728 00:06B0: AD xx xx     	lda	|_~pxEnd+2
+  1729 00:06B3: A0 02 00     	ldy	#$2
+  1730 00:06B6: 97 19        	sta	[<L70+pxFirstFreeBlockInRegion_1],Y
+  1731                        ;
+  1732                        ;        /* If this is not the first region that makes up the entire heap space
+  1733                        ;         * then link the previous region to this region. */
+  1734                        ;        if( pxPreviousFreeBlock != NULL )
+  1735                        ;        {
+  1736 00:06B8: A5 09        	lda	<L70+pxPreviousFreeBlock_1
+  1737 00:06BA: 05 0B        	ora	<L70+pxPreviousFreeBlock_1+2
+  1738 00:06BC: D0 1D        	bne	L76
+  1739 00:06BE: 80 26        	bra	L10111
+  1740                        L10095:
+  1741                        ;        {
+  1742                        ;            /* Should only get here if one region has already been added to the
+  1743                        ;             * heap. */
+  1744                        ;            configASSERT( pxEnd != heapPROTECT_BLOCK_POINTER( NULL ) );
+  1745 00:06C0: AD xx xx     	lda	|_~pxEnd
+  1746 00:06C3: 0D xx xx     	ora	|_~pxEnd+2
+  1747 00:06C6: D0 02        	bne	L10097
+  1748                        L10101:
+  1749 00:06C8: 80 FE        	bra	L10101
+  1750                        L10097:
+  1751                        ;
+  1752                        ;            /* Check blocks are passed in with increasing start addresses. */
+  1753                        ;            configASSERT( ( uint32_t ) xAddress > ( uint32_t ) pxEnd );
+  1754 00:06CA: AD xx xx     	lda	|_~pxEnd
+  1755 00:06CD: C5 11        	cmp	<L70+xAddress_1
+  1756 00:06CF: AD xx xx     	lda	|_~pxEnd+2
+  1757 00:06D2: E5 13        	sbc	<L70+xAddress_1+2
+  1758 00:06D4: B0 03        	bcs	*+5
+  1759 00:06D6: 82 4F FF     	brl	L10096
+  1760                        L10108:
+  1761 00:06D9: 80 FE        	bra	L10108
+  1762                        ;        }
+  1763                        L76:
+  1764                        ;            pxPreviousFreeBlock->pxNextFreeBlock = heapPROTECT_BLOCK_POINTER( pxFirstFreeBlockInRegio
+                    n );
+  1765 00:06DB: A5 19        	lda	<L70+pxFirstFreeBlockInRegion_1
+  1766 00:06DD: 87 09        	sta	[<L70+pxPreviousFreeBlock_1]
+  1767 00:06DF: A5 1B        	lda	<L70+pxFirstFreeBlockInRegion_1+2
+  1768 00:06E1: A0 02 00     	ldy	#$2
+  Mon Sep 14 2026 18:41                                                                                                    Page 32
+
+
+  1769 00:06E4: 97 09        	sta	[<L70+pxPreviousFreeBlock_1],Y
+  1770                        ;        }
+  1771                        ;
+  1772                        ;        xTotalHeapSize += pxFirstFreeBlockInRegion->xBlockSize;
+  1773                        L10111:
+  1774 00:06E6: 18           	clc
+  1775 00:06E7: A5 21        	lda	<L70+xTotalHeapSize_1
+  1776 00:06E9: A0 04 00     	ldy	#$4
+  1777 00:06EC: 77 19        	adc	[<L70+pxFirstFreeBlockInRegion_1],Y
+  1778 00:06EE: 85 21        	sta	<L70+xTotalHeapSize_1
+  1779 00:06F0: A5 23        	lda	<L70+xTotalHeapSize_1+2
+  1780 00:06F2: C8           	iny
+  1781 00:06F3: C8           	iny
+  1782 00:06F4: 77 19        	adc	[<L70+pxFirstFreeBlockInRegion_1],Y
+  1783 00:06F6: 85 23        	sta	<L70+xTotalHeapSize_1+2
+  1784                        ;		//debug_ptr((void *)xTotalHeapSize);
+  1785                        ;
+  1786                        ;        #if ( configENABLE_HEAP_PROTECTOR == 1 )
+  1787                        ;        {
+  1788                        ;            if( ( pucHeapHighAddress == NULL ) ||
+  1789                        ;                ( ( ( ( uint8_t * ) pxFirstFreeBlockInRegion ) + pxFirstFreeBlockInRegion->xBlockSize
+                     ) > pucHeapHighAddress ) )
+  1790                        ;            {
+  1791                        ;                pucHeapHighAddress = ( ( uint8_t * ) pxFirstFreeBlockInRegion ) + pxFirstFreeBlockInR
+                    egion->xBlockSize;
+  1792                        ;            }
+  1793                        ;        }
+  1794                        ;        #endif
+  1795                        ;
+  1796                        ;        /* Move onto the next HeapRegion_t structure. */
+  1797                        ;        xDefinedRegions++;
+  1798 00:06F8: E6 25        	inc	<L70+xDefinedRegions_1
+  1799                        ;        pxHeapRegion = &( pxHeapRegions[ xDefinedRegions ] );
+  1800 00:06FA: A0 00 00     	ldy	#$0
+  1801 00:06FD: A5 25        	lda	<L70+xDefinedRegions_1
+  1802 00:06FF: 10 01        	bpl	L77
+  1803 00:0701: 88           	dey
+  1804                        L77:
+  1805 00:0702: 85 05        	sta	<R1
+  1806 00:0704: 84 07        	sty	<R1+2
+  1807 00:0706: D4 07        	pei	<R1+2
+  1808 00:0708: D4 05        	pei	<R1
+  1809 00:070A: A9 03 00     	lda	#$3
+  1810                        	xref	_~~lasl
+  1811 00:070D: 20 xx xx     	jsr	_~~lasl
+  1812 00:0710: 85 01        	sta	<R0
+  1813 00:0712: 86 03        	stx	<R0+2
+  1814 00:0714: A5 29        	lda	<L69+pxHeapRegions_0
+  1815 00:0716: 18           	clc
+  1816 00:0717: 65 01        	adc	<R0
+  1817 00:0719: 85 15        	sta	<L70+pxHeapRegion_1
+  1818 00:071B: A5 2B        	lda	<L69+pxHeapRegions_0+2
+  1819 00:071D: 65 03        	adc	<R0+2
+  1820 00:071F: 82 A0 FE     	brl	L20005
+  1821                        ;    }
+  1822                        ;}
+  1823                        L79:
+  1824 00:0722: A5 27        	lda	<L69+1
+  Mon Sep 14 2026 18:41                                                                                                    Page 33
+
+
+  1825 00:0724: 85 2B        	sta	<L69+1+4
+  1826 00:0726: 2B           	pld
+  1827 00:0727: 3B           	tsc
+  1828 00:0728: 18           	clc
+  1829 00:0729: 69 2A 00     	adc	#L69+4
+  1830 00:072C: 1B           	tcs
+  1831 00:072D: 60           	rts
+  1832             00000026   L69	equ	38
+  1833             00000009   L70	equ	9
+  1834                        	ends
+  1835                        	efunc
+  1836                        ;/*-----------------------------------------------------------*/
+  1837                        ;
+  1838                        ;void vPortGetHeapStats( HeapStats_t * pxHeapStats )
+  1839                        ;{
+  1840                        	code
+  1841                        	xdef	_~vPortGetHeapStats
+  1842                        	func
+  1843                        _~vPortGetHeapStats:
+  1844                        	longa	on
+  1845                        	longi	on
+  1846 00:072E: 3B           	tsc
+  1847 00:072F: 38           	sec
+  1848 00:0730: E9 0E 00     	sbc	#L80
+  1849 00:0733: 1B           	tcs
+  1850 00:0734: 0B           	phd
+  1851 00:0735: 5B           	tcd
+  1852             00000003   pxHeapStats_0	set	3
+  1853                        ;    BlockLink_t * pxBlock;
+  1854                        ;    size_t xBlocks = 0, xMaxSize = 0, xMinSize = SIZE_MAX;
+  1855                        ;
+  1856                        ;    vTaskSuspendAll();
+  1857             00000000   pxBlock_1	set	0
+  1858             00000004   xBlocks_1	set	4
+  1859             00000006   xMaxSize_1	set	6
+  1860             00000008   xMinSize_1	set	8
+  1861 00:0736: 64 09        	stz	<L81+xBlocks_1
+  1862 00:0738: 64 0B        	stz	<L81+xMaxSize_1
+  1863 00:073A: A9 FF FF     	lda	#$ffff
+  1864 00:073D: 85 0D        	sta	<L81+xMinSize_1
+  1865 00:073F: 20 xx xx     	jsr	_~vTaskSuspendAll
+  1866                        ;    {
+  1867                        ;        pxBlock = heapPROTECT_BLOCK_POINTER( xStart.pxNextFreeBlock );
+  1868 00:0742: AD xx xx     	lda	|_~xStart
+  1869 00:0745: 85 05        	sta	<L81+pxBlock_1
+  1870 00:0747: AD xx xx     	lda	|_~xStart+2
+  1871 00:074A: 85 07        	sta	<L81+pxBlock_1+2
+  1872                        ;
+  1873                        ;        /* pxBlock will be NULL if the heap has not been initialised.  The heap
+  1874                        ;         * is initialised automatically when the first allocation is made. */
+  1875                        ;        if( pxBlock != NULL )
+  1876                        ;        {
+  1877 00:074C: A5 05        	lda	<L81+pxBlock_1
+  1878 00:074E: 05 07        	ora	<L81+pxBlock_1+2
+  1879 00:0750: D0 57        	bne	L10120
+  1880                        ;            while( pxBlock != pxEnd )
+  1881 00:0752: 80 63        	bra	L10119
+  1882                        L20009:
+  Mon Sep 14 2026 18:41                                                                                                    Page 34
+
+
+  1883                        ;            {
+  1884                        ;                /* Increment the number of blocks and record the largest block seen
+  1885                        ;                 * so far. */
+  1886                        ;                xBlocks++;
+  1887 00:0754: E6 09        	inc	<L81+xBlocks_1
+  1888                        ;
+  1889                        ;                if( pxBlock->xBlockSize > xMaxSize )
+  1890                        ;                {
+  1891 00:0756: A5 0B        	lda	<L81+xMaxSize_1
+  1892 00:0758: 85 01        	sta	<R0
+  1893 00:075A: 64 03        	stz	<R0+2
+  1894 00:075C: A5 01        	lda	<R0
+  1895 00:075E: A0 04 00     	ldy	#$4
+  1896 00:0761: D7 05        	cmp	[<L81+pxBlock_1],Y
+  1897 00:0763: A5 03        	lda	<R0+2
+  1898 00:0765: C8           	iny
+  1899 00:0766: C8           	iny
+  1900 00:0767: F7 05        	sbc	[<L81+pxBlock_1],Y
+  1901 00:0769: B0 06        	bcs	L10122
+  1902                        ;                    xMaxSize = pxBlock->xBlockSize;
+  1903 00:076B: 88           	dey
+  1904 00:076C: 88           	dey
+  1905 00:076D: B7 05        	lda	[<L81+pxBlock_1],Y
+  1906 00:076F: 85 0B        	sta	<L81+xMaxSize_1
+  1907                        ;                }
+  1908                        ;
+  1909                        ;                /* Heap five will have a zero sized block at the end of each
+  1910                        ;                 * each region - the block is only used to link to the next
+  1911                        ;                 * heap region so it not a real block. */
+  1912                        ;                if( pxBlock->xBlockSize != 0 )
+  1913                        L10122:
+  1914                        ;                {
+  1915 00:0771: A0 04 00     	ldy	#$4
+  1916 00:0774: B7 05        	lda	[<L81+pxBlock_1],Y
+  1917 00:0776: C8           	iny
+  1918 00:0777: C8           	iny
+  1919 00:0778: 17 05        	ora	[<L81+pxBlock_1],Y
+  1920 00:077A: F0 1A        	beq	L10123
+  1921                        ;                    if( pxBlock->xBlockSize < xMinSize )
+  1922                        ;                    {
+  1923 00:077C: A5 0D        	lda	<L81+xMinSize_1
+  1924 00:077E: 85 01        	sta	<R0
+  1925 00:0780: 64 03        	stz	<R0+2
+  1926 00:0782: 88           	dey
+  1927 00:0783: 88           	dey
+  1928 00:0784: B7 05        	lda	[<L81+pxBlock_1],Y
+  1929 00:0786: C5 01        	cmp	<R0
+  1930 00:0788: C8           	iny
+  1931 00:0789: C8           	iny
+  1932 00:078A: B7 05        	lda	[<L81+pxBlock_1],Y
+  1933 00:078C: E5 03        	sbc	<R0+2
+  1934 00:078E: B0 06        	bcs	L10123
+  1935                        ;                        xMinSize = pxBlock->xBlockSize;
+  1936 00:0790: 88           	dey
+  1937 00:0791: 88           	dey
+  1938 00:0792: B7 05        	lda	[<L81+pxBlock_1],Y
+  1939 00:0794: 85 0D        	sta	<L81+xMinSize_1
+  1940                        ;                    }
+  Mon Sep 14 2026 18:41                                                                                                    Page 35
+
+
+  1941                        ;                }
+  1942                        ;
+  1943                        ;                /* Move to the next block in the chain until the last block is
+  1944                        ;                 * reached. */
+  1945                        ;                pxBlock = heapPROTECT_BLOCK_POINTER( pxBlock->pxNextFreeBlock );
+  1946                        L10123:
+  1947 00:0796: A7 05        	lda	[<L81+pxBlock_1]
+  1948 00:0798: 85 01        	sta	<R0
+  1949 00:079A: A0 02 00     	ldy	#$2
+  1950 00:079D: B7 05        	lda	[<L81+pxBlock_1],Y
+  1951 00:079F: 85 03        	sta	<R0+2
+  1952 00:07A1: A5 01        	lda	<R0
+  1953 00:07A3: 85 05        	sta	<L81+pxBlock_1
+  1954 00:07A5: A5 03        	lda	<R0+2
+  1955 00:07A7: 85 07        	sta	<L81+pxBlock_1+2
+  1956                        ;            }
+  1957                        L10120:
+  1958 00:07A9: A5 05        	lda	<L81+pxBlock_1
+  1959 00:07AB: CD xx xx     	cmp	|_~pxEnd
+  1960 00:07AE: D0 05        	bne	L83
+  1961 00:07B0: A5 07        	lda	<L81+pxBlock_1+2
+  1962 00:07B2: CD xx xx     	cmp	|_~pxEnd+2
+  1963                        L83:
+  1964 00:07B5: D0 9D        	bne	L20009
+  1965                        ;        }
+  1966                        ;    }
+  1967                        L10119:
+  1968                        ;    ( void ) xTaskResumeAll();
+  1969 00:07B7: 20 xx xx     	jsr	_~xTaskResumeAll
+  1970                        ;
+  1971                        ;    pxHeapStats->xSizeOfLargestFreeBlockInBytes = xMaxSize;
+  1972 00:07BA: A5 0B        	lda	<L81+xMaxSize_1
+  1973 00:07BC: 85 01        	sta	<R0
+  1974 00:07BE: 64 03        	stz	<R0+2
+  1975 00:07C0: A5 01        	lda	<R0
+  1976 00:07C2: A0 04 00     	ldy	#$4
+  1977 00:07C5: 97 11        	sta	[<L80+pxHeapStats_0],Y
+  1978 00:07C7: A5 03        	lda	<R0+2
+  1979 00:07C9: C8           	iny
+  1980 00:07CA: C8           	iny
+  1981 00:07CB: 97 11        	sta	[<L80+pxHeapStats_0],Y
+  1982                        ;    pxHeapStats->xSizeOfSmallestFreeBlockInBytes = xMinSize;
+  1983 00:07CD: A5 0D        	lda	<L81+xMinSize_1
+  1984 00:07CF: 85 01        	sta	<R0
+  1985 00:07D1: 64 03        	stz	<R0+2
+  1986 00:07D3: A5 01        	lda	<R0
+  1987 00:07D5: C8           	iny
+  1988 00:07D6: C8           	iny
+  1989 00:07D7: 97 11        	sta	[<L80+pxHeapStats_0],Y
+  1990 00:07D9: A5 03        	lda	<R0+2
+  1991 00:07DB: C8           	iny
+  1992 00:07DC: C8           	iny
+  1993 00:07DD: 97 11        	sta	[<L80+pxHeapStats_0],Y
+  1994                        ;    pxHeapStats->xNumberOfFreeBlocks = xBlocks;
+  1995 00:07DF: A5 09        	lda	<L81+xBlocks_1
+  1996 00:07E1: 85 01        	sta	<R0
+  1997 00:07E3: 64 03        	stz	<R0+2
+  1998 00:07E5: A5 01        	lda	<R0
+  Mon Sep 14 2026 18:41                                                                                                    Page 36
+
+
+  1999 00:07E7: C8           	iny
+  2000 00:07E8: C8           	iny
+  2001 00:07E9: 97 11        	sta	[<L80+pxHeapStats_0],Y
+  2002 00:07EB: A5 03        	lda	<R0+2
+  2003 00:07ED: C8           	iny
+  2004 00:07EE: C8           	iny
+  2005 00:07EF: 97 11        	sta	[<L80+pxHeapStats_0],Y
+  2006                        ;
+  2007                        ;    taskENTER_CRITICAL();
+  2008                        ;    {
+  2009                        ;        pxHeapStats->xAvailableHeapSpaceInBytes = xFreeBytesRemaining;
+  2010 00:07F1: AD xx xx     	lda	|_~xFreeBytesRemaining
+  2011 00:07F4: 87 11        	sta	[<L80+pxHeapStats_0]
+  2012 00:07F6: AD xx xx     	lda	|_~xFreeBytesRemaining+2
+  2013 00:07F9: A0 02 00     	ldy	#$2
+  2014 00:07FC: 97 11        	sta	[<L80+pxHeapStats_0],Y
+  2015                        ;        pxHeapStats->xNumberOfSuccessfulAllocations = xNumberOfSuccessfulAllocations;
+  2016 00:07FE: AD xx xx     	lda	|_~xNumberOfSuccessfulAllocations
+  2017 00:0801: A0 14 00     	ldy	#$14
+  2018 00:0804: 97 11        	sta	[<L80+pxHeapStats_0],Y
+  2019 00:0806: AD xx xx     	lda	|_~xNumberOfSuccessfulAllocations+2
+  2020 00:0809: C8           	iny
+  2021 00:080A: C8           	iny
+  2022 00:080B: 97 11        	sta	[<L80+pxHeapStats_0],Y
+  2023                        ;        pxHeapStats->xNumberOfSuccessfulFrees = xNumberOfSuccessfulFrees;
+  2024 00:080D: AD xx xx     	lda	|_~xNumberOfSuccessfulFrees
+  2025 00:0810: C8           	iny
+  2026 00:0811: C8           	iny
+  2027 00:0812: 97 11        	sta	[<L80+pxHeapStats_0],Y
+  2028 00:0814: AD xx xx     	lda	|_~xNumberOfSuccessfulFrees+2
+  2029 00:0817: C8           	iny
+  2030 00:0818: C8           	iny
+  2031 00:0819: 97 11        	sta	[<L80+pxHeapStats_0],Y
+  2032                        ;        pxHeapStats->xMinimumEverFreeBytesRemaining = xMinimumEverFreeBytesRemaining;
+  2033 00:081B: AD xx xx     	lda	|_~xMinimumEverFreeBytesRemaining
+  2034 00:081E: A0 10 00     	ldy	#$10
+  2035 00:0821: 97 11        	sta	[<L80+pxHeapStats_0],Y
+  2036 00:0823: AD xx xx     	lda	|_~xMinimumEverFreeBytesRemaining+2
+  2037 00:0826: C8           	iny
+  2038 00:0827: C8           	iny
+  2039 00:0828: 97 11        	sta	[<L80+pxHeapStats_0],Y
+  2040                        ;    }
+  2041                        ;    taskEXIT_CRITICAL();
+  2042                        ;}
+  2043 00:082A: A5 0F        	lda	<L80+1
+  2044 00:082C: 85 13        	sta	<L80+1+4
+  2045 00:082E: 2B           	pld
+  2046 00:082F: 3B           	tsc
+  2047 00:0830: 18           	clc
+  2048 00:0831: 69 12 00     	adc	#L80+4
+  2049 00:0834: 1B           	tcs
+  2050 00:0835: 60           	rts
+  2051             0000000E   L80	equ	14
+  2052             00000005   L81	equ	5
+  2053                        	ends
+  2054                        	efunc
+  2055                        ;/*-----------------------------------------------------------*/
+  2056                        ;
+  Mon Sep 14 2026 18:41                                                                                                    Page 37
+
+
+  2057                        ;/*
+  2058                        ; * Reset the state in this file. This state is normally initialized at start up.
+  2059                        ; * This function must be called by the application before restarting the
+  2060                        ; * scheduler.
+  2061                        ; */
+  2062                        ;void vPortHeapResetState( void )
+  2063                        ;{
+  2064                        	code
+  2065                        	xdef	_~vPortHeapResetState
+  2066                        	func
+  2067                        _~vPortHeapResetState:
+  2068                        	longa	on
+  2069                        	longi	on
+  2070                        ;    pxEnd = NULL;
+  2071 00:0836: 9C xx xx     	stz	|_~pxEnd
+  2072 00:0839: 9C xx xx     	stz	|_~pxEnd+2
+  2073                        ;
+  2074                        ;    xFreeBytesRemaining = ( unsigned long ) 0U;
+  2075 00:083C: 9C xx xx     	stz	|_~xFreeBytesRemaining
+  2076 00:083F: 9C xx xx     	stz	|_~xFreeBytesRemaining+2
+  2077                        ;    xMinimumEverFreeBytesRemaining = ( unsigned long ) 0U;
+  2078 00:0842: 9C xx xx     	stz	|_~xMinimumEverFreeBytesRemaining
+  2079 00:0845: 9C xx xx     	stz	|_~xMinimumEverFreeBytesRemaining+2
+  2080                        ;    xNumberOfSuccessfulAllocations = ( unsigned long ) 0U;
+  2081 00:0848: 9C xx xx     	stz	|_~xNumberOfSuccessfulAllocations
+  2082 00:084B: 9C xx xx     	stz	|_~xNumberOfSuccessfulAllocations+2
+  2083                        ;    xNumberOfSuccessfulFrees = ( unsigned long ) 0U;
+  2084 00:084E: 9C xx xx     	stz	|_~xNumberOfSuccessfulFrees
+  2085 00:0851: 9C xx xx     	stz	|_~xNumberOfSuccessfulFrees+2
+  2086                        ;
+  2087                        ;    #if ( configENABLE_HEAP_PROTECTOR == 1 )
+  2088                        ;        pucHeapHighAddress = NULL;
+  2089                        ;        pucHeapLowAddress = NULL;
+  2090                        ;    #endif /* #if ( configENABLE_HEAP_PROTECTOR == 1 ) */
+  2091                        ;}
+  2092 00:0854: 60           	rts
+  2093             00000000   L89	equ	0
+  2094             00000001   L90	equ	1
+  2095                        	ends
+  2096                        	efunc
+  2097                        ;/*-----------------------------------------------------------*/
+  2098                        ;
+  2099                        	xref	_~xTaskResumeAll
+  2100                        	xref	_~vTaskSuspendAll
+  2101                        	xref	_~memset
+  2102                        	xref	_~debug_hex
+  2103                        	xref	_~debug_char
+  2104                        	udata
+  2105                        _~xStart
+  2106 00:0000:              	ds	8
+  2107 00:0008:              	ends
+
+
+      Lines assembled: 2107
+      Errors: 0

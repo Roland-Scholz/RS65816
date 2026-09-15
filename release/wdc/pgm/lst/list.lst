@@ -1,0 +1,716 @@
+  Mon Sep 14 2026  7:48                                                                                                    Page 1
+
+
+                                               ***************************************
+                                               **      WDC 65C816 Macro Assembler   **
+                                               **                                   **
+                                               **     Version 3.49.1- Feb  6 2006    **
+                                               ***************************************
+
+     1                        ;:ts=8
+     2             00000001   R0	equ	1
+     3             00000005   R1	equ	5
+     4             00000009   R2	equ	9
+     5             0000000D   R3	equ	13
+     6                        ;/*
+     7                        ; * FreeRTOS Kernel V11.3.1
+     8                        ; * Copyright (C) 2021 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+     9                        ; *
+    10                        ; * SPDX-License-Identifier: MIT
+    11                        ; *
+    12                        ; * Permission is hereby granted, free of charge, to any person obtaining a copy of
+    13                        ; * this software and associated documentation files (the "Software"), to deal in
+    14                        ; * the Software without restriction, including without limitation the rights to
+    15                        ; * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+    16                        ; * the Software, and to permit persons to whom the Software is furnished to do so,
+    17                        ; * subject to the following conditions:
+    18                        ; *
+    19                        ; * The above copyright notice and this permission notice shall be included in all
+    20                        ; * copies or substantial portions of the Software.
+    21                        ; *
+    22                        ; * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    23                        ; * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+    24                        ; * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+    25                        ; * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+    26                        ; * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+    27                        ; * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+    28                        ; *
+    29                        ; * https://www.FreeRTOS.org
+    30                        ; * https://github.com/FreeRTOS
+    31                        ; *
+    32                        ; */
+    33                        ;
+    34                        ;
+    35                        ;#include <stdlib.h>
+    36                        ;
+    37                        ;/* Defining MPU_WRAPPERS_INCLUDED_FROM_API_FILE prevents task.h from redefining
+    38                        ; * all the API functions to use the MPU wrappers.  That should only be done when
+    39                        ; * task.h is included from an application file. */
+    40                        ;#define MPU_WRAPPERS_INCLUDED_FROM_API_FILE
+    41                        ;
+    42                        ;#include "FreeRTOS.h"
+    43                        ;#include "list.h"
+    44                        ;
+    45                        ;/* The MPU ports require MPU_WRAPPERS_INCLUDED_FROM_API_FILE to be
+    46                        ; * defined for the header files above, but not in this file, in order to
+    47                        ; * generate the correct privileged Vs unprivileged linkage and placement. */
+    48                        ;#undef MPU_WRAPPERS_INCLUDED_FROM_API_FILE
+    49                        ;
+    50                        ;/*-----------------------------------------------------------
+    51                        ;* PUBLIC LIST API documented in list.h
+    52                        ;*----------------------------------------------------------*/
+  Mon Sep 14 2026  7:48                                                                                                    Page 2
+
+
+    53                        ;
+    54                        ;void vListInitialise( List_t * const pxList )
+    55                        ;{
+    56                        	code
+    57                        	xdef	_~vListInitialise
+    58                        	func
+    59                        _~vListInitialise:
+    60                        	longa	on
+    61                        	longi	on
+    62 00:0000: 3B           	tsc
+    63 00:0001: 38           	sec
+    64 00:0002: E9 04 00     	sbc	#L2
+    65 00:0005: 1B           	tcs
+    66 00:0006: 0B           	phd
+    67 00:0007: 5B           	tcd
+    68             00000003   pxList_0	set	3
+    69                        ;    traceENTER_vListInitialise( pxList );
+    70                        ;
+    71                        ;    /* The list structure contains a list item which is used to mark the
+    72                        ;     * end of the list.  To initialise the list the list end is inserted
+    73                        ;     * as the only list entry. */
+    74                        ;    pxList->pxIndex = ( ListItem_t * ) &( pxList->xListEnd );
+    75 00:0008: A9 06 00     	lda	#$6
+    76 00:000B: 18           	clc
+    77 00:000C: 65 07        	adc	<L2+pxList_0
+    78 00:000E: 85 01        	sta	<R0
+    79 00:0010: A9 00 00     	lda	#$0
+    80 00:0013: 65 09        	adc	<L2+pxList_0+2
+    81 00:0015: 85 03        	sta	<R0+2
+    82 00:0017: A5 01        	lda	<R0
+    83 00:0019: A0 02 00     	ldy	#$2
+    84 00:001C: 97 07        	sta	[<L2+pxList_0],Y
+    85 00:001E: A5 03        	lda	<R0+2
+    86 00:0020: C8           	iny
+    87 00:0021: C8           	iny
+    88 00:0022: 97 07        	sta	[<L2+pxList_0],Y
+    89                        ;
+    90                        ;    listSET_FIRST_LIST_ITEM_INTEGRITY_CHECK_VALUE( &( pxList->xListEnd ) );
+    91                        ;
+    92                        ;    /* The list end value is the highest possible value in the list to
+    93                        ;     * ensure it remains at the end of the list. */
+    94                        ;    pxList->xListEnd.xItemValue = portMAX_DELAY;
+    95 00:0024: A9 FF FF     	lda	#$ffff
+    96 00:0027: C8           	iny
+    97 00:0028: C8           	iny
+    98 00:0029: 97 07        	sta	[<L2+pxList_0],Y
+    99 00:002B: C8           	iny
+   100 00:002C: C8           	iny
+   101 00:002D: 97 07        	sta	[<L2+pxList_0],Y
+   102                        ;
+   103                        ;    /* The list end next and previous pointers point to itself so we know
+   104                        ;     * when the list is empty. */
+   105                        ;    pxList->xListEnd.pxNext = ( ListItem_t * ) &( pxList->xListEnd );
+   106 00:002F: A9 06 00     	lda	#$6
+   107 00:0032: 18           	clc
+   108 00:0033: 65 07        	adc	<L2+pxList_0
+   109 00:0035: 85 01        	sta	<R0
+   110 00:0037: A9 00 00     	lda	#$0
+  Mon Sep 14 2026  7:48                                                                                                    Page 3
+
+
+   111 00:003A: 65 09        	adc	<L2+pxList_0+2
+   112 00:003C: 85 03        	sta	<R0+2
+   113 00:003E: A5 01        	lda	<R0
+   114 00:0040: C8           	iny
+   115 00:0041: C8           	iny
+   116 00:0042: 97 07        	sta	[<L2+pxList_0],Y
+   117 00:0044: A5 03        	lda	<R0+2
+   118 00:0046: C8           	iny
+   119 00:0047: C8           	iny
+   120 00:0048: 97 07        	sta	[<L2+pxList_0],Y
+   121                        ;    pxList->xListEnd.pxPrevious = ( ListItem_t * ) &( pxList->xListEnd );
+   122 00:004A: A9 06 00     	lda	#$6
+   123 00:004D: 18           	clc
+   124 00:004E: 65 07        	adc	<L2+pxList_0
+   125 00:0050: 85 01        	sta	<R0
+   126 00:0052: A9 00 00     	lda	#$0
+   127 00:0055: 65 09        	adc	<L2+pxList_0+2
+   128 00:0057: 85 03        	sta	<R0+2
+   129 00:0059: A5 01        	lda	<R0
+   130 00:005B: C8           	iny
+   131 00:005C: C8           	iny
+   132 00:005D: 97 07        	sta	[<L2+pxList_0],Y
+   133 00:005F: A5 03        	lda	<R0+2
+   134 00:0061: C8           	iny
+   135 00:0062: C8           	iny
+   136 00:0063: 97 07        	sta	[<L2+pxList_0],Y
+   137                        ;
+   138                        ;    /* Initialize the remaining fields of xListEnd when it is a proper ListItem_t */
+   139                        ;    #if ( configUSE_MINI_LIST_ITEM == 0 )
+   140                        ;    {
+   141                        ;        pxList->xListEnd.pvOwner = NULL;
+   142                        ;        pxList->xListEnd.pxContainer = NULL;
+   143                        ;        listSET_SECOND_LIST_ITEM_INTEGRITY_CHECK_VALUE( &( pxList->xListEnd ) );
+   144                        ;    }
+   145                        ;    #endif
+   146                        ;
+   147                        ;    pxList->uxNumberOfItems = ( UBaseType_t ) 0U;
+   148 00:0065: A9 00 00     	lda	#$0
+   149 00:0068: 87 07        	sta	[<L2+pxList_0]
+   150                        ;
+   151                        ;    /* Write known values into the list if
+   152                        ;     * configUSE_LIST_DATA_INTEGRITY_CHECK_BYTES is set to 1. */
+   153                        ;    listSET_LIST_INTEGRITY_CHECK_1_VALUE( pxList );
+   154                        ;    listSET_LIST_INTEGRITY_CHECK_2_VALUE( pxList );
+   155                        ;
+   156                        ;    traceRETURN_vListInitialise();
+   157                        ;}
+   158 00:006A: A5 05        	lda	<L2+1
+   159 00:006C: 85 09        	sta	<L2+1+4
+   160 00:006E: 2B           	pld
+   161 00:006F: 3B           	tsc
+   162 00:0070: 18           	clc
+   163 00:0071: 69 08 00     	adc	#L2+4
+   164 00:0074: 1B           	tcs
+   165 00:0075: 60           	rts
+   166             00000004   L2	equ	4
+   167             00000005   L3	equ	5
+   168                        	ends
+  Mon Sep 14 2026  7:48                                                                                                    Page 4
+
+
+   169                        	efunc
+   170                        ;/*-----------------------------------------------------------*/
+   171                        ;
+   172                        ;void vListInitialiseItem( ListItem_t * const pxItem )
+   173                        ;{
+   174                        	code
+   175                        	xdef	_~vListInitialiseItem
+   176                        	func
+   177                        _~vListInitialiseItem:
+   178                        	longa	on
+   179                        	longi	on
+   180 00:0076: 3B           	tsc
+   181 00:0077: 38           	sec
+   182 00:0078: E9 00 00     	sbc	#L5
+   183 00:007B: 1B           	tcs
+   184 00:007C: 0B           	phd
+   185 00:007D: 5B           	tcd
+   186             00000003   pxItem_0	set	3
+   187                        ;    traceENTER_vListInitialiseItem( pxItem );
+   188                        ;
+   189                        ;    /* Make sure the list item is not recorded as being on a list. */
+   190                        ;    pxItem->pxContainer = NULL;
+   191 00:007E: A9 00 00     	lda	#$0
+   192 00:0081: A0 10 00     	ldy	#$10
+   193 00:0084: 97 03        	sta	[<L5+pxItem_0],Y
+   194 00:0086: C8           	iny
+   195 00:0087: C8           	iny
+   196 00:0088: 97 03        	sta	[<L5+pxItem_0],Y
+   197                        ;
+   198                        ;    /* Write known values into the list item if
+   199                        ;     * configUSE_LIST_DATA_INTEGRITY_CHECK_BYTES is set to 1. */
+   200                        ;    listSET_FIRST_LIST_ITEM_INTEGRITY_CHECK_VALUE( pxItem );
+   201                        ;    listSET_SECOND_LIST_ITEM_INTEGRITY_CHECK_VALUE( pxItem );
+   202                        ;
+   203                        ;    traceRETURN_vListInitialiseItem();
+   204                        ;}
+   205 00:008A: A5 01        	lda	<L5+1
+   206 00:008C: 85 05        	sta	<L5+1+4
+   207 00:008E: 2B           	pld
+   208 00:008F: 3B           	tsc
+   209 00:0090: 18           	clc
+   210 00:0091: 69 04 00     	adc	#L5+4
+   211 00:0094: 1B           	tcs
+   212 00:0095: 60           	rts
+   213             00000000   L5	equ	0
+   214             00000001   L6	equ	1
+   215                        	ends
+   216                        	efunc
+   217                        ;/*-----------------------------------------------------------*/
+   218                        ;
+   219                        ;void vListInsertEnd( List_t * const pxList,
+   220                        ;                     ListItem_t * const pxNewListItem )
+   221                        ;{
+   222                        	code
+   223                        	xdef	_~vListInsertEnd
+   224                        	func
+   225                        _~vListInsertEnd:
+   226                        	longa	on
+  Mon Sep 14 2026  7:48                                                                                                    Page 5
+
+
+   227                        	longi	on
+   228 00:0096: 3B           	tsc
+   229 00:0097: 38           	sec
+   230 00:0098: E9 08 00     	sbc	#L8
+   231 00:009B: 1B           	tcs
+   232 00:009C: 0B           	phd
+   233 00:009D: 5B           	tcd
+   234             00000003   pxList_0	set	3
+   235             00000007   pxNewListItem_0	set	7
+   236                        ;    ListItem_t * const pxIndex = pxList->pxIndex;
+   237                        ;
+   238                        ;    traceENTER_vListInsertEnd( pxList, pxNewListItem );
+   239             00000000   pxIndex_1	set	0
+   240 00:009E: A0 02 00     	ldy	#$2
+   241 00:00A1: B7 0B        	lda	[<L8+pxList_0],Y
+   242 00:00A3: 85 05        	sta	<L9+pxIndex_1
+   243 00:00A5: C8           	iny
+   244 00:00A6: C8           	iny
+   245 00:00A7: B7 0B        	lda	[<L8+pxList_0],Y
+   246 00:00A9: 85 07        	sta	<L9+pxIndex_1+2
+   247                        ;
+   248                        ;    /* Only effective when configASSERT() is also defined, these tests may catch
+   249                        ;     * the list data structures being overwritten in memory.  They will not catch
+   250                        ;     * data errors caused by incorrect configuration or use of FreeRTOS. */
+   251                        ;    listTEST_LIST_INTEGRITY( pxList );
+   252                        ;    listTEST_LIST_ITEM_INTEGRITY( pxNewListItem );
+   253                        ;
+   254                        ;    /* Insert a new list item into pxList, but rather than sort the list,
+   255                        ;     * makes the new list item the last item to be removed by a call to
+   256                        ;     * listGET_OWNER_OF_NEXT_ENTRY(). */
+   257                        ;    pxNewListItem->pxNext = pxIndex;
+   258 00:00AB: A5 05        	lda	<L9+pxIndex_1
+   259 00:00AD: 97 0F        	sta	[<L8+pxNewListItem_0],Y
+   260 00:00AF: A5 07        	lda	<L9+pxIndex_1+2
+   261 00:00B1: C8           	iny
+   262 00:00B2: C8           	iny
+   263 00:00B3: 97 0F        	sta	[<L8+pxNewListItem_0],Y
+   264                        ;    pxNewListItem->pxPrevious = pxIndex->pxPrevious;
+   265 00:00B5: C8           	iny
+   266 00:00B6: C8           	iny
+   267 00:00B7: B7 05        	lda	[<L9+pxIndex_1],Y
+   268 00:00B9: 97 0F        	sta	[<L8+pxNewListItem_0],Y
+   269 00:00BB: C8           	iny
+   270 00:00BC: C8           	iny
+   271 00:00BD: B7 05        	lda	[<L9+pxIndex_1],Y
+   272 00:00BF: 97 0F        	sta	[<L8+pxNewListItem_0],Y
+   273                        ;
+   274                        ;    /* Only used during decision coverage testing. */
+   275                        ;    mtCOVERAGE_TEST_DELAY();
+   276                        ;
+   277                        ;    pxIndex->pxPrevious->pxNext = pxNewListItem;
+   278 00:00C1: 88           	dey
+   279 00:00C2: 88           	dey
+   280 00:00C3: B7 05        	lda	[<L9+pxIndex_1],Y
+   281 00:00C5: 85 01        	sta	<R0
+   282 00:00C7: C8           	iny
+   283 00:00C8: C8           	iny
+   284 00:00C9: B7 05        	lda	[<L9+pxIndex_1],Y
+  Mon Sep 14 2026  7:48                                                                                                    Page 6
+
+
+   285 00:00CB: 85 03        	sta	<R0+2
+   286 00:00CD: A5 0F        	lda	<L8+pxNewListItem_0
+   287 00:00CF: A0 04 00     	ldy	#$4
+   288 00:00D2: 97 01        	sta	[<R0],Y
+   289 00:00D4: A5 11        	lda	<L8+pxNewListItem_0+2
+   290 00:00D6: C8           	iny
+   291 00:00D7: C8           	iny
+   292 00:00D8: 97 01        	sta	[<R0],Y
+   293                        ;    pxIndex->pxPrevious = pxNewListItem;
+   294 00:00DA: A5 0F        	lda	<L8+pxNewListItem_0
+   295 00:00DC: C8           	iny
+   296 00:00DD: C8           	iny
+   297 00:00DE: 97 05        	sta	[<L9+pxIndex_1],Y
+   298 00:00E0: A5 11        	lda	<L8+pxNewListItem_0+2
+   299 00:00E2: C8           	iny
+   300 00:00E3: C8           	iny
+   301 00:00E4: 97 05        	sta	[<L9+pxIndex_1],Y
+   302                        ;
+   303                        ;    /* Remember which list the item is in. */
+   304                        ;    pxNewListItem->pxContainer = pxList;
+   305 00:00E6: A5 0B        	lda	<L8+pxList_0
+   306 00:00E8: A0 10 00     	ldy	#$10
+   307 00:00EB: 97 0F        	sta	[<L8+pxNewListItem_0],Y
+   308 00:00ED: A5 0D        	lda	<L8+pxList_0+2
+   309 00:00EF: C8           	iny
+   310 00:00F0: C8           	iny
+   311 00:00F1: 97 0F        	sta	[<L8+pxNewListItem_0],Y
+   312                        ;
+   313                        ;    ( pxList->uxNumberOfItems ) = ( UBaseType_t ) ( pxList->uxNumberOfItems + 1U );
+   314 00:00F3: A7 0B        	lda	[<L8+pxList_0]
+   315 00:00F5: 1A           	ina
+   316 00:00F6: 87 0B        	sta	[<L8+pxList_0]
+   317                        ;
+   318                        ;    traceRETURN_vListInsertEnd();
+   319                        ;}
+   320 00:00F8: A5 09        	lda	<L8+1
+   321 00:00FA: 85 11        	sta	<L8+1+8
+   322 00:00FC: 2B           	pld
+   323 00:00FD: 3B           	tsc
+   324 00:00FE: 18           	clc
+   325 00:00FF: 69 10 00     	adc	#L8+8
+   326 00:0102: 1B           	tcs
+   327 00:0103: 60           	rts
+   328             00000008   L8	equ	8
+   329             00000005   L9	equ	5
+   330                        	ends
+   331                        	efunc
+   332                        ;/*-----------------------------------------------------------*/
+   333                        ;
+   334                        ;void vListInsert( List_t * const pxList,
+   335                        ;                  ListItem_t * const pxNewListItem )
+   336                        ;{
+   337                        	code
+   338                        	xdef	_~vListInsert
+   339                        	func
+   340                        _~vListInsert:
+   341                        	longa	on
+   342                        	longi	on
+  Mon Sep 14 2026  7:48                                                                                                    Page 7
+
+
+   343 00:0104: 3B           	tsc
+   344 00:0105: 38           	sec
+   345 00:0106: E9 0C 00     	sbc	#L11
+   346 00:0109: 1B           	tcs
+   347 00:010A: 0B           	phd
+   348 00:010B: 5B           	tcd
+   349             00000003   pxList_0	set	3
+   350             00000007   pxNewListItem_0	set	7
+   351                        ;    ListItem_t * pxIterator;
+   352                        ;    const TickType_t xValueOfInsertion = pxNewListItem->xItemValue;
+   353                        ;
+   354                        ;    traceENTER_vListInsert( pxList, pxNewListItem );
+   355             00000000   pxIterator_1	set	0
+   356             00000004   xValueOfInsertion_1	set	4
+   357 00:010C: A7 13        	lda	[<L11+pxNewListItem_0]
+   358 00:010E: 85 09        	sta	<L12+xValueOfInsertion_1
+   359 00:0110: A0 02 00     	ldy	#$2
+   360 00:0113: B7 13        	lda	[<L11+pxNewListItem_0],Y
+   361 00:0115: 85 0B        	sta	<L12+xValueOfInsertion_1+2
+   362                        ;
+   363                        ;    /* Only effective when configASSERT() is also defined, these tests may catch
+   364                        ;     * the list data structures being overwritten in memory.  They will not catch
+   365                        ;     * data errors caused by incorrect configuration or use of FreeRTOS. */
+   366                        ;    listTEST_LIST_INTEGRITY( pxList );
+   367                        ;    listTEST_LIST_ITEM_INTEGRITY( pxNewListItem );
+   368                        ;
+   369                        ;    /* Insert the new list item into the list, sorted in xItemValue order.
+   370                        ;     *
+   371                        ;     * If the list already contains a list item with the same item value then the
+   372                        ;     * new list item should be placed after it.  This ensures that TCBs which are
+   373                        ;     * stored in ready lists (all of which have the same xItemValue value) get a
+   374                        ;     * share of the CPU.  However, if the xItemValue is the same as the back marker
+   375                        ;     * the iteration loop below will not end.  Therefore the value is checked
+   376                        ;     * first, and the algorithm slightly modified if necessary. */
+   377                        ;    if( xValueOfInsertion == portMAX_DELAY )
+   378                        ;    {
+   379 00:0117: A5 09        	lda	<L12+xValueOfInsertion_1
+   380 00:0119: C9 FF FF     	cmp	#<$ffffffff
+   381 00:011C: D0 05        	bne	L13
+   382 00:011E: A5 0B        	lda	<L12+xValueOfInsertion_1+2
+   383 00:0120: C9 FF FF     	cmp	#^$ffffffff
+   384                        L13:
+   385 00:0123: D0 69        	bne	L10001
+   386                        ;        pxIterator = pxList->xListEnd.pxPrevious;
+   387 00:0125: A0 0E 00     	ldy	#$e
+   388 00:0128: B7 0F        	lda	[<L11+pxList_0],Y
+   389 00:012A: 85 05        	sta	<L12+pxIterator_1
+   390 00:012C: C8           	iny
+   391 00:012D: C8           	iny
+   392 00:012E: B7 0F        	lda	[<L11+pxList_0],Y
+   393 00:0130: 85 07        	sta	<L12+pxIterator_1+2
+   394                        ;    }
+   395                        ;    else
+   396                        L10002:
+   397                        ;
+   398                        ;    pxNewListItem->pxNext = pxIterator->pxNext;
+   399 00:0132: A0 04 00     	ldy	#$4
+   400 00:0135: B7 05        	lda	[<L12+pxIterator_1],Y
+  Mon Sep 14 2026  7:48                                                                                                    Page 8
+
+
+   401 00:0137: 97 13        	sta	[<L11+pxNewListItem_0],Y
+   402 00:0139: C8           	iny
+   403 00:013A: C8           	iny
+   404 00:013B: B7 05        	lda	[<L12+pxIterator_1],Y
+   405 00:013D: 97 13        	sta	[<L11+pxNewListItem_0],Y
+   406                        ;    pxNewListItem->pxNext->pxPrevious = pxNewListItem;
+   407 00:013F: 88           	dey
+   408 00:0140: 88           	dey
+   409 00:0141: B7 13        	lda	[<L11+pxNewListItem_0],Y
+   410 00:0143: 85 01        	sta	<R0
+   411 00:0145: C8           	iny
+   412 00:0146: C8           	iny
+   413 00:0147: B7 13        	lda	[<L11+pxNewListItem_0],Y
+   414 00:0149: 85 03        	sta	<R0+2
+   415 00:014B: A5 13        	lda	<L11+pxNewListItem_0
+   416 00:014D: C8           	iny
+   417 00:014E: C8           	iny
+   418 00:014F: 97 01        	sta	[<R0],Y
+   419 00:0151: A5 15        	lda	<L11+pxNewListItem_0+2
+   420 00:0153: C8           	iny
+   421 00:0154: C8           	iny
+   422 00:0155: 97 01        	sta	[<R0],Y
+   423                        ;    pxNewListItem->pxPrevious = pxIterator;
+   424 00:0157: A5 05        	lda	<L12+pxIterator_1
+   425 00:0159: 88           	dey
+   426 00:015A: 88           	dey
+   427 00:015B: 97 13        	sta	[<L11+pxNewListItem_0],Y
+   428 00:015D: A5 07        	lda	<L12+pxIterator_1+2
+   429 00:015F: C8           	iny
+   430 00:0160: C8           	iny
+   431 00:0161: 97 13        	sta	[<L11+pxNewListItem_0],Y
+   432                        ;    pxIterator->pxNext = pxNewListItem;
+   433 00:0163: A5 13        	lda	<L11+pxNewListItem_0
+   434 00:0165: A0 04 00     	ldy	#$4
+   435 00:0168: 97 05        	sta	[<L12+pxIterator_1],Y
+   436 00:016A: A5 15        	lda	<L11+pxNewListItem_0+2
+   437 00:016C: C8           	iny
+   438 00:016D: C8           	iny
+   439 00:016E: 97 05        	sta	[<L12+pxIterator_1],Y
+   440                        ;
+   441                        ;    /* Remember which list the item is in.  This allows fast removal of the
+   442                        ;     * item later. */
+   443                        ;    pxNewListItem->pxContainer = pxList;
+   444 00:0170: A5 0F        	lda	<L11+pxList_0
+   445 00:0172: A0 10 00     	ldy	#$10
+   446 00:0175: 97 13        	sta	[<L11+pxNewListItem_0],Y
+   447 00:0177: A5 11        	lda	<L11+pxList_0+2
+   448 00:0179: C8           	iny
+   449 00:017A: C8           	iny
+   450 00:017B: 97 13        	sta	[<L11+pxNewListItem_0],Y
+   451                        ;
+   452                        ;    ( pxList->uxNumberOfItems ) = ( UBaseType_t ) ( pxList->uxNumberOfItems + 1U );
+   453 00:017D: A7 0F        	lda	[<L11+pxList_0]
+   454 00:017F: 1A           	ina
+   455 00:0180: 87 0F        	sta	[<L11+pxList_0]
+   456                        ;
+   457                        ;    traceRETURN_vListInsert();
+   458                        ;}
+  Mon Sep 14 2026  7:48                                                                                                    Page 9
+
+
+   459 00:0182: A5 0D        	lda	<L11+1
+   460 00:0184: 85 15        	sta	<L11+1+8
+   461 00:0186: 2B           	pld
+   462 00:0187: 3B           	tsc
+   463 00:0188: 18           	clc
+   464 00:0189: 69 14 00     	adc	#L11+8
+   465 00:018C: 1B           	tcs
+   466 00:018D: 60           	rts
+   467                        L10001:
+   468                        ;    {
+   469                        ;        /* *** NOTE ***********************************************************
+   470                        ;        *  If you find your application is crashing here then likely causes are
+   471                        ;        *  listed below.  In addition see https://www.freertos.org/Why-FreeRTOS/FAQs for
+   472                        ;        *  more tips, and ensure configASSERT() is defined!
+   473                        ;        *  https://www.FreeRTOS.org/a00110.html#configASSERT
+   474                        ;        *
+   475                        ;        *   1) Stack overflow -
+   476                        ;        *      see https://www.FreeRTOS.org/Stacks-and-stack-overflow-checking.html
+   477                        ;        *   2) Incorrect interrupt priority assignment, especially on Cortex-M
+   478                        ;        *      parts where numerically high priority values denote low actual
+   479                        ;        *      interrupt priorities, which can seem counter intuitive.  See
+   480                        ;        *      https://www.FreeRTOS.org/RTOS-Cortex-M3-M4.html and the definition
+   481                        ;        *      of configMAX_SYSCALL_INTERRUPT_PRIORITY on
+   482                        ;        *      https://www.FreeRTOS.org/a00110.html
+   483                        ;        *   3) Calling an API function from within a critical section or when
+   484                        ;        *      the scheduler is suspended, or calling an API function that does
+   485                        ;        *      not end in "FromISR" from an interrupt.
+   486                        ;        *   4) Using a queue or semaphore before it has been initialised or
+   487                        ;        *      before the scheduler has been started (are interrupts firing
+   488                        ;        *      before vTaskStartScheduler() has been called?).
+   489                        ;        *   5) If the FreeRTOS port supports interrupt nesting then ensure that
+   490                        ;        *      the priority of the tick interrupt is at or below
+   491                        ;        *      configMAX_SYSCALL_INTERRUPT_PRIORITY.
+   492                        ;        **********************************************************************/
+   493                        ;
+   494                        ;        for( pxIterator = ( ListItem_t * ) &( pxList->xListEnd ); pxIterator->pxNext->xItemValue <= x
+                    ValueOfInsertion; pxIterator = pxIterator->pxNext )
+   495 00:018E: A9 06 00     	lda	#$6
+   496 00:0191: 18           	clc
+   497 00:0192: 65 0F        	adc	<L11+pxList_0
+   498 00:0194: 85 05        	sta	<L12+pxIterator_1
+   499 00:0196: A9 00 00     	lda	#$0
+   500 00:0199: 65 11        	adc	<L11+pxList_0+2
+   501 00:019B: 80 13        	bra	L20000
+   502                        ;        {
+   503                        ;            /* There is nothing to do here, just iterating to the wanted
+   504                        ;             * insertion position.
+   505                        ;             * IF YOU FIND YOUR CODE STUCK HERE, SEE THE NOTE JUST ABOVE.
+   506                        ;             */
+   507                        ;        }
+   508                        L10003:
+   509 00:019D: A0 04 00     	ldy	#$4
+   510 00:01A0: B7 05        	lda	[<L12+pxIterator_1],Y
+   511 00:01A2: 85 01        	sta	<R0
+   512 00:01A4: C8           	iny
+   513 00:01A5: C8           	iny
+   514 00:01A6: B7 05        	lda	[<L12+pxIterator_1],Y
+   515 00:01A8: 85 03        	sta	<R0+2
+  Mon Sep 14 2026  7:48                                                                                                    Page 10
+
+
+   516 00:01AA: A5 01        	lda	<R0
+   517 00:01AC: 85 05        	sta	<L12+pxIterator_1
+   518 00:01AE: A5 03        	lda	<R0+2
+   519                        L20000:
+   520 00:01B0: 85 07        	sta	<L12+pxIterator_1+2
+   521 00:01B2: A0 04 00     	ldy	#$4
+   522 00:01B5: B7 05        	lda	[<L12+pxIterator_1],Y
+   523 00:01B7: 85 01        	sta	<R0
+   524 00:01B9: C8           	iny
+   525 00:01BA: C8           	iny
+   526 00:01BB: B7 05        	lda	[<L12+pxIterator_1],Y
+   527 00:01BD: 85 03        	sta	<R0+2
+   528 00:01BF: A5 09        	lda	<L12+xValueOfInsertion_1
+   529 00:01C1: C7 01        	cmp	[<R0]
+   530 00:01C3: A5 0B        	lda	<L12+xValueOfInsertion_1+2
+   531 00:01C5: A0 02 00     	ldy	#$2
+   532 00:01C8: F7 01        	sbc	[<R0],Y
+   533 00:01CA: B0 D1        	bcs	L10003
+   534 00:01CC: 82 63 FF     	brl	L10002
+   535                        ;    }
+   536             0000000C   L11	equ	12
+   537             00000005   L12	equ	5
+   538                        	ends
+   539                        	efunc
+   540                        ;/*-----------------------------------------------------------*/
+   541                        ;
+   542                        ;
+   543                        ;UBaseType_t uxListRemove( ListItem_t * const pxItemToRemove )
+   544                        ;{
+   545                        	code
+   546                        	xdef	_~uxListRemove
+   547                        	func
+   548                        _~uxListRemove:
+   549                        	longa	on
+   550                        	longi	on
+   551 00:01CF: 3B           	tsc
+   552 00:01D0: 38           	sec
+   553 00:01D1: E9 08 00     	sbc	#L17
+   554 00:01D4: 1B           	tcs
+   555 00:01D5: 0B           	phd
+   556 00:01D6: 5B           	tcd
+   557             00000003   pxItemToRemove_0	set	3
+   558                        ;    /* The list item knows which list it is in.  Obtain the list from the list
+   559                        ;     * item. */
+   560                        ;    List_t * const pxList = pxItemToRemove->pxContainer;
+   561                        ;
+   562                        ;    traceENTER_uxListRemove( pxItemToRemove );
+   563             00000000   pxList_1	set	0
+   564 00:01D7: A0 10 00     	ldy	#$10
+   565 00:01DA: B7 0B        	lda	[<L17+pxItemToRemove_0],Y
+   566 00:01DC: 85 05        	sta	<L18+pxList_1
+   567 00:01DE: C8           	iny
+   568 00:01DF: C8           	iny
+   569 00:01E0: B7 0B        	lda	[<L17+pxItemToRemove_0],Y
+   570 00:01E2: 85 07        	sta	<L18+pxList_1+2
+   571                        ;
+   572                        ;    pxItemToRemove->pxNext->pxPrevious = pxItemToRemove->pxPrevious;
+   573 00:01E4: A0 04 00     	ldy	#$4
+  Mon Sep 14 2026  7:48                                                                                                    Page 11
+
+
+   574 00:01E7: B7 0B        	lda	[<L17+pxItemToRemove_0],Y
+   575 00:01E9: 85 01        	sta	<R0
+   576 00:01EB: C8           	iny
+   577 00:01EC: C8           	iny
+   578 00:01ED: B7 0B        	lda	[<L17+pxItemToRemove_0],Y
+   579 00:01EF: 85 03        	sta	<R0+2
+   580 00:01F1: C8           	iny
+   581 00:01F2: C8           	iny
+   582 00:01F3: B7 0B        	lda	[<L17+pxItemToRemove_0],Y
+   583 00:01F5: 97 01        	sta	[<R0],Y
+   584 00:01F7: C8           	iny
+   585 00:01F8: C8           	iny
+   586 00:01F9: B7 0B        	lda	[<L17+pxItemToRemove_0],Y
+   587 00:01FB: 97 01        	sta	[<R0],Y
+   588                        ;    pxItemToRemove->pxPrevious->pxNext = pxItemToRemove->pxNext;
+   589 00:01FD: 88           	dey
+   590 00:01FE: 88           	dey
+   591 00:01FF: B7 0B        	lda	[<L17+pxItemToRemove_0],Y
+   592 00:0201: 85 01        	sta	<R0
+   593 00:0203: C8           	iny
+   594 00:0204: C8           	iny
+   595 00:0205: B7 0B        	lda	[<L17+pxItemToRemove_0],Y
+   596 00:0207: 85 03        	sta	<R0+2
+   597 00:0209: A0 04 00     	ldy	#$4
+   598 00:020C: B7 0B        	lda	[<L17+pxItemToRemove_0],Y
+   599 00:020E: 97 01        	sta	[<R0],Y
+   600 00:0210: C8           	iny
+   601 00:0211: C8           	iny
+   602 00:0212: B7 0B        	lda	[<L17+pxItemToRemove_0],Y
+   603 00:0214: 97 01        	sta	[<R0],Y
+   604                        ;
+   605                        ;    /* Only used during decision coverage testing. */
+   606                        ;    mtCOVERAGE_TEST_DELAY();
+   607                        ;
+   608                        ;    /* Make sure the index is left pointing to a valid item. */
+   609                        ;    if( pxList->pxIndex == pxItemToRemove )
+   610                        ;    {
+   611 00:0216: A0 02 00     	ldy	#$2
+   612 00:0219: B7 05        	lda	[<L18+pxList_1],Y
+   613 00:021B: C5 0B        	cmp	<L17+pxItemToRemove_0
+   614 00:021D: D0 06        	bne	L19
+   615 00:021F: C8           	iny
+   616 00:0220: C8           	iny
+   617 00:0221: B7 05        	lda	[<L18+pxList_1],Y
+   618 00:0223: C5 0D        	cmp	<L17+pxItemToRemove_0+2
+   619                        L19:
+   620 00:0225: D0 14        	bne	L10008
+   621                        ;        pxList->pxIndex = pxItemToRemove->pxPrevious;
+   622 00:0227: A0 08 00     	ldy	#$8
+   623 00:022A: B7 0B        	lda	[<L17+pxItemToRemove_0],Y
+   624 00:022C: A0 02 00     	ldy	#$2
+   625 00:022F: 97 05        	sta	[<L18+pxList_1],Y
+   626 00:0231: A0 0A 00     	ldy	#$a
+   627 00:0234: B7 0B        	lda	[<L17+pxItemToRemove_0],Y
+   628 00:0236: A0 04 00     	ldy	#$4
+   629 00:0239: 97 05        	sta	[<L18+pxList_1],Y
+   630                        ;    }
+   631                        ;    else
+  Mon Sep 14 2026  7:48                                                                                                    Page 12
+
+
+   632                        ;    {
+   633                        ;        mtCOVERAGE_TEST_MARKER();
+   634                        ;    }
+   635                        L10008:
+   636                        ;
+   637                        ;    pxItemToRemove->pxContainer = NULL;
+   638 00:023B: A9 00 00     	lda	#$0
+   639 00:023E: A0 10 00     	ldy	#$10
+   640 00:0241: 97 0B        	sta	[<L17+pxItemToRemove_0],Y
+   641 00:0243: C8           	iny
+   642 00:0244: C8           	iny
+   643 00:0245: 97 0B        	sta	[<L17+pxItemToRemove_0],Y
+   644                        ;    ( pxList->uxNumberOfItems ) = ( UBaseType_t ) ( pxList->uxNumberOfItems - 1U );
+   645 00:0247: A9 FF FF     	lda	#$ffff
+   646 00:024A: 18           	clc
+   647 00:024B: 67 05        	adc	[<L18+pxList_1]
+   648 00:024D: 87 05        	sta	[<L18+pxList_1]
+   649                        ;
+   650                        ;    traceRETURN_uxListRemove( pxList->uxNumberOfItems );
+   651                        ;
+   652                        ;    return pxList->uxNumberOfItems;
+   653 00:024F: A8           	tay
+   654 00:0250: A5 09        	lda	<L17+1
+   655 00:0252: 85 0D        	sta	<L17+1+4
+   656 00:0254: 2B           	pld
+   657 00:0255: 3B           	tsc
+   658 00:0256: 18           	clc
+   659 00:0257: 69 0C 00     	adc	#L17+4
+   660 00:025A: 1B           	tcs
+   661 00:025B: 98           	tya
+   662 00:025C: 60           	rts
+   663                        ;}
+   664             00000008   L17	equ	8
+   665             00000005   L18	equ	5
+   666                        	ends
+   667                        	efunc
+   668                        ;/*-----------------------------------------------------------*/
+   669                        ;
+
+
+      Lines assembled: 669
+      Errors: 0

@@ -5,7 +5,7 @@
 <design name='cpumodule'/>
 <rptdir name='cpumodule'/>
 <xilinx path='C:/Xilinx/14.7/ISE_DS/ISE;'/>
-<projDir path='C:\github\RS65816\RS65816'/>
+<projDir path='C:\github\RS65816\cpld'/>
 <xslDir path='chipviewer/data/xsl'/>
 <fileDir path='/chipviewer/data/html'/>
 <dataFile file='index.htm'/>

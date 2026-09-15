@@ -1,0 +1,1286 @@
+  Mon Sep 14 2026 18:41                                                                                                    Page 1
+
+
+                                               ***************************************
+                                               **      WDC 65C816 Macro Assembler   **
+                                               **                                   **
+                                               **     Version 3.49.1- Feb  6 2006    **
+                                               ***************************************
+
+     1                        ;:ts=8
+     2             00000001   R0	equ	1
+     3             00000005   R1	equ	5
+     4             00000009   R2	equ	9
+     5             0000000D   R3	equ	13
+     6                        ;#include <stdio.h>
+     7                        ;#include <stdlib.h>
+     8                        ;#include <fcntl.h>
+     9                        ;
+    10                        ;#include "FreeRTOS.h"
+    11                        ;#include "task.h"
+    12                        ;
+    13                        ;char *ucHeapStack = (char *)0x0200;
+    14                        	data
+    15                        	xdef	_~ucHeapStack
+    16                        _~ucHeapStack:
+    17 00:0000: 00 02 00 00  	dl	$200
+    18 00:0004:              	ends
+    19                        ;
+    20                        ;volatile char* debug_char = (volatile char *) 0xfffff0;
+    21                        	data
+    22                        	xdef	_~debug_char
+    23                        _~debug_char:
+    24 00:0004: F0 FF FF 00  	dl	$FFFFF0
+    25 00:0008:              	ends
+    26                        ;volatile char* debug_hex  = (volatile char *) 0xfffff1;
+    27                        	data
+    28                        	xdef	_~debug_hex
+    29                        _~debug_hex:
+    30 00:0008: F1 FF FF 00  	dl	$FFFFF1
+    31 00:000C:              	ends
+    32                        ;volatile char* debug_reset  = (volatile char *) 0xfffff2;
+    33                        	data
+    34                        	xdef	_~debug_reset
+    35                        _~debug_reset:
+    36 00:000C: F2 FF FF 00  	dl	$FFFFF2
+    37 00:0010:              	ends
+    38                        ;
+    39                        ;const char *ansi_white = "\033[0m";
+    40                        	data
+    41                        	xdef	_~ansi_white
+    42                        _~ansi_white:
+    43 00:0010: xx xx xx xx  	dl	L1+0
+    44 00:0014:              	ends
+    45                        	data
+    46                        L1:
+    47 00:0014: 1B 5B 30 6D  	db	$1B,$5B,$30,$6D,$00
+       00:0018: 00 
+    48 00:0019:              	ends
+    49                        ;const char *ansi_red = "\033[31m";
+    50                        	data
+    51                        	xdef	_~ansi_red
+  Mon Sep 14 2026 18:41                                                                                                    Page 2
+
+
+    52                        _~ansi_red:
+    53 00:0019: xx xx xx xx  	dl	L2+0
+    54 00:001D:              	ends
+    55                        	data
+    56                        L2:
+    57 00:001D: 1B 5B 33 31  	db	$1B,$5B,$33,$31,$6D,$00
+       00:0021: 6D 00 
+    58 00:0023:              	ends
+    59                        ;const char *ansi_yellow = "\033[33;1m";
+    60                        	data
+    61                        	xdef	_~ansi_yellow
+    62                        _~ansi_yellow:
+    63 00:0023: xx xx xx xx  	dl	L3+0
+    64 00:0027:              	ends
+    65                        	data
+    66                        L3:
+    67 00:0027: 1B 5B 33 33  	db	$1B,$5B,$33,$33,$3B,$31,$6D,$00
+       00:002B: 3B 31 6D 00 
+    68 00:002F:              	ends
+    69                        ;const char *ansi_clrhome = "\033[2J\033[H";
+    70                        	data
+    71                        	xdef	_~ansi_clrhome
+    72                        _~ansi_clrhome:
+    73 00:002F: xx xx xx xx  	dl	L4+0
+    74 00:0033:              	ends
+    75                        	data
+    76                        L4:
+    77 00:0033: 1B 5B 32 4A  	db	$1B,$5B,$32,$4A,$1B,$5B,$48,$00
+       00:0037: 1B 5B 48 00 
+    78 00:003B:              	ends
+    79                        ;
+    80                        ;const HeapRegion_t xHeapRegions[] = 
+    81                        	data
+    82                        	xdef	_~xHeapRegions
+    83                        _~xHeapRegions:
+    84                        ;{
+    85                        ;    /* Region 1: Internes schnelles RAM (z.B. ab 0x20000000, Größe 64 KB) */
+    86                        ;    { ( uint8_t * ) 0x020000, 0xffff }, 
+    87 00:003B: 00 00 02 00  	dl	$20000,$FFFF
+       00:003F: FF FF 00 00 
+    88                        ;    
+    89                        ;    /* Region 2: Zweiter RAM-Block oder CCM-RAM (z.B. ab 0x30000000, Größe 128 KB) */
+    90                        ;    { ( uint8_t * ) 0x030000, 0xffff }, 
+    91 00:0043: 00 00 03 00  	dl	$30000,$FFFF
+       00:0047: FF FF 00 00 
+    92                        ;    
+    93                        ;    /* Region 3: Externes schnelles SDRAM (z.B. ab 0xD0000000, Größe 1 MB) */
+    94                        ;    { ( uint8_t * ) 0x040000, 0xffff }, 
+    95 00:004B: 00 00 04 00  	dl	$40000,$FFFF
+       00:004F: FF FF 00 00 
+    96                        ;    
+    97                        ;    /* Array-Terminierung: MUSS immer als letztes Element stehen! */
+    98                        ;    { NULL, 0 } 
+    99 00:0053: 00 00 00 00  	dl	$0,$0
+       00:0057: 00 00 00 00 
+   100                        ;};
+   101 00:005B:              	ends
+   102                        ;
+  Mon Sep 14 2026 18:41                                                                                                    Page 3
+
+
+   103                        ;#asm
+   104                        ;	;wdm 7
+   105                        ;	clc
+   106                        ;	xce
+   107                        ;	rep #$30
+   108                        ;	lda #$efff
+   109                        ;	tcs
+   110                        ;	phk
+   111                        ;	plb
+   112                        ;	jmp _~main
+   113                        ;#endasm
+   114                        	asmstart
+   115                        	;wdm 7
+   116 00:0000: 18           	clc
+   117 00:0001: FB           	xce
+   118 00:0002: C2 30        	rep #$30
+   119 00:0004: A9 FF EF     	lda #$efff
+   120 00:0007: 1B           	tcs
+   121 00:0008: 4B           	phk
+   122 00:0009: AB           	plb
+   123 00:000A: 4C xx xx     	jmp _~main
+   124                        	asmend
+   125                        ;
+   126                        ;#include "wdc_misc.h"
+   127                        	data
+   128                        	xdef	_~far_heap_start
+   129                        _~far_heap_start:
+   130 00:005B: 00 00 01 00  	dl	$10000
+   131 00:005F:              	ends
+   132                        	data
+   133                        	xdef	_~far_heap_end
+   134                        _~far_heap_end:
+   135 00:005F: FF FF 02 00  	dl	$2FFFF
+   136 00:0063:              	ends
+   137                        	data
+   138                        	xdef	_~heap_start
+   139                        _~heap_start:
+   140 00:0063: 00 00 03 00  	dl	$30000
+   141 00:0067:              	ends
+   142                        	data
+   143                        	xdef	_~heap_end
+   144                        _~heap_end:
+   145 00:0067: FF FF 03 00  	dl	$3FFFF
+   146 00:006B:              	ends
+   147                        	asmstart
+   148 00:000D: 18           	clc
+   149 00:000E: FB           	xce
+   150 00:000F: C2 30        	rep #$30
+   151 00:0011: A9 FF EF     	lda #$efff
+   152 00:0014: 1B           	tcs
+   153 00:0015: 4C xx xx     	jmp _~main
+   154                        	asmend
+   155                        	code
+   156                        	xdef	_~debug
+   157                        	func
+   158                        _~debug:
+   159                        	longa	on
+   160                        	longi	on
+  Mon Sep 14 2026 18:41                                                                                                    Page 4
+
+
+   161 00:0018: 3B           	tsc
+   162 00:0019: 38           	sec
+   163 00:001A: E9 08 00     	sbc	#L6
+   164 00:001D: 1B           	tcs
+   165 00:001E: 0B           	phd
+   166 00:001F: 5B           	tcd
+   167             00000005   format_0	set	5
+   168             00000000   args_1	set	0
+   169             00000004   strbuf_1	set	4
+   170 00:0020: F4 00 01     	pea	#<$100
+   171 00:0023: 20 xx xx     	jsr	_~malloc
+   172 00:0026: 85 05        	sta	<L7+strbuf_1
+   173 00:0028: 86 07        	stx	<L7+strbuf_1+2
+   174 00:002A: 18           	clc
+   175 00:002B: 7B           	tdc
+   176 00:002C: 69 11 00     	adc	#<L6+format_0+4
+   177 00:002F: 85 01        	sta	<L7+args_1
+   178 00:0031: A9 00 00     	lda	#$0
+   179 00:0034: 85 03        	sta	<L7+args_1+2
+   180 00:0036: 48           	pha
+   181 00:0037: D4 01        	pei	<L7+args_1
+   182 00:0039: D4 0F        	pei	<L6+format_0+2
+   183 00:003B: D4 0D        	pei	<L6+format_0
+   184 00:003D: D4 07        	pei	<L7+strbuf_1+2
+   185 00:003F: D4 05        	pei	<L7+strbuf_1
+   186 00:0041: 20 xx xx     	jsr	_~vsprintf
+   187 00:0044: D4 07        	pei	<L7+strbuf_1+2
+   188 00:0046: D4 05        	pei	<L7+strbuf_1
+   189 00:0048: 20 xx xx     	jsr	_~strlen
+   190 00:004B: 48           	pha
+   191 00:004C: D4 07        	pei	<L7+strbuf_1+2
+   192 00:004E: D4 05        	pei	<L7+strbuf_1
+   193 00:0050: F4 00 00     	pea	#<$0
+   194 00:0053: 20 xx xx     	jsr	_~write
+   195 00:0056: D4 07        	pei	<L7+strbuf_1+2
+   196 00:0058: D4 05        	pei	<L7+strbuf_1
+   197 00:005A: 20 xx xx     	jsr	_~free
+   198 00:005D: DA           	phx
+   199 00:005E: A6 0B        	ldx	<L6+3
+   200 00:0060: A5 09        	lda	<L6+1
+   201 00:0062: 95 09        	sta	<L6+1,X
+   202 00:0064: 8A           	txa
+   203 00:0065: FA           	plx
+   204 00:0066: 2B           	pld
+   205 00:0067: 48           	pha
+   206 00:0068: 3B           	tsc
+   207 00:0069: 18           	clc
+   208 00:006A: 69 0A 00     	adc	#L6+2
+   209 00:006D: 63 01        	adc	<1,s
+   210 00:006F: 1B           	tcs
+   211 00:0070: 60           	rts
+   212             00000008   L6	equ	8
+   213             00000001   L7	equ	1
+   214                        	ends
+   215                        	efunc
+   216                        	code
+   217                        	xdef	_~unlink
+   218                        	func
+  Mon Sep 14 2026 18:41                                                                                                    Page 5
+
+
+   219                        _~unlink:
+   220                        	longa	on
+   221                        	longi	on
+   222 00:0071: 3B           	tsc
+   223 00:0072: 38           	sec
+   224 00:0073: E9 00 00     	sbc	#L9
+   225 00:0076: 1B           	tcs
+   226 00:0077: 0B           	phd
+   227 00:0078: 5B           	tcd
+   228             00000003   pchar_0	set	3
+   229 00:0079: D4 05        	pei	<L9+pchar_0+2
+   230 00:007B: D4 03        	pei	<L9+pchar_0
+   231 00:007D: F4 xx xx     	pea	#^L5
+   232 00:0080: F4 xx xx     	pea	#<L5
+   233 00:0083: F4 0A 00     	pea	#10
+   234 00:0086: 20 xx xx     	jsr	_~debug
+   235 00:0089: A9 01 00     	lda	#$1
+   236 00:008C: A8           	tay
+   237 00:008D: A5 01        	lda	<L9+1
+   238 00:008F: 85 05        	sta	<L9+1+4
+   239 00:0091: 2B           	pld
+   240 00:0092: 3B           	tsc
+   241 00:0093: 18           	clc
+   242 00:0094: 69 04 00     	adc	#L9+4
+   243 00:0097: 1B           	tcs
+   244 00:0098: 98           	tya
+   245 00:0099: 60           	rts
+   246             00000000   L9	equ	0
+   247             00000001   L10	equ	1
+   248                        	ends
+   249                        	efunc
+   250                        	data
+   251                        L5:
+   252 00:006B: 75 6E 6C 69  	db	$75,$6E,$6C,$69,$6E,$6B,$20,$63,$61,$6C,$6C,$65,$64,$20,$6E
+       00:006F: 6E 6B 20 63 
+       00:0073: 61 6C 6C 65 
+       00:0077: 64 20 6E 
+   253 00:007A: 61 6D 65 3A  	db	$61,$6D,$65,$3A,$20,$25,$73,$0A,$00
+       00:007E: 20 25 73 0A 
+       00:0082: 00 
+   254 00:0083:              	ends
+   255                        	code
+   256                        	xdef	_~print_str
+   257                        	func
+   258                        _~print_str:
+   259                        	longa	on
+   260                        	longi	on
+   261 00:009A: 3B           	tsc
+   262 00:009B: 38           	sec
+   263 00:009C: E9 04 00     	sbc	#L13
+   264 00:009F: 1B           	tcs
+   265 00:00A0: 0B           	phd
+   266 00:00A1: 5B           	tcd
+   267             00000003   str_0	set	3
+   268 00:00A2: 80 18        	bra	L10001
+   269                        L20001:
+   270 00:00A4: AD xx xx     	lda	|_~debug_char
+   271 00:00A7: 85 01        	sta	<R0
+  Mon Sep 14 2026 18:41                                                                                                    Page 6
+
+
+   272 00:00A9: AD xx xx     	lda	|_~debug_char+2
+   273 00:00AC: 85 03        	sta	<R0+2
+   274 00:00AE: E2 20        	sep	#$20
+   275                        	longa	off
+   276 00:00B0: A7 07        	lda	[<L13+str_0]
+   277 00:00B2: 87 01        	sta	[<R0]
+   278 00:00B4: C2 20        	rep	#$20
+   279                        	longa	on
+   280 00:00B6: E6 07        	inc	<L13+str_0
+   281 00:00B8: D0 02        	bne	L10001
+   282 00:00BA: E6 09        	inc	<L13+str_0+2
+   283                        L10001:
+   284 00:00BC: A7 07        	lda	[<L13+str_0]
+   285 00:00BE: 29 FF 00     	and	#$ff
+   286 00:00C1: D0 E1        	bne	L20001
+   287 00:00C3: A5 05        	lda	<L13+1
+   288 00:00C5: 85 09        	sta	<L13+1+4
+   289 00:00C7: 2B           	pld
+   290 00:00C8: 3B           	tsc
+   291 00:00C9: 18           	clc
+   292 00:00CA: 69 08 00     	adc	#L13+4
+   293 00:00CD: 1B           	tcs
+   294 00:00CE: 60           	rts
+   295             00000004   L13	equ	4
+   296             00000005   L14	equ	5
+   297                        	ends
+   298                        	efunc
+   299                        	code
+   300                        	xdef	_~write
+   301                        	func
+   302                        _~write:
+   303                        	longa	on
+   304                        	longi	on
+   305 00:00CF: 3B           	tsc
+   306 00:00D0: 38           	sec
+   307 00:00D1: E9 0C 00     	sbc	#L18
+   308 00:00D4: 1B           	tcs
+   309 00:00D5: 0B           	phd
+   310 00:00D6: 5B           	tcd
+   311             00000003   fd_0	set	3
+   312             00000005   buf_0	set	5
+   313             00000009   size_0	set	9
+   314             00000000   p_1	set	0
+   315             00000004   ansi_1	set	4
+   316 00:00D7: A5 11        	lda	<L18+buf_0
+   317 00:00D9: 85 05        	sta	<L19+p_1
+   318 00:00DB: A5 13        	lda	<L18+buf_0+2
+   319 00:00DD: 85 07        	sta	<L19+p_1+2
+   320 00:00DF: A5 0F        	lda	<L18+fd_0
+   321                        	xref	_~~swt
+   322 00:00E1: 20 xx xx     	jsr	_~~swt
+   323 00:00E4: 02 00        	dw	2
+   324 00:00E6: 00 00        	dw	0
+   325 00:00E8: xx xx        	dw	L10005-1
+   326 00:00EA: 02 00        	dw	2
+   327 00:00EC: xx xx        	dw	L10006-1
+   328 00:00EE: xx xx        	dw	L10007-1
+   329                        L10005:
+  Mon Sep 14 2026 18:41                                                                                                    Page 7
+
+
+   330 00:00F0: AD xx xx     	lda	|_~ansi_yellow
+   331 00:00F3: 85 09        	sta	<L19+ansi_1
+   332 00:00F5: AD xx xx     	lda	|_~ansi_yellow+2
+   333                        L20002:
+   334 00:00F8: 85 0B        	sta	<L19+ansi_1+2
+   335                        L10004:
+   336 00:00FA: D4 0B        	pei	<L19+ansi_1+2
+   337 00:00FC: D4 09        	pei	<L19+ansi_1
+   338 00:00FE: 20 xx xx     	jsr	_~print_str
+   339 00:0101: 80 4F        	bra	L10011
+   340                        L10006:
+   341 00:0103: AD xx xx     	lda	|_~ansi_red
+   342 00:0106: 85 09        	sta	<L19+ansi_1
+   343 00:0108: AD xx xx     	lda	|_~ansi_red+2
+   344 00:010B: 80 EB        	bra	L20002
+   345                        L10007:
+   346 00:010D: 64 09        	stz	<L19+ansi_1
+   347 00:010F: 64 0B        	stz	<L19+ansi_1+2
+   348 00:0111: 80 E7        	bra	L10004
+   349                        L10010:
+   350 00:0113: A5 0F        	lda	<L18+fd_0
+   351 00:0115: 30 05        	bmi	L20
+   352 00:0117: 3A           	dea
+   353 00:0118: 3A           	dea
+   354 00:0119: 3A           	dea
+   355 00:011A: 10 1C        	bpl	L10012
+   356                        L20:
+   357 00:011C: E2 20        	sep	#$20
+   358                        	longa	off
+   359 00:011E: A7 05        	lda	[<L19+p_1]
+   360 00:0120: C9 0A        	cmp	#<$a
+   361 00:0122: C2 20        	rep	#$20
+   362                        	longa	on
+   363 00:0124: D0 12        	bne	L10012
+   364 00:0126: AD xx xx     	lda	|_~debug_char
+   365 00:0129: 85 01        	sta	<R0
+   366 00:012B: AD xx xx     	lda	|_~debug_char+2
+   367 00:012E: 85 03        	sta	<R0+2
+   368 00:0130: E2 20        	sep	#$20
+   369                        	longa	off
+   370 00:0132: A9 0D        	lda	#$d
+   371 00:0134: 87 01        	sta	[<R0]
+   372 00:0136: C2 20        	rep	#$20
+   373                        	longa	on
+   374                        L10012:
+   375 00:0138: AD xx xx     	lda	|_~debug_char
+   376 00:013B: 85 01        	sta	<R0
+   377 00:013D: AD xx xx     	lda	|_~debug_char+2
+   378 00:0140: 85 03        	sta	<R0+2
+   379 00:0142: E2 20        	sep	#$20
+   380                        	longa	off
+   381 00:0144: A7 05        	lda	[<L19+p_1]
+   382 00:0146: 87 01        	sta	[<R0]
+   383 00:0148: C2 20        	rep	#$20
+   384                        	longa	on
+   385 00:014A: E6 05        	inc	<L19+p_1
+   386 00:014C: D0 02        	bne	L10008
+   387 00:014E: E6 07        	inc	<L19+p_1+2
+  Mon Sep 14 2026 18:41                                                                                                    Page 8
+
+
+   388                        L10008:
+   389 00:0150: C6 15        	dec	<L18+size_0
+   390                        L10011:
+   391 00:0152: A9 00 00     	lda	#$0
+   392 00:0155: C5 15        	cmp	<L18+size_0
+   393 00:0157: 90 BA        	bcc	L10010
+   394 00:0159: A5 09        	lda	<L19+ansi_1
+   395 00:015B: 05 0B        	ora	<L19+ansi_1+2
+   396 00:015D: F0 0B        	beq	L10013
+   397 00:015F: AD xx xx     	lda	|_~ansi_white+2
+   398 00:0162: 48           	pha
+   399 00:0163: AD xx xx     	lda	|_~ansi_white
+   400 00:0166: 48           	pha
+   401 00:0167: 20 xx xx     	jsr	_~print_str
+   402                        L10013:
+   403 00:016A: A5 15        	lda	<L18+size_0
+   404 00:016C: A8           	tay
+   405 00:016D: A5 0D        	lda	<L18+1
+   406 00:016F: 85 15        	sta	<L18+1+8
+   407 00:0171: 2B           	pld
+   408 00:0172: 3B           	tsc
+   409 00:0173: 18           	clc
+   410 00:0174: 69 14 00     	adc	#L18+8
+   411 00:0177: 1B           	tcs
+   412 00:0178: 98           	tya
+   413 00:0179: 60           	rts
+   414             0000000C   L18	equ	12
+   415             00000005   L19	equ	5
+   416                        	ends
+   417                        	efunc
+   418                        	code
+   419                        	xdef	_~read
+   420                        	func
+   421                        _~read:
+   422                        	longa	on
+   423                        	longi	on
+   424 00:017A: 3B           	tsc
+   425 00:017B: 38           	sec
+   426 00:017C: E9 04 00     	sbc	#L26
+   427 00:017F: 1B           	tcs
+   428 00:0180: 0B           	phd
+   429 00:0181: 5B           	tcd
+   430             00000003   fd_0	set	3
+   431             00000005   buf_0	set	5
+   432             00000009   size_0	set	9
+   433 00:0182: AD xx xx     	lda	|_~debug_char
+   434 00:0185: 85 01        	sta	<R0
+   435 00:0187: AD xx xx     	lda	|_~debug_char+2
+   436 00:018A: 85 03        	sta	<R0+2
+   437 00:018C: E2 20        	sep	#$20
+   438                        	longa	off
+   439 00:018E: A7 01        	lda	[<R0]
+   440 00:0190: C2 20        	rep	#$20
+   441                        	longa	on
+   442 00:0192: 29 FF 00     	and	#$ff
+   443 00:0195: A8           	tay
+   444 00:0196: A5 05        	lda	<L26+1
+   445 00:0198: 85 0D        	sta	<L26+1+8
+  Mon Sep 14 2026 18:41                                                                                                    Page 9
+
+
+   446 00:019A: 2B           	pld
+   447 00:019B: 3B           	tsc
+   448 00:019C: 18           	clc
+   449 00:019D: 69 0C 00     	adc	#L26+8
+   450 00:01A0: 1B           	tcs
+   451 00:01A1: 98           	tya
+   452 00:01A2: 60           	rts
+   453             00000004   L26	equ	4
+   454             00000005   L27	equ	5
+   455                        	ends
+   456                        	efunc
+   457                        	code
+   458                        	xdef	_~close
+   459                        	func
+   460                        _~close:
+   461                        	longa	on
+   462                        	longi	on
+   463 00:01A3: 3B           	tsc
+   464 00:01A4: 38           	sec
+   465 00:01A5: E9 00 00     	sbc	#L29
+   466 00:01A8: 1B           	tcs
+   467 00:01A9: 0B           	phd
+   468 00:01AA: 5B           	tcd
+   469             00000003   fd_0	set	3
+   470 00:01AB: A9 01 00     	lda	#$1
+   471 00:01AE: A8           	tay
+   472 00:01AF: A5 01        	lda	<L29+1
+   473 00:01B1: 85 03        	sta	<L29+1+2
+   474 00:01B3: 2B           	pld
+   475 00:01B4: 3B           	tsc
+   476 00:01B5: 18           	clc
+   477 00:01B6: 69 02 00     	adc	#L29+2
+   478 00:01B9: 1B           	tcs
+   479 00:01BA: 98           	tya
+   480 00:01BB: 60           	rts
+   481             00000000   L29	equ	0
+   482             00000001   L30	equ	1
+   483                        	ends
+   484                        	efunc
+   485                        	code
+   486                        	xdef	_~open
+   487                        	func
+   488                        _~open:
+   489                        	longa	on
+   490                        	longi	on
+   491 00:01BC: 3B           	tsc
+   492 00:01BD: 38           	sec
+   493 00:01BE: E9 00 00     	sbc	#L32
+   494 00:01C1: 1B           	tcs
+   495 00:01C2: 0B           	phd
+   496 00:01C3: 5B           	tcd
+   497             00000003   _name_0	set	3
+   498             00000007   _mode_0	set	7
+   499 00:01C4: D4 07        	pei	<L32+_mode_0
+   500 00:01C6: D4 05        	pei	<L32+_name_0+2
+   501 00:01C8: D4 03        	pei	<L32+_name_0
+   502 00:01CA: F4 xx xx     	pea	#^L12
+   503 00:01CD: F4 xx xx     	pea	#<L12
+  Mon Sep 14 2026 18:41                                                                                                    Page 10
+
+
+   504 00:01D0: F4 0C 00     	pea	#12
+   505 00:01D3: 20 xx xx     	jsr	_~debug
+   506 00:01D6: A9 01 00     	lda	#$1
+   507 00:01D9: A8           	tay
+   508 00:01DA: A5 01        	lda	<L32+1
+   509 00:01DC: 85 07        	sta	<L32+1+6
+   510 00:01DE: 2B           	pld
+   511 00:01DF: 3B           	tsc
+   512 00:01E0: 18           	clc
+   513 00:01E1: 69 06 00     	adc	#L32+6
+   514 00:01E4: 1B           	tcs
+   515 00:01E5: 98           	tya
+   516 00:01E6: 60           	rts
+   517             00000000   L32	equ	0
+   518             00000001   L33	equ	1
+   519                        	ends
+   520                        	efunc
+   521                        	data
+   522                        L12:
+   523 00:0083: 6F 70 65 6E  	db	$6F,$70,$65,$6E,$20,$63,$61,$6C,$6C,$65,$64,$20,$6E,$61,$6D
+       00:0087: 20 63 61 6C 
+       00:008B: 6C 65 64 20 
+       00:008F: 6E 61 6D 
+   524 00:0092: 65 3A 25 73  	db	$65,$3A,$25,$73,$2C,$20,$6D,$6F,$64,$65,$3A,$25,$64,$0A,$00
+       00:0096: 2C 20 6D 6F 
+       00:009A: 64 65 3A 25 
+       00:009E: 64 0A 00 
+   525 00:00A1:              	ends
+   526                        	code
+   527                        	xdef	_~isatty
+   528                        	func
+   529                        _~isatty:
+   530                        	longa	on
+   531                        	longi	on
+   532 00:01E7: 3B           	tsc
+   533 00:01E8: 38           	sec
+   534 00:01E9: E9 00 00     	sbc	#L36
+   535 00:01EC: 1B           	tcs
+   536 00:01ED: 0B           	phd
+   537 00:01EE: 5B           	tcd
+   538             00000003   fd_0	set	3
+   539 00:01EF: D4 03        	pei	<L36+fd_0
+   540 00:01F1: F4 xx xx     	pea	#^L35
+   541 00:01F4: F4 xx xx     	pea	#<L35
+   542 00:01F7: F4 08 00     	pea	#8
+   543 00:01FA: 20 xx xx     	jsr	_~debug
+   544 00:01FD: A9 01 00     	lda	#$1
+   545 00:0200: A8           	tay
+   546 00:0201: A5 01        	lda	<L36+1
+   547 00:0203: 85 03        	sta	<L36+1+2
+   548 00:0205: 2B           	pld
+   549 00:0206: 3B           	tsc
+   550 00:0207: 18           	clc
+   551 00:0208: 69 02 00     	adc	#L36+2
+   552 00:020B: 1B           	tcs
+   553 00:020C: 98           	tya
+   554 00:020D: 60           	rts
+   555             00000000   L36	equ	0
+  Mon Sep 14 2026 18:41                                                                                                    Page 11
+
+
+   556             00000001   L37	equ	1
+   557                        	ends
+   558                        	efunc
+   559                        	data
+   560                        L35:
+   561 00:00A1: 69 73 61 74  	db	$69,$73,$61,$74,$74,$79,$20,$63,$61,$6C,$6C,$65,$64,$20,$66
+       00:00A5: 74 79 20 63 
+       00:00A9: 61 6C 6C 65 
+       00:00AD: 64 20 66 
+   562 00:00B0: 64 3A 25 64  	db	$64,$3A,$25,$64,$0A,$00
+       00:00B4: 0A 00 
+   563 00:00B6:              	ends
+   564                        	code
+   565                        	xdef	_~lseek
+   566                        	func
+   567                        _~lseek:
+   568                        	longa	on
+   569                        	longi	on
+   570 00:020E: 3B           	tsc
+   571 00:020F: 38           	sec
+   572 00:0210: E9 00 00     	sbc	#L40
+   573 00:0213: 1B           	tcs
+   574 00:0214: 0B           	phd
+   575 00:0215: 5B           	tcd
+   576             00000003   fd_0	set	3
+   577             00000005   offset_0	set	5
+   578             00000009   whence_0	set	9
+   579 00:0216: D4 09        	pei	<L40+whence_0
+   580 00:0218: D4 07        	pei	<L40+offset_0+2
+   581 00:021A: D4 05        	pei	<L40+offset_0
+   582 00:021C: D4 03        	pei	<L40+fd_0
+   583 00:021E: F4 xx xx     	pea	#^L39
+   584 00:0221: F4 xx xx     	pea	#<L39
+   585 00:0224: F4 0E 00     	pea	#14
+   586 00:0227: 20 xx xx     	jsr	_~debug
+   587 00:022A: A9 00 00     	lda	#$0
+   588 00:022D: AA           	tax
+   589 00:022E: 1A           	ina
+   590 00:022F: A8           	tay
+   591 00:0230: A5 01        	lda	<L40+1
+   592 00:0232: 85 09        	sta	<L40+1+8
+   593 00:0234: 2B           	pld
+   594 00:0235: 3B           	tsc
+   595 00:0236: 18           	clc
+   596 00:0237: 69 08 00     	adc	#L40+8
+   597 00:023A: 1B           	tcs
+   598 00:023B: 98           	tya
+   599 00:023C: 60           	rts
+   600             00000000   L40	equ	0
+   601             00000001   L41	equ	1
+   602                        	ends
+   603                        	efunc
+   604                        	data
+   605                        L39:
+   606 00:00B6: 6C 73 65 65  	db	$6C,$73,$65,$65,$6B,$20,$63,$61,$6C,$6C,$65,$64,$20,$66,$64
+       00:00BA: 6B 20 63 61 
+       00:00BE: 6C 6C 65 64 
+       00:00C2: 20 66 64 
+  Mon Sep 14 2026 18:41                                                                                                    Page 12
+
+
+   607 00:00C5: 3A 25 64 2C  	db	$3A,$25,$64,$2C,$20,$6F,$66,$66,$73,$65,$74,$3A,$25,$64,$2C
+       00:00C9: 20 6F 66 66 
+       00:00CD: 73 65 74 3A 
+       00:00D1: 25 64 2C 
+   608 00:00D4: 20 77 68 65  	db	$20,$77,$68,$65,$6E,$63,$65,$3A,$25,$64,$0A,$00
+       00:00D8: 6E 63 65 3A 
+       00:00DC: 25 64 0A 00 
+   609 00:00E0:              	ends
+   610                        ;
+   611                        ;void vApplicationStackOverflowHook( TaskHandle_t xTask,
+   612                        ;                                        char * pcTaskName ) {
+   613                        	code
+   614                        	xdef	_~vApplicationStackOverflowHook
+   615                        	func
+   616                        _~vApplicationStackOverflowHook:
+   617                        	longa	on
+   618                        	longi	on
+   619 00:023D: 3B           	tsc
+   620 00:023E: 38           	sec
+   621 00:023F: E9 00 00     	sbc	#L44
+   622 00:0242: 1B           	tcs
+   623 00:0243: 0B           	phd
+   624 00:0244: 5B           	tcd
+   625             00000003   xTask_0	set	3
+   626             00000007   pcTaskName_0	set	7
+   627                        ;
+   628                        ;}
+   629 00:0245: A5 01        	lda	<L44+1
+   630 00:0247: 85 09        	sta	<L44+1+8
+   631 00:0249: 2B           	pld
+   632 00:024A: 3B           	tsc
+   633 00:024B: 18           	clc
+   634 00:024C: 69 08 00     	adc	#L44+8
+   635 00:024F: 1B           	tcs
+   636 00:0250: 60           	rts
+   637             00000000   L44	equ	0
+   638             00000001   L45	equ	1
+   639                        	ends
+   640                        	efunc
+   641                        ;
+   642                        ;void printHeapStats() {
+   643                        	code
+   644                        	xdef	_~printHeapStats
+   645                        	func
+   646                        _~printHeapStats:
+   647                        	longa	on
+   648                        	longi	on
+   649 00:0251: 3B           	tsc
+   650 00:0252: 38           	sec
+   651 00:0253: E9 1C 00     	sbc	#L47
+   652 00:0256: 1B           	tcs
+   653 00:0257: 0B           	phd
+   654 00:0258: 5B           	tcd
+   655                        ;	HeapStats_t pxHeapStats;
+   656                        ;	
+   657                        ;	vPortGetHeapStats(&pxHeapStats);
+   658             00000000   pxHeapStats_1	set	0
+   659 00:0259: F4 00 00     	pea	#0
+  Mon Sep 14 2026 18:41                                                                                                    Page 13
+
+
+   660 00:025C: 18           	clc
+   661 00:025D: 7B           	tdc
+   662 00:025E: 69 01 00     	adc	#<L48+pxHeapStats_1
+   663 00:0261: 48           	pha
+   664 00:0262: 20 xx xx     	jsr	_~vPortGetHeapStats
+   665                        ;	printf("\n");
+   666 00:0265: F4 xx xx     	pea	#^L43
+   667 00:0268: F4 xx xx     	pea	#<L43
+   668 00:026B: F4 06 00     	pea	#6
+   669 00:026E: 20 xx xx     	jsr	_~printf
+   670                        ;	printf("xAvailableHeapSpaceInBytes:%p\n", (void *)pxHeapStats.xAvailableHeapSpaceInBytes);
+   671 00:0271: D4 03        	pei	<L48+pxHeapStats_1+2
+   672 00:0273: D4 01        	pei	<L48+pxHeapStats_1
+   673 00:0275: F4 xx xx     	pea	#^L43+2
+   674 00:0278: F4 xx xx     	pea	#<L43+2
+   675 00:027B: F4 0A 00     	pea	#10
+   676 00:027E: 20 xx xx     	jsr	_~printf
+   677                        ;	printf("xSizeOfLargestFreeBlockInBytes:%04X\n", pxHeapStats.xSizeOfLargestFreeBlockInBytes);
+   678 00:0281: D4 07        	pei	<L48+pxHeapStats_1+6
+   679 00:0283: D4 05        	pei	<L48+pxHeapStats_1+4
+   680 00:0285: F4 xx xx     	pea	#^L43+33
+   681 00:0288: F4 xx xx     	pea	#<L43+33
+   682 00:028B: F4 0A 00     	pea	#10
+   683 00:028E: 20 xx xx     	jsr	_~printf
+   684                        ;	printf("xSizeOfSmallestFreeBlockInBytes:%04X\n", pxHeapStats.xSizeOfSmallestFreeBlockInBytes);
+   685 00:0291: D4 0B        	pei	<L48+pxHeapStats_1+10
+   686 00:0293: D4 09        	pei	<L48+pxHeapStats_1+8
+   687 00:0295: F4 xx xx     	pea	#^L43+70
+   688 00:0298: F4 xx xx     	pea	#<L43+70
+   689 00:029B: F4 0A 00     	pea	#10
+   690 00:029E: 20 xx xx     	jsr	_~printf
+   691                        ;	printf("xNumberOfFreeBlocks:%04X\n", pxHeapStats.xNumberOfFreeBlocks);
+   692 00:02A1: D4 0F        	pei	<L48+pxHeapStats_1+14
+   693 00:02A3: D4 0D        	pei	<L48+pxHeapStats_1+12
+   694 00:02A5: F4 xx xx     	pea	#^L43+108
+   695 00:02A8: F4 xx xx     	pea	#<L43+108
+   696 00:02AB: F4 0A 00     	pea	#10
+   697 00:02AE: 20 xx xx     	jsr	_~printf
+   698                        ;	printf("xMinimumEverFreeBytesRemaining:%p\n", (void *)pxHeapStats.xMinimumEverFreeBytesRemaining);
+   699 00:02B1: D4 13        	pei	<L48+pxHeapStats_1+18
+   700 00:02B3: D4 11        	pei	<L48+pxHeapStats_1+16
+   701 00:02B5: F4 xx xx     	pea	#^L43+134
+   702 00:02B8: F4 xx xx     	pea	#<L43+134
+   703 00:02BB: F4 0A 00     	pea	#10
+   704 00:02BE: 20 xx xx     	jsr	_~printf
+   705                        ;	printf("xNumberOfSuccessfulAllocations:%p\n", (void *)pxHeapStats.xNumberOfSuccessfulAllocations);
+   706 00:02C1: D4 17        	pei	<L48+pxHeapStats_1+22
+   707 00:02C3: D4 15        	pei	<L48+pxHeapStats_1+20
+   708 00:02C5: F4 xx xx     	pea	#^L43+169
+   709 00:02C8: F4 xx xx     	pea	#<L43+169
+   710 00:02CB: F4 0A 00     	pea	#10
+   711 00:02CE: 20 xx xx     	jsr	_~printf
+   712                        ;	printf("xNumberOfSuccessfulFrees:%p\n", (void *)pxHeapStats.xNumberOfSuccessfulFrees);
+   713 00:02D1: D4 1B        	pei	<L48+pxHeapStats_1+26
+   714 00:02D3: D4 19        	pei	<L48+pxHeapStats_1+24
+   715 00:02D5: F4 xx xx     	pea	#^L43+204
+   716 00:02D8: F4 xx xx     	pea	#<L43+204
+   717 00:02DB: F4 0A 00     	pea	#10
+  Mon Sep 14 2026 18:41                                                                                                    Page 14
+
+
+   718 00:02DE: 20 xx xx     	jsr	_~printf
+   719                        ;}
+   720 00:02E1: 2B           	pld
+   721 00:02E2: 3B           	tsc
+   722 00:02E3: 18           	clc
+   723 00:02E4: 69 1C 00     	adc	#L47
+   724 00:02E7: 1B           	tcs
+   725 00:02E8: 60           	rts
+   726             0000001C   L47	equ	28
+   727             00000001   L48	equ	1
+   728                        	ends
+   729                        	efunc
+   730                        	data
+   731                        L43:
+   732 00:00E0: 0A 00 78 41  	db	$0A,$00,$78,$41,$76,$61,$69,$6C,$61,$62,$6C,$65,$48,$65,$61
+       00:00E4: 76 61 69 6C 
+       00:00E8: 61 62 6C 65 
+       00:00EC: 48 65 61 
+   733 00:00EF: 70 53 70 61  	db	$70,$53,$70,$61,$63,$65,$49,$6E,$42,$79,$74,$65,$73,$3A,$25
+       00:00F3: 63 65 49 6E 
+       00:00F7: 42 79 74 65 
+       00:00FB: 73 3A 25 
+   734 00:00FE: 70 0A 00 78  	db	$70,$0A,$00,$78,$53,$69,$7A,$65,$4F,$66,$4C,$61,$72,$67,$65
+       00:0102: 53 69 7A 65 
+       00:0106: 4F 66 4C 61 
+       00:010A: 72 67 65 
+   735 00:010D: 73 74 46 72  	db	$73,$74,$46,$72,$65,$65,$42,$6C,$6F,$63,$6B,$49,$6E,$42,$79
+       00:0111: 65 65 42 6C 
+       00:0115: 6F 63 6B 49 
+       00:0119: 6E 42 79 
+   736 00:011C: 74 65 73 3A  	db	$74,$65,$73,$3A,$25,$30,$34,$58,$0A,$00,$78,$53,$69,$7A,$65
+       00:0120: 25 30 34 58 
+       00:0124: 0A 00 78 53 
+       00:0128: 69 7A 65 
+   737 00:012B: 4F 66 53 6D  	db	$4F,$66,$53,$6D,$61,$6C,$6C,$65,$73,$74,$46,$72,$65,$65,$42
+       00:012F: 61 6C 6C 65 
+       00:0133: 73 74 46 72 
+       00:0137: 65 65 42 
+   738 00:013A: 6C 6F 63 6B  	db	$6C,$6F,$63,$6B,$49,$6E,$42,$79,$74,$65,$73,$3A,$25,$30,$34
+       00:013E: 49 6E 42 79 
+       00:0142: 74 65 73 3A 
+       00:0146: 25 30 34 
+   739 00:0149: 58 0A 00 78  	db	$58,$0A,$00,$78,$4E,$75,$6D,$62,$65,$72,$4F,$66,$46,$72,$65
+       00:014D: 4E 75 6D 62 
+       00:0151: 65 72 4F 66 
+       00:0155: 46 72 65 
+   740 00:0158: 65 42 6C 6F  	db	$65,$42,$6C,$6F,$63,$6B,$73,$3A,$25,$30,$34,$58,$0A,$00,$78
+       00:015C: 63 6B 73 3A 
+       00:0160: 25 30 34 58 
+       00:0164: 0A 00 78 
+   741 00:0167: 4D 69 6E 69  	db	$4D,$69,$6E,$69,$6D,$75,$6D,$45,$76,$65,$72,$46,$72,$65,$65
+       00:016B: 6D 75 6D 45 
+       00:016F: 76 65 72 46 
+       00:0173: 72 65 65 
+   742 00:0176: 42 79 74 65  	db	$42,$79,$74,$65,$73,$52,$65,$6D,$61,$69,$6E,$69,$6E,$67,$3A
+       00:017A: 73 52 65 6D 
+       00:017E: 61 69 6E 69 
+       00:0182: 6E 67 3A 
+  Mon Sep 14 2026 18:41                                                                                                    Page 15
+
+
+   743 00:0185: 25 70 0A 00  	db	$25,$70,$0A,$00,$78,$4E,$75,$6D,$62,$65,$72,$4F,$66,$53,$75
+       00:0189: 78 4E 75 6D 
+       00:018D: 62 65 72 4F 
+       00:0191: 66 53 75 
+   744 00:0194: 63 63 65 73  	db	$63,$63,$65,$73,$73,$66,$75,$6C,$41,$6C,$6C,$6F,$63,$61,$74
+       00:0198: 73 66 75 6C 
+       00:019C: 41 6C 6C 6F 
+       00:01A0: 63 61 74 
+   745 00:01A3: 69 6F 6E 73  	db	$69,$6F,$6E,$73,$3A,$25,$70,$0A,$00,$78,$4E,$75,$6D,$62,$65
+       00:01A7: 3A 25 70 0A 
+       00:01AB: 00 78 4E 75 
+       00:01AF: 6D 62 65 
+   746 00:01B2: 72 4F 66 53  	db	$72,$4F,$66,$53,$75,$63,$63,$65,$73,$73,$66,$75,$6C,$46,$72
+       00:01B6: 75 63 63 65 
+       00:01BA: 73 73 66 75 
+       00:01BE: 6C 46 72 
+   747 00:01C1: 65 65 73 3A  	db	$65,$65,$73,$3A,$25,$70,$0A,$00
+       00:01C5: 25 70 0A 00 
+   748 00:01C9:              	ends
+   749                        ;
+   750                        ;void shellTask( void *pvParameters )
+   751                        ;{
+   752                        	code
+   753                        	xdef	_~shellTask
+   754                        	func
+   755                        _~shellTask:
+   756                        	longa	on
+   757                        	longi	on
+   758 00:02E9: 3B           	tsc
+   759 00:02EA: 38           	sec
+   760 00:02EB: E9 00 00     	sbc	#L51
+   761 00:02EE: 1B           	tcs
+   762 00:02EF: 0B           	phd
+   763 00:02F0: 5B           	tcd
+   764             00000003   pvParameters_0	set	3
+   765                        ;	for(;;)
+   766                        L10016:
+   767                        ;		printf("shellTask...\n");
+   768 00:02F1: F4 xx xx     	pea	#^L50
+   769 00:02F4: F4 xx xx     	pea	#<L50
+   770 00:02F7: F4 06 00     	pea	#6
+   771 00:02FA: 20 xx xx     	jsr	_~printf
+   772 00:02FD: 80 F2        	bra	L10016
+   773                        ;}
+   774             00000000   L51	equ	0
+   775             00000001   L52	equ	1
+   776                        	ends
+   777                        	efunc
+   778                        	data
+   779                        L50:
+   780 00:01C9: 73 68 65 6C  	db	$73,$68,$65,$6C,$6C,$54,$61,$73,$6B,$2E,$2E,$2E,$0A,$00
+       00:01CD: 6C 54 61 73 
+       00:01D1: 6B 2E 2E 2E 
+       00:01D5: 0A 00 
+   781 00:01D7:              	ends
+   782                        ;
+   783                        ;int main (int argc, char ** argv) {
+   784                        	code
+  Mon Sep 14 2026 18:41                                                                                                    Page 16
+
+
+   785                        	xdef	_~main
+   786                        	func
+   787                        _~main:
+   788                        	longa	on
+   789                        	longi	on
+   790 00:02FF: 3B           	tsc
+   791 00:0300: 38           	sec
+   792 00:0301: E9 20 00     	sbc	#L54
+   793 00:0304: 1B           	tcs
+   794 00:0305: 0B           	phd
+   795 00:0306: 5B           	tcd
+   796             00000003   argc_0	set	3
+   797             00000005   argv_0	set	5
+   798                        ;	
+   799                        ;	BaseType_t rc;
+   800                        ;	HeapRegion_t reg;
+   801                        ;	HeapRegion_t *pxHeapReg;
+   802                        ;	char *p;
+   803                        ;	int i;
+   804                        ;
+   805                        ;	pxHeapReg = (HeapRegion_t *)pvPortMallocStack(sizeof(reg) * 100);
+   806             00000000   rc_1	set	0
+   807             00000002   reg_1	set	2
+   808             0000000A   pxHeapReg_1	set	10
+   809             0000000E   p_1	set	14
+   810             00000012   i_1	set	18
+   811 00:0307: F4 20 03     	pea	#<$320
+   812 00:030A: 20 xx xx     	jsr	_~pvPortMallocStack
+   813 00:030D: 85 17        	sta	<L55+pxHeapReg_1
+   814 00:030F: 86 19        	stx	<L55+pxHeapReg_1+2
+   815                        ;	printf("pxHeapReg:%p %u\n", pxHeapReg, sizeof(reg) * 100);
+   816 00:0311: F4 20 03     	pea	#<$320
+   817 00:0314: D4 19        	pei	<L55+pxHeapReg_1+2
+   818 00:0316: D4 17        	pei	<L55+pxHeapReg_1
+   819 00:0318: F4 xx xx     	pea	#^L53
+   820 00:031B: F4 xx xx     	pea	#<L53
+   821 00:031E: F4 0C 00     	pea	#12
+   822 00:0321: 20 xx xx     	jsr	_~printf
+   823                        ;	
+   824                        ;	reg.xSizeInBytes = 0x010000;
+   825 00:0324: A9 00 00     	lda	#$0
+   826 00:0327: 85 13        	sta	<L55+reg_1+4
+   827 00:0329: 1A           	ina
+   828 00:032A: 85 15        	sta	<L55+reg_1+6
+   829                        ;	
+   830                        ;	for(i = 0; i < 99; i++) {
+   831 00:032C: 64 1F        	stz	<L55+i_1
+   832                        L10019:
+   833                        ;		reg.pucStartAddress = (char *)((i+2) * 0x010000U);
+   834 00:032E: A9 02 00     	lda	#$2
+   835 00:0331: 18           	clc
+   836 00:0332: 65 1F        	adc	<L55+i_1
+   837 00:0334: 85 05        	sta	<R1
+   838 00:0336: A0 00 00     	ldy	#$0
+   839 00:0339: A5 05        	lda	<R1
+   840 00:033B: 10 01        	bpl	L56
+   841 00:033D: 88           	dey
+   842                        L56:
+  Mon Sep 14 2026 18:41                                                                                                    Page 17
+
+
+   843 00:033E: 85 05        	sta	<R1
+   844 00:0340: 84 07        	sty	<R1+2
+   845 00:0342: D4 07        	pei	<R1+2
+   846 00:0344: D4 05        	pei	<R1
+   847 00:0346: A9 10 00     	lda	#$10
+   848                        	xref	_~~lasl
+   849 00:0349: 20 xx xx     	jsr	_~~lasl
+   850 00:034C: 86 03        	stx	<R0+2
+   851 00:034E: 85 0F        	sta	<L55+reg_1
+   852 00:0350: A5 03        	lda	<R0+2
+   853 00:0352: 85 11        	sta	<L55+reg_1+2
+   854                        ;		pxHeapReg[i] = reg;
+   855 00:0354: 18           	clc
+   856 00:0355: 7B           	tdc
+   857 00:0356: 69 0F 00     	adc	#<L55+reg_1
+   858 00:0359: 85 01        	sta	<R0
+   859 00:035B: A9 00 00     	lda	#$0
+   860 00:035E: 48           	pha
+   861 00:035F: D4 01        	pei	<R0
+   862 00:0361: A8           	tay
+   863 00:0362: A5 1F        	lda	<L55+i_1
+   864 00:0364: 10 01        	bpl	L57
+   865 00:0366: 88           	dey
+   866                        L57:
+   867 00:0367: 85 05        	sta	<R1
+   868 00:0369: 84 07        	sty	<R1+2
+   869 00:036B: D4 07        	pei	<R1+2
+   870 00:036D: D4 05        	pei	<R1
+   871 00:036F: A9 03 00     	lda	#$3
+   872                        	xref	_~~lasl
+   873 00:0372: 20 xx xx     	jsr	_~~lasl
+   874 00:0375: 85 01        	sta	<R0
+   875 00:0377: 86 03        	stx	<R0+2
+   876 00:0379: A5 17        	lda	<L55+pxHeapReg_1
+   877 00:037B: 18           	clc
+   878 00:037C: 65 01        	adc	<R0
+   879 00:037E: 85 09        	sta	<R2
+   880 00:0380: A5 19        	lda	<L55+pxHeapReg_1+2
+   881 00:0382: 65 03        	adc	<R0+2
+   882 00:0384: 48           	pha
+   883 00:0385: D4 09        	pei	<R2
+   884 00:0387: A9 08 00     	lda	#$8
+   885                        	xref	_~~fmov
+   886 00:038A: 20 xx xx     	jsr	_~~fmov
+   887                        ;		
+   888                        ;	}
+   889 00:038D: E6 1F        	inc	<L55+i_1
+   890 00:038F: 38           	sec
+   891 00:0390: A5 1F        	lda	<L55+i_1
+   892 00:0392: E9 63 00     	sbc	#<$63
+   893 00:0395: 70 03        	bvs	L58
+   894 00:0397: 49 00 80     	eor	#$8000
+   895                        L58:
+   896 00:039A: 10 92        	bpl	L10019
+   897                        ;	reg.pucStartAddress = NULL;
+   898 00:039C: 64 0F        	stz	<L55+reg_1
+   899 00:039E: 64 11        	stz	<L55+reg_1+2
+   900                        ;	reg.xSizeInBytes = 0;
+  Mon Sep 14 2026 18:41                                                                                                    Page 18
+
+
+   901 00:03A0: 64 13        	stz	<L55+reg_1+4
+   902 00:03A2: 64 15        	stz	<L55+reg_1+6
+   903                        ;	pxHeapReg[i] = reg;
+   904 00:03A4: 18           	clc
+   905 00:03A5: 7B           	tdc
+   906 00:03A6: 69 0F 00     	adc	#<L55+reg_1
+   907 00:03A9: 85 01        	sta	<R0
+   908 00:03AB: A9 00 00     	lda	#$0
+   909 00:03AE: 48           	pha
+   910 00:03AF: D4 01        	pei	<R0
+   911 00:03B1: A8           	tay
+   912 00:03B2: A5 1F        	lda	<L55+i_1
+   913 00:03B4: 10 01        	bpl	L60
+   914 00:03B6: 88           	dey
+   915                        L60:
+   916 00:03B7: 85 05        	sta	<R1
+   917 00:03B9: 84 07        	sty	<R1+2
+   918 00:03BB: D4 07        	pei	<R1+2
+   919 00:03BD: D4 05        	pei	<R1
+   920 00:03BF: A9 03 00     	lda	#$3
+   921                        	xref	_~~lasl
+   922 00:03C2: 20 xx xx     	jsr	_~~lasl
+   923 00:03C5: 85 01        	sta	<R0
+   924 00:03C7: 86 03        	stx	<R0+2
+   925 00:03C9: A5 17        	lda	<L55+pxHeapReg_1
+   926 00:03CB: 18           	clc
+   927 00:03CC: 65 01        	adc	<R0
+   928 00:03CE: 85 09        	sta	<R2
+   929 00:03D0: A5 19        	lda	<L55+pxHeapReg_1+2
+   930 00:03D2: 65 03        	adc	<R0+2
+   931 00:03D4: 48           	pha
+   932 00:03D5: D4 09        	pei	<R2
+   933 00:03D7: A9 08 00     	lda	#$8
+   934                        	xref	_~~fmov
+   935 00:03DA: 20 xx xx     	jsr	_~~fmov
+   936                        ;
+   937                        ;	
+   938                        ;	printf("*** RTOS main \n");
+   939 00:03DD: F4 xx xx     	pea	#^L53+17
+   940 00:03E0: F4 xx xx     	pea	#<L53+17
+   941 00:03E3: F4 06 00     	pea	#6
+   942 00:03E6: 20 xx xx     	jsr	_~printf
+   943                        ;	printf("*** RTOS vPortHeapResetState \n");
+   944 00:03E9: F4 xx xx     	pea	#^L53+33
+   945 00:03EC: F4 xx xx     	pea	#<L53+33
+   946 00:03EF: F4 06 00     	pea	#6
+   947 00:03F2: 20 xx xx     	jsr	_~printf
+   948                        ;	vPortHeapResetState();
+   949 00:03F5: 20 xx xx     	jsr	_~vPortHeapResetState
+   950                        ;
+   951                        ;	printf("*** RTOS vPortDefineHeapRegions \n");
+   952 00:03F8: F4 xx xx     	pea	#^L53+64
+   953 00:03FB: F4 xx xx     	pea	#<L53+64
+   954 00:03FE: F4 06 00     	pea	#6
+   955 00:0401: 20 xx xx     	jsr	_~printf
+   956                        ;	vPortDefineHeapRegions( pxHeapReg );
+   957 00:0404: D4 19        	pei	<L55+pxHeapReg_1+2
+   958 00:0406: D4 17        	pei	<L55+pxHeapReg_1
+  Mon Sep 14 2026 18:41                                                                                                    Page 19
+
+
+   959 00:0408: 20 xx xx     	jsr	_~vPortDefineHeapRegions
+   960                        ;	
+   961                        ;	vPortFreeStack(pxHeapReg);
+   962 00:040B: D4 19        	pei	<L55+pxHeapReg_1+2
+   963 00:040D: D4 17        	pei	<L55+pxHeapReg_1
+   964 00:040F: 20 xx xx     	jsr	_~vPortFreeStack
+   965                        ;	
+   966                        ;	printHeapStats();
+   967 00:0412: 20 xx xx     	jsr	_~printHeapStats
+   968                        ;	
+   969                        ;	rc = xTaskCreate( shellTask, "SHELL", 512, NULL, 0, NULL);
+   970 00:0415: F4 00 00     	pea	#^$0
+   971 00:0418: F4 00 00     	pea	#<$0
+   972 00:041B: F4 00 00     	pea	#<$0
+   973 00:041E: F4 00 00     	pea	#^$0
+   974 00:0421: F4 00 00     	pea	#<$0
+   975 00:0424: F4 00 02     	pea	#<$200
+   976 00:0427: F4 xx xx     	pea	#^L53+98
+   977 00:042A: F4 xx xx     	pea	#<L53+98
+   978 00:042D: F4 xx xx     	pea	#<_~shellTask
+   979 00:0430: 20 xx xx     	jsr	_~xTaskCreate
+   980 00:0433: 85 0D        	sta	<L55+rc_1
+   981                        ;	printf("task create rc: %d\n", rc);
+   982 00:0435: 48           	pha
+   983 00:0436: F4 xx xx     	pea	#^L53+104
+   984 00:0439: F4 xx xx     	pea	#<L53+104
+   985 00:043C: F4 08 00     	pea	#8
+   986 00:043F: 20 xx xx     	jsr	_~printf
+   987                        ;	
+   988                        ;	
+   989                        ;	if (rc != pdPASS) {
+   990 00:0442: A5 0D        	lda	<L55+rc_1
+   991 00:0444: C9 01 00     	cmp	#<$1
+   992 00:0447: F0 1F        	beq	L10020
+   993                        ;		printf("shell could not be created rc: %d\n", rc);
+   994 00:0449: D4 0D        	pei	<L55+rc_1
+   995 00:044B: F4 xx xx     	pea	#^L53+124
+   996 00:044E: F4 xx xx     	pea	#<L53+124
+   997 00:0451: F4 08 00     	pea	#8
+   998 00:0454: 20 xx xx     	jsr	_~printf
+   999                        ;		return pdPASS;
+  1000 00:0457: A9 01 00     	lda	#$1
+  1001                        L62:
+  1002 00:045A: A8           	tay
+  1003 00:045B: A5 21        	lda	<L54+1
+  1004 00:045D: 85 27        	sta	<L54+1+6
+  1005 00:045F: 2B           	pld
+  1006 00:0460: 3B           	tsc
+  1007 00:0461: 18           	clc
+  1008 00:0462: 69 26 00     	adc	#L54+6
+  1009 00:0465: 1B           	tcs
+  1010 00:0466: 98           	tya
+  1011 00:0467: 60           	rts
+  1012                        ;	}
+  1013                        ;
+  1014                        ;	/* Start the scheduler so the tasks start executing. */
+  1015                        ;
+  1016                        ;	vTaskStartScheduler();
+  Mon Sep 14 2026 18:41                                                                                                    Page 20
+
+
+  1017                        L10020:
+  1018 00:0468: 20 xx xx     	jsr	_~vTaskStartScheduler
+  1019                        ;
+  1020                        ;	/* If all is well then main() will never reach here as the scheduler will
+  1021                        ;	now be running the tasks. If main() does reach here then it is likely that
+  1022                        ;	there was insufficient heap memory available for the idle task to be created.
+  1023                        ;	Chapter 2 provides more information on heap memory management. */
+  1024                        ;	printf("Error starting RTOS scheduler\n");
+  1025 00:046B: F4 xx xx     	pea	#^L53+159
+  1026 00:046E: F4 xx xx     	pea	#<L53+159
+  1027 00:0471: F4 06 00     	pea	#6
+  1028 00:0474: 20 xx xx     	jsr	_~printf
+  1029                        ;
+  1030                        ;	return pdFAIL;
+  1031 00:0477: A9 00 00     	lda	#$0
+  1032 00:047A: 80 DE        	bra	L62
+  1033                        ;
+  1034                        ;
+  1035                        ;/*	
+  1036                        ;
+  1037                        ;	
+  1038                        ;	
+  1039                        ;	
+  1040                        ;
+  1041                        ;#asm
+  1042                        ;;	WDM 0
+  1043                        ;#endasm
+  1044                        ;	
+  1045                        ;	for (;;) {
+  1046                        ;		p = pvPortMalloc(0x2000);
+  1047                        ;		printf("%p\n", p);
+  1048                        ;		if (p == NULL) break;
+  1049                        ;	}
+  1050                        ;
+  1051                        ;	printHeapStats();
+  1052                        ;
+  1053                        ;
+  1054                        ;#asm
+  1055                        ;	WDM 8
+  1056                        ;#endasm
+  1057                        ;	for (;;) {}
+  1058                        ;*/	
+  1059                        ;}
+  1060             00000020   L54	equ	32
+  1061             0000000D   L55	equ	13
+  1062                        	ends
+  1063                        	efunc
+  1064                        	data
+  1065                        L53:
+  1066 00:01D7: 70 78 48 65  	db	$70,$78,$48,$65,$61,$70,$52,$65,$67,$3A,$25,$70,$20,$25,$75
+       00:01DB: 61 70 52 65 
+       00:01DF: 67 3A 25 70 
+       00:01E3: 20 25 75 
+  1067 00:01E6: 0A 00 2A 2A  	db	$0A,$00,$2A,$2A,$2A,$20,$52,$54,$4F,$53,$20,$6D,$61,$69,$6E
+       00:01EA: 2A 20 52 54 
+       00:01EE: 4F 53 20 6D 
+       00:01F2: 61 69 6E 
+  1068 00:01F5: 20 0A 00 2A  	db	$20,$0A,$00,$2A,$2A,$2A,$20,$52,$54,$4F,$53,$20,$76,$50,$6F
+  Mon Sep 14 2026 18:41                                                                                                    Page 21
+
+
+       00:01F9: 2A 2A 20 52 
+       00:01FD: 54 4F 53 20 
+       00:0201: 76 50 6F 
+  1069 00:0204: 72 74 48 65  	db	$72,$74,$48,$65,$61,$70,$52,$65,$73,$65,$74,$53,$74,$61,$74
+       00:0208: 61 70 52 65 
+       00:020C: 73 65 74 53 
+       00:0210: 74 61 74 
+  1070 00:0213: 65 20 0A 00  	db	$65,$20,$0A,$00,$2A,$2A,$2A,$20,$52,$54,$4F,$53,$20,$76,$50
+       00:0217: 2A 2A 2A 20 
+       00:021B: 52 54 4F 53 
+       00:021F: 20 76 50 
+  1071 00:0222: 6F 72 74 44  	db	$6F,$72,$74,$44,$65,$66,$69,$6E,$65,$48,$65,$61,$70,$52,$65
+       00:0226: 65 66 69 6E 
+       00:022A: 65 48 65 61 
+       00:022E: 70 52 65 
+  1072 00:0231: 67 69 6F 6E  	db	$67,$69,$6F,$6E,$73,$20,$0A,$00,$53,$48,$45,$4C,$4C,$00,$74
+       00:0235: 73 20 0A 00 
+       00:0239: 53 48 45 4C 
+       00:023D: 4C 00 74 
+  1073 00:0240: 61 73 6B 20  	db	$61,$73,$6B,$20,$63,$72,$65,$61,$74,$65,$20,$72,$63,$3A,$20
+       00:0244: 63 72 65 61 
+       00:0248: 74 65 20 72 
+       00:024C: 63 3A 20 
+  1074 00:024F: 25 64 0A 00  	db	$25,$64,$0A,$00,$73,$68,$65,$6C,$6C,$20,$63,$6F,$75,$6C,$64
+       00:0253: 73 68 65 6C 
+       00:0257: 6C 20 63 6F 
+       00:025B: 75 6C 64 
+  1075 00:025E: 20 6E 6F 74  	db	$20,$6E,$6F,$74,$20,$62,$65,$20,$63,$72,$65,$61,$74,$65,$64
+       00:0262: 20 62 65 20 
+       00:0266: 63 72 65 61 
+       00:026A: 74 65 64 
+  1076 00:026D: 20 72 63 3A  	db	$20,$72,$63,$3A,$20,$25,$64,$0A,$00,$45,$72,$72,$6F,$72,$20
+       00:0271: 20 25 64 0A 
+       00:0275: 00 45 72 72 
+       00:0279: 6F 72 20 
+  1077 00:027C: 73 74 61 72  	db	$73,$74,$61,$72,$74,$69,$6E,$67,$20,$52,$54,$4F,$53,$20,$73
+       00:0280: 74 69 6E 67 
+       00:0284: 20 52 54 4F 
+       00:0288: 53 20 73 
+  1078 00:028B: 63 68 65 64  	db	$63,$68,$65,$64,$75,$6C,$65,$72,$0A,$00
+       00:028F: 75 6C 65 72 
+       00:0293: 0A 00 
+  1079 00:0295:              	ends
+  1080                        ;
+  1081                        	xref	_~strlen
+  1082                        	xref	_~vTaskStartScheduler
+  1083                        	xref	_~xTaskCreate
+  1084                        	xref	_~vPortHeapResetState
+  1085                        	xref	_~vPortFreeStack
+  1086                        	xref	_~pvPortMallocStack
+  1087                        	xref	_~vPortGetHeapStats
+  1088                        	xref	_~vPortDefineHeapRegions
+  1089                        	xref	_~malloc
+  1090                        	xref	_~free
+  1091                        	xref	_~vsprintf
+  1092                        	xref	_~printf
+
+
+  Mon Sep 14 2026 18:41                                                                                                    Page 22
+
+
+      Lines assembled: 1092
+      Errors: 0

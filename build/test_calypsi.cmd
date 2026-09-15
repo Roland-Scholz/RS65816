@@ -1,31 +1,54 @@
 @echo off
-rem ***************************************************
-rem * compile-precedure for Calypsi 65816 compiler
-rem ***************************************************
+set CALYPSI=C:\github\atari-tools\calypsi-65816-5.18
+path=%PATH%;%CALYPSI%\bin
+
+set COMPILER=calypsi
 
 set HOME=C:\github\RS65816
-set CALYPSI=C:\github\atari-tools\calypsi-65816-5.18
-PATH=%PATH%;%CALYPSI%\bin
-
 set SRC=%HOME%\src
-set REL=%HOME%\release
-set OBJ=%REL%\obj
+set REL=%HOME%\release\%COMPILER%
 set LST=%REL%\lst
+set OBJ=%REL%\obj
 
-rem echo ***
-rem echo *** assemble 
-rem echo ***
-rem as65816 --code-model compact --data-model huge --list-file %LST%\mystartup.lst -I%CALYPSI%\src\lib\lowlevel -o %OBJ%\mystartup.o %SRC%\mystartup.s 
-rem echo %ERRORLEVEL%
+set MODULES=main monitor
+set CFLAGS=-O2 --code-model compact --data-model large
+set LFLAGS=--raw-multiple-memories --output-format raw --rtattr printf=medium 
+set EXE=test_calypsi
 
-echo ***
-echo *** compile
-echo ***
-cc65816 -O2 --code-model compact --data-model huge -o %OBJ%\testc.o --list-file %LST%\testc.lst %SRC%\testc.c
+set LIST=%MODULES%
+setlocal enabledelayedexpansion
+:loop
+for /F "tokens=1*" %%i in ("%LIST%") do (
+	call :compile %%i
+	if !RC! NEQ 0 goto error
+	set LIST=%%j
+	set OBJS=%OBJS% %%i.o
+)
+if defined LIST goto loop
 
-echo ***
-echo *** link 
-echo ***
-ln65816 --list-file %LST%\testc.lin --raw-multiple-memories --output-format raw --output-file %REL%\testc.elf %OBJ%\testc.o clib-cc-hd.a %SRC%\testc.scm
-rem %OBJ%\mystartup.o --output-format intel-hex
+pushd
+cd %OBJ%
+echo ************************************************************
+echo linking %EXE%
+echo ln65816 %LFLAGS% --list-file %LST%\%EXE%.lin --output-file %REL%\%EXE%.elf %OBJS% clib-cc-ld.a %SRC%\%EXE%.scm
+echo ************************************************************
+ln65816 %LFLAGS% --list-file %LST%\%EXE%.lin --output-file %REL%\%EXE%.elf %OBJS% clib-cc-ld.a %SRC%\%EXE%.scm
+popd
+if %ERRORLEVEL% NEQ 0 goto error
+goto eof
+	
+	
+:compile
+echo ************************************************************
+echo compiling %1.c
+echo cc65816 %CFLAGS% -o %OBJ%\%1.o --list-file %LST%\%1.lst %SRC%\%1.c
+echo ************************************************************
+cc65816 %CFLAGS% -o %OBJ%\%1.o --list-file %LST%\%1.lst %SRC%\%1.c
+set RC=%ERRORLEVEL%
+exit /b
+
+
+:error
 pause
+
+:eof

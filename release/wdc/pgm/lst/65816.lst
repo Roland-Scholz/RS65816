@@ -1,0 +1,59 @@
+  Mon Sep 14 2026  7:48                                                                                                    Page 1
+
+
+                                               ***************************************
+                                               **      WDC 65C816 Macro Assembler   **
+                                               **                                   **
+                                               **     Version 3.49.1- Feb  6 2006    **
+                                               ***************************************
+
+     1                        ;:ts=8
+     2             00000001   R0	equ	1
+     3             00000005   R1	equ	5
+     4             00000009   R2	equ	9
+     5             0000000D   R3	equ	13
+     6                        ;#include "FreeRTOS.h"
+     7                        ;#include "task.h"
+     8                        ;
+     9                        ;char *ucHeapStack = (char *)0xdfff;
+    10                        	data
+    11                        	xdef	_~ucHeapStack
+    12                        _~ucHeapStack:
+    13 00:0000: FF DF 00 00  	dl	$DFFF
+    14 00:0004:              	ends
+    15                        ;
+    16                        ;void vApplicationStackOverflowHook( TaskHandle_t xTask,
+    17                        ;                                        char * pcTaskName ) {
+    18                        	code
+    19                        	xdef	_~vApplicationStackOverflowHook
+    20                        	func
+    21                        _~vApplicationStackOverflowHook:
+    22                        	longa	on
+    23                        	longi	on
+    24 00:0000: 3B           	tsc
+    25 00:0001: 38           	sec
+    26 00:0002: E9 00 00     	sbc	#L2
+    27 00:0005: 1B           	tcs
+    28 00:0006: 0B           	phd
+    29 00:0007: 5B           	tcd
+    30             00000003   xTask_0	set	3
+    31             00000007   pcTaskName_0	set	7
+    32                        ;
+    33                        ;}
+    34 00:0008: A5 01        	lda	<L2+1
+    35 00:000A: 85 09        	sta	<L2+1+8
+    36 00:000C: 2B           	pld
+    37 00:000D: 3B           	tsc
+    38 00:000E: 18           	clc
+    39 00:000F: 69 08 00     	adc	#L2+8
+    40 00:0012: 1B           	tcs
+    41 00:0013: 60           	rts
+    42             00000000   L2	equ	0
+    43             00000001   L3	equ	1
+    44                        	ends
+    45                        	efunc
+    46                        ;
+
+
+      Lines assembled: 46
+      Errors: 0

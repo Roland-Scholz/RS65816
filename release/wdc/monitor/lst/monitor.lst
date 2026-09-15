@@ -1,0 +1,1251 @@
+  Mon Sep 14 2026 11:35                                                                                                    Page 1
+
+
+                                               ***************************************
+                                               **      WDC 65C816 Macro Assembler   **
+                                               **                                   **
+                                               **     Version 3.49.1- Feb  6 2006    **
+                                               ***************************************
+
+     1                        ;:ts=8
+     2             00000001   R0	equ	1
+     3             00000005   R1	equ	5
+     4             00000009   R2	equ	9
+     5             0000000D   R3	equ	13
+     6                        ;#include <stdio.h>
+     7                        ;#include <ctype.h>
+     8                        ;#include "monitor.h"
+     9                        ;
+    10                        ;volatile char* debug_char = (volatile char *) 0xfffff0;
+    11                        	data
+    12                        	xdef	_~debug_char
+    13                        _~debug_char:
+    14 00:0000: F0 FF FF 00  	dl	$FFFFF0
+    15 00:0004:              	ends
+    16                        ;volatile char* debug_hex  = (volatile char *) 0xfffff1;
+    17                        	data
+    18                        	xdef	_~debug_hex
+    19                        _~debug_hex:
+    20 00:0004: F1 FF FF 00  	dl	$FFFFF1
+    21 00:0008:              	ends
+    22                        ;volatile char* debug_reset  = (volatile char *) 0xfffff2;
+    23                        	data
+    24                        	xdef	_~debug_reset
+    25                        _~debug_reset:
+    26 00:0008: F2 FF FF 00  	dl	$FFFFF2
+    27 00:000C:              	ends
+    28                        ;
+    29                        ;const char *ansi_white = "\033[0m";
+    30                        	data
+    31                        	xdef	_~ansi_white
+    32                        _~ansi_white:
+    33 00:000C: xx xx xx xx  	dl	L1+0
+    34 00:0010:              	ends
+    35                        	data
+    36                        L1:
+    37 00:0010: 1B 5B 30 6D  	db	$1B,$5B,$30,$6D,$00
+       00:0014: 00 
+    38 00:0015:              	ends
+    39                        ;const char *ansi_red = "\033[31m";
+    40                        	data
+    41                        	xdef	_~ansi_red
+    42                        _~ansi_red:
+    43 00:0015: xx xx xx xx  	dl	L2+0
+    44 00:0019:              	ends
+    45                        	data
+    46                        L2:
+    47 00:0019: 1B 5B 33 31  	db	$1B,$5B,$33,$31,$6D,$00
+       00:001D: 6D 00 
+    48 00:001F:              	ends
+    49                        ;const char *ansi_yellow = "\033[33;1m";
+    50                        	data
+  Mon Sep 14 2026 11:35                                                                                                    Page 2
+
+
+    51                        	xdef	_~ansi_yellow
+    52                        _~ansi_yellow:
+    53 00:001F: xx xx xx xx  	dl	L3+0
+    54 00:0023:              	ends
+    55                        	data
+    56                        L3:
+    57 00:0023: 1B 5B 33 33  	db	$1B,$5B,$33,$33,$3B,$31,$6D,$00
+       00:0027: 3B 31 6D 00 
+    58 00:002B:              	ends
+    59                        ;const char *ansi_clrhome = "\033[2J\033[H";
+    60                        	data
+    61                        	xdef	_~ansi_clrhome
+    62                        _~ansi_clrhome:
+    63 00:002B: xx xx xx xx  	dl	L4+0
+    64 00:002F:              	ends
+    65                        	data
+    66                        L4:
+    67 00:002F: 1B 5B 32 4A  	db	$1B,$5B,$32,$4A,$1B,$5B,$48,$00
+       00:0033: 1B 5B 48 00 
+    68 00:0037:              	ends
+    69                        ;
+    70                        ;const char * stars = "**************************************";
+    71                        	data
+    72                        	xdef	_~stars
+    73                        _~stars:
+    74 00:0037: xx xx xx xx  	dl	L5+0
+    75 00:003B:              	ends
+    76                        	data
+    77                        L5:
+    78 00:003B: 2A 2A 2A 2A  	db	$2A,$2A,$2A,$2A,$2A,$2A,$2A,$2A,$2A,$2A,$2A,$2A,$2A,$2A,$2A
+       00:003F: 2A 2A 2A 2A 
+       00:0043: 2A 2A 2A 2A 
+       00:0047: 2A 2A 2A 
+    79 00:004A: 2A 2A 2A 2A  	db	$2A,$2A,$2A,$2A,$2A,$2A,$2A,$2A,$2A,$2A,$2A,$2A,$2A,$2A,$2A
+       00:004E: 2A 2A 2A 2A 
+       00:0052: 2A 2A 2A 2A 
+       00:0056: 2A 2A 2A 
+    80 00:0059: 2A 2A 2A 2A  	db	$2A,$2A,$2A,$2A,$2A,$2A,$2A,$2A,$00
+       00:005D: 2A 2A 2A 2A 
+       00:0061: 00 
+    81 00:0062:              	ends
+    82                        ;
+    83                        ;static char *ptr = NULL;
+    84                        	data
+    85                        _~ptr:
+    86 00:0062: 00 00 00 00  	dl	$0
+    87 00:0066:              	ends
+    88                        ;
+    89                        ;void print_welcome() {
+    90                        	code
+    91                        	xdef	_~print_welcome
+    92                        	func
+    93                        _~print_welcome:
+    94                        	longa	on
+    95                        	longi	on
+    96                        ;	printf("\n");
+    97 00:0000: F4 xx xx     	pea	#^L6
+    98 00:0003: F4 xx xx     	pea	#<L6
+  Mon Sep 14 2026 11:35                                                                                                    Page 3
+
+
+    99 00:0006: F4 06 00     	pea	#6
+   100 00:0009: 20 xx xx     	jsr	_~printf
+   101                        ;    printf("%s\n", stars);
+   102 00:000C: AD xx xx     	lda	|_~stars+2
+   103 00:000F: 48           	pha
+   104 00:0010: AD xx xx     	lda	|_~stars
+   105 00:0013: 48           	pha
+   106 00:0014: F4 xx xx     	pea	#^L6+2
+   107 00:0017: F4 xx xx     	pea	#<L6+2
+   108 00:001A: F4 0A 00     	pea	#10
+   109 00:001D: 20 xx xx     	jsr	_~printf
+   110                        ;	printf("* 65816 Monitor (c) by R. Scholz     *\n");
+   111 00:0020: F4 xx xx     	pea	#^L6+6
+   112 00:0023: F4 xx xx     	pea	#<L6+6
+   113 00:0026: F4 06 00     	pea	#6
+   114 00:0029: 20 xx xx     	jsr	_~printf
+   115                        ;    printf("%s\n\n", stars);
+   116 00:002C: AD xx xx     	lda	|_~stars+2
+   117 00:002F: 48           	pha
+   118 00:0030: AD xx xx     	lda	|_~stars
+   119 00:0033: 48           	pha
+   120 00:0034: F4 xx xx     	pea	#^L6+46
+   121 00:0037: F4 xx xx     	pea	#<L6+46
+   122 00:003A: F4 0A 00     	pea	#10
+   123 00:003D: 20 xx xx     	jsr	_~printf
+   124                        ;	
+   125                        ;	printf("a - set address\n");
+   126 00:0040: F4 xx xx     	pea	#^L6+51
+   127 00:0043: F4 xx xx     	pea	#<L6+51
+   128 00:0046: F4 06 00     	pea	#6
+   129 00:0049: 20 xx xx     	jsr	_~printf
+   130                        ;	printf("b - set bank\n");
+   131 00:004C: F4 xx xx     	pea	#^L6+68
+   132 00:004F: F4 xx xx     	pea	#<L6+68
+   133 00:0052: F4 06 00     	pea	#6
+   134 00:0055: 20 xx xx     	jsr	_~printf
+   135                        ;	printf("c - change memory\n");
+   136 00:0058: F4 xx xx     	pea	#^L6+82
+   137 00:005B: F4 xx xx     	pea	#<L6+82
+   138 00:005E: F4 06 00     	pea	#6
+   139 00:0061: 20 xx xx     	jsr	_~printf
+   140                        ;	printf("d - dump  memory\n");
+   141 00:0064: F4 xx xx     	pea	#^L6+101
+   142 00:0067: F4 xx xx     	pea	#<L6+101
+   143 00:006A: F4 06 00     	pea	#6
+   144 00:006D: 20 xx xx     	jsr	_~printf
+   145                        ;	printf("l - disassemble memory a8\n");
+   146 00:0070: F4 xx xx     	pea	#^L6+119
+   147 00:0073: F4 xx xx     	pea	#<L6+119
+   148 00:0076: F4 06 00     	pea	#6
+   149 00:0079: 20 xx xx     	jsr	_~printf
+   150                        ;	printf("m - disassemble memory a16\n");
+   151 00:007C: F4 xx xx     	pea	#^L6+146
+   152 00:007F: F4 xx xx     	pea	#<L6+146
+   153 00:0082: F4 06 00     	pea	#6
+   154 00:0085: 20 xx xx     	jsr	_~printf
+   155                        ;	printf("r - RTOS 0x01:0000\n");
+   156 00:0088: F4 xx xx     	pea	#^L6+174
+  Mon Sep 14 2026 11:35                                                                                                    Page 4
+
+
+   157 00:008B: F4 xx xx     	pea	#<L6+174
+   158 00:008E: F4 06 00     	pea	#6
+   159 00:0091: 20 xx xx     	jsr	_~printf
+   160                        ;	printf("x - exit emulator\n");
+   161 00:0094: F4 xx xx     	pea	#^L6+194
+   162 00:0097: F4 xx xx     	pea	#<L6+194
+   163 00:009A: F4 06 00     	pea	#6
+   164 00:009D: 20 xx xx     	jsr	_~printf
+   165                        ;	printf("z - reset\n");	
+   166 00:00A0: F4 xx xx     	pea	#^L6+213
+   167 00:00A3: F4 xx xx     	pea	#<L6+213
+   168 00:00A6: F4 06 00     	pea	#6
+   169 00:00A9: 20 xx xx     	jsr	_~printf
+   170                        ;	printf("? - this message\n");
+   171 00:00AC: F4 xx xx     	pea	#^L6+224
+   172 00:00AF: F4 xx xx     	pea	#<L6+224
+   173 00:00B2: F4 06 00     	pea	#6
+   174 00:00B5: 20 xx xx     	jsr	_~printf
+   175                        ;}
+   176 00:00B8: 60           	rts
+   177             00000000   L7	equ	0
+   178             00000001   L8	equ	1
+   179                        	ends
+   180                        	efunc
+   181                        	data
+   182                        L6:
+   183 00:0066: 0A 00 25 73  	db	$0A,$00,$25,$73,$0A,$00,$2A,$20,$36,$35,$38,$31,$36,$20,$4D
+       00:006A: 0A 00 2A 20 
+       00:006E: 36 35 38 31 
+       00:0072: 36 20 4D 
+   184 00:0075: 6F 6E 69 74  	db	$6F,$6E,$69,$74,$6F,$72,$20,$28,$63,$29,$20,$62,$79,$20,$52
+       00:0079: 6F 72 20 28 
+       00:007D: 63 29 20 62 
+       00:0081: 79 20 52 
+   185 00:0084: 2E 20 53 63  	db	$2E,$20,$53,$63,$68,$6F,$6C,$7A,$20,$20,$20,$20,$20,$2A,$0A
+       00:0088: 68 6F 6C 7A 
+       00:008C: 20 20 20 20 
+       00:0090: 20 2A 0A 
+   186 00:0093: 00 25 73 0A  	db	$00,$25,$73,$0A,$0A,$00,$61,$20,$2D,$20,$73,$65,$74,$20,$61
+       00:0097: 0A 00 61 20 
+       00:009B: 2D 20 73 65 
+       00:009F: 74 20 61 
+   187 00:00A2: 64 64 72 65  	db	$64,$64,$72,$65,$73,$73,$0A,$00,$62,$20,$2D,$20,$73,$65,$74
+       00:00A6: 73 73 0A 00 
+       00:00AA: 62 20 2D 20 
+       00:00AE: 73 65 74 
+   188 00:00B1: 20 62 61 6E  	db	$20,$62,$61,$6E,$6B,$0A,$00,$63,$20,$2D,$20,$63,$68,$61,$6E
+       00:00B5: 6B 0A 00 63 
+       00:00B9: 20 2D 20 63 
+       00:00BD: 68 61 6E 
+   189 00:00C0: 67 65 20 6D  	db	$67,$65,$20,$6D,$65,$6D,$6F,$72,$79,$0A,$00,$64,$20,$2D,$20
+       00:00C4: 65 6D 6F 72 
+       00:00C8: 79 0A 00 64 
+       00:00CC: 20 2D 20 
+   190 00:00CF: 64 75 6D 70  	db	$64,$75,$6D,$70,$20,$20,$6D,$65,$6D,$6F,$72,$79,$0A,$00,$6C
+       00:00D3: 20 20 6D 65 
+       00:00D7: 6D 6F 72 79 
+       00:00DB: 0A 00 6C 
+  Mon Sep 14 2026 11:35                                                                                                    Page 5
+
+
+   191 00:00DE: 20 2D 20 64  	db	$20,$2D,$20,$64,$69,$73,$61,$73,$73,$65,$6D,$62,$6C,$65,$20
+       00:00E2: 69 73 61 73 
+       00:00E6: 73 65 6D 62 
+       00:00EA: 6C 65 20 
+   192 00:00ED: 6D 65 6D 6F  	db	$6D,$65,$6D,$6F,$72,$79,$20,$61,$38,$0A,$00,$6D,$20,$2D,$20
+       00:00F1: 72 79 20 61 
+       00:00F5: 38 0A 00 6D 
+       00:00F9: 20 2D 20 
+   193 00:00FC: 64 69 73 61  	db	$64,$69,$73,$61,$73,$73,$65,$6D,$62,$6C,$65,$20,$6D,$65,$6D
+       00:0100: 73 73 65 6D 
+       00:0104: 62 6C 65 20 
+       00:0108: 6D 65 6D 
+   194 00:010B: 6F 72 79 20  	db	$6F,$72,$79,$20,$61,$31,$36,$0A,$00,$72,$20,$2D,$20,$52,$54
+       00:010F: 61 31 36 0A 
+       00:0113: 00 72 20 2D 
+       00:0117: 20 52 54 
+   195 00:011A: 4F 53 20 30  	db	$4F,$53,$20,$30,$78,$30,$31,$3A,$30,$30,$30,$30,$0A,$00,$78
+       00:011E: 78 30 31 3A 
+       00:0122: 30 30 30 30 
+       00:0126: 0A 00 78 
+   196 00:0129: 20 2D 20 65  	db	$20,$2D,$20,$65,$78,$69,$74,$20,$65,$6D,$75,$6C,$61,$74,$6F
+       00:012D: 78 69 74 20 
+       00:0131: 65 6D 75 6C 
+       00:0135: 61 74 6F 
+   197 00:0138: 72 0A 00 7A  	db	$72,$0A,$00,$7A,$20,$2D,$20,$72,$65,$73,$65,$74,$0A,$00,$3F
+       00:013C: 20 2D 20 72 
+       00:0140: 65 73 65 74 
+       00:0144: 0A 00 3F 
+   198 00:0147: 20 2D 20 74  	db	$20,$2D,$20,$74,$68,$69,$73,$20,$6D,$65,$73,$73,$61,$67,$65
+       00:014B: 68 69 73 20 
+       00:014F: 6D 65 73 73 
+       00:0153: 61 67 65 
+   199 00:0156: 0A 00        	db	$0A,$00
+   200 00:0158:              	ends
+   201                        ;
+   202                        ;char charin() {
+   203                        	code
+   204                        	xdef	_~charin
+   205                        	func
+   206                        _~charin:
+   207                        	longa	on
+   208                        	longi	on
+   209 00:00B9: 3B           	tsc
+   210 00:00BA: 38           	sec
+   211 00:00BB: E9 04 00     	sbc	#L11
+   212 00:00BE: 1B           	tcs
+   213 00:00BF: 0B           	phd
+   214 00:00C0: 5B           	tcd
+   215                        ;	return *debug_char;
+   216 00:00C1: AD xx xx     	lda	|_~debug_char
+   217 00:00C4: 85 01        	sta	<R0
+   218 00:00C6: AD xx xx     	lda	|_~debug_char+2
+   219 00:00C9: 85 03        	sta	<R0+2
+   220 00:00CB: E2 20        	sep	#$20
+   221                        	longa	off
+   222 00:00CD: A7 01        	lda	[<R0]
+   223 00:00CF: C2 20        	rep	#$20
+   224                        	longa	on
+  Mon Sep 14 2026 11:35                                                                                                    Page 6
+
+
+   225 00:00D1: 29 FF 00     	and	#$ff
+   226 00:00D4: A8           	tay
+   227 00:00D5: 2B           	pld
+   228 00:00D6: 3B           	tsc
+   229 00:00D7: 18           	clc
+   230 00:00D8: 69 04 00     	adc	#L11
+   231 00:00DB: 1B           	tcs
+   232 00:00DC: 98           	tya
+   233 00:00DD: 60           	rts
+   234                        ;}
+   235             00000004   L11	equ	4
+   236             00000005   L12	equ	5
+   237                        	ends
+   238                        	efunc
+   239                        ;
+   240                        ;char getnibble() {
+   241                        	code
+   242                        	xdef	_~getnibble
+   243                        	func
+   244                        _~getnibble:
+   245                        	longa	on
+   246                        	longi	on
+   247 00:00DE: 3B           	tsc
+   248 00:00DF: 38           	sec
+   249 00:00E0: E9 0A 00     	sbc	#L14
+   250 00:00E3: 1B           	tcs
+   251 00:00E4: 0B           	phd
+   252 00:00E5: 5B           	tcd
+   253                        ;	char c, b;
+   254                        ;	
+   255                        ;	for(;;) {
+   256             00000000   c_1	set	0
+   257             00000001   b_1	set	1
+   258                        L10003:
+   259                        ;		c = charin();
+   260 00:00E6: 20 xx xx     	jsr	_~charin
+   261 00:00E9: E2 20        	sep	#$20
+   262                        	longa	off
+   263 00:00EB: 85 09        	sta	<L15+c_1
+   264                        ;		if (c >= '0' && c <= '9') {
+   265 00:00ED: C9 30        	cmp	#<$30
+   266 00:00EF: C2 20        	rep	#$20
+   267                        	longa	on
+   268 00:00F1: 90 48        	bcc	L10004
+   269 00:00F3: E2 20        	sep	#$20
+   270                        	longa	off
+   271 00:00F5: A9 39        	lda	#$39
+   272 00:00F7: C5 09        	cmp	<L15+c_1
+   273 00:00F9: C2 20        	rep	#$20
+   274                        	longa	on
+   275 00:00FB: 90 3E        	bcc	L10004
+   276                        ;			b = c - '0';
+   277 00:00FD: A5 09        	lda	<L15+c_1
+   278 00:00FF: 29 FF 00     	and	#$ff
+   279 00:0102: 18           	clc
+   280 00:0103: 69 D0 FF     	adc	#$ffd0
+   281 00:0106: E2 20        	sep	#$20
+   282                        	longa	off
+  Mon Sep 14 2026 11:35                                                                                                    Page 7
+
+
+   283 00:0108: 85 0A        	sta	<L15+b_1
+   284 00:010A: C2 20        	rep	#$20
+   285                        	longa	on
+   286                        ;			break;
+   287                        L10002:
+   288                        ;	
+   289                        ;	printf("%c", c);
+   290 00:010C: A5 09        	lda	<L15+c_1
+   291 00:010E: 29 FF 00     	and	#$ff
+   292 00:0111: 48           	pha
+   293 00:0112: F4 xx xx     	pea	#^L10
+   294 00:0115: F4 xx xx     	pea	#<L10
+   295 00:0118: F4 08 00     	pea	#8
+   296 00:011B: 20 xx xx     	jsr	_~printf
+   297                        ;	fflush(stdout);
+   298 00:011E: A9 xx xx     	lda	#<_~_iob+20
+   299 00:0121: 85 01        	sta	<R0
+   300                        	xref	_BEG_DATA
+   301 00:0123: A9 xx xx     	lda	#_BEG_DATA>>16
+   302 00:0126: 48           	pha
+   303 00:0127: D4 01        	pei	<R0
+   304 00:0129: 20 xx xx     	jsr	_~fflush
+   305                        ;	
+   306                        ;	return b;
+   307 00:012C: A5 0A        	lda	<L15+b_1
+   308 00:012E: 29 FF 00     	and	#$ff
+   309 00:0131: A8           	tay
+   310 00:0132: 2B           	pld
+   311 00:0133: 3B           	tsc
+   312 00:0134: 18           	clc
+   313 00:0135: 69 0A 00     	adc	#L14
+   314 00:0138: 1B           	tcs
+   315 00:0139: 98           	tya
+   316 00:013A: 60           	rts
+   317                        ;		}
+   318                        ;		if (c >= 'a' && c <= 'f') {
+   319                        L10004:
+   320 00:013B: E2 20        	sep	#$20
+   321                        	longa	off
+   322 00:013D: A5 09        	lda	<L15+c_1
+   323 00:013F: C9 61        	cmp	#<$61
+   324 00:0141: C2 20        	rep	#$20
+   325                        	longa	on
+   326 00:0143: 90 A1        	bcc	L10003
+   327 00:0145: E2 20        	sep	#$20
+   328                        	longa	off
+   329 00:0147: A9 66        	lda	#$66
+   330 00:0149: C5 09        	cmp	<L15+c_1
+   331 00:014B: C2 20        	rep	#$20
+   332                        	longa	on
+   333 00:014D: 90 97        	bcc	L10003
+   334                        ;			b = c - 'a' + 10;
+   335 00:014F: A5 09        	lda	<L15+c_1
+   336 00:0151: 29 FF 00     	and	#$ff
+   337 00:0154: 18           	clc
+   338 00:0155: 69 A9 FF     	adc	#$ffa9
+   339 00:0158: E2 20        	sep	#$20
+   340                        	longa	off
+  Mon Sep 14 2026 11:35                                                                                                    Page 8
+
+
+   341 00:015A: 85 0A        	sta	<L15+b_1
+   342 00:015C: C2 20        	rep	#$20
+   343                        	longa	on
+   344                        ;			break;
+   345 00:015E: 80 AC        	bra	L10002
+   346                        ;		}
+   347                        ;	}
+   348                        ;
+   349                        ;}
+   350             0000000A   L14	equ	10
+   351             00000009   L15	equ	9
+   352                        	ends
+   353                        	efunc
+   354                        	data
+   355                        L10:
+   356 00:0158: 25 63 00     	db	$25,$63,$00
+   357 00:015B:              	ends
+   358                        ;
+   359                        ;char getbyte() {
+   360                        	code
+   361                        	xdef	_~getbyte
+   362                        	func
+   363                        _~getbyte:
+   364                        	longa	on
+   365                        	longi	on
+   366 00:0160: 3B           	tsc
+   367 00:0161: 38           	sec
+   368 00:0162: E9 05 00     	sbc	#L22
+   369 00:0165: 1B           	tcs
+   370 00:0166: 0B           	phd
+   371 00:0167: 5B           	tcd
+   372                        ;	char c;
+   373                        ;
+   374                        ;	c = getnibble() << 4;
+   375             00000000   c_1	set	0
+   376 00:0168: 20 xx xx     	jsr	_~getnibble
+   377 00:016B: E2 20        	sep	#$20
+   378                        	longa	off
+   379 00:016D: 0A           	asl	A
+   380 00:016E: 0A           	asl	A
+   381 00:016F: 0A           	asl	A
+   382 00:0170: 0A           	asl	A
+   383 00:0171: 85 05        	sta	<L23+c_1
+   384 00:0173: C2 20        	rep	#$20
+   385                        	longa	on
+   386                        ;	c += getnibble();
+   387 00:0175: 20 xx xx     	jsr	_~getnibble
+   388 00:0178: E2 20        	sep	#$20
+   389                        	longa	off
+   390 00:017A: 18           	clc
+   391 00:017B: 65 05        	adc	<L23+c_1
+   392 00:017D: 85 05        	sta	<L23+c_1
+   393 00:017F: C2 20        	rep	#$20
+   394                        	longa	on
+   395                        ;	
+   396                        ;	return c;
+   397 00:0181: A5 05        	lda	<L23+c_1
+   398 00:0183: 29 FF 00     	and	#$ff
+  Mon Sep 14 2026 11:35                                                                                                    Page 9
+
+
+   399 00:0186: A8           	tay
+   400 00:0187: 2B           	pld
+   401 00:0188: 3B           	tsc
+   402 00:0189: 18           	clc
+   403 00:018A: 69 05 00     	adc	#L22
+   404 00:018D: 1B           	tcs
+   405 00:018E: 98           	tya
+   406 00:018F: 60           	rts
+   407                        ;}
+   408             00000005   L22	equ	5
+   409             00000005   L23	equ	5
+   410                        	ends
+   411                        	efunc
+   412                        ;
+   413                        ;void print_adr(char *p) {
+   414                        	code
+   415                        	xdef	_~print_adr
+   416                        	func
+   417                        _~print_adr:
+   418                        	longa	on
+   419                        	longi	on
+   420 00:0190: 3B           	tsc
+   421 00:0191: 38           	sec
+   422 00:0192: E9 0C 00     	sbc	#L25
+   423 00:0195: 1B           	tcs
+   424 00:0196: 0B           	phd
+   425 00:0197: 5B           	tcd
+   426             00000003   p_0	set	3
+   427                        ;	unsigned long l = (unsigned long)p;
+   428                        ;	
+   429                        ;    printf("%02x:%04x", (char)(l >> 16), (unsigned int)(l & 0xffff));
+   430             00000000   l_1	set	0
+   431 00:0198: A5 0F        	lda	<L25+p_0
+   432 00:019A: 85 09        	sta	<L26+l_1
+   433 00:019C: A5 11        	lda	<L25+p_0+2
+   434 00:019E: 85 0B        	sta	<L26+l_1+2
+   435 00:01A0: A5 09        	lda	<L26+l_1
+   436 00:01A2: 85 01        	sta	<R0
+   437 00:01A4: 64 03        	stz	<R0+2
+   438 00:01A6: D4 01        	pei	<R0
+   439 00:01A8: D4 0B        	pei	<L26+l_1+2
+   440 00:01AA: D4 09        	pei	<L26+l_1
+   441 00:01AC: A9 10 00     	lda	#$10
+   442                        	xref	_~~llsr
+   443 00:01AF: 20 xx xx     	jsr	_~~llsr
+   444 00:01B2: 86 07        	stx	<R1+2
+   445 00:01B4: 29 FF 00     	and	#$ff
+   446 00:01B7: 48           	pha
+   447 00:01B8: F4 xx xx     	pea	#^L21
+   448 00:01BB: F4 xx xx     	pea	#<L21
+   449 00:01BE: F4 0A 00     	pea	#10
+   450 00:01C1: 20 xx xx     	jsr	_~printf
+   451                        ;}
+   452 00:01C4: A5 0D        	lda	<L25+1
+   453 00:01C6: 85 11        	sta	<L25+1+4
+   454 00:01C8: 2B           	pld
+   455 00:01C9: 3B           	tsc
+   456 00:01CA: 18           	clc
+  Mon Sep 14 2026 11:35                                                                                                    Page 10
+
+
+   457 00:01CB: 69 10 00     	adc	#L25+4
+   458 00:01CE: 1B           	tcs
+   459 00:01CF: 60           	rts
+   460             0000000C   L25	equ	12
+   461             00000009   L26	equ	9
+   462                        	ends
+   463                        	efunc
+   464                        	data
+   465                        L21:
+   466 00:015B: 25 30 32 78  	db	$25,$30,$32,$78,$3A,$25,$30,$34,$78,$00
+       00:015F: 3A 25 30 34 
+       00:0163: 78 00 
+   467 00:0165:              	ends
+   468                        ;
+   469                        ;void print_prompt() {
+   470                        	code
+   471                        	xdef	_~print_prompt
+   472                        	func
+   473                        _~print_prompt:
+   474                        	longa	on
+   475                        	longi	on
+   476 00:01D0: 3B           	tsc
+   477 00:01D1: 38           	sec
+   478 00:01D2: E9 0B 00     	sbc	#L29
+   479 00:01D5: 1B           	tcs
+   480 00:01D6: 0B           	phd
+   481 00:01D7: 5B           	tcd
+   482                        ;	unsigned int stackptr = 0;
+   483                        ;	unsigned int direct = 0;
+   484                        ;	char db = 0;
+   485                        ;	char flags = 0;
+   486                        ;	char program_bank;
+   487                        ;
+   488                        ;#ifdef __WDC__
+   489                        ;	#asm
+   490             00000000   stackptr_1	set	0
+   491             00000002   direct_1	set	2
+   492             00000004   db_1	set	4
+   493             00000005   flags_1	set	5
+   494             00000006   program_bank_1	set	6
+   495 00:01D8: 64 05        	stz	<L30+stackptr_1
+   496 00:01DA: 64 07        	stz	<L30+direct_1
+   497 00:01DC: E2 20        	sep	#$20
+   498                        	longa	off
+   499 00:01DE: 64 09        	stz	<L30+db_1
+   500 00:01E0: 64 0A        	stz	<L30+flags_1
+   501 00:01E2: C2 20        	rep	#$20
+   502                        	longa	on
+   503                        ;	php
+   504                        ;	sep #$20
+   505                        ;	pla
+   506                        ;	sta %%flags
+   507                        ;	phb
+   508                        ;	pla
+   509                        ;	sta %%db
+   510                        ;	rep #$20
+   511                        ;	tsc
+   512                        ;	sta %%stackptr;
+  Mon Sep 14 2026 11:35                                                                                                    Page 11
+
+
+   513                        ;	tdc
+   514                        ;	sta %%direct;
+   515                        ;	#endasm
+   516                        	asmstart
+   517 00:01E4: 08           	php
+   518 00:01E5: E2 20        	sep #$20
+   519 00:01E7: 68           	pla
+   520 00:01E8: 85 0A        	sta <L30+flags_1
+   521 00:01EA: 8B           	phb
+   522 00:01EB: 68           	pla
+   523 00:01EC: 85 09        	sta <L30+db_1
+   524 00:01EE: C2 20        	rep #$20
+   525 00:01F0: 3B           	tsc
+   526 00:01F1: 85 05        	sta <L30+stackptr_1;
+   527 00:01F3: 7B           	tdc
+   528 00:01F4: 85 07        	sta <L30+direct_1;
+   529                        	asmend
+   530                        ;#endif
+   531                        ;#ifdef __CALYPSI__
+   532                        ;__asm (
+   533                        ; " php \n"
+   534                        ; " sep #32 \n"
+   535                        ; " pla \n"
+   536                        ; " sta 2,s \n"
+   537                        ; " phb \n"
+   538                        ; " pla \n"
+   539                        ; " sta 1,s \n"
+   540                        ; " rep #32 \n"
+   541                        ; " tsx \n"
+   542                        ; " phd \n"
+   543                        ; " ply \n"
+   544                        ;);
+   545                        ;
+   546                        ;#endif
+   547                        ;
+   548                        ;	printf("S:%04x D:%04x DB:%02X F:%02X ", stackptr, direct, db, flags);
+   549 00:01F6: A5 0A        	lda	<L30+flags_1
+   550 00:01F8: 29 FF 00     	and	#$ff
+   551 00:01FB: 48           	pha
+   552 00:01FC: A5 09        	lda	<L30+db_1
+   553 00:01FE: 29 FF 00     	and	#$ff
+   554 00:0201: 48           	pha
+   555 00:0202: D4 07        	pei	<L30+direct_1
+   556 00:0204: D4 05        	pei	<L30+stackptr_1
+   557 00:0206: F4 xx xx     	pea	#^L28
+   558 00:0209: F4 xx xx     	pea	#<L28
+   559 00:020C: F4 0E 00     	pea	#14
+   560 00:020F: 20 xx xx     	jsr	_~printf
+   561                        ;	print_adr(ptr);	
+   562 00:0212: AD xx xx     	lda	|_~ptr+2
+   563 00:0215: 48           	pha
+   564 00:0216: AD xx xx     	lda	|_~ptr
+   565 00:0219: 48           	pha
+   566 00:021A: 20 xx xx     	jsr	_~print_adr
+   567                        ;	printf(">");
+   568 00:021D: F4 xx xx     	pea	#^L28+30
+   569 00:0220: F4 xx xx     	pea	#<L28+30
+   570 00:0223: F4 06 00     	pea	#6
+  Mon Sep 14 2026 11:35                                                                                                    Page 12
+
+
+   571 00:0226: 20 xx xx     	jsr	_~printf
+   572                        ;	fflush(stdout);
+   573 00:0229: A9 xx xx     	lda	#<_~_iob+20
+   574 00:022C: 85 01        	sta	<R0
+   575                        	xref	_BEG_DATA
+   576 00:022E: A9 xx xx     	lda	#_BEG_DATA>>16
+   577 00:0231: 48           	pha
+   578 00:0232: D4 01        	pei	<R0
+   579 00:0234: 20 xx xx     	jsr	_~fflush
+   580                        ;}
+   581 00:0237: 2B           	pld
+   582 00:0238: 3B           	tsc
+   583 00:0239: 18           	clc
+   584 00:023A: 69 0B 00     	adc	#L29
+   585 00:023D: 1B           	tcs
+   586 00:023E: 60           	rts
+   587             0000000B   L29	equ	11
+   588             00000005   L30	equ	5
+   589                        	ends
+   590                        	efunc
+   591                        	data
+   592                        L28:
+   593 00:0165: 53 3A 25 30  	db	$53,$3A,$25,$30,$34,$78,$20,$44,$3A,$25,$30,$34,$78,$20,$44
+       00:0169: 34 78 20 44 
+       00:016D: 3A 25 30 34 
+       00:0171: 78 20 44 
+   594 00:0174: 42 3A 25 30  	db	$42,$3A,$25,$30,$32,$58,$20,$46,$3A,$25,$30,$32,$58,$20,$00
+       00:0178: 32 58 20 46 
+       00:017C: 3A 25 30 32 
+       00:0180: 58 20 00 
+   595 00:0183: 3E 00        	db	$3E,$00
+   596 00:0185:              	ends
+   597                        ;
+   598                        ;void dump_memory() {
+   599                        	code
+   600                        	xdef	_~dump_memory
+   601                        	func
+   602                        _~dump_memory:
+   603                        	longa	on
+   604                        	longi	on
+   605 00:023F: 3B           	tsc
+   606 00:0240: 38           	sec
+   607 00:0241: E9 09 00     	sbc	#L33
+   608 00:0244: 1B           	tcs
+   609 00:0245: 0B           	phd
+   610 00:0246: 5B           	tcd
+   611                        ;	int i, j;
+   612                        ;	char c;
+   613                        ;	
+   614                        ;	printf("\n");
+   615             00000000   i_1	set	0
+   616             00000002   j_1	set	2
+   617             00000004   c_1	set	4
+   618 00:0247: F4 xx xx     	pea	#^L32
+   619 00:024A: F4 xx xx     	pea	#<L32
+   620 00:024D: F4 06 00     	pea	#6
+   621 00:0250: 20 xx xx     	jsr	_~printf
+   622                        ;	printf("	00 01 02 03 04 05 06 07  08 09 0a 0b 0c 0d 0e 0f\n");
+  Mon Sep 14 2026 11:35                                                                                                    Page 13
+
+
+   623 00:0253: F4 xx xx     	pea	#^L32+2
+   624 00:0256: F4 xx xx     	pea	#<L32+2
+   625 00:0259: F4 06 00     	pea	#6
+   626 00:025C: 20 xx xx     	jsr	_~printf
+   627                        ;	//printf("	------------------------------------------------\n");
+   628                        ;	
+   629                        ;	for(i = 0; i < 16; i++) {
+   630 00:025F: 64 05        	stz	<L34+i_1
+   631                        L10008:
+   632                        ;		print_adr(ptr);
+   633 00:0261: AD xx xx     	lda	|_~ptr+2
+   634 00:0264: 48           	pha
+   635 00:0265: AD xx xx     	lda	|_~ptr
+   636 00:0268: 48           	pha
+   637 00:0269: 20 xx xx     	jsr	_~print_adr
+   638                        ;		for(j = 0; j < 16; j++) {
+   639 00:026C: 64 07        	stz	<L34+j_1
+   640                        L10011:
+   641                        ;			if (j == 8)
+   642                        ;				printf(" ");
+   643 00:026E: A5 07        	lda	<L34+j_1
+   644 00:0270: C9 08 00     	cmp	#<$8
+   645 00:0273: D0 0C        	bne	L10012
+   646 00:0275: F4 xx xx     	pea	#^L32+53
+   647 00:0278: F4 xx xx     	pea	#<L32+53
+   648 00:027B: F4 06 00     	pea	#6
+   649 00:027E: 20 xx xx     	jsr	_~printf
+   650                        ;			printf(" %02X", ptr[j]);
+   651                        L10012:
+   652 00:0281: AD xx xx     	lda	|_~ptr
+   653 00:0284: 85 01        	sta	<R0
+   654 00:0286: AD xx xx     	lda	|_~ptr+2
+   655 00:0289: 85 03        	sta	<R0+2
+   656 00:028B: A4 07        	ldy	<L34+j_1
+   657 00:028D: B7 01        	lda	[<R0],Y
+   658 00:028F: 29 FF 00     	and	#$ff
+   659 00:0292: 48           	pha
+   660 00:0293: F4 xx xx     	pea	#^L32+55
+   661 00:0296: F4 xx xx     	pea	#<L32+55
+   662 00:0299: F4 08 00     	pea	#8
+   663 00:029C: 20 xx xx     	jsr	_~printf
+   664                        ;		}
+   665 00:029F: E6 07        	inc	<L34+j_1
+   666 00:02A1: 38           	sec
+   667 00:02A2: A5 07        	lda	<L34+j_1
+   668 00:02A4: E9 10 00     	sbc	#<$10
+   669 00:02A7: 70 03        	bvs	L36
+   670 00:02A9: 49 00 80     	eor	#$8000
+   671                        L36:
+   672 00:02AC: 10 C0        	bpl	L10011
+   673                        ;		
+   674                        ;		printf("  |");
+   675 00:02AE: F4 xx xx     	pea	#^L32+61
+   676 00:02B1: F4 xx xx     	pea	#<L32+61
+   677 00:02B4: F4 06 00     	pea	#6
+   678 00:02B7: 20 xx xx     	jsr	_~printf
+   679                        ;		for(j = 0; j < 16; j++) {
+   680 00:02BA: 64 07        	stz	<L34+j_1
+  Mon Sep 14 2026 11:35                                                                                                    Page 14
+
+
+   681                        L10015:
+   682                        ;			c = ptr[j];
+   683 00:02BC: AD xx xx     	lda	|_~ptr
+   684 00:02BF: 85 01        	sta	<R0
+   685 00:02C1: AD xx xx     	lda	|_~ptr+2
+   686 00:02C4: 85 03        	sta	<R0+2
+   687 00:02C6: E2 20        	sep	#$20
+   688                        	longa	off
+   689 00:02C8: A4 07        	ldy	<L34+j_1
+   690 00:02CA: B7 01        	lda	[<R0],Y
+   691 00:02CC: 85 09        	sta	<L34+c_1
+   692                        ;			if (c < 32 || c >126)
+   693                        ;				c = '.';
+   694 00:02CE: C9 20        	cmp	#<$20
+   695 00:02D0: C2 20        	rep	#$20
+   696                        	longa	on
+   697 00:02D2: 90 0A        	bcc	L38
+   698 00:02D4: E2 20        	sep	#$20
+   699                        	longa	off
+   700 00:02D6: A9 7E        	lda	#$7e
+   701 00:02D8: C5 09        	cmp	<L34+c_1
+   702 00:02DA: C2 20        	rep	#$20
+   703                        	longa	on
+   704 00:02DC: B0 08        	bcs	L10016
+   705                        L38:
+   706 00:02DE: E2 20        	sep	#$20
+   707                        	longa	off
+   708 00:02E0: A9 2E        	lda	#$2e
+   709 00:02E2: 85 09        	sta	<L34+c_1
+   710 00:02E4: C2 20        	rep	#$20
+   711                        	longa	on
+   712                        ;			printf("%c", c);
+   713                        L10016:
+   714 00:02E6: A5 09        	lda	<L34+c_1
+   715 00:02E8: 29 FF 00     	and	#$ff
+   716 00:02EB: 48           	pha
+   717 00:02EC: F4 xx xx     	pea	#^L32+65
+   718 00:02EF: F4 xx xx     	pea	#<L32+65
+   719 00:02F2: F4 08 00     	pea	#8
+   720 00:02F5: 20 xx xx     	jsr	_~printf
+   721                        ;		}
+   722 00:02F8: E6 07        	inc	<L34+j_1
+   723 00:02FA: 38           	sec
+   724 00:02FB: A5 07        	lda	<L34+j_1
+   725 00:02FD: E9 10 00     	sbc	#<$10
+   726 00:0300: 70 03        	bvs	L41
+   727 00:0302: 49 00 80     	eor	#$8000
+   728                        L41:
+   729 00:0305: 10 B5        	bpl	L10015
+   730                        ;		printf("|\n");
+   731 00:0307: F4 xx xx     	pea	#^L32+68
+   732 00:030A: F4 xx xx     	pea	#<L32+68
+   733 00:030D: F4 06 00     	pea	#6
+   734 00:0310: 20 xx xx     	jsr	_~printf
+   735                        ;		ptr += 16;
+   736 00:0313: A9 10 00     	lda	#$10
+   737 00:0316: 18           	clc
+   738 00:0317: 6D xx xx     	adc	|_~ptr
+  Mon Sep 14 2026 11:35                                                                                                    Page 15
+
+
+   739 00:031A: 8D xx xx     	sta	|_~ptr
+   740 00:031D: 90 03        	bcc	L10006
+   741 00:031F: EE xx xx     	inc	|_~ptr+2
+   742                        ;	}
+   743                        L10006:
+   744 00:0322: E6 05        	inc	<L34+i_1
+   745 00:0324: 38           	sec
+   746 00:0325: A5 05        	lda	<L34+i_1
+   747 00:0327: E9 10 00     	sbc	#<$10
+   748 00:032A: 70 03        	bvs	L44
+   749 00:032C: 49 00 80     	eor	#$8000
+   750                        L44:
+   751 00:032F: 30 03        	bmi	*+5
+   752 00:0331: 82 2D FF     	brl	L10008
+   753                        ;}
+   754 00:0334: 2B           	pld
+   755 00:0335: 3B           	tsc
+   756 00:0336: 18           	clc
+   757 00:0337: 69 09 00     	adc	#L33
+   758 00:033A: 1B           	tcs
+   759 00:033B: 60           	rts
+   760             00000009   L33	equ	9
+   761             00000005   L34	equ	5
+   762                        	ends
+   763                        	efunc
+   764                        	data
+   765                        L32:
+   766 00:0185: 0A 00 09 30  	db	$0A,$00,$09,$30,$30,$20,$30,$31,$20,$30,$32,$20,$30,$33,$20
+       00:0189: 30 20 30 31 
+       00:018D: 20 30 32 20 
+       00:0191: 30 33 20 
+   767 00:0194: 30 34 20 30  	db	$30,$34,$20,$30,$35,$20,$30,$36,$20,$30,$37,$20,$20,$30,$38
+       00:0198: 35 20 30 36 
+       00:019C: 20 30 37 20 
+       00:01A0: 20 30 38 
+   768 00:01A3: 20 30 39 20  	db	$20,$30,$39,$20,$30,$61,$20,$30,$62,$20,$30,$63,$20,$30,$64
+       00:01A7: 30 61 20 30 
+       00:01AB: 62 20 30 63 
+       00:01AF: 20 30 64 
+   769 00:01B2: 20 30 65 20  	db	$20,$30,$65,$20,$30,$66,$0A,$00,$20,$00,$20,$25,$30,$32,$58
+       00:01B6: 30 66 0A 00 
+       00:01BA: 20 00 20 25 
+       00:01BE: 30 32 58 
+   770 00:01C1: 00 20 20 7C  	db	$00,$20,$20,$7C,$00,$25,$63,$00,$7C,$0A,$00
+       00:01C5: 00 25 63 00 
+       00:01C9: 7C 0A 00 
+   771 00:01CC:              	ends
+   772                        ;
+   773                        ;void set_bank() {
+   774                        	code
+   775                        	xdef	_~set_bank
+   776                        	func
+   777                        _~set_bank:
+   778                        	longa	on
+   779                        	longi	on
+   780 00:033C: 3B           	tsc
+   781 00:033D: 38           	sec
+   782 00:033E: E9 08 00     	sbc	#L48
+  Mon Sep 14 2026 11:35                                                                                                    Page 16
+
+
+   783 00:0341: 1B           	tcs
+   784 00:0342: 0B           	phd
+   785 00:0343: 5B           	tcd
+   786                        ;	char *p;
+   787                        ;	
+   788                        ;	printf("bank:");
+   789             00000000   p_1	set	0
+   790 00:0344: F4 xx xx     	pea	#^L47
+   791 00:0347: F4 xx xx     	pea	#<L47
+   792 00:034A: F4 06 00     	pea	#6
+   793 00:034D: 20 xx xx     	jsr	_~printf
+   794                        ;	fflush(stdout);
+   795 00:0350: A9 xx xx     	lda	#<_~_iob+20
+   796 00:0353: 85 01        	sta	<R0
+   797                        	xref	_BEG_DATA
+   798 00:0355: A9 xx xx     	lda	#_BEG_DATA>>16
+   799 00:0358: 48           	pha
+   800 00:0359: D4 01        	pei	<R0
+   801 00:035B: 20 xx xx     	jsr	_~fflush
+   802                        ;	
+   803                        ;	p = (char *)&ptr;
+   804 00:035E: A9 xx xx     	lda	#<_~ptr
+   805 00:0361: 85 05        	sta	<L49+p_1
+   806                        	xref	_BEG_DATA
+   807 00:0363: A9 xx xx     	lda	#_BEG_DATA>>16
+   808 00:0366: 85 07        	sta	<L49+p_1+2
+   809                        ;	
+   810                        ;	p[2] = getbyte();
+   811 00:0368: 20 xx xx     	jsr	_~getbyte
+   812 00:036B: E2 20        	sep	#$20
+   813                        	longa	off
+   814 00:036D: A0 02 00     	ldy	#$2
+   815 00:0370: 97 05        	sta	[<L49+p_1],Y
+   816 00:0372: C2 20        	rep	#$20
+   817                        	longa	on
+   818                        ;}
+   819 00:0374: 2B           	pld
+   820 00:0375: 3B           	tsc
+   821 00:0376: 18           	clc
+   822 00:0377: 69 08 00     	adc	#L48
+   823 00:037A: 1B           	tcs
+   824 00:037B: 60           	rts
+   825             00000008   L48	equ	8
+   826             00000005   L49	equ	5
+   827                        	ends
+   828                        	efunc
+   829                        	data
+   830                        L47:
+   831 00:01CC: 62 61 6E 6B  	db	$62,$61,$6E,$6B,$3A,$00
+       00:01D0: 3A 00 
+   832 00:01D2:              	ends
+   833                        ;
+   834                        ;void set_addr() {
+   835                        	code
+   836                        	xdef	_~set_addr
+   837                        	func
+   838                        _~set_addr:
+   839                        	longa	on
+  Mon Sep 14 2026 11:35                                                                                                    Page 17
+
+
+   840                        	longi	on
+   841 00:037C: 3B           	tsc
+   842 00:037D: 38           	sec
+   843 00:037E: E9 08 00     	sbc	#L52
+   844 00:0381: 1B           	tcs
+   845 00:0382: 0B           	phd
+   846 00:0383: 5B           	tcd
+   847                        ;	char *p;
+   848                        ;	
+   849                        ;	printf("addr:");
+   850             00000000   p_1	set	0
+   851 00:0384: F4 xx xx     	pea	#^L51
+   852 00:0387: F4 xx xx     	pea	#<L51
+   853 00:038A: F4 06 00     	pea	#6
+   854 00:038D: 20 xx xx     	jsr	_~printf
+   855                        ;	fflush(stdout);
+   856 00:0390: A9 xx xx     	lda	#<_~_iob+20
+   857 00:0393: 85 01        	sta	<R0
+   858                        	xref	_BEG_DATA
+   859 00:0395: A9 xx xx     	lda	#_BEG_DATA>>16
+   860 00:0398: 48           	pha
+   861 00:0399: D4 01        	pei	<R0
+   862 00:039B: 20 xx xx     	jsr	_~fflush
+   863                        ;	
+   864                        ;	p = (char *)&ptr;
+   865 00:039E: A9 xx xx     	lda	#<_~ptr
+   866 00:03A1: 85 05        	sta	<L53+p_1
+   867                        	xref	_BEG_DATA
+   868 00:03A3: A9 xx xx     	lda	#_BEG_DATA>>16
+   869 00:03A6: 85 07        	sta	<L53+p_1+2
+   870                        ;	p[1] = getbyte();
+   871 00:03A8: 20 xx xx     	jsr	_~getbyte
+   872 00:03AB: E2 20        	sep	#$20
+   873                        	longa	off
+   874 00:03AD: A0 01 00     	ldy	#$1
+   875 00:03B0: 97 05        	sta	[<L53+p_1],Y
+   876 00:03B2: C2 20        	rep	#$20
+   877                        	longa	on
+   878                        ;	p[0] = getbyte();
+   879 00:03B4: 20 xx xx     	jsr	_~getbyte
+   880 00:03B7: E2 20        	sep	#$20
+   881                        	longa	off
+   882 00:03B9: 87 05        	sta	[<L53+p_1]
+   883 00:03BB: C2 20        	rep	#$20
+   884                        	longa	on
+   885                        ;}
+   886 00:03BD: 2B           	pld
+   887 00:03BE: 3B           	tsc
+   888 00:03BF: 18           	clc
+   889 00:03C0: 69 08 00     	adc	#L52
+   890 00:03C3: 1B           	tcs
+   891 00:03C4: 60           	rts
+   892             00000008   L52	equ	8
+   893             00000005   L53	equ	5
+   894                        	ends
+   895                        	efunc
+   896                        	data
+   897                        L51:
+  Mon Sep 14 2026 11:35                                                                                                    Page 18
+
+
+   898 00:01D2: 61 64 64 72  	db	$61,$64,$64,$72,$3A,$00
+       00:01D6: 3A 00 
+   899 00:01D8:              	ends
+   900                        ;
+   901                        ;void do_function(char c) {
+   902                        	code
+   903                        	xdef	_~do_function
+   904                        	func
+   905                        _~do_function:
+   906                        	longa	on
+   907                        	longi	on
+   908 00:03C5: 3B           	tsc
+   909 00:03C6: 38           	sec
+   910 00:03C7: E9 05 00     	sbc	#L56
+   911 00:03CA: 1B           	tcs
+   912 00:03CB: 0B           	phd
+   913 00:03CC: 5B           	tcd
+   914             00000003   c_0	set	3
+   915                        ;	char b;
+   916                        ;	
+   917                        ;	if (isalpha(c))
+   918             00000000   b_1	set	0
+   919                        ;		printf("%c ", c);
+   920 00:03CD: A5 08        	lda	<L56+c_0
+   921 00:03CF: 29 FF 00     	and	#$ff
+   922 00:03D2: AA           	tax
+   923 00:03D3: E2 20        	sep	#$20
+   924                        	longa	off
+   925 00:03D5: BD xx xx     	lda	|_~_ctype+1,X
+   926 00:03D8: 29 03        	and	#<$3
+   927 00:03DA: C2 20        	rep	#$20
+   928                        	longa	on
+   929 00:03DC: F0 12        	beq	L10017
+   930 00:03DE: A5 08        	lda	<L56+c_0
+   931 00:03E0: 29 FF 00     	and	#$ff
+   932 00:03E3: 48           	pha
+   933 00:03E4: F4 xx xx     	pea	#^L55
+   934 00:03E7: F4 xx xx     	pea	#<L55
+   935 00:03EA: F4 08 00     	pea	#8
+   936 00:03ED: 20 xx xx     	jsr	_~printf
+   937                        ;	
+   938                        ;	switch (c) {
+   939                        L10017:
+   940 00:03F0: A5 08        	lda	<L56+c_0
+   941 00:03F2: 29 FF 00     	and	#$ff
+   942                        	xref	_~~swt
+   943 00:03F5: 20 xx xx     	jsr	_~~swt
+   944 00:03F8: 0A 00        	dw	10
+   945 00:03FA: 3F 00        	dw	63
+   946 00:03FC: xx xx        	dw	L10028-1
+   947 00:03FE: 61 00        	dw	97
+   948 00:0400: xx xx        	dw	L10020-1
+   949 00:0402: 62 00        	dw	98
+   950 00:0404: xx xx        	dw	L10021-1
+   951 00:0406: 63 00        	dw	99
+   952 00:0408: xx xx        	dw	L10019-1
+   953 00:040A: 64 00        	dw	100
+   954 00:040C: xx xx        	dw	L10023-1
+  Mon Sep 14 2026 11:35                                                                                                    Page 19
+
+
+   955 00:040E: 6C 00        	dw	108
+   956 00:0410: xx xx        	dw	L10019-1
+   957 00:0412: 6D 00        	dw	109
+   958 00:0414: xx xx        	dw	L10019-1
+   959 00:0416: 72 00        	dw	114
+   960 00:0418: xx xx        	dw	L10026-1
+   961 00:041A: 78 00        	dw	120
+   962 00:041C: xx xx        	dw	L10029-1
+   963 00:041E: 7A 00        	dw	122
+   964 00:0420: xx xx        	dw	L10027-1
+   965 00:0422: xx xx        	dw	L10019-1
+   966                        ;	case 'a':
+   967                        L10020:
+   968                        ;		set_addr();
+   969 00:0424: 20 xx xx     	jsr	_~set_addr
+   970                        ;		break;
+   971                        L10019:
+   972                        ;	
+   973                        ;	printf("\n");
+   974 00:0427: F4 xx xx     	pea	#^L55+4
+   975 00:042A: F4 xx xx     	pea	#<L55+4
+   976 00:042D: F4 06 00     	pea	#6
+   977 00:0430: 20 xx xx     	jsr	_~printf
+   978                        ;}
+   979 00:0433: A5 06        	lda	<L56+1
+   980 00:0435: 85 08        	sta	<L56+1+2
+   981 00:0437: 2B           	pld
+   982 00:0438: 3B           	tsc
+   983 00:0439: 18           	clc
+   984 00:043A: 69 07 00     	adc	#L56+2
+   985 00:043D: 1B           	tcs
+   986 00:043E: 60           	rts
+   987                        ;	case 'b':
+   988                        L10021:
+   989                        ;		set_bank();
+   990 00:043F: 20 xx xx     	jsr	_~set_bank
+   991                        ;		break;
+   992 00:0442: 80 E3        	bra	L10019
+   993                        ;	case 'c':
+   994                        ;		break;
+   995                        ;	case 'd':
+   996                        L10023:
+   997                        ;		dump_memory();
+   998 00:0444: 20 xx xx     	jsr	_~dump_memory
+   999                        ;		break;
+  1000 00:0447: 80 DE        	bra	L10019
+  1001                        ;	case 'l':
+  1002                        ;		break;
+  1003                        ;	case 'm':
+  1004                        ;		break;
+  1005                        ;	case 'r':
+  1006                        L10026:
+  1007                        ;#asm
+  1008                        ;		JML $010000
+  1009                        ;#endasm
+  1010                        	asmstart
+  1011 00:0449: 5C 00 00 01  		JML $010000
+  1012                        L20000:
+  Mon Sep 14 2026 11:35                                                                                                    Page 20
+
+
+  1013                        	asmend
+  1014                        ;		break;
+  1015 00:044D: 80 D8        	bra	L10019
+  1016                        ;	case 'z':
+  1017                        L10027:
+  1018                        ;		b = *debug_reset;
+  1019 00:044F: AD xx xx     	lda	|_~debug_reset
+  1020 00:0452: 85 01        	sta	<R0
+  1021 00:0454: AD xx xx     	lda	|_~debug_reset+2
+  1022 00:0457: 85 03        	sta	<R0+2
+  1023 00:0459: E2 20        	sep	#$20
+  1024                        	longa	off
+  1025 00:045B: A7 01        	lda	[<R0]
+  1026 00:045D: 85 05        	sta	<L57+b_1
+  1027 00:045F: C2 20        	rep	#$20
+  1028                        	longa	on
+  1029                        ;		break;
+  1030 00:0461: 80 C4        	bra	L10019
+  1031                        ;	case '?':
+  1032                        L10028:
+  1033                        ;		print_welcome();
+  1034 00:0463: 20 xx xx     	jsr	_~print_welcome
+  1035                        ;		break;
+  1036 00:0466: 80 BF        	bra	L10019
+  1037                        ;	case 'x':
+  1038                        L10029:
+  1039                        ;#asm
+  1040                        ;		wdm 0
+  1041                        ;#endasm
+  1042                        	asmstart
+  1043 00:0468: 42 00        		wdm 0
+  1044                        ;		break;
+  1045 00:046A: 80 E1        	bra	L20000
+  1046                        ;	default:	
+  1047                        ;		break;
+  1048                        ;	}
+  1049             00000005   L56	equ	5
+  1050             00000005   L57	equ	5
+  1051                        	ends
+  1052                        	efunc
+  1053                        	data
+  1054                        L55:
+  1055 00:01D8: 25 63 20 00  	db	$25,$63,$20,$00,$0A,$00
+       00:01DC: 0A 00 
+  1056 00:01DE:              	ends
+  1057                        ;
+  1058                        ;void monitor() {
+  1059                        	code
+  1060                        	xdef	_~monitor
+  1061                        	func
+  1062                        _~monitor:
+  1063                        	longa	on
+  1064                        	longi	on
+  1065 00:046C: 3B           	tsc
+  1066 00:046D: 38           	sec
+  1067 00:046E: E9 00 00     	sbc	#L61
+  1068 00:0471: 1B           	tcs
+  1069 00:0472: 0B           	phd
+  Mon Sep 14 2026 11:35                                                                                                    Page 21
+
+
+  1070 00:0473: 5B           	tcd
+  1071                        ;    print_welcome();
+  1072 00:0474: 20 xx xx     	jsr	_~print_welcome
+  1073                        ;	
+  1074                        ;    for(;;) {
+  1075                        L10033:
+  1076                        ;        print_prompt();
+  1077 00:0477: 20 xx xx     	jsr	_~print_prompt
+  1078                        ;        do_function(charin());
+  1079 00:047A: 20 xx xx     	jsr	_~charin
+  1080 00:047D: 48           	pha
+  1081 00:047E: 20 xx xx     	jsr	_~do_function
+  1082                        ;    }
+  1083 00:0481: 80 F4        	bra	L10033
+  1084                        ;}
+  1085             00000000   L61	equ	0
+  1086             00000001   L62	equ	1
+  1087                        	ends
+  1088                        	efunc
+  1089                        ;
+  1090                        	xref	_~printf
+  1091                        	xref	_~fflush
+  1092                        	xref	_~_ctype
+  1093                        	xref	_~_iob
+
+
+      Lines assembled: 1093
+      Errors: 0

@@ -1,0 +1,70 @@
+Section CODE:
+	00000200 _BEG_CODE
+	0000020b _~debug
+	00000264 _~unlink
+	0000028d _~print_str
+	000002c2 _~write
+	0000036d _~read
+	00000396 _~close
+	000003af _~open
+	000003da _~isatty
+	00000401 _~lseek
+	00000430 _~main
+	00000456 _~print_welcome
+	0000050f _~charin
+	00000534 _~getnibble
+	000005b6 _~getbyte
+	000005e6 _~print_adr
+	00000626 _~print_prompt
+	00000695 _~dump_memory
+	00000792 _~set_bank
+	000007d2 _~set_addr
+	0000081b _~do_function
+	000008c2 _~monitor
+	000008d9 _~fflush
+	00000950 _~free
+	00000a13 _~malloc
+	00000ae9 _~printf
+	00000b2c _~sbrk
+	00000b76 _~strlen
+	00000b90 _~vsprintf
+	00000be8 _~~llsr
+	00000c14 _~~swt
+	00000c3a _~_flsbuf
+	00000ed1 _~_format
+	000016aa _~_getbuf
+	0000176d _~~ludv
+	00001782 _~~lumd
+	00001792 _~_closeall
+	000017d1 _~fclose
+	000018c9 _~strcpy
+	000018ea _~~comdiv
+	0000192a _~~udv
+	0000195e _~~umd
+	00001963 _END_CODE
+
+Section DATA:
+	00001963 _BEG_DATA
+	00001963 _~far_heap_start
+	00001967 _~far_heap_end
+	0000196b _~heap_start
+	0000196f _~heap_end
+	000019e8 _~debug_char
+	000019ec _~debug_hex
+	000019f0 _~debug_reset
+	000019f4 _~ansi_white
+	000019fd _~ansi_red
+	00001a07 _~ansi_yellow
+	00001a13 _~ansi_clrhome
+	00001a1f _~stars
+	00001bc6 _~_ctype
+	00001cc7 _~_iob
+	00001e7d _END_DATA
+
+Section UDATA:
+	00001e7d _BEG_UDATA
+	00001e7d _~_heap_top
+	00002081 _~_mem_start
+	00002085 _~_close_stdio
+	00002087 _END_UDATA
+

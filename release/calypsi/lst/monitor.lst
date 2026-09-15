@@ -1,0 +1,997 @@
+###############################################################################
+#                                                                             #
+# Calypsi ISO C compiler for 65816                               version 5.18 #
+#                                                       13/Sep/2026  15:01:04 #
+# Command line: -O2 --code-model compact --data-model large -o                #
+#               C:\github\RS65816\release\calypsi\obj\monitor.o --list-file   #
+#               C:\github\RS65816\release\calypsi\lst\monitor.lst             #
+#               C:\github\RS65816\src\monitor.c                               #
+#                                                                             #
+###############################################################################
+
+    \ 000000                      .rtmodel version,"1"
+    \ 000000                      .rtmodel codeModel,"compact"
+    \ 000000                      .rtmodel dataModel,"large"
+    \ 000000                      .rtmodel core,"65816"
+    \ 000000                      .rtmodel huge,"0"
+    \ 000000                      .rtmodel doubleSize,"32"
+    \ 000000                      .rtmodel target,"none-specified"
+    \ 000000                      .extern _Dp
+    \ 000000                      .extern _ValueSwitch16
+    \ 000000                      .extern _Vfp
+    \ 000000                      .extern __global_streams
+    \ 000000                      .extern fflush
+    \ 000000                      .extern isalpha
+    \ 000000                      .extern printf
+0001                  #include <stdio.h>
+0002                  #include <ctype.h>
+0003                  #include "monitor.h"
+0004                  
+0005                  volatile char* debug_char = (volatile char *) 0xd800;
+0006                  volatile char* debug_hex  = (volatile char *) 0xd801;
+0007                  volatile char* debug_reset  = (volatile char *) 0xd802;
+0008                  
+0009                  const char *ansi_white = "\033[0m";
+0010                  const char *ansi_red = "\033[31m";
+0011                  const char *ansi_yellow = "\033[33;1m";
+0012                  const char *ansi_clrhome = "\033[2J\033[H";
+    \ 000000                      .section far,data
+    \ 000000                      .public ansi_clrhome
+    \ 000000          ansi_clrhome:
+    \ 000000 ........             .long   `_StringLiteral_[27,91,50,74,27,91,72]`
+0013                  
+0014                  const char * stars = "**************************************";
+    \ 000000                      .section far,data
+    \ 000000                      .public stars
+    \ 000000 ........ stars:      .long   `_StringLiteral_**************************************`
+0015                  
+0016                  static char *ptr = NULL;
+    \ 000000                      .section zfar,bss
+    \ 000000          ptr:        .space  4
+0017                  
+0018                  void print_welcome() {
+    \ 000000                      .section compactcode,text
+    \ 000000                      .public print_welcome
+    \ 000000          print_welcome:
+0019                  	printf("\n");
+    \ 000000 a9....               lda     ##.word0 `_StringLiteral_FormatString_[10]`
+    \ 000003 85..                 sta     dp:.tiny _Dp
+    \ 000005 a9....               lda     ##.word2 `_StringLiteral_FormatString_[10]`
+    \ 000008 20....               jsr     .kbank `?L162`
+0020                      printf("%s\n", stars);
+    \ 00000b af......             lda     long:stars+2
+    \ 00000f 48                   pha
+    \ 000010 af......             lda     long:stars
+    \ 000014 48                   pha
+    \ 000015 a9....               lda     ##.word0 `_StringLiteral_FormatString_[37,115,10]`
+    \ 000018 85..                 sta     dp:.tiny _Dp
+    \ 00001a a9....               lda     ##.word2 `_StringLiteral_FormatString_[37,115,10]`
+    \ 00001d 20....               jsr     .kbank `?L165`
+0021                  	printf("* 65816 Monitor (c) by R. Scholz     *\n");
+    \ 000020 68                   pla
+    \ 000021 68                   pla
+    \ 000022 a9....               lda     ##.word0 `_StringLiteral_FormatString_[42,32,54,53,56,49,54,32,77,111,110,105,116,111,114,32,40,99,41,32,98,121,32,82,46,32,83,99,104,111,108,122,32,32,32,32,32,42,10]`
+    \ 000025 85..                 sta     dp:.tiny _Dp
+    \ 000027 a9....               lda     ##.word2 `_StringLiteral_FormatString_[42,32,54,53,56,49,54,32,77,111,110,105,116,111,114,32,40,99,41,32,98,121,32,82,46,32,83,99,104,111,108,122,32,32,32,32,32,42,10]`
+    \ 00002a 20....               jsr     .kbank `?L162`
+0022                      printf("%s\n\n", stars);
+    \ 00002d af......             lda     long:stars+2
+    \ 000031 48                   pha
+    \ 000032 af......             lda     long:stars
+    \ 000036 48                   pha
+    \ 000037 a9....               lda     ##.word0 `_StringLiteral_FormatString_[37,115,10,10]`
+    \ 00003a 85..                 sta     dp:.tiny _Dp
+    \ 00003c a9....               lda     ##.word2 `_StringLiteral_FormatString_[37,115,10,10]`
+    \ 00003f 20....               jsr     .kbank `?L165`
+0023                  	
+0024                  	printf("a - set address\n");
+    \ 000042 68                   pla
+    \ 000043 68                   pla
+    \ 000044 a9....               lda     ##.word0 `_StringLiteral_FormatString_[97,32,45,32,115,101,116,32,97,100,100,114,101,115,115,10]`
+    \ 000047 85..                 sta     dp:.tiny _Dp
+    \ 000049 a9....               lda     ##.word2 `_StringLiteral_FormatString_[97,32,45,32,115,101,116,32,97,100,100,114,101,115,115,10]`
+    \ 00004c 20....               jsr     .kbank `?L162`
+0025                  	printf("b - set bank\n");
+    \ 00004f a9....               lda     ##.word0 `_StringLiteral_FormatString_[98,32,45,32,115,101,116,32,98,97,110,107,10]`
+    \ 000052 85..                 sta     dp:.tiny _Dp
+    \ 000054 a9....               lda     ##.word2 `_StringLiteral_FormatString_[98,32,45,32,115,101,116,32,98,97,110,107,10]`
+    \ 000057 20....               jsr     .kbank `?L162`
+0026                  	printf("c - change memory\n");
+    \ 00005a a9....               lda     ##.word0 `_StringLiteral_FormatString_[99,32,45,32,99,104,97,110,103,101,32,109,101,109,111,114,121,10]`
+    \ 00005d 85..                 sta     dp:.tiny _Dp
+    \ 00005f a9....               lda     ##.word2 `_StringLiteral_FormatString_[99,32,45,32,99,104,97,110,103,101,32,109,101,109,111,114,121,10]`
+    \ 000062 20....               jsr     .kbank `?L162`
+0027                  	printf("d - dump  memory\n");
+    \ 000065 a9....               lda     ##.word0 `_StringLiteral_FormatString_[100,32,45,32,100,117,109,112,32,32,109,101,109,111,114,121,10]`
+    \ 000068 85..                 sta     dp:.tiny _Dp
+    \ 00006a a9....               lda     ##.word2 `_StringLiteral_FormatString_[100,32,45,32,100,117,109,112,32,32,109,101,109,111,114,121,10]`
+    \ 00006d 20....               jsr     .kbank `?L162`
+0028                  	printf("l - disassemble memory a8\n");
+    \ 000070 a9....               lda     ##.word0 `_StringLiteral_FormatString_[108,32,45,32,100,105,115,97,115,115,101,109,98,108,101,32,109,101,109,111,114,121,32,97,56,10]`
+    \ 000073 85..                 sta     dp:.tiny _Dp
+    \ 000075 a9....               lda     ##.word2 `_StringLiteral_FormatString_[108,32,45,32,100,105,115,97,115,115,101,109,98,108,101,32,109,101,109,111,114,121,32,97,56,10]`
+    \ 000078 20....               jsr     .kbank `?L162`
+0029                  	printf("m - disassemble memory a16\n");
+    \ 00007b a9....               lda     ##.word0 `_StringLiteral_FormatString_[109,32,45,32,100,105,115,97,115,115,101,109,98,108,101,32,109,101,109,111,114,121,32,97,49,54,10]`
+    \ 00007e 85..                 sta     dp:.tiny _Dp
+    \ 000080 a9....               lda     ##.word2 `_StringLiteral_FormatString_[109,32,45,32,100,105,115,97,115,115,101,109,98,108,101,32,109,101,109,111,114,121,32,97,49,54,10]`
+    \ 000083 20....               jsr     .kbank `?L162`
+0030                  	printf("r - reset\n");	
+    \ 000086 a9....               lda     ##.word0 `_StringLiteral_FormatString_[114,32,45,32,114,101,115,101,116,10]`
+    \ 000089 85..                 sta     dp:.tiny _Dp
+    \ 00008b a9....               lda     ##.word2 `_StringLiteral_FormatString_[114,32,45,32,114,101,115,101,116,10]`
+    \ 00008e 20....               jsr     .kbank `?L162`
+0031                  	printf("? - this message\n");
+    \ 000091 a9....               lda     ##.word0 `_StringLiteral_FormatString_[63,32,45,32,116,104,105,115,32,109,101,115,115,97,103,101,10]`
+    \ 000094 85..                 sta     dp:.tiny _Dp
+    \ 000096 a9....               lda     ##.word2 `_StringLiteral_FormatString_[63,32,45,32,116,104,105,115,32,109,101,115,115,97,103,101,10]`
+    \ 000099 20....               jsr     .kbank `?L162`
+0032                  	printf("x - exit emulator\n");
+    \ 00009c a9....               lda     ##.word0 `_StringLiteral_FormatString_[120,32,45,32,101,120,105,116,32,101,109,117,108,97,116,111,114,10]`
+    \ 00009f 85..                 sta     dp:.tiny _Dp
+    \ 0000a1 a9....               lda     ##.word2 `_StringLiteral_FormatString_[120,32,45,32,101,120,105,116,32,101,109,117,108,97,116,111,114,10]`
+    \ 0000a4 20....               jsr     .kbank `?L162`
+0033                  }
+    \ 0000a7 60                   rts
+0034                  
+0035                  char charin() {
+    \ 000000                      .section compactcode,text
+    \ 000000                      .public charin
+    \ 000000          charin:
+0036                  	return *debug_char;
+    \ 000000 af......             lda     long:debug_char+2
+    \ 000004 85..                 sta     dp:.tiny (_Dp+2)
+    \ 000006 af......             lda     long:debug_char
+    \ 00000a 20....               jsr     .kbank `?L166`
+0037                  }
+    \ 00000d 60                   rts
+0038                  
+0039                  char getnibble() {
+    \ 000000                      .section compactcode,text
+    \ 000000                      .public getnibble
+    \ 000000 5a       getnibble:  phy
+    \ 000001 5a                   phy
+    \ 000002          `?L11`:
+0040                  	char c, b;
+0041                  	
+0042                  	for(;;) {
+0043                  		c = charin();
+    \ 000002 20....               jsr     .kbank charin
+    \ 000005 e220                 sep     #32
+    \ 000007 8304                 sta     4,s
+    \ 000009 c220                 rep     #32
+0044                  		if (c >= '0' && c <= '9') {
+    \ 00000b a304                 lda     4,s
+    \ 00000d e220                 sep     #32
+    \ 00000f c930                 cmp     #48
+    \ 000011 c220                 rep     #32
+    \ 000013 9017                 bcc     `?L16`
+    \ 000015 a93900               lda     ##57
+    \ 000018 e220                 sep     #32
+    \ 00001a c304                 cmp     4,s
+    \ 00001c c220                 rep     #32
+    \ 00001e 900c                 bcc     `?L16`
+0045                  			b = c - '0';
+    \ 000020 a304                 lda     4,s
+    \ 000022 38                   sec
+    \ 000023 e93000               sbc     ##48
+    \ 000026 e220                 sep     #32
+    \ 000028 8301                 sta     1,s
+0046                  			break;
+    \ 00002a 801f                 bra     `?L156`
+    \ 00002c          `?L16`:
+0047                  		}
+0048                  		if (c >= 'a' && c <= 'f') {
+    \ 00002c a304                 lda     4,s
+    \ 00002e e220                 sep     #32
+    \ 000030 c961                 cmp     #97
+    \ 000032 c220                 rep     #32
+    \ 000034 90cc                 bcc     `?L11`
+    \ 000036 a96600               lda     ##102
+    \ 000039 e220                 sep     #32
+    \ 00003b c304                 cmp     4,s
+    \ 00003d c220                 rep     #32
+    \ 00003f 90c1                 bcc     `?L11`
+0049                  			b = c - 'a' + 10;
+    \ 000041 a9a900               lda     ##169
+    \ 000044 18                   clc
+    \ 000045 6304                 adc     4,s
+    \ 000047 e220                 sep     #32
+    \ 000049 8301                 sta     1,s
+    \ 00004b          `?L156`:
+0050                  			break;
+    \ 00004b 8303                 sta     3,s
+    \ 00004d c220                 rep     #32
+0051                  		}
+0052                  	}
+0053                  	
+0054                  	printf("%c", c);
+    \ 00004f a304                 lda     4,s
+    \ 000051 29ff00               and     ##255
+    \ 000054 48                   pha
+    \ 000055 a9....               lda     ##.word0 `_StringLiteral_FormatString_%c`
+    \ 000058 85..                 sta     dp:.tiny _Dp
+    \ 00005a a9....               lda     ##.word2 `_StringLiteral_FormatString_%c`
+    \ 00005d 20....               jsr     .kbank `?L165`
+    \ 000060 8303                 sta     3,s
+0055                  	fflush(stdout);
+    \ 000062 68                   pla
+    \ 000063 20....               jsr     .kbank `?L163`
+0056                  	
+0057                  	return b;
+    \ 000066 a303                 lda     3,s
+0058                  
+0059                  }
+    \ 000068 7a                   ply
+    \ 000069 7a                   ply
+    \ 00006a 60                   rts
+0060                  
+0061                  char getbyte() {
+    \ 000000                      .section compactcode,text
+    \ 000000                      .public getbyte
+    \ 000000          getbyte:
+    \ 000000 d4..                 pei     dp:.tiny (_Dp+8)
+0062                  	char c;
+0063                  
+0064                  	c = getnibble() << 4;
+    \ 000002 20....               jsr     .kbank getnibble
+    \ 000005 0a                   asl     a
+    \ 000006 0a                   asl     a
+    \ 000007 0a                   asl     a
+    \ 000008 0a                   asl     a
+0065                  	c += getnibble();
+    \ 000009 85..                 sta     dp:.tiny (_Dp+8)
+    \ 00000b 20....               jsr     .kbank getnibble
+    \ 00000e 18                   clc
+    \ 00000f 65..                 adc     dp:.tiny (_Dp+8)
+0066                  	
+0067                  	return c;
+0068                  }
+    \ 000011 7a                   ply
+    \ 000012 84..                 sty     dp:.tiny (_Dp+8)
+    \ 000014 60                   rts
+0069                  
+0070                  void print_adr(char *p) {
+    \ 000000                      .section compactcode,text
+    \ 000000                      .public print_adr
+    \ 000000          print_adr:
+0071                  	unsigned long l = (unsigned long)p;
+    \ 000000 a5..                 lda     dp:.tiny (_Dp+2)
+    \ 000002 85..                 sta     dp:.tiny (_Dp+6)
+    \ 000004 a5..                 lda     dp:.tiny _Dp
+    \ 000006 85..                 sta     dp:.tiny (_Dp+4)
+0072                  	
+0073                      printf("%02x:%04x", (char)(l >> 16), (unsigned int)(l & 0xffff));
+    \ 000008 48                   pha
+    \ 000009 a5..                 lda     dp:.tiny (_Dp+6)
+    \ 00000b 48                   pha
+    \ 00000c a9....               lda     ##.word0 `_StringLiteral_FormatString_%02x:%04x`
+    \ 00000f 85..                 sta     dp:.tiny _Dp
+    \ 000011 a9....               lda     ##.word2 `_StringLiteral_FormatString_%02x:%04x`
+    \ 000014 20....               jsr     .kbank `?L165`
+    \ 000017 68                   pla
+    \ 000018 68                   pla
+0074                  }
+    \ 000019 60                   rts
+0075                  
+0076                  void print_prompt() {
+    \ 000000                      .section compactcode,text
+    \ 000000                      .public print_prompt
+    \ 000000          print_prompt:
+    \ 000000 5a                   phy
+0077                  	unsigned int stackptr = 0;
+0078                  	unsigned int direct = 0;
+0079                  	char db = 0;
+    \ 000001 e220                 sep     #32
+    \ 000003 a900                 lda     #0
+    \ 000005 8301                 sta     1,s
+0080                  	char flags = 0;
+    \ 000007 8302                 sta     2,s
+    \ 000009 c220                 rep     #32
+0081                  	char program_bank;
+0082                  
+0083                  #ifdef __WDC__
+0084                  	#asm
+0085                  	php
+0086                  	sep #$20
+0087                  	pla
+0088                  	sta %%flags
+0089                  	phb
+0090                  	pla
+0091                  	sta %%db
+0092                  	rep #$20
+0093                  	tsc
+0094                  	sta %%stackptr;
+0095                  	tdc
+0096                  	sta %%direct;
+0097                  	#endasm
+0098                  #endif
+0099                  #ifdef __CALYPSI__
+0100                  __asm (
+0101                   " php \n"
+    \ 00000b 08                   php
+    \ 00000c e220                 sep     #32
+    \ 00000e 68                   pla
+    \ 00000f 8302                 sta     2,s
+    \ 000011 8b                   phb
+    \ 000012 68                   pla
+    \ 000013 8301                 sta     1,s
+    \ 000015 c220                 rep     #32
+    \ 000017 ba                   tsx
+    \ 000018 0b                   phd
+    \ 000019 7a                   ply
+0102                   " sep #32 \n"
+0103                   " pla \n"
+0104                   " sta 2,s \n"
+0105                   " phb \n"
+0106                   " pla \n"
+0107                   " sta 1,s \n"
+0108                   " rep #32 \n"
+0109                   " tsx \n"
+0110                   " phd \n"
+0111                   " ply \n"
+0112                  );
+0113                  
+0114                  #endif
+0115                  
+0116                  	printf("S:%04x D:%04x DB:%02X F:%02X ", stackptr, direct, db, flags);
+    \ 00001a a302                 lda     2,s
+    \ 00001c 29ff00               and     ##255
+    \ 00001f 48                   pha
+    \ 000020 a303                 lda     3,s
+    \ 000022 29ff00               and     ##255
+    \ 000025 48                   pha
+    \ 000026 5a                   phy
+    \ 000027 da                   phx
+    \ 000028 a9....               lda     ##.word0 `_StringLiteral_FormatString_S:%04x D:%04x DB:%02X F:%02X `
+    \ 00002b 85..                 sta     dp:.tiny _Dp
+    \ 00002d a9....               lda     ##.word2 `_StringLiteral_FormatString_S:%04x D:%04x DB:%02X F:%02X `
+    \ 000030 20....               jsr     .kbank `?L165`
+0117                  	print_adr(ptr);	
+    \ 000033 68                   pla
+    \ 000034 68                   pla
+    \ 000035 68                   pla
+    \ 000036 68                   pla
+    \ 000037 20....               jsr     .kbank `?L164`
+    \ 00003a 20....               jsr     .kbank print_adr
+0118                  	printf(">");
+    \ 00003d a9....               lda     ##.word0 `_StringLiteral_FormatString_>`
+    \ 000040 85..                 sta     dp:.tiny _Dp
+    \ 000042 a9....               lda     ##.word2 `_StringLiteral_FormatString_>`
+    \ 000045 20....               jsr     .kbank `?L162`
+0119                  	fflush(stdout);
+    \ 000048 20....               jsr     .kbank `?L163`
+0120                  }
+    \ 00004b 7a                   ply
+    \ 00004c 60                   rts
+0121                  
+0122                  void dump_memory() {
+    \ 000000                      .section compactcode,text
+    \ 000000                      .public dump_memory
+    \ 000000          dump_memory:
+    \ 000000 5a                   phy
+    \ 000001 5a                   phy
+    \ 000002 5a                   phy
+0123                  	int i, j;
+0124                  	char c;
+0125                  	
+0126                  	printf("\n");
+    \ 000003 a9....               lda     ##.word0 `_StringLiteral_FormatString_[10]`
+    \ 000006 85..                 sta     dp:.tiny _Dp
+    \ 000008 a9....               lda     ##.word2 `_StringLiteral_FormatString_[10]`
+    \ 00000b 20....               jsr     .kbank `?L162`
+0127                  	printf("	00 01 02 03 04 05 06 07  08 09 0a 0b 0c 0d 0e 0f\n");
+    \ 00000e a9....               lda     ##.word0 `_StringLiteral_FormatString_[9,48,48,32,48,49,32,48,50,32,48,51,32,48,52,32,48,53,32,48,54,32,48,55,32,32,48,56,32,48,57,32,48,97,32,48,98,32,48,99,32,48,100,32,48,101,32,48,102,10]`
+    \ 000011 85..                 sta     dp:.tiny _Dp
+    \ 000013 a9....               lda     ##.word2 `_StringLiteral_FormatString_[9,48,48,32,48,49,32,48,50,32,48,51,32,48,52,32,48,53,32,48,54,32,48,55,32,32,48,56,32,48,57,32,48,97,32,48,98,32,48,99,32,48,100,32,48,101,32,48,102,10]`
+    \ 000016 20....               jsr     .kbank `?L162`
+0128                  	//printf("	------------------------------------------------\n");
+0129                  	
+0130                  	for(i = 0; i < 16; i++) {
+    \ 000019 a90000               lda     ##0
+    \ 00001c 8303     `?L160`:    sta     3,s
+    \ 00001e a303                 lda     3,s
+    \ 000020 38                   sec
+    \ 000021 e91000               sbc     ##16
+    \ 000024 5003                 bvc     `?L125`
+    \ 000026 490080               eor     ##-32768
+    \ 000029 3004     `?L125`:    bmi     `?L37`
+0131                  		print_adr(ptr);
+0132                  		for(j = 0; j < 16; j++) {
+0133                  			if (j == 8)
+0134                  				printf(" ");
+0135                  			printf(" %02X", ptr[j]);
+0136                  		}
+0137                  		
+0138                  		printf("  |");
+0139                  		for(j = 0; j < 16; j++) {
+0140                  			c = ptr[j];
+0141                  			if (c < 32 || c >126)
+0142                  				c = '.';
+0143                  			printf("%c", c);
+0144                  		}
+0145                  		printf("|\n");
+0146                  		ptr += 16;
+0147                  	}
+0148                  }
+    \ 00002b 7a                   ply
+    \ 00002c 7a                   ply
+    \ 00002d 7a                   ply
+    \ 00002e 60                   rts
+    \ 00002f          `?L37`:
+    \ 00002f 20....               jsr     .kbank `?L164`
+    \ 000032 20....               jsr     .kbank print_adr
+    \ 000035 a90000               lda     ##0
+    \ 000038 8305     `?L159`:    sta     5,s
+    \ 00003a a305                 lda     5,s
+    \ 00003c 38                   sec
+    \ 00003d e91000               sbc     ##16
+    \ 000040 5003                 bvc     `?L128`
+    \ 000042 490080               eor     ##-32768
+    \ 000045 1003     `?L128`:    bpl     `?L173`
+    \ 000047 4c....               jmp     .kbank `?L41`
+    \ 00004a          `?L173`:
+    \ 00004a a9....               lda     ##.word0 `_StringLiteral_FormatString_  |`
+    \ 00004d 85..                 sta     dp:.tiny _Dp
+    \ 00004f a9....               lda     ##.word2 `_StringLiteral_FormatString_  |`
+    \ 000052 20....               jsr     .kbank `?L162`
+    \ 000055 a90000               lda     ##0
+    \ 000058 8305     `?L158`:    sta     5,s
+    \ 00005a a305                 lda     5,s
+    \ 00005c 38                   sec
+    \ 00005d e91000               sbc     ##16
+    \ 000060 5003                 bvc     `?L131`
+    \ 000062 490080               eor     ##-32768
+    \ 000065 3028     `?L131`:    bmi     `?L48`
+    \ 000067 a9....               lda     ##.word0 `_StringLiteral_FormatString_[124,10]`
+    \ 00006a 85..                 sta     dp:.tiny _Dp
+    \ 00006c a9....               lda     ##.word2 `_StringLiteral_FormatString_[124,10]`
+    \ 00006f 20....               jsr     .kbank `?L162`
+    \ 000072 af......             lda     long:ptr+2
+    \ 000076 aa                   tax
+    \ 000077 af......             lda     long:ptr
+    \ 00007b 18                   clc
+    \ 00007c 691000               adc     ##16
+    \ 00007f 8f......             sta     long:ptr
+    \ 000083 8a                   txa
+    \ 000084 8f......             sta     long:ptr+2
+    \ 000088 a303                 lda     3,s
+    \ 00008a 1a                   inc     a
+    \ 00008b 8301                 sta     1,s
+    \ 00008d 808d                 bra     `?L160`
+    \ 00008f          `?L48`:
+    \ 00008f 20....               jsr     .kbank `?L164`
+    \ 000092 18                   clc
+    \ 000093 a5..                 lda     dp:.tiny _Dp
+    \ 000095 6305                 adc     5,s
+    \ 000097 85..                 sta     dp:.tiny _Dp
+    \ 000099 e220                 sep     #32
+    \ 00009b a7..                 lda     [.tiny _Dp]
+    \ 00009d 8301                 sta     1,s
+    \ 00009f c220                 rep     #32
+    \ 0000a1 a301                 lda     1,s
+    \ 0000a3 e220                 sep     #32
+    \ 0000a5 c920                 cmp     #32
+    \ 0000a7 c220                 rep     #32
+    \ 0000a9 9009                 bcc     `?L54`
+    \ 0000ab a97e00               lda     ##126
+    \ 0000ae e220                 sep     #32
+    \ 0000b0 c301                 cmp     1,s
+    \ 0000b2 b006                 bcs     `?L157`
+    \ 0000b4 e220     `?L54`:     sep     #32
+    \ 0000b6 a92e                 lda     #46
+    \ 0000b8 8301                 sta     1,s
+    \ 0000ba c220     `?L157`:    rep     #32
+    \ 0000bc a301                 lda     1,s
+    \ 0000be 29ff00               and     ##255
+    \ 0000c1 48                   pha
+    \ 0000c2 a9....               lda     ##.word0 `_StringLiteral_FormatString_%c`
+    \ 0000c5 85..                 sta     dp:.tiny _Dp
+    \ 0000c7 a9....               lda     ##.word2 `_StringLiteral_FormatString_%c`
+    \ 0000ca 20....               jsr     .kbank `?L165`
+    \ 0000cd 8303                 sta     3,s
+    \ 0000cf 68                   pla
+    \ 0000d0 a305                 lda     5,s
+    \ 0000d2 1a                   inc     a
+    \ 0000d3 8301                 sta     1,s
+    \ 0000d5 8081                 bra     `?L158`
+    \ 0000d7 a305     `?L41`:     lda     5,s
+    \ 0000d9 c90800               cmp     ##8
+    \ 0000dc d00b                 bne     `?L46`
+    \ 0000de a9....               lda     ##.word0 `_StringLiteral_FormatString_ `
+    \ 0000e1 85..                 sta     dp:.tiny _Dp
+    \ 0000e3 a9....               lda     ##.word2 `_StringLiteral_FormatString_ `
+    \ 0000e6 20....               jsr     .kbank `?L162`
+    \ 0000e9          `?L46`:
+    \ 0000e9 20....               jsr     .kbank `?L164`
+    \ 0000ec 18                   clc
+    \ 0000ed a5..                 lda     dp:.tiny _Dp
+    \ 0000ef 6305                 adc     5,s
+    \ 0000f1 85..                 sta     dp:.tiny _Dp
+    \ 0000f3 a7..                 lda     [.tiny _Dp]
+    \ 0000f5 29ff00               and     ##255
+    \ 0000f8 48                   pha
+    \ 0000f9 a9....               lda     ##.word0 `_StringLiteral_FormatString_ %02X`
+    \ 0000fc 85..                 sta     dp:.tiny _Dp
+    \ 0000fe a9....               lda     ##.word2 `_StringLiteral_FormatString_ %02X`
+    \ 000101 20....               jsr     .kbank `?L165`
+    \ 000104 8303                 sta     3,s
+    \ 000106 68                   pla
+    \ 000107 a305                 lda     5,s
+    \ 000109 1a                   inc     a
+    \ 00010a 8301                 sta     1,s
+    \ 00010c 4c....               jmp     .kbank `?L159`
+0149                  
+0150                  void set_bank() {
+    \ 000000                      .section compactcode,text
+    \ 000000                      .public set_bank
+    \ 000000          set_bank:
+    \ 000000 d4..                 pei     dp:.tiny (_Dp+8)
+    \ 000002 d4..                 pei     dp:.tiny (_Dp+10)
+0151                  	char *p;
+0152                  	
+0153                  	printf("bank:");
+    \ 000004 a9....               lda     ##.word0 `_StringLiteral_FormatString_bank:`
+    \ 000007 85..                 sta     dp:.tiny _Dp
+    \ 000009 a9....               lda     ##.word2 `_StringLiteral_FormatString_bank:`
+    \ 00000c 20....               jsr     .kbank `?L162`
+0154                  	fflush(stdout);
+    \ 00000f 20....               jsr     .kbank `?L163`
+0155                  	
+0156                  	p = (char *)&ptr;
+    \ 000012 a9....               lda     ##.word0 ptr
+    \ 000015 85..                 sta     dp:.tiny (_Dp+8)
+    \ 000017 a9....               lda     ##.word2 ptr
+    \ 00001a 85..                 sta     dp:.tiny (_Dp+10)
+0157                  	
+0158                  	p[2] = getbyte();
+    \ 00001c 20....               jsr     .kbank getbyte
+    \ 00001f e220                 sep     #32
+    \ 000021 a00200               ldy     ##2
+    \ 000024 97..                 sta     [.tiny (_Dp+8)],y
+    \ 000026 c220                 rep     #32
+0159                  }
+    \ 000028 4c....               jmp     .kbank `?L60`
+0160                  
+0161                  void set_addr() {
+    \ 000000                      .section compactcode,text
+    \ 000000                      .public set_addr
+    \ 000000          set_addr:
+    \ 000000 d4..                 pei     dp:.tiny (_Dp+8)
+    \ 000002 d4..                 pei     dp:.tiny (_Dp+10)
+0162                  	char *p;
+0163                  	
+0164                  	printf("addr:");
+    \ 000004 a9....               lda     ##.word0 `_StringLiteral_FormatString_addr:`
+    \ 000007 85..                 sta     dp:.tiny _Dp
+    \ 000009 a9....               lda     ##.word2 `_StringLiteral_FormatString_addr:`
+    \ 00000c 20....               jsr     .kbank `?L162`
+0165                  	fflush(stdout);
+    \ 00000f 20....               jsr     .kbank `?L163`
+0166                  	
+0167                  	p = (char *)&ptr;
+    \ 000012 a9....               lda     ##.word0 ptr
+    \ 000015 85..                 sta     dp:.tiny (_Dp+8)
+    \ 000017 a9....               lda     ##.word2 ptr
+    \ 00001a 85..                 sta     dp:.tiny (_Dp+10)
+0168                  	p[1] = getbyte();
+    \ 00001c 20....               jsr     .kbank getbyte
+    \ 00001f e220                 sep     #32
+    \ 000021 a00100               ldy     ##1
+    \ 000024 97..                 sta     [.tiny (_Dp+8)],y
+    \ 000026 c220                 rep     #32
+0169                  	p[0] = getbyte();
+    \ 000028 20....               jsr     .kbank getbyte
+    \ 00002b e220                 sep     #32
+    \ 00002d 87..                 sta     [.tiny (_Dp+8)]
+    \ 00002f c220                 rep     #32
+    \ 000031          `?L60`:
+0170                  }
+    \ 000031 7a                   ply
+    \ 000032 84..                 sty     dp:.tiny (_Dp+10)
+    \ 000034 7a                   ply
+    \ 000035 84..                 sty     dp:.tiny (_Dp+8)
+    \ 000037 60                   rts
+0171                  
+0172                  void do_function(char c) {
+    \ 000000                      .section compactcode,text
+    \ 000000                      .public do_function
+    \ 000000          do_function:
+    \ 000000 5a                   phy
+    \ 000001 5a                   phy
+    \ 000002 e220                 sep     #32
+    \ 000004 8303                 sta     3,s
+    \ 000006 c220                 rep     #32
+0173                  	char b;
+0174                  	
+0175                  	if (isalpha(c))
+    \ 000008 a303                 lda     3,s
+    \ 00000a 29ff00               and     ##255
+    \ 00000d 20....               jsr     .kbank isalpha
+    \ 000010 1a                   inc     a
+    \ 000011 3a                   dec     a
+    \ 000012 f014                 beq     `?L65`
+0176                  		printf("%c ", c);
+    \ 000014 a303                 lda     3,s
+    \ 000016 29ff00               and     ##255
+    \ 000019 48                   pha
+    \ 00001a a9....               lda     ##.word0 `_StringLiteral_FormatString_%c `
+    \ 00001d 85..                 sta     dp:.tiny _Dp
+    \ 00001f a9....               lda     ##.word2 `_StringLiteral_FormatString_%c `
+    \ 000022 20....               jsr     .kbank `?L165`
+    \ 000025 8303                 sta     3,s
+    \ 000027 68                   pla
+    \ 000028          `?L65`:
+0177                  	
+0178                  	switch (c) {
+    \ 000028 a9....               lda     ##.word0 `?L99`
+    \ 00002b 85..                 sta     dp:.tiny _Dp
+    \ 00002d a9....               lda     ##.word2 `?L99`
+    \ 000030 85..                 sta     dp:.tiny (_Dp+2)
+    \ 000032 a303                 lda     3,s
+    \ 000034 29ff00               and     ##255
+    \ 000037 20....               jsr     .kbank _ValueSwitch16
+    \ 00003a          `?L70`:
+0179                  	case 'a':
+0180                  		set_addr();
+0181                  		break;
+0182                  	case 'b':
+0183                  		set_bank();
+0184                  		break;
+0185                  	case 'c':
+0186                  		break;
+0187                  	case 'd':
+0188                  		dump_memory();
+0189                  		break;
+0190                  	case 'l':
+0191                  		break;
+0192                  	case 'm':
+0193                  		break;
+0194                  	case 'r':
+0195                  		b = *debug_reset;
+0196                  		break;
+0197                  	case '?':
+0198                  		print_welcome();
+0199                  		break;
+0200                  	case 'x':
+0201                  		b = *debug_hex;
+    \ 00003a af......             lda     long:debug_hex+2
+    \ 00003e 85..                 sta     dp:.tiny (_Dp+2)
+    \ 000040 af......             lda     long:debug_hex
+0202                  		break;
+    \ 000044 800a                 bra     `?L161`
+    \ 000046          `?L72`:
+    \ 000046 af......             lda     long:debug_reset+2
+    \ 00004a 85..                 sta     dp:.tiny (_Dp+2)
+    \ 00004c af......             lda     long:debug_reset
+    \ 000050          `?L161`:
+    \ 000050 20....               jsr     .kbank `?L166`
+    \ 000053 8012                 bra     `?L67`
+    \ 000055          `?L75`:
+    \ 000055 20....               jsr     .kbank dump_memory
+    \ 000058 800d                 bra     `?L67`
+    \ 00005a          `?L77`:
+    \ 00005a 20....               jsr     .kbank set_bank
+    \ 00005d 8008                 bra     `?L67`
+    \ 00005f          `?L78`:
+    \ 00005f 20....               jsr     .kbank set_addr
+    \ 000062 8003                 bra     `?L67`
+    \ 000064          `?L71`:
+    \ 000064 20....               jsr     .kbank print_welcome
+    \ 000067          `?L67`:
+0203                  	default:	
+0204                  		break;
+0205                  	}
+0206                  	
+0207                  	printf("\n");
+    \ 000067 a9....               lda     ##.word0 `_StringLiteral_FormatString_[10]`
+    \ 00006a 85..                 sta     dp:.tiny _Dp
+    \ 00006c a9....               lda     ##.word2 `_StringLiteral_FormatString_[10]`
+    \ 00006f 20....               jsr     .kbank `?L162`
+0208                  }
+    \ 000072 7a                   ply
+    \ 000073 7a                   ply
+    \ 000074 60                   rts
+0209                  
+0210                  void monitor() {
+    \ 000000                      .section compactcode,text
+    \ 000000                      .public monitor
+    \ 000000          monitor:
+0211                      print_welcome();
+    \ 000000 20....               jsr     .kbank print_welcome
+    \ 000003          `?L92`:
+0212                  	
+0213                      for(;;) {
+0214                          print_prompt();
+    \ 000003 20....               jsr     .kbank print_prompt
+0215                          do_function(charin());
+    \ 000006 20....               jsr     .kbank charin
+    \ 000009 20....               jsr     .kbank do_function
+    \ 00000c 80f5                 bra     `?L92`
+0216                      }
+0217                  }
+    \ 000000                      .section compactcode,text
+    \ 000000          `?L162`:
+    \ 000000 85..                 sta     dp:.tiny (_Dp+2)
+    \ 000002 4c....               jmp     .kbank printf
+    \ 000000                      .section compactcode,text
+    \ 000000          `?L163`:
+    \ 000000 af......             lda     long:__global_streams+6
+    \ 000004 85..                 sta     dp:.tiny (_Dp+2)
+    \ 000006 af......             lda     long:__global_streams+4
+    \ 00000a 85..                 sta     dp:.tiny _Dp
+    \ 00000c 4c....               jmp     .kbank fflush
+    \ 000000                      .section compactcode,text
+    \ 000000          `?L164`:
+    \ 000000 af......             lda     long:ptr+2
+    \ 000004 85..                 sta     dp:.tiny (_Dp+2)
+    \ 000006 af......             lda     long:ptr
+    \ 00000a 85..                 sta     dp:.tiny _Dp
+    \ 00000c 60                   rts
+    \ 000000                      .section compactcode,text
+    \ 000000          `?L165`:
+    \ 000000 85..                 sta     dp:.tiny (_Dp+2)
+    \ 000002 4c....               jmp     .kbank printf
+    \ 000000                      .section compactcode,text
+    \ 000000          `?L166`:
+    \ 000000 85..                 sta     dp:.tiny _Dp
+    \ 000002 e220                 sep     #32
+    \ 000004 a7..                 lda     [.tiny _Dp]
+    \ 000006 c220                 rep     #32
+    \ 000008 60                   rts
+    \ 000000                      .section far,data
+    \ 000000                      .public debug_char
+    \ 000000 00d80000 debug_char: .long   0xd800
+    \ 000000                      .section far,data
+    \ 000000                      .public debug_hex
+    \ 000000 01d80000 debug_hex:  .long   0xd801
+    \ 000000                      .section far,data
+    \ 000000                      .public debug_reset
+    \ 000000          debug_reset:
+    \ 000000 02d80000             .long   0xd802
+    \ 000000                      .section far,data
+    \ 000000                      .public ansi_white
+    \ 000000 ........ ansi_white: .long   `_StringLiteral_[27,91,48,109]`
+    \ 000000                      .section far,data
+    \ 000000                      .public ansi_red
+    \ 000000 ........ ansi_red:   .long   `_StringLiteral_[27,91,51,49,109]`
+    \ 000000                      .section far,data
+    \ 000000                      .public ansi_yellow
+    \ 000000          ansi_yellow:
+    \ 000000 ........             .long   `_StringLiteral_[27,91,51,51,59,49,109]`
+    \ 000000                      .section switch,rodata
+    \ 000000 0800     `?L99`:     .word   8
+    \ 000002 ....                 .word   .word0 (`?L67`-1)
+    \ 000004 3f00                 .word   63
+    \ 000006 ....                 .word   .word0 (`?L71`-1)
+    \ 000008 6100                 .word   97
+    \ 00000a ....                 .word   .word0 (`?L78`-1)
+    \ 00000c 6200                 .word   98
+    \ 00000e ....                 .word   .word0 (`?L77`-1)
+    \ 000010 6300                 .word   99
+    \ 000012 ....                 .word   .word0 (`?L67`-1)
+    \ 000014 6400                 .word   100
+    \ 000016 ....                 .word   .word0 (`?L75`-1)
+    \ 000018 6c00                 .word   108
+    \ 00001a ....                 .word   .word0 (`?L67`-1)
+    \ 00001c 6d00                 .word   109
+    \ 00001e ....                 .word   .word0 (`?L67`-1)
+    \ 000020 7200                 .word   114
+    \ 000022 ....                 .word   .word0 (`?L72`-1)
+    \ 000024 7800                 .word   120
+    \ 000026 ....                 .word   .word0 (`?L70`-1)
+    \ 000000                      .section cfar,rodata
+    \ 000000                      .pubweak `_StringLiteral_FormatString_[9,48,48,32,48,49,32,48,50,32,48,51,32,48,52,32,48,53,32,48,54,32,48,55,32,32,48,56,32,48,57,32,48,97,32,48,98,32,48,99,32,48,100,32,48,101,32,48,102,10]`
+    \ 000000          `_StringLiteral_FormatString_[9,48,48,32,48,49,32,48,50,32,48,51,32,48,52,32,48,53,32,48,54,32,48,55,32,32,48,56,32,48,57,32,48,97,32,48,98,32,48,99,32,48,100,32,48,101,32,48,102,10]`:
+    \ 000000 09303020             .byte   9,48,48,32,48,49,32,48,50,32,48,51,32,48,52,32,48,53,32,48,54,32,48,55,32,32,48,56,32,48,57,32,48,97,32,48,98,32,48,99,32,48,100,32,48,101,32,48,102,10,0
+    \ 000004 30312030
+    \ 000008 32203033
+    \ 00000c 20303420
+    \ 000010 30352030
+    \ 000014 36203037
+    \ 000018 20203038
+    \ 00001c 20303920
+    \ 000020 30612030
+    \ 000024 62203063
+    \ 000028 20306420
+    \ 00002c 30652030
+    \ 000030 660a00
+    \ 000000                      .section cfar,rodata
+    \ 000000                      .pubweak `_StringLiteral_FormatString_[10]`
+    \ 000000          `_StringLiteral_FormatString_[10]`:
+    \ 000000 0a00                 .byte   10,0
+    \ 000000                      .section cfar,rodata
+    \ 000000                      .pubweak `_StringLiteral_[27,91,48,109]`
+    \ 000000          `_StringLiteral_[27,91,48,109]`:
+    \ 000000 1b5b306d             .byte   27,91,48,109,0
+    \ 000004 00
+    \ 000000                      .section cfar,rodata
+    \ 000000                      .pubweak `_StringLiteral_[27,91,50,74,27,91,72]`
+    \ 000000          `_StringLiteral_[27,91,50,74,27,91,72]`:
+    \ 000000 1b5b324a             .byte   27,91,50,74,27,91,72,0
+    \ 000004 1b5b4800
+    \ 000000                      .section cfar,rodata
+    \ 000000                      .pubweak `_StringLiteral_[27,91,51,49,109]`
+    \ 000000          `_StringLiteral_[27,91,51,49,109]`:
+    \ 000000 1b5b3331             .byte   27,91,51,49,109,0
+    \ 000004 6d00
+    \ 000000                      .section cfar,rodata
+    \ 000000                      .pubweak `_StringLiteral_[27,91,51,51,59,49,109]`
+    \ 000000          `_StringLiteral_[27,91,51,51,59,49,109]`:
+    \ 000000 1b5b3333             .byte   27,91,51,51,59,49,109,0
+    \ 000004 3b316d00
+    \ 000000                      .section cfar,rodata
+    \ 000000                      .pubweak `_StringLiteral_FormatString_ `
+    \ 000000          `_StringLiteral_FormatString_ `:
+    \ 000000 2000                 .byte   32,0
+    \ 000000                      .section cfar,rodata
+    \ 000000                      .pubweak `_StringLiteral_FormatString_  |`
+    \ 000000          `_StringLiteral_FormatString_  |`:
+    \ 000000 20207c00             .byte   32,32,124,0
+    \ 000000                      .section cfar,rodata
+    \ 000000                      .pubweak `_StringLiteral_FormatString_ %02X`
+    \ 000000          `_StringLiteral_FormatString_ %02X`:
+    \ 000000 20253032             .byte   32,37,48,50,88,0
+    \ 000004 5800
+    \ 000000                      .section cfar,rodata
+    \ 000000                      .pubweak `_StringLiteral_FormatString_%02x:%04x`
+    \ 000000          `_StringLiteral_FormatString_%02x:%04x`:
+    \ 000000 25303278             .byte   37,48,50,120,58,37,48,52,120,0
+    \ 000004 3a253034
+    \ 000008 7800
+    \ 000000                      .section cfar,rodata
+    \ 000000                      .pubweak `_StringLiteral_FormatString_%c`
+    \ 000000          `_StringLiteral_FormatString_%c`:
+    \ 000000 256300               .byte   37,99,0
+    \ 000000                      .section cfar,rodata
+    \ 000000                      .pubweak `_StringLiteral_FormatString_%c `
+    \ 000000          `_StringLiteral_FormatString_%c `:
+    \ 000000 25632000             .byte   37,99,32,0
+    \ 000000                      .section cfar,rodata
+    \ 000000                      .pubweak `_StringLiteral_FormatString_[37,115,10]`
+    \ 000000          `_StringLiteral_FormatString_[37,115,10]`:
+    \ 000000 25730a00             .byte   37,115,10,0
+    \ 000000                      .section cfar,rodata
+    \ 000000                      .pubweak `_StringLiteral_FormatString_[37,115,10,10]`
+    \ 000000          `_StringLiteral_FormatString_[37,115,10,10]`:
+    \ 000000 25730a0a             .byte   37,115,10,10,0
+    \ 000004 00
+    \ 000000                      .section cfar,rodata
+    \ 000000                      .pubweak `_StringLiteral_FormatString_[42,32,54,53,56,49,54,32,77,111,110,105,116,111,114,32,40,99,41,32,98,121,32,82,46,32,83,99,104,111,108,122,32,32,32,32,32,42,10]`
+    \ 000000          `_StringLiteral_FormatString_[42,32,54,53,56,49,54,32,77,111,110,105,116,111,114,32,40,99,41,32,98,121,32,82,46,32,83,99,104,111,108,122,32,32,32,32,32,42,10]`:
+    \ 000000 2a203635             .byte   42,32,54,53,56,49,54,32,77,111,110,105,116,111,114,32,40,99,41,32,98,121,32,82,46,32,83,99,104,111,108,122,32,32,32,32,32,42,10,0
+    \ 000004 38313620
+    \ 000008 4d6f6e69
+    \ 00000c 746f7220
+    \ 000010 28632920
+    \ 000014 62792052
+    \ 000018 2e205363
+    \ 00001c 686f6c7a
+    \ 000020 20202020
+    \ 000024 202a0a00
+    \ 000000                      .section cfar,rodata
+    \ 000000                      .pubweak `_StringLiteral_**************************************`
+    \ 000000          `_StringLiteral_**************************************`:
+    \ 000000 2a2a2a2a             .byte   42,42,42,42,42,42,42,42,42,42,42,42,42,42,42,42,42,42,42,42,42,42,42,42,42,42,42,42,42,42,42,42,42,42,42,42,42,42,0
+    \ 000004 2a2a2a2a
+    \ 000008 2a2a2a2a
+    \ 00000c 2a2a2a2a
+    \ 000010 2a2a2a2a
+    \ 000014 2a2a2a2a
+    \ 000018 2a2a2a2a
+    \ 00001c 2a2a2a2a
+    \ 000020 2a2a2a2a
+    \ 000024 2a2a00
+    \ 000000                      .section cfar,rodata
+    \ 000000                      .pubweak `_StringLiteral_FormatString_>`
+    \ 000000          `_StringLiteral_FormatString_>`:
+    \ 000000 3e00                 .byte   62,0
+    \ 000000                      .section cfar,rodata
+    \ 000000                      .pubweak `_StringLiteral_FormatString_[63,32,45,32,116,104,105,115,32,109,101,115,115,97,103,101,10]`
+    \ 000000          `_StringLiteral_FormatString_[63,32,45,32,116,104,105,115,32,109,101,115,115,97,103,101,10]`:
+    \ 000000 3f202d20             .byte   63,32,45,32,116,104,105,115,32,109,101,115,115,97,103,101,10,0
+    \ 000004 74686973
+    \ 000008 206d6573
+    \ 00000c 73616765
+    \ 000010 0a00
+    \ 000000                      .section cfar,rodata
+    \ 000000                      .pubweak `_StringLiteral_FormatString_S:%04x D:%04x DB:%02X F:%02X `
+    \ 000000          `_StringLiteral_FormatString_S:%04x D:%04x DB:%02X F:%02X `:
+    \ 000000 533a2530             .byte   83,58,37,48,52,120,32,68,58,37,48,52,120,32,68,66,58,37,48,50,88,32,70,58,37,48,50,88,32,0
+    \ 000004 34782044
+    \ 000008 3a253034
+    \ 00000c 78204442
+    \ 000010 3a253032
+    \ 000014 5820463a
+    \ 000018 25303258
+    \ 00001c 2000
+    \ 000000                      .section cfar,rodata
+    \ 000000                      .pubweak `_StringLiteral_FormatString_[97,32,45,32,115,101,116,32,97,100,100,114,101,115,115,10]`
+    \ 000000          `_StringLiteral_FormatString_[97,32,45,32,115,101,116,32,97,100,100,114,101,115,115,10]`:
+    \ 000000 61202d20             .byte   97,32,45,32,115,101,116,32,97,100,100,114,101,115,115,10,0
+    \ 000004 73657420
+    \ 000008 61646472
+    \ 00000c 6573730a
+    \ 000010 00
+    \ 000000                      .section cfar,rodata
+    \ 000000                      .pubweak `_StringLiteral_FormatString_addr:`
+    \ 000000          `_StringLiteral_FormatString_addr:`:
+    \ 000000 61646472             .byte   97,100,100,114,58,0
+    \ 000004 3a00
+    \ 000000                      .section cfar,rodata
+    \ 000000                      .pubweak `_StringLiteral_FormatString_[98,32,45,32,115,101,116,32,98,97,110,107,10]`
+    \ 000000          `_StringLiteral_FormatString_[98,32,45,32,115,101,116,32,98,97,110,107,10]`:
+    \ 000000 62202d20             .byte   98,32,45,32,115,101,116,32,98,97,110,107,10,0
+    \ 000004 73657420
+    \ 000008 62616e6b
+    \ 00000c 0a00
+    \ 000000                      .section cfar,rodata
+    \ 000000                      .pubweak `_StringLiteral_FormatString_bank:`
+    \ 000000          `_StringLiteral_FormatString_bank:`:
+    \ 000000 62616e6b             .byte   98,97,110,107,58,0
+    \ 000004 3a00
+    \ 000000                      .section cfar,rodata
+    \ 000000                      .pubweak `_StringLiteral_FormatString_[99,32,45,32,99,104,97,110,103,101,32,109,101,109,111,114,121,10]`
+    \ 000000          `_StringLiteral_FormatString_[99,32,45,32,99,104,97,110,103,101,32,109,101,109,111,114,121,10]`:
+    \ 000000 63202d20             .byte   99,32,45,32,99,104,97,110,103,101,32,109,101,109,111,114,121,10,0
+    \ 000004 6368616e
+    \ 000008 6765206d
+    \ 00000c 656d6f72
+    \ 000010 790a00
+    \ 000000                      .section cfar,rodata
+    \ 000000                      .pubweak `_StringLiteral_FormatString_[100,32,45,32,100,117,109,112,32,32,109,101,109,111,114,121,10]`
+    \ 000000          `_StringLiteral_FormatString_[100,32,45,32,100,117,109,112,32,32,109,101,109,111,114,121,10]`:
+    \ 000000 64202d20             .byte   100,32,45,32,100,117,109,112,32,32,109,101,109,111,114,121,10,0
+    \ 000004 64756d70
+    \ 000008 20206d65
+    \ 00000c 6d6f7279
+    \ 000010 0a00
+    \ 000000                      .section cfar,rodata
+    \ 000000                      .pubweak `_StringLiteral_FormatString_[108,32,45,32,100,105,115,97,115,115,101,109,98,108,101,32,109,101,109,111,114,121,32,97,56,10]`
+    \ 000000          `_StringLiteral_FormatString_[108,32,45,32,100,105,115,97,115,115,101,109,98,108,101,32,109,101,109,111,114,121,32,97,56,10]`:
+    \ 000000 6c202d20             .byte   108,32,45,32,100,105,115,97,115,115,101,109,98,108,101,32,109,101,109,111,114,121,32,97,56,10,0
+    \ 000004 64697361
+    \ 000008 7373656d
+    \ 00000c 626c6520
+    \ 000010 6d656d6f
+    \ 000014 72792061
+    \ 000018 380a00
+    \ 000000                      .section cfar,rodata
+    \ 000000                      .pubweak `_StringLiteral_FormatString_[109,32,45,32,100,105,115,97,115,115,101,109,98,108,101,32,109,101,109,111,114,121,32,97,49,54,10]`
+    \ 000000          `_StringLiteral_FormatString_[109,32,45,32,100,105,115,97,115,115,101,109,98,108,101,32,109,101,109,111,114,121,32,97,49,54,10]`:
+    \ 000000 6d202d20             .byte   109,32,45,32,100,105,115,97,115,115,101,109,98,108,101,32,109,101,109,111,114,121,32,97,49,54,10,0
+    \ 000004 64697361
+    \ 000008 7373656d
+    \ 00000c 626c6520
+    \ 000010 6d656d6f
+    \ 000014 72792061
+    \ 000018 31360a00
+    \ 000000                      .section cfar,rodata
+    \ 000000                      .pubweak `_StringLiteral_FormatString_[114,32,45,32,114,101,115,101,116,10]`
+    \ 000000          `_StringLiteral_FormatString_[114,32,45,32,114,101,115,101,116,10]`:
+    \ 000000 72202d20             .byte   114,32,45,32,114,101,115,101,116,10,0
+    \ 000004 72657365
+    \ 000008 740a00
+    \ 000000                      .section cfar,rodata
+    \ 000000                      .pubweak `_StringLiteral_FormatString_[120,32,45,32,101,120,105,116,32,101,109,117,108,97,116,111,114,10]`
+    \ 000000          `_StringLiteral_FormatString_[120,32,45,32,101,120,105,116,32,101,109,117,108,97,116,111,114,10]`:
+    \ 000000 78202d20             .byte   120,32,45,32,101,120,105,116,32,101,109,117,108,97,116,111,114,10,0
+    \ 000004 65786974
+    \ 000008 20656d75
+    \ 00000c 6c61746f
+    \ 000010 720a00
+    \ 000000                      .section cfar,rodata
+    \ 000000                      .pubweak `_StringLiteral_FormatString_[124,10]`
+    \ 000000          `_StringLiteral_FormatString_[124,10]`:
+    \ 000000 7c0a00               .byte   124,10,0
+
+##########################
+#                        #
+# Memory sizes (decimal) #
+#                        #
+##########################
+
+Executable              (Text): 961 bytes
+Zero initialized __far   (BSS):   4 bytes
+Data             __far        :  32 bytes
+Constant         __far        : 455 bytes

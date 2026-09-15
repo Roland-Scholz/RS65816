@@ -2699,7 +2699,7 @@ NODE | ras_PIN_BUF_ | 5033 | ? | 0 | 0 | cpumodule_COPY_0_COPY_0 | NULL | NULL |
 FB_INSTANCE | FOOBAR1_ | cpumodule_COPY_0_COPY_0 | 0 | 0 | 0
 FBPIN | 1 | cas0_OBUF | 1 | Pfbk_Created_cas0 | 1 | cas0 | 1 | 2 | 49152
 FBPIN | 2 | refcnt<6> | 1 | a15_13_2_IBUF | 1 | NULL | 0 | 3 | 49152
-FBPIN | 3 | refcnt<3> | 1 | clk_IBUF | 1 | NULL | 0 | 5 | 57344
+FBPIN | 3 | refcnt<3> | 1 | clk_IBUF | 0 | NULL | 0 | 5 | 57344
 FBPIN | 4 | cas1_OBUF | 1 | Pfbk_Created_cas1 | 1 | cas1 | 1 | 4 | 49152
 FBPIN | 5 | refcnt<5> | 1 | bank_6_IBUF | 1 | NULL | 0 | 6 | 57344
 FBPIN | 6 | EXP0_ | 1 | a10_IBUF | 1 | NULL | 0 | 8 | 49152

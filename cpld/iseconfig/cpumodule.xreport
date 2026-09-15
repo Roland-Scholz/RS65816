@@ -1,11 +1,11 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <report-views version="2.0" >
  <header>
-  <DateModified>2026-09-07T08:05:49</DateModified>
+  <DateModified>2026-09-10T16:45:49</DateModified>
   <ModuleName>cpumodule</ModuleName>
   <SummaryTimeStamp>2026-09-05T12:40:51</SummaryTimeStamp>
-  <SavedFilePath>C:/github/RS65816/RS65816/iseconfig/cpumodule.xreport</SavedFilePath>
-  <ImplementationReportsDirectory>C:/github/RS65816/RS65816\</ImplementationReportsDirectory>
+  <SavedFilePath>C:/github/RS65816/cpld/iseconfig/cpumodule.xreport</SavedFilePath>
+  <ImplementationReportsDirectory>C:/github/RS65816/cpld\</ImplementationReportsDirectory>
   <DateInitialized>2026-08-31T12:49:21</DateInitialized>
   <EnableMessageFiltering>false</EnableMessageFiltering>
  </header>

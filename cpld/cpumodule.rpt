@@ -1,7 +1,7 @@
  
 cpldfit:  version P.20131013                        Xilinx Inc.
                                   Fitter Report
-Design Name: cpumodule                           Date:  9- 5-2026, 12:40PM
+Design Name: cpumodule                           Date:  9-10-2026,  4:53PM
 Device Used: XC9536-15-PC44
 Fitting Status: Successful
 
@@ -98,7 +98,7 @@ iocnt<0>            4     19    FB2_18  STD  RESET
 Signal              Loc     Pin  Pin     Pin     
 Name                        No.  Type    Use     
 a15_13<2>           FB1_2   3    I/O     I
-clk                 FB1_3   5~   GCK/I/O GCK
+clk                 FB1_3   5    GCK/I/O GCK
 bank<6>             FB1_5   6    GCK/I/O I
 a10                 FB1_6   8    I/O     I
 bank<7>             FB1_7   7    GCK/I/O I

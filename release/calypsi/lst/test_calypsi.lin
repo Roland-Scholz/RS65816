@@ -1,0 +1,1375 @@
+###############################################################################
+#                                                                             #
+# Calypsi linker for 65816                                       version 5.18 #
+#                                                       13/Sep/2026  15:01:04 #
+# Command line: --raw-multiple-memories --output-format raw --rtattr          #
+#               printf=medium --list-file                                     #
+#               C:\github\RS65816\release\calypsi\lst\test_calypsi.lin        #
+#               --output-file                                                 #
+#               C:\github\RS65816\release\calypsi\test_calypsi.elf main.o     #
+#               monitor.o clib-cc-ld.a                                        #
+#               C:\github\RS65816\src\test_calypsi.scm                        #
+#                                                                             #
+###############################################################################
+
+####################
+#                  #
+# Memories summary #
+#                  #
+####################
+
+Name       Range         Size    Used    Checksum  Largest unallocated
+----------------------------------------------------------------------
+DirectPage 000000-0000ff 000100    7.8%  none      0000ec
+STACK      000100-0001ff 000100  100.0%  none      none
+COMPACT    000200-007fff 007e00   24.4%  none      005f4c
+farVAR     00f000-00ffdf 000fe0    4.6%  none      000f27
+VECTORS    00ffe0-00ffff 000020    6.3%  none      00001c
+HEAPMEM    010000-02ffff 020000  100.0%  none      none
+
+
+####################
+#                  #
+# Sections summary #
+#                  #
+####################
+
+Name            Range          Size    Memory     Fragments
+-----------------------------------------------------------
+registers       000000-000013  000014  DirectPage 1
+stack           000100-0001ff  000100  STACK      1
+compactcode     000200-0011ef  000ff0  COMPACT    4
+cfar            0011f0-0012ef  000100  COMPACT    1
+compactcode     0012f0-001b8f  0008a0  COMPACT    24
+cfar            001b90-001bc2  000033  COMPACT    1
+compactcode     001bc3-001c9c  0000da  COMPACT    8
+cfar            001c9d-001cc4  000028  COMPACT    1
+switch          001cc5-001cec  000028  COMPACT    1
+cfar            001ced-001d13  000027  COMPACT    1
+compactcode     001d14-001d52  00003f  COMPACT    2
+cfar            001d53-001d70  00001e  COMPACT    1
+compactcode     001d71-001d8d  00001d  COMPACT    1
+cfar            001d8e-001dc4  000037  COMPACT    2
+compactcode     001dc5-001df8  000034  COMPACT    2
+code            001df9-001e11  000019  COMPACT    1
+switch          001e12-001e41  000030  COMPACT    2
+compactcode     001e42-001e6c  00002b  COMPACT    2
+data_init_table 001e6d-001e80  000014  COMPACT    1
+compactcode     001e81-001e93  000013  COMPACT    1
+cfar            001e94-001eb9  000026  COMPACT    2
+ifar            001eba-001ec9  000010  COMPACT    4
+cfar            001eca-001efe  000035  COMPACT    3
+compactcode     001eff-001f1c  00001e  COMPACT    2
+cfar            001f1d-001f2a  00000e  COMPACT    1
+compactcode     001f2b-001f80  000056  COMPACT    7
+cfar            001f81-001f8b  00000b  COMPACT    1
+compactcode     001f8c-001f9f  000014  COMPACT    2
+cfar            001fa0-001fa9  00000a  COMPACT    1
+compactcode     001faa-002014  00006b  COMPACT    12
+cfar            002015-00201c  000008  COMPACT    1
+compactcode     00201d-00204f  000033  COMPACT    7
+cfar            002050-002056  000007  COMPACT    1
+compactcode     002057-00205d  000007  COMPACT    1
+cfar            00205e-00206f  000012  COMPACT    3
+compactcode     002070-002079  00000a  COMPACT    2
+cfar            00207a-00207e  000005  COMPACT    1
+compactcode     00207f-002095  000017  COMPACT    5
+cfar            002096-0020a1  00000c  COMPACT    3
+compactcode     0020a2-0020a5  000004  COMPACT    1
+cfar            0020a6-0020b1  00000c  COMPACT    5
+compactcode     0020b2-0020b3  000002  COMPACT    2
+zfar            00f000-00f0a8  0000a9  farVAR     9
+far             00f0a9-00f0b8  000010  farVAR     4
+reset           00fffc-00fffd  000002  VECTORS    1
+heap            010000-02ffff  020000  HEAPMEM    1
+
+
+###################
+#                 #
+# Placement rules #
+#                 #
+###################
+
+Name       Address range  Key
+----------------------------------------------------------------------
+COMPACT    000200-007fff  Plain
+  > compactcode
+  > cfar
+  > ifar
+  > switch
+  > data_init_table
+  > code
+DirectPage 000000-0000ff  Plain
+  > registers
+HEAPMEM    010000-02ffff  
+  > heap
+STACK      000100-0001ff  Plain
+  > stack
+VECTORS    00ffe0-00ffff  Plain
+  > (reset 00fffc)
+farVAR     00f000-00ffdf  Plain
+  > far
+  > zfar
+
+Name  Size   Align
+-------------------
+stack 000100 no
+heap  020000 no
+
+Name             Memory     Offset
+-----------------------------------
+_DirectPageStart DirectPage 000000
+_NearBaseAddress COMPACT    000000
+
+################
+#              #
+# Object files #
+#              #
+################
+
+Unit Filename            Archive
+-------------------------------------
+  0  main.o              -
+          >  compactcode 000046
+  1  monitor.o           -
+          >  cfar        000184
+          >  compactcode 0003c1
+          >  far         000010
+          >  ifar        000010
+          >  switch      000028
+          >  zfar        000004
+  3  cstartup.o          clib-cc-ld.a
+          # picked based on cstartup=normal (built-in default)
+          >  code        000019
+          >  compactcode 000027
+          >  reset       000002
+  4  exit.o              clib-cc-ld.a
+          # picked based on exit=stdexit (built-in default)
+          >  compactcode 00003d
+  6  controlFlow.o       clib-cc-ld.a
+          >  compactcode 000005
+  7  pseudoRegisters.o   clib-cc-ld.a
+          >  registers 000014
+  8  atexit.o            clib-cc-ld.a
+          >  zfar 000042
+  9  exitC99.o           clib-cc-ld.a
+          >  compactcode 000004
+ 10  defaultExit.o       clib-cc-ld.a
+          >  compactcode 000001
+ 12  streamlist.o        clib-cc-ld.a
+          >  compactcode 0000a1
+          >  zfar        000061
+ 13  lib_fflush.o        clib-cc-ld.a
+          >  compactcode 000036
+ 14  errno.o             clib-cc-ld.a
+          >  zfar 000002
+ 15  lib_libfflush.o     clib-cc-ld.a
+          >  compactcode 000179
+ 17  lib_libflushall.o   clib-cc-ld.a
+          >  compactcode 000075
+ 18  lib_printf.o        clib-cc-ld.a
+          >  compactcode 00002e
+ 19  lib_vfprintf.o      clib-cc-ld.a
+          >  compactcode 000056
+ 22  __vsprintf_medium.o clib-cc-ld.a
+          # picked based on printf=medium (specified on the command line)
+          >  cfar        00000f
+          >  compactcode 000d49
+          >  switch      000030
+ 24  lib_stdoutstream.o  clib-cc-ld.a
+          >  compactcode 0000af
+ 25  lib_fputc.o         clib-cc-ld.a
+          >  compactcode 00007d
+ 26  lib_libfwrite.o     clib-cc-ld.a
+          >  compactcode 0001c4
+ 27  lib_rdflush.o       clib-cc-ld.a
+          >  compactcode 0000a9
+ 28  lib_fseek.o         clib-cc-ld.a
+          >  compactcode 00007f
+ 30  lib_wrflush.o       clib-cc-ld.a
+          >  compactcode 000020
+ 32  lib_fclose.o        clib-cc-ld.a
+          >  compactcode 00002d
+ 33  lib_libnoflush.o    clib-cc-ld.a
+          >  compactcode 000004
+ 34  vswitch16.o         clib-cc-ld.a
+          >  compactcode 00007b
+ 35  ctype.o             clib-cc-ld.a
+          >  cfar        000100
+          >  compactcode 000020
+ 36  initialize.o        clib-cc-ld.a
+          # picked based on initialize=normal (built-in default)
+          >  compactcode 000080
+ 38  lib_memset.o        clib-cc-ld.a
+          >  compactcode 00003d
+ 39  lib_memcpy.o        clib-cc-ld.a
+          >  compactcode 00003e
+ 40  lib_strnlen.o       clib-cc-ld.a
+          >  compactcode 00001f
+ 42  integer.o           clib-cc-ld.a
+          >  compactcode 000067
+
+###################
+#                 #
+# Cross reference #
+#                 #
+###################
+
+_Dp in section 'registers'  placed at address 000000-000013 of size 000014
+(pseudoRegisters.o (from clib-cc-ld.a) unit 7 section index 2)
+    Defines:
+        _Vfp = 000010
+        _Dp = 000000
+    Referenced from:
+        _Stub_write (main.o unit 0 section index 7)
+        print_welcome (monitor.o unit 1 section index 11)
+        charin (monitor.o unit 1 section index 12)
+        getnibble (monitor.o unit 1 section index 13)
+        getbyte (monitor.o unit 1 section index 14)
+        print_adr (monitor.o unit 1 section index 15)
+        print_prompt (monitor.o unit 1 section index 16)
+        dump_memory (monitor.o unit 1 section index 17)
+        ... 56 more
+
+Section 'stack'  placed at address 000100-0001ff of size 000100
+(linker generated)
+
+vsprintf_internal in section 'compactcode'
+ placed at address 000200-000df5 of size 000bf6
+(__vsprintf_medium.o (from clib-cc-ld.a) unit 22 section index 5)
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-ld.a) unit 7 section index 2)
+        _JmpInd in (controlFlow.o (from clib-cc-ld.a) unit 6 section index 2)
+        `_StringLiteral_*float*` in (__vsprintf_medium.o (from clib-cc-ld.a) unit 22 section index 3)
+        _ValueSwitch16 in (vswitch16.o (from clib-cc-ld.a) unit 34 section index 2)
+        __lib_vsprintf in (__vsprintf_medium.o (from clib-cc-ld.a) unit 22 section index 6)
+        __ultoa_invert in (__vsprintf_medium.o (from clib-cc-ld.a) unit 22 section index 4)
+        strnlen in (lib_strnlen.o (from clib-cc-ld.a) unit 40 section index 2)
+
+__lib_fwrite in section 'compactcode'
+ placed at address 000df6-000f90 of size 00019b
+(lib_libfwrite.o (from clib-cc-ld.a) unit 26 section index 2)
+    Defines:
+        __lib_fwrite = 000df6
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-ld.a) unit 7 section index 2)
+        _Stub_write in (main.o unit 0 section index 7)
+        __lib_fflush in (lib_libfflush.o (from clib-cc-ld.a) unit 15 section index 2)
+        __lib_rdflush in (lib_rdflush.o (from clib-cc-ld.a) unit 27 section index 2)
+    Referenced from:
+        fputc (lib_fputc.o (from clib-cc-ld.a) unit 25 section index 2)
+
+__lib_fflush in section 'compactcode'
+ placed at address 000f91-0010e0 of size 000150
+(lib_libfflush.o (from clib-cc-ld.a) unit 15 section index 2)
+    Defines:
+        __lib_fflush = 000f91
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-ld.a) unit 7 section index 2)
+        _Stub_write in (main.o unit 0 section index 7)
+        errno in (errno.o (from clib-cc-ld.a) unit 14 section index 2)
+    Referenced from:
+        fflush (lib_fflush.o (from clib-cc-ld.a) unit 13 section index 2)
+        (lib_stdoutstream.o (from clib-cc-ld.a) unit 24 section index 3)
+        fputc (lib_fputc.o (from clib-cc-ld.a) unit 25 section index 2)
+        __lib_fwrite (lib_libfwrite.o (from clib-cc-ld.a) unit 26 section index 2)
+        __lib_wrflush (lib_wrflush.o (from clib-cc-ld.a) unit 30 section index 2)
+
+dump_memory in section 'compactcode'
+ placed at address 0010e1-0011ef of size 00010f
+(monitor.o unit 1 section index 17)
+    Defines:
+        dump_memory = 0010e1
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-ld.a) unit 7 section index 2)
+        `_StringLiteral_FormatString_ ` in (monitor.o unit 1 section index 34)
+        `_StringLiteral_FormatString_  |` in (monitor.o unit 1 section index 35)
+        `_StringLiteral_FormatString_ %02X` in (monitor.o unit 1 section index 36)
+        `_StringLiteral_FormatString_%c` in (monitor.o unit 1 section index 38)
+        `_StringLiteral_FormatString_[10]` in (monitor.o unit 1 section index 29)
+        `_StringLiteral_FormatString_[124,10]` in (monitor.o unit 1 section index 57)
+        `_StringLiteral_FormatString_[9,48,48,32,48,49,32,48,50,32,48,51,32,48,52,32,48,53,32,48,54,32,48,55,32,32,48,56,32,48,57,32,48,97,32,48,98,32,48,99,32,48,100,32,48,101,32,48,102,10]` in (monitor.o unit 1 section index 28)
+        print_adr in (monitor.o unit 1 section index 15)
+    Referenced from:
+        do_function (monitor.o unit 1 section index 20)
+
+__ctype_ in section 'cfar'  placed at address 0011f0-0012ef of size 000100
+(ctype.o (from clib-cc-ld.a) unit 35 section index 18)
+    Defines:
+        __ctype_ = 0011f0
+    Referenced from:
+        (ctype.o (from clib-cc-ld.a) unit 35 section index 16)
+
+__ultoa_invert in section 'compactcode'
+ placed at address 0012f0-00139e of size 0000af
+(__vsprintf_medium.o (from clib-cc-ld.a) unit 22 section index 4)
+    Defines:
+        __ultoa_invert = 0012f0
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-ld.a) unit 7 section index 2)
+    Referenced from:
+        (__vsprintf_medium.o (from clib-cc-ld.a) unit 22 section index 5)
+
+__lib_rdflush in section 'compactcode'
+ placed at address 00139f-001447 of size 0000a9
+(lib_rdflush.o (from clib-cc-ld.a) unit 27 section index 2)
+    Defines:
+        __lib_rdflush = 00139f
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-ld.a) unit 7 section index 2)
+        errno in (errno.o (from clib-cc-ld.a) unit 14 section index 2)
+        fseek in (lib_fseek.o (from clib-cc-ld.a) unit 28 section index 2)
+    Referenced from:
+        __lib_fwrite (lib_libfwrite.o (from clib-cc-ld.a) unit 26 section index 2)
+        fseek (lib_fseek.o (from clib-cc-ld.a) unit 28 section index 2)
+
+print_welcome in section 'compactcode'
+ placed at address 001448-0014ef of size 0000a8
+(monitor.o unit 1 section index 11)
+    Defines:
+        print_welcome = 001448
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-ld.a) unit 7 section index 2)
+        `_StringLiteral_FormatString_[100,32,45,32,100,117,109,112,32,32,109,101,109,111,114,121,10]` in (monitor.o unit 1 section index 52)
+        `_StringLiteral_FormatString_[108,32,45,32,100,105,115,97,115,115,101,109,98,108,101,32,109,101,109,111,114,121,32,97,56,10]` in (monitor.o unit 1 section index 53)
+        `_StringLiteral_FormatString_[109,32,45,32,100,105,115,97,115,115,101,109,98,108,101,32,109,101,109,111,114,121,32,97,49,54,10]` in (monitor.o unit 1 section index 54)
+        `_StringLiteral_FormatString_[10]` in (monitor.o unit 1 section index 29)
+        `_StringLiteral_FormatString_[114,32,45,32,114,101,115,101,116,10]` in (monitor.o unit 1 section index 55)
+        `_StringLiteral_FormatString_[120,32,45,32,101,120,105,116,32,101,109,117,108,97,116,111,114,10]` in (monitor.o unit 1 section index 56)
+        `_StringLiteral_FormatString_[37,115,10,10]` in (monitor.o unit 1 section index 41)
+        ... 7 more
+    Referenced from:
+        do_function (monitor.o unit 1 section index 20)
+        monitor (monitor.o unit 1 section index 21)
+
+fputc in section 'compactcode'  placed at address 0014f0-00156c of size 00007d
+(lib_fputc.o (from clib-cc-ld.a) unit 25 section index 2)
+    Defines:
+        fputc = 0014f0
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-ld.a) unit 7 section index 2)
+        __lib_fflush in (lib_libfflush.o (from clib-cc-ld.a) unit 15 section index 2)
+        __lib_fwrite in (lib_libfwrite.o (from clib-cc-ld.a) unit 26 section index 2)
+    Referenced from:
+        (lib_stdoutstream.o (from clib-cc-ld.a) unit 24 section index 2)
+
+_ValueSwitch16 in section 'compactcode'
+ placed at address 00156d-0015e7 of size 00007b
+(vswitch16.o (from clib-cc-ld.a) unit 34 section index 2)
+    Defines:
+        _ValueSwitch16 = 00156d
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-ld.a) unit 7 section index 2)
+    Referenced from:
+        do_function (monitor.o unit 1 section index 20)
+        (__vsprintf_medium.o (from clib-cc-ld.a) unit 22 section index 5)
+
+__initialize_sections in section 'compactcode'
+ placed at address 0015e8-00165e of size 000077
+(initialize.o (from clib-cc-ld.a) unit 36 section index 2)
+    Defines:
+        __initialize_sections = 0015e8
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-ld.a) unit 7 section index 2)
+        memcpy in (lib_memcpy.o (from clib-cc-ld.a) unit 39 section index 2)
+        memset in (lib_memset.o (from clib-cc-ld.a) unit 38 section index 2)
+    Referenced from:
+        __data_initialization_needed (cstartup.o (from clib-cc-ld.a) unit 3 section index 5)
+
+fseek in section 'compactcode'  placed at address 00165f-0016d4 of size 000076
+(lib_fseek.o (from clib-cc-ld.a) unit 28 section index 2)
+    Defines:
+        fseek = 00165f
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-ld.a) unit 7 section index 2)
+        _Stub_lseek in (main.o unit 0 section index 3)
+        __lib_rdflush in (lib_rdflush.o (from clib-cc-ld.a) unit 27 section index 2)
+        __lib_wrflush in (lib_wrflush.o (from clib-cc-ld.a) unit 30 section index 2)
+        errno in (errno.o (from clib-cc-ld.a) unit 14 section index 2)
+    Referenced from:
+        __lib_rdflush (lib_rdflush.o (from clib-cc-ld.a) unit 27 section index 2)
+
+__lib_flushall in section 'compactcode'
+ placed at address 0016d5-001749 of size 000075
+(lib_libflushall.o (from clib-cc-ld.a) unit 17 section index 2)
+    Defines:
+        __lib_flushall = 0016d5
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-ld.a) unit 7 section index 2)
+        fflush in (lib_fflush.o (from clib-cc-ld.a) unit 13 section index 2)
+    Referenced from:
+        fflush (lib_fflush.o (from clib-cc-ld.a) unit 13 section index 2)
+
+do_function in section 'compactcode'
+ placed at address 00174a-0017be of size 000075
+(monitor.o unit 1 section index 20)
+    Defines:
+        do_function = 00174a
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-ld.a) unit 7 section index 2)
+        `_StringLiteral_FormatString_%c ` in (monitor.o unit 1 section index 39)
+        `_StringLiteral_FormatString_[10]` in (monitor.o unit 1 section index 29)
+        _ValueSwitch16 in (vswitch16.o (from clib-cc-ld.a) unit 34 section index 2)
+        debug_hex in (monitor.o unit 1 section index 5)
+        debug_reset in (monitor.o unit 1 section index 6)
+        dump_memory in (monitor.o unit 1 section index 17)
+        isalpha in (ctype.o (from clib-cc-ld.a) unit 35 section index 3)
+        print_welcome in (monitor.o unit 1 section index 11)
+        set_addr in (monitor.o unit 1 section index 19)
+        set_bank in (monitor.o unit 1 section index 18)
+    Referenced from:
+        monitor (monitor.o unit 1 section index 21)
+        (monitor.o unit 1 section index 27)
+
+getnibble in section 'compactcode'
+ placed at address 0017bf-001829 of size 00006b
+(monitor.o unit 1 section index 13)
+    Defines:
+        getnibble = 0017bf
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-ld.a) unit 7 section index 2)
+        `_StringLiteral_FormatString_%c` in (monitor.o unit 1 section index 38)
+        charin in (monitor.o unit 1 section index 12)
+    Referenced from:
+        getbyte (monitor.o unit 1 section index 14)
+
+_DivModSign16 in section 'compactcode'
+ placed at address 00182a-001831 of size 000008
+(integer.o (from clib-cc-ld.a) unit 42 section index 9)
+    Defines:
+        _DivModSign16 = 00182a
+
+_UDivMod32 in section 'compactcode'
+ placed at address 001832-00187a of size 000049
+(integer.o (from clib-cc-ld.a) unit 42 section index 11)
+    Defines:
+        _UDivMod32 = 001832
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-ld.a) unit 7 section index 2)
+    Referenced from:
+        (__vsprintf_medium.o (from clib-cc-ld.a) unit 22 section index 20)
+
+_DivModSign32 in section 'compactcode'
+ placed at address 00187b-001890 of size 000016
+(integer.o (from clib-cc-ld.a) unit 42 section index 14)
+    Defines:
+        _DivModSign32 = 00187b
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-ld.a) unit 7 section index 2)
+
+`?L3` in section 'compactcode'  placed at address 001891-0018ea of size 00005a
+(lib_stdoutstream.o (from clib-cc-ld.a) unit 24 section index 2)
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-ld.a) unit 7 section index 2)
+        errno in (errno.o (from clib-cc-ld.a) unit 14 section index 2)
+        fputc in (lib_fputc.o (from clib-cc-ld.a) unit 25 section index 2)
+
+`?L5` in section 'compactcode'  placed at address 0018eb-001941 of size 000057
+(streamlist.o (from clib-cc-ld.a) unit 12 section index 7)
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-ld.a) unit 7 section index 2)
+        _Stub_close in (main.o unit 0 section index 2)
+        __close in (lib_fclose.o (from clib-cc-ld.a) unit 32 section index 2)
+        __global_streams in (streamlist.o (from clib-cc-ld.a) unit 12 section index 6)
+        fflush in (lib_fflush.o (from clib-cc-ld.a) unit 13 section index 2)
+
+vfprintf in section 'compactcode'
+ placed at address 001942-001997 of size 000056
+(lib_vfprintf.o (from clib-cc-ld.a) unit 19 section index 2)
+    Defines:
+        vfprintf = 001942
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-ld.a) unit 7 section index 2)
+        __lib_stdoutstream in (lib_stdoutstream.o (from clib-cc-ld.a) unit 24 section index 4)
+        __lib_vsprintf in (__vsprintf_medium.o (from clib-cc-ld.a) unit 22 section index 6)
+    Referenced from:
+        printf (lib_printf.o (from clib-cc-ld.a) unit 18 section index 2)
+
+print_prompt in section 'compactcode'
+ placed at address 001998-0019e4 of size 00004d
+(monitor.o unit 1 section index 16)
+    Defines:
+        print_prompt = 001998
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-ld.a) unit 7 section index 2)
+        `_StringLiteral_FormatString_>` in (monitor.o unit 1 section index 44)
+        `_StringLiteral_FormatString_S:%04x D:%04x DB:%02X F:%02X ` in (monitor.o unit 1 section index 46)
+        print_adr in (monitor.o unit 1 section index 15)
+    Referenced from:
+        monitor (monitor.o unit 1 section index 21)
+
+__initialize_global_streams in section 'compactcode'
+ placed at address 0019e5-001a2e of size 00004a
+(streamlist.o (from clib-cc-ld.a) unit 12 section index 8)
+    Defines:
+        __initialize_global_streams = 0019e5
+    References:
+        _ExitCloseStreams in (streamlist.o (from clib-cc-ld.a) unit 12 section index 2)
+        __global_streams in (streamlist.o (from clib-cc-ld.a) unit 12 section index 6)
+    Referenced from:
+        __call_initialize_global_streams (cstartup.o (from clib-cc-ld.a) unit 3 section index 6)
+
+memcpy in section 'compactcode'  placed at address 001a2f-001a6c of size 00003e
+(lib_memcpy.o (from clib-cc-ld.a) unit 39 section index 2)
+    Defines:
+        memcpy = 001a2f
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-ld.a) unit 7 section index 2)
+    Referenced from:
+        __initialize_sections (initialize.o (from clib-cc-ld.a) unit 36 section index 2)
+
+exit in section 'compactcode'  placed at address 001a6d-001aa9 of size 00003d
+(exit.o (from clib-cc-ld.a) unit 4 section index 2)
+    Defines:
+        exit = 001a6d
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-ld.a) unit 7 section index 2)
+        _Exit in (exitC99.o (from clib-cc-ld.a) unit 9 section index 2)
+        _ExitCloseStreams in (streamlist.o (from clib-cc-ld.a) unit 12 section index 2)
+        _JmpInd in (controlFlow.o (from clib-cc-ld.a) unit 6 section index 2)
+        __atexit in (atexit.o (from clib-cc-ld.a) unit 8 section index 2)
+        __atexit_index in (atexit.o (from clib-cc-ld.a) unit 8 section index 3)
+    Referenced from:
+        (cstartup.o (from clib-cc-ld.a) unit 3 section index 8)
+
+memset in section 'compactcode'  placed at address 001aaa-001ae6 of size 00003d
+(lib_memset.o (from clib-cc-ld.a) unit 38 section index 2)
+    Defines:
+        memset = 001aaa
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-ld.a) unit 7 section index 2)
+    Referenced from:
+        __initialize_sections (initialize.o (from clib-cc-ld.a) unit 36 section index 2)
+
+__lib_stdoutstream in section 'compactcode'
+ placed at address 001ae7-001b21 of size 00003b
+(lib_stdoutstream.o (from clib-cc-ld.a) unit 24 section index 4)
+    Defines:
+        __lib_stdoutstream = 001ae7
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-ld.a) unit 7 section index 2)
+        __lib_noflush in (lib_libnoflush.o (from clib-cc-ld.a) unit 33 section index 2)
+    Referenced from:
+        vfprintf (lib_vfprintf.o (from clib-cc-ld.a) unit 19 section index 2)
+
+set_addr in section 'compactcode'
+ placed at address 001b22-001b59 of size 000038
+(monitor.o unit 1 section index 19)
+    Defines:
+        set_addr = 001b22
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-ld.a) unit 7 section index 2)
+        `_StringLiteral_FormatString_addr:` in (monitor.o unit 1 section index 48)
+        getbyte in (monitor.o unit 1 section index 14)
+    Referenced from:
+        do_function (monitor.o unit 1 section index 20)
+
+fflush in section 'compactcode'  placed at address 001b5a-001b8f of size 000036
+(lib_fflush.o (from clib-cc-ld.a) unit 13 section index 2)
+    Defines:
+        fflush = 001b5a
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-ld.a) unit 7 section index 2)
+        __global_streams in (streamlist.o (from clib-cc-ld.a) unit 12 section index 6)
+        __lib_fflush in (lib_libfflush.o (from clib-cc-ld.a) unit 15 section index 2)
+        __lib_flushall in (lib_libflushall.o (from clib-cc-ld.a) unit 17 section index 2)
+        errno in (errno.o (from clib-cc-ld.a) unit 14 section index 2)
+    Referenced from:
+        (monitor.o unit 1 section index 23)
+        (streamlist.o (from clib-cc-ld.a) unit 12 section index 7)
+        __lib_flushall (lib_libflushall.o (from clib-cc-ld.a) unit 17 section index 2)
+
+`_StringLiteral_FormatString_[9,48,48,32,48,49,32,48,50,32,48,51,32,48,52,32,48,53,32,48,54,32,48,55,32,32,48,56,32,48,57,32,48,97,32,48,98,32,48,99,32,48,100,32,48,101,32,48,102,10]` in section 'cfar'
+ placed at address 001b90-001bc2 of size 000033
+(monitor.o unit 1 section index 28)
+    Defines:
+        `_StringLiteral_FormatString_[9,48,48,32,48,49,32,48,50,32,48,51,32,48,52,32,48,53,32,48,54,32,48,55,32,32,48,56,32,48,57,32,48,97,32,48,98,32,48,99,32,48,100,32,48,101,32,48,102,10]` = 001b90
+    Referenced from:
+        dump_memory (monitor.o unit 1 section index 17)
+
+printf in section 'compactcode'  placed at address 001bc3-001bf0 of size 00002e
+(lib_printf.o (from clib-cc-ld.a) unit 18 section index 2)
+    Defines:
+        printf = 001bc3
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-ld.a) unit 7 section index 2)
+        __global_streams in (streamlist.o (from clib-cc-ld.a) unit 12 section index 6)
+        vfprintf in (lib_vfprintf.o (from clib-cc-ld.a) unit 19 section index 2)
+    Referenced from:
+        (monitor.o unit 1 section index 22)
+        (monitor.o unit 1 section index 25)
+
+_Stub_write in section 'compactcode'
+ placed at address 001bf1-001c1e of size 00002e (main.o unit 0 section index 7)
+    Defines:
+        _Stub_write = 001bf1
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-ld.a) unit 7 section index 2)
+        _write in (main.o unit 0 section index 4)
+    Referenced from:
+        __lib_fflush (lib_libfflush.o (from clib-cc-ld.a) unit 15 section index 2)
+        __lib_fwrite (lib_libfwrite.o (from clib-cc-ld.a) unit 26 section index 2)
+
+__close in section 'compactcode'
+ placed at address 001c1f-001c4b of size 00002d
+(lib_fclose.o (from clib-cc-ld.a) unit 32 section index 2)
+    Defines:
+        __close = 001c1f
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-ld.a) unit 7 section index 2)
+        _Stub_close in (main.o unit 0 section index 2)
+        errno in (errno.o (from clib-cc-ld.a) unit 14 section index 2)
+    Referenced from:
+        (streamlist.o (from clib-cc-ld.a) unit 12 section index 7)
+
+set_bank in section 'compactcode'
+ placed at address 001c4c-001c76 of size 00002b
+(monitor.o unit 1 section index 18)
+    Defines:
+        set_bank = 001c4c
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-ld.a) unit 7 section index 2)
+        `_StringLiteral_FormatString_bank:` in (monitor.o unit 1 section index 50)
+        getbyte in (monitor.o unit 1 section index 14)
+    Referenced from:
+        do_function (monitor.o unit 1 section index 20)
+
+_Trampoline_program_start in section 'compactcode'
+ placed at address 001c77-001c79 of size 000003
+(cstartup.o (from clib-cc-ld.a) unit 3 section index 4)
+    References:
+        __low_level_init in (cstartup.o (from clib-cc-ld.a) unit 3 section index 9)
+
+__data_initialization_needed in section 'compactcode'
+ placed at address 001c7a-001c90 of size 000017
+(cstartup.o (from clib-cc-ld.a) unit 3 section index 5)
+    Defines:
+        __data_initialization_needed = 001c7a
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-ld.a) unit 7 section index 2)
+        .sectionEnd(data_init_table)
+        .sectionStart(data_init_table)
+        __initialize_sections in (initialize.o (from clib-cc-ld.a) unit 36 section index 2)
+
+__call_initialize_global_streams in section 'compactcode'
+ placed at address 001c91-001c93 of size 000003
+(cstartup.o (from clib-cc-ld.a) unit 3 section index 6)
+    Defines:
+        __call_initialize_global_streams = 001c91
+    References:
+        __initialize_global_streams in (streamlist.o (from clib-cc-ld.a) unit 12 section index 8)
+
+Section 'compactcode'  placed at address 001c94-001c9c of size 000009
+(cstartup.o (from clib-cc-ld.a) unit 3 section index 8)
+    References:
+        exit in (exit.o (from clib-cc-ld.a) unit 4 section index 2)
+        main in (main.o unit 0 section index 8)
+
+`_StringLiteral_FormatString_[42,32,54,53,56,49,54,32,77,111,110,105,116,111,114,32,40,99,41,32,98,121,32,82,46,32,83,99,104,111,108,122,32,32,32,32,32,42,10]` in section 'cfar'
+ placed at address 001c9d-001cc4 of size 000028
+(monitor.o unit 1 section index 42)
+    Defines:
+        `_StringLiteral_FormatString_[42,32,54,53,56,49,54,32,77,111,110,105,116,111,114,32,40,99,41,32,98,121,32,82,46,32,83,99,104,111,108,122,32,32,32,32,32,42,10]` = 001c9d
+    Referenced from:
+        print_welcome (monitor.o unit 1 section index 11)
+
+`?L99` in section 'switch'  placed at address 001cc5-001cec of size 000028
+(monitor.o unit 1 section index 27)
+    References:
+        do_function in (monitor.o unit 1 section index 20)
+
+`_StringLiteral_**************************************` in section 'cfar'
+ placed at address 001ced-001d13 of size 000027
+(monitor.o unit 1 section index 43)
+    Defines:
+        `_StringLiteral_**************************************` = 001ced
+    Referenced from:
+        stars (monitor.o unit 1 section index 3)
+
+__lib_wrflush in section 'compactcode'
+ placed at address 001d14-001d33 of size 000020
+(lib_wrflush.o (from clib-cc-ld.a) unit 30 section index 2)
+    Defines:
+        __lib_wrflush = 001d14
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-ld.a) unit 7 section index 2)
+        __lib_fflush in (lib_libfflush.o (from clib-cc-ld.a) unit 15 section index 2)
+    Referenced from:
+        fseek (lib_fseek.o (from clib-cc-ld.a) unit 28 section index 2)
+
+strnlen in section 'compactcode'
+ placed at address 001d34-001d52 of size 00001f
+(lib_strnlen.o (from clib-cc-ld.a) unit 40 section index 2)
+    Defines:
+        strnlen = 001d34
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-ld.a) unit 7 section index 2)
+    Referenced from:
+        (__vsprintf_medium.o (from clib-cc-ld.a) unit 22 section index 5)
+
+`_StringLiteral_FormatString_S:%04x D:%04x DB:%02X F:%02X ` in section 'cfar'
+ placed at address 001d53-001d70 of size 00001e
+(monitor.o unit 1 section index 46)
+    Defines:
+        `_StringLiteral_FormatString_S:%04x D:%04x DB:%02X F:%02X ` = 001d53
+    Referenced from:
+        print_prompt (monitor.o unit 1 section index 16)
+
+__lib_vsprintf in section 'compactcode'
+ placed at address 001d71-001d8d of size 00001d
+(__vsprintf_medium.o (from clib-cc-ld.a) unit 22 section index 6)
+    Defines:
+        __lib_vsprintf = 001d71
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-ld.a) unit 7 section index 2)
+    Referenced from:
+        vfprintf (lib_vfprintf.o (from clib-cc-ld.a) unit 19 section index 2)
+        (__vsprintf_medium.o (from clib-cc-ld.a) unit 22 section index 5)
+
+`_StringLiteral_FormatString_[109,32,45,32,100,105,115,97,115,115,101,109,98,108,101,32,109,101,109,111,114,121,32,97,49,54,10]` in section 'cfar'
+ placed at address 001d8e-001da9 of size 00001c
+(monitor.o unit 1 section index 54)
+    Defines:
+        `_StringLiteral_FormatString_[109,32,45,32,100,105,115,97,115,115,101,109,98,108,101,32,109,101,109,111,114,121,32,97,49,54,10]` = 001d8e
+    Referenced from:
+        print_welcome (monitor.o unit 1 section index 11)
+
+`_StringLiteral_FormatString_[108,32,45,32,100,105,115,97,115,115,101,109,98,108,101,32,109,101,109,111,114,121,32,97,56,10]` in section 'cfar'
+ placed at address 001daa-001dc4 of size 00001b
+(monitor.o unit 1 section index 53)
+    Defines:
+        `_StringLiteral_FormatString_[108,32,45,32,100,105,115,97,115,115,101,109,98,108,101,32,109,101,109,111,114,121,32,97,56,10]` = 001daa
+    Referenced from:
+        print_welcome (monitor.o unit 1 section index 11)
+
+stdoutstream_flush in section 'compactcode'
+ placed at address 001dc5-001dde of size 00001a
+(lib_stdoutstream.o (from clib-cc-ld.a) unit 24 section index 3)
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-ld.a) unit 7 section index 2)
+        __lib_fflush in (lib_libfflush.o (from clib-cc-ld.a) unit 15 section index 2)
+
+print_adr in section 'compactcode'
+ placed at address 001ddf-001df8 of size 00001a
+(monitor.o unit 1 section index 15)
+    Defines:
+        print_adr = 001ddf
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-ld.a) unit 7 section index 2)
+        `_StringLiteral_FormatString_%02x:%04x` in (monitor.o unit 1 section index 37)
+    Referenced from:
+        print_prompt (monitor.o unit 1 section index 16)
+        dump_memory (monitor.o unit 1 section index 17)
+
+__program_start in section 'code'
+ placed at address 001df9-001e11 of size 000019
+(cstartup.o (from clib-cc-ld.a) unit 3 section index 2)
+    Defines:
+        __program_start = 001df9
+    References:
+        _DirectPageStart
+        _NearBaseAddress
+        .sectionEnd(stack)
+        _Vfp in (pseudoRegisters.o (from clib-cc-ld.a) unit 7 section index 2)
+    Referenced from:
+        __program_root_section (cstartup.o (from clib-cc-ld.a) unit 3 section index 3)
+
+`?L287` in section 'switch'  placed at address 001e12-001e29 of size 000018
+(__vsprintf_medium.o (from clib-cc-ld.a) unit 22 section index 23)
+
+`?L270` in section 'switch'  placed at address 001e2a-001e41 of size 000018
+(__vsprintf_medium.o (from clib-cc-ld.a) unit 22 section index 22)
+
+`?L39` in section 'compactcode'  placed at address 001e42-001e57 of size 000016
+(lib_libfflush.o (from clib-cc-ld.a) unit 15 section index 3)
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-ld.a) unit 7 section index 2)
+
+getbyte in section 'compactcode'
+ placed at address 001e58-001e6c of size 000015
+(monitor.o unit 1 section index 14)
+    Defines:
+        getbyte = 001e58
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-ld.a) unit 7 section index 2)
+        getnibble in (monitor.o unit 1 section index 13)
+    Referenced from:
+        set_bank (monitor.o unit 1 section index 18)
+        set_addr (monitor.o unit 1 section index 19)
+
+Section 'data_init_table'  placed at address 001e6d-001e80 of size 000014
+(linker generated)
+
+isalpha in section 'compactcode'
+ placed at address 001e81-001e93 of size 000013
+(ctype.o (from clib-cc-ld.a) unit 35 section index 3)
+    Defines:
+        isalpha = 001e81
+    Referenced from:
+        do_function (monitor.o unit 1 section index 20)
+
+`_StringLiteral_FormatString_[120,32,45,32,101,120,105,116,32,101,109,117,108,97,116,111,114,10]` in section 'cfar'
+ placed at address 001e94-001ea6 of size 000013
+(monitor.o unit 1 section index 56)
+    Defines:
+        `_StringLiteral_FormatString_[120,32,45,32,101,120,105,116,32,101,109,117,108,97,116,111,114,10]` = 001e94
+    Referenced from:
+        print_welcome (monitor.o unit 1 section index 11)
+
+`_StringLiteral_FormatString_[99,32,45,32,99,104,97,110,103,101,32,109,101,109,111,114,121,10]` in section 'cfar'
+ placed at address 001ea7-001eb9 of size 000013
+(monitor.o unit 1 section index 51)
+    Defines:
+        `_StringLiteral_FormatString_[99,32,45,32,99,104,97,110,103,101,32,109,101,109,111,114,121,10]` = 001ea7
+    Referenced from:
+        print_welcome (monitor.o unit 1 section index 11)
+
+Section 'ifar'  placed at address 001eba-001ebd of size 000004
+(monitor.o unit 1 initializer for section index 6)
+
+Section 'ifar'  placed at address 001ebe-001ec1 of size 000004
+(monitor.o unit 1 initializer for section index 5)
+
+Section 'ifar'  placed at address 001ec2-001ec5 of size 000004
+(monitor.o unit 1 initializer for section index 4)
+
+Section 'ifar'  placed at address 001ec6-001ec9 of size 000004
+(monitor.o unit 1 initializer for section index 3)
+
+`_StringLiteral_FormatString_[100,32,45,32,100,117,109,112,32,32,109,101,109,111,114,121,10]` in section 'cfar'
+ placed at address 001eca-001edb of size 000012
+(monitor.o unit 1 section index 52)
+    Defines:
+        `_StringLiteral_FormatString_[100,32,45,32,100,117,109,112,32,32,109,101,109,111,114,121,10]` = 001eca
+    Referenced from:
+        print_welcome (monitor.o unit 1 section index 11)
+
+`_StringLiteral_FormatString_[63,32,45,32,116,104,105,115,32,109,101,115,115,97,103,101,10]` in section 'cfar'
+ placed at address 001edc-001eed of size 000012
+(monitor.o unit 1 section index 45)
+    Defines:
+        `_StringLiteral_FormatString_[63,32,45,32,116,104,105,115,32,109,101,115,115,97,103,101,10]` = 001edc
+    Referenced from:
+        print_welcome (monitor.o unit 1 section index 11)
+
+`_StringLiteral_FormatString_[97,32,45,32,115,101,116,32,97,100,100,114,101,115,115,10]` in section 'cfar'
+ placed at address 001eee-001efe of size 000011
+(monitor.o unit 1 section index 47)
+    Defines:
+        `_StringLiteral_FormatString_[97,32,45,32,115,101,116,32,97,100,100,114,101,115,115,10]` = 001eee
+    Referenced from:
+        print_welcome (monitor.o unit 1 section index 11)
+
+`?L379` in section 'compactcode'
+ placed at address 001eff-001f0d of size 00000f
+(__vsprintf_medium.o (from clib-cc-ld.a) unit 22 section index 11)
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-ld.a) unit 7 section index 2)
+
+`?L163` in section 'compactcode'
+ placed at address 001f0e-001f1c of size 00000f
+(monitor.o unit 1 section index 23)
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-ld.a) unit 7 section index 2)
+        __global_streams in (streamlist.o (from clib-cc-ld.a) unit 12 section index 6)
+        fflush in (lib_fflush.o (from clib-cc-ld.a) unit 13 section index 2)
+
+`_StringLiteral_FormatString_[98,32,45,32,115,101,116,32,98,97,110,107,10]` in section 'cfar'
+ placed at address 001f1d-001f2a of size 00000e
+(monitor.o unit 1 section index 49)
+    Defines:
+        `_StringLiteral_FormatString_[98,32,45,32,115,101,116,32,98,97,110,107,10]` = 001f1d
+    Referenced from:
+        print_welcome (monitor.o unit 1 section index 11)
+
+monitor in section 'compactcode'
+ placed at address 001f2b-001f38 of size 00000e
+(monitor.o unit 1 section index 21)
+    Defines:
+        monitor = 001f2b
+    References:
+        charin in (monitor.o unit 1 section index 12)
+        do_function in (monitor.o unit 1 section index 20)
+        print_prompt in (monitor.o unit 1 section index 16)
+        print_welcome in (monitor.o unit 1 section index 11)
+    Referenced from:
+        main (main.o unit 0 section index 8)
+
+charin in section 'compactcode'  placed at address 001f39-001f46 of size 00000e
+(monitor.o unit 1 section index 12)
+    Defines:
+        charin = 001f39
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-ld.a) unit 7 section index 2)
+        debug_char in (monitor.o unit 1 section index 4)
+    Referenced from:
+        getnibble (monitor.o unit 1 section index 13)
+        monitor (monitor.o unit 1 section index 21)
+
+`?L164` in section 'compactcode'
+ placed at address 001f47-001f53 of size 00000d
+(monitor.o unit 1 section index 24)
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-ld.a) unit 7 section index 2)
+
+`?L377` in section 'compactcode'
+ placed at address 001f54-001f5f of size 00000c
+(__vsprintf_medium.o (from clib-cc-ld.a) unit 22 section index 9)
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-ld.a) unit 7 section index 2)
+
+`?L385` in section 'compactcode'
+ placed at address 001f60-001f6a of size 00000b
+(__vsprintf_medium.o (from clib-cc-ld.a) unit 22 section index 17)
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-ld.a) unit 7 section index 2)
+
+`?L53` in section 'compactcode'  placed at address 001f6b-001f75 of size 00000b
+(lib_libfwrite.o (from clib-cc-ld.a) unit 26 section index 4)
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-ld.a) unit 7 section index 2)
+
+`?L52` in section 'compactcode'  placed at address 001f76-001f80 of size 00000b
+(lib_libfwrite.o (from clib-cc-ld.a) unit 26 section index 3)
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-ld.a) unit 7 section index 2)
+        errno in (errno.o (from clib-cc-ld.a) unit 14 section index 2)
+
+`_StringLiteral_FormatString_[114,32,45,32,114,101,115,101,116,10]` in section 'cfar'
+ placed at address 001f81-001f8b of size 00000b
+(monitor.o unit 1 section index 55)
+    Defines:
+        `_StringLiteral_FormatString_[114,32,45,32,114,101,115,101,116,10]` = 001f81
+    Referenced from:
+        print_welcome (monitor.o unit 1 section index 11)
+
+`?L54` in section 'compactcode'  placed at address 001f8c-001f95 of size 00000a
+(lib_libfwrite.o (from clib-cc-ld.a) unit 26 section index 5)
+    References:
+        errno in (errno.o (from clib-cc-ld.a) unit 14 section index 2)
+
+`?L40` in section 'compactcode'  placed at address 001f96-001f9f of size 00000a
+(lib_libfflush.o (from clib-cc-ld.a) unit 15 section index 4)
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-ld.a) unit 7 section index 2)
+
+`_StringLiteral_FormatString_%02x:%04x` in section 'cfar'
+ placed at address 001fa0-001fa9 of size 00000a
+(monitor.o unit 1 section index 37)
+    Defines:
+        `_StringLiteral_FormatString_%02x:%04x` = 001fa0
+    Referenced from:
+        print_adr (monitor.o unit 1 section index 15)
+
+`?L12` in section 'compactcode'  placed at address 001faa-001fb2 of size 000009
+(initialize.o (from clib-cc-ld.a) unit 36 section index 3)
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-ld.a) unit 7 section index 2)
+
+`?L390` in section 'compactcode'
+ placed at address 001fb3-001fbb of size 000009
+(__vsprintf_medium.o (from clib-cc-ld.a) unit 22 section index 21)
+
+`?L382` in section 'compactcode'
+ placed at address 001fbc-001fc4 of size 000009
+(__vsprintf_medium.o (from clib-cc-ld.a) unit 22 section index 14)
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-ld.a) unit 7 section index 2)
+
+`?L381` in section 'compactcode'
+ placed at address 001fc5-001fcd of size 000009
+(__vsprintf_medium.o (from clib-cc-ld.a) unit 22 section index 13)
+
+`?L380` in section 'compactcode'
+ placed at address 001fce-001fd6 of size 000009
+(__vsprintf_medium.o (from clib-cc-ld.a) unit 22 section index 12)
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-ld.a) unit 7 section index 2)
+
+`?L376` in section 'compactcode'
+ placed at address 001fd7-001fdf of size 000009
+(__vsprintf_medium.o (from clib-cc-ld.a) unit 22 section index 8)
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-ld.a) unit 7 section index 2)
+
+`?L375` in section 'compactcode'
+ placed at address 001fe0-001fe8 of size 000009
+(__vsprintf_medium.o (from clib-cc-ld.a) unit 22 section index 7)
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-ld.a) unit 7 section index 2)
+
+`?L55` in section 'compactcode'  placed at address 001fe9-001ff1 of size 000009
+(lib_libfwrite.o (from clib-cc-ld.a) unit 26 section index 6)
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-ld.a) unit 7 section index 2)
+
+`?L41` in section 'compactcode'  placed at address 001ff2-001ffa of size 000009
+(lib_libfflush.o (from clib-cc-ld.a) unit 15 section index 5)
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-ld.a) unit 7 section index 2)
+
+`?L17` in section 'compactcode'  placed at address 001ffb-002003 of size 000009
+(lib_fseek.o (from clib-cc-ld.a) unit 28 section index 3)
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-ld.a) unit 7 section index 2)
+
+`?L166` in section 'compactcode'
+ placed at address 002004-00200c of size 000009
+(monitor.o unit 1 section index 26)
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-ld.a) unit 7 section index 2)
+
+`?L378` in section 'compactcode'
+ placed at address 00200d-002014 of size 000008
+(__vsprintf_medium.o (from clib-cc-ld.a) unit 22 section index 10)
+
+`_StringLiteral_*float*` in section 'cfar'
+ placed at address 002015-00201c of size 000008
+(__vsprintf_medium.o (from clib-cc-ld.a) unit 22 section index 3)
+    Defines:
+        `_StringLiteral_*float*` = 002015
+    Referenced from:
+        (__vsprintf_medium.o (from clib-cc-ld.a) unit 22 section index 5)
+
+`?L103` in section 'compactcode'
+ placed at address 00201d-002024 of size 000008
+(ctype.o (from clib-cc-ld.a) unit 35 section index 16)
+    References:
+        __ctype_ in (ctype.o (from clib-cc-ld.a) unit 35 section index 18)
+
+_write in section 'compactcode'  placed at address 002025-00202c of size 000008
+(main.o unit 0 section index 4)
+    Defines:
+        _write = 002025
+    Referenced from:
+        _Stub_write (main.o unit 0 section index 7)
+
+`?L389` in section 'compactcode'
+ placed at address 00202d-002033 of size 000007
+(__vsprintf_medium.o (from clib-cc-ld.a) unit 22 section index 20)
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-ld.a) unit 7 section index 2)
+        _UDivMod32 in (integer.o (from clib-cc-ld.a) unit 42 section index 11)
+
+`?L387` in section 'compactcode'
+ placed at address 002034-00203a of size 000007
+(__vsprintf_medium.o (from clib-cc-ld.a) unit 22 section index 19)
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-ld.a) unit 7 section index 2)
+
+`?L386` in section 'compactcode'
+ placed at address 00203b-002041 of size 000007
+(__vsprintf_medium.o (from clib-cc-ld.a) unit 22 section index 18)
+
+`?L384` in section 'compactcode'
+ placed at address 002042-002048 of size 000007
+(__vsprintf_medium.o (from clib-cc-ld.a) unit 22 section index 16)
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-ld.a) unit 7 section index 2)
+
+`?L383` in section 'compactcode'
+ placed at address 002049-00204f of size 000007
+(__vsprintf_medium.o (from clib-cc-ld.a) unit 22 section index 15)
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-ld.a) unit 7 section index 2)
+
+g_nullstring in section 'cfar'  placed at address 002050-002056 of size 000007
+(__vsprintf_medium.o (from clib-cc-ld.a) unit 22 section index 2)
+
+main in section 'compactcode'  placed at address 002057-00205d of size 000007
+(main.o unit 0 section index 8)
+    Defines:
+        main = 002057
+    References:
+        monitor in (monitor.o unit 1 section index 21)
+    Referenced from:
+        (cstartup.o (from clib-cc-ld.a) unit 3 section index 8)
+
+`_StringLiteral_FormatString_bank:` in section 'cfar'
+ placed at address 00205e-002063 of size 000006
+(monitor.o unit 1 section index 50)
+    Defines:
+        `_StringLiteral_FormatString_bank:` = 00205e
+    Referenced from:
+        set_bank (monitor.o unit 1 section index 18)
+
+`_StringLiteral_FormatString_addr:` in section 'cfar'
+ placed at address 002064-002069 of size 000006
+(monitor.o unit 1 section index 48)
+    Defines:
+        `_StringLiteral_FormatString_addr:` = 002064
+    Referenced from:
+        set_addr (monitor.o unit 1 section index 19)
+
+`_StringLiteral_FormatString_ %02X` in section 'cfar'
+ placed at address 00206a-00206f of size 000006
+(monitor.o unit 1 section index 36)
+    Defines:
+        `_StringLiteral_FormatString_ %02X` = 00206a
+    Referenced from:
+        dump_memory (monitor.o unit 1 section index 17)
+
+`?L104` in section 'compactcode'
+ placed at address 002070-002074 of size 000005
+(ctype.o (from clib-cc-ld.a) unit 35 section index 17)
+
+_JmpInd in section 'compactcode'
+ placed at address 002075-002079 of size 000005
+(controlFlow.o (from clib-cc-ld.a) unit 6 section index 2)
+    Defines:
+        _JmpInd = 002075
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-ld.a) unit 7 section index 2)
+    Referenced from:
+        exit (exit.o (from clib-cc-ld.a) unit 4 section index 2)
+        (__vsprintf_medium.o (from clib-cc-ld.a) unit 22 section index 5)
+
+`_StringLiteral_FormatString_[37,115,10,10]` in section 'cfar'
+ placed at address 00207a-00207e of size 000005
+(monitor.o unit 1 section index 41)
+    Defines:
+        `_StringLiteral_FormatString_[37,115,10,10]` = 00207a
+    Referenced from:
+        print_welcome (monitor.o unit 1 section index 11)
+
+`?L165` in section 'compactcode'
+ placed at address 00207f-002083 of size 000005
+(monitor.o unit 1 section index 25)
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-ld.a) unit 7 section index 2)
+        printf in (lib_printf.o (from clib-cc-ld.a) unit 18 section index 2)
+
+`?L162` in section 'compactcode'
+ placed at address 002084-002088 of size 000005
+(monitor.o unit 1 section index 22)
+    References:
+        _Dp in (pseudoRegisters.o (from clib-cc-ld.a) unit 7 section index 2)
+        printf in (lib_printf.o (from clib-cc-ld.a) unit 18 section index 2)
+
+_Stub_lseek in section 'compactcode'
+ placed at address 002089-00208d of size 000005 (main.o unit 0 section index 3)
+    Defines:
+        _Stub_lseek = 002089
+    Referenced from:
+        fseek (lib_fseek.o (from clib-cc-ld.a) unit 28 section index 2)
+
+_Exit in section 'compactcode'  placed at address 00208e-002091 of size 000004
+(exitC99.o (from clib-cc-ld.a) unit 9 section index 2)
+    Defines:
+        _Exit = 00208e
+    References:
+        _Stub_exit in (defaultExit.o (from clib-cc-ld.a) unit 10 section index 2)
+    Referenced from:
+        exit (exit.o (from clib-cc-ld.a) unit 4 section index 2)
+
+__lib_noflush in section 'compactcode'
+ placed at address 002092-002095 of size 000004
+(lib_libnoflush.o (from clib-cc-ld.a) unit 33 section index 2)
+    Defines:
+        __lib_noflush = 002092
+    Referenced from:
+        __lib_stdoutstream (lib_stdoutstream.o (from clib-cc-ld.a) unit 24 section index 4)
+
+`_StringLiteral_FormatString_[37,115,10]` in section 'cfar'
+ placed at address 002096-002099 of size 000004
+(monitor.o unit 1 section index 40)
+    Defines:
+        `_StringLiteral_FormatString_[37,115,10]` = 002096
+    Referenced from:
+        print_welcome (monitor.o unit 1 section index 11)
+
+`_StringLiteral_FormatString_%c ` in section 'cfar'
+ placed at address 00209a-00209d of size 000004
+(monitor.o unit 1 section index 39)
+    Defines:
+        `_StringLiteral_FormatString_%c ` = 00209a
+    Referenced from:
+        do_function (monitor.o unit 1 section index 20)
+
+`_StringLiteral_FormatString_  |` in section 'cfar'
+ placed at address 00209e-0020a1 of size 000004
+(monitor.o unit 1 section index 35)
+    Defines:
+        `_StringLiteral_FormatString_  |` = 00209e
+    Referenced from:
+        dump_memory (monitor.o unit 1 section index 17)
+
+_Stub_close in section 'compactcode'
+ placed at address 0020a2-0020a5 of size 000004 (main.o unit 0 section index 2)
+    Defines:
+        _Stub_close = 0020a2
+    Referenced from:
+        (streamlist.o (from clib-cc-ld.a) unit 12 section index 7)
+        __close (lib_fclose.o (from clib-cc-ld.a) unit 32 section index 2)
+
+`_StringLiteral_FormatString_[124,10]` in section 'cfar'
+ placed at address 0020a6-0020a8 of size 000003
+(monitor.o unit 1 section index 57)
+    Defines:
+        `_StringLiteral_FormatString_[124,10]` = 0020a6
+    Referenced from:
+        dump_memory (monitor.o unit 1 section index 17)
+
+`_StringLiteral_FormatString_%c` in section 'cfar'
+ placed at address 0020a9-0020ab of size 000003
+(monitor.o unit 1 section index 38)
+    Defines:
+        `_StringLiteral_FormatString_%c` = 0020a9
+    Referenced from:
+        getnibble (monitor.o unit 1 section index 13)
+        dump_memory (monitor.o unit 1 section index 17)
+
+`_StringLiteral_FormatString_>` in section 'cfar'
+ placed at address 0020ac-0020ad of size 000002
+(monitor.o unit 1 section index 44)
+    Defines:
+        `_StringLiteral_FormatString_>` = 0020ac
+    Referenced from:
+        print_prompt (monitor.o unit 1 section index 16)
+
+`_StringLiteral_FormatString_ ` in section 'cfar'
+ placed at address 0020ae-0020af of size 000002
+(monitor.o unit 1 section index 34)
+    Defines:
+        `_StringLiteral_FormatString_ ` = 0020ae
+    Referenced from:
+        dump_memory (monitor.o unit 1 section index 17)
+
+`_StringLiteral_FormatString_[10]` in section 'cfar'
+ placed at address 0020b0-0020b1 of size 000002
+(monitor.o unit 1 section index 29)
+    Defines:
+        `_StringLiteral_FormatString_[10]` = 0020b0
+    Referenced from:
+        print_welcome (monitor.o unit 1 section index 11)
+        dump_memory (monitor.o unit 1 section index 17)
+        do_function (monitor.o unit 1 section index 20)
+
+__low_level_init in section 'compactcode'
+ placed at address 0020b2-0020b2 of size 000001
+(cstartup.o (from clib-cc-ld.a) unit 3 section index 9)
+    Defines:
+        __low_level_init = 0020b2
+    Referenced from:
+        (cstartup.o (from clib-cc-ld.a) unit 3 section index 4)
+
+_Stub_exit in section 'compactcode'
+ placed at address 0020b3-0020b3 of size 000001
+(defaultExit.o (from clib-cc-ld.a) unit 10 section index 2)
+    Defines:
+        _Stub_exit = 0020b3
+    Referenced from:
+        _Exit (exitC99.o (from clib-cc-ld.a) unit 9 section index 2)
+
+__atexit_index in section 'zfar'
+ placed at address 00f000-00f001 of size 000002
+(atexit.o (from clib-cc-ld.a) unit 8 section index 3)
+    Defines:
+        __atexit_index = 00f000
+    Referenced from:
+        exit (exit.o (from clib-cc-ld.a) unit 4 section index 2)
+
+__atexit in section 'zfar'  placed at address 00f002-00f041 of size 000040
+(atexit.o (from clib-cc-ld.a) unit 8 section index 2)
+    Defines:
+        __atexit = 00f002
+    Referenced from:
+        exit (exit.o (from clib-cc-ld.a) unit 4 section index 2)
+
+__global_streams in section 'zfar'
+ placed at address 00f042-00f055 of size 000014
+(streamlist.o (from clib-cc-ld.a) unit 12 section index 6)
+    Defines:
+        __global_streams = 00f042
+    Referenced from:
+        (monitor.o unit 1 section index 23)
+        (streamlist.o (from clib-cc-ld.a) unit 12 section index 7)
+        __initialize_global_streams (streamlist.o (from clib-cc-ld.a) unit 12 section index 8)
+        fflush (lib_fflush.o (from clib-cc-ld.a) unit 13 section index 2)
+        printf (lib_printf.o (from clib-cc-ld.a) unit 18 section index 2)
+
+__stderr in section 'zfar'  placed at address 00f056-00f06e of size 000019
+(streamlist.o (from clib-cc-ld.a) unit 12 section index 5)
+
+__stdout in section 'zfar'  placed at address 00f06f-00f087 of size 000019
+(streamlist.o (from clib-cc-ld.a) unit 12 section index 4)
+
+__stdin in section 'zfar'  placed at address 00f088-00f0a0 of size 000019
+(streamlist.o (from clib-cc-ld.a) unit 12 section index 3)
+
+_ExitCloseStreams in section 'zfar'
+ placed at address 00f0a1-00f0a2 of size 000002
+(streamlist.o (from clib-cc-ld.a) unit 12 section index 2)
+    Defines:
+        _ExitCloseStreams = 00f0a1
+    Referenced from:
+        exit (exit.o (from clib-cc-ld.a) unit 4 section index 2)
+        __initialize_global_streams (streamlist.o (from clib-cc-ld.a) unit 12 section index 8)
+
+errno in section 'zfar'  placed at address 00f0a3-00f0a4 of size 000002
+(errno.o (from clib-cc-ld.a) unit 14 section index 2)
+    Defines:
+        errno = 00f0a3
+    Referenced from:
+        fflush (lib_fflush.o (from clib-cc-ld.a) unit 13 section index 2)
+        __lib_fflush (lib_libfflush.o (from clib-cc-ld.a) unit 15 section index 2)
+        (lib_stdoutstream.o (from clib-cc-ld.a) unit 24 section index 2)
+        (lib_libfwrite.o (from clib-cc-ld.a) unit 26 section index 3)
+        (lib_libfwrite.o (from clib-cc-ld.a) unit 26 section index 5)
+        __lib_rdflush (lib_rdflush.o (from clib-cc-ld.a) unit 27 section index 2)
+        fseek (lib_fseek.o (from clib-cc-ld.a) unit 28 section index 2)
+        __close (lib_fclose.o (from clib-cc-ld.a) unit 32 section index 2)
+
+ptr in section 'zfar'  placed at address 00f0a5-00f0a8 of size 000004
+(monitor.o unit 1 section index 10)
+
+debug_reset in section 'far'  placed at address 00f0a9-00f0ac of size 000004
+(monitor.o unit 1 section index 6)
+    Defines:
+        debug_reset = 00f0a9
+    Referenced from:
+        do_function (monitor.o unit 1 section index 20)
+
+debug_hex in section 'far'  placed at address 00f0ad-00f0b0 of size 000004
+(monitor.o unit 1 section index 5)
+    Defines:
+        debug_hex = 00f0ad
+    Referenced from:
+        do_function (monitor.o unit 1 section index 20)
+
+debug_char in section 'far'  placed at address 00f0b1-00f0b4 of size 000004
+(monitor.o unit 1 section index 4)
+    Defines:
+        debug_char = 00f0b1
+    Referenced from:
+        charin (monitor.o unit 1 section index 12)
+
+stars in section 'far'  placed at address 00f0b5-00f0b8 of size 000004
+(monitor.o unit 1 section index 3)
+    Defines:
+        stars = 00f0b5
+    References:
+        `_StringLiteral_**************************************` in (monitor.o unit 1 section index 43)
+    Referenced from:
+        print_welcome (monitor.o unit 1 section index 11)
+
+__program_root_section in section 'reset'
+ placed at address 00fffc-00fffd of size 000002
+(cstartup.o (from clib-cc-ld.a) unit 3 section index 3)
+    Defines:
+        __program_root_section = 00fffc
+    References:
+        __program_start in (cstartup.o (from clib-cc-ld.a) unit 3 section index 2)
+
+Section 'heap'  placed at address 010000-02ffff of size 020000
+(linker generated)
+
+##########################
+#                        #
+# Memory sizes (decimal) #
+#                        #
+##########################
+
+Executable       (Text):   7862 bytes
+Data                   :    185 bytes
+Non-initialized        : 131348 bytes
