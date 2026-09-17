@@ -1,4 +1,4 @@
-  Tue Sep 15 2026 17:44                                                                                                    Page 1
+  Wed Sep 16 2026 17:13                                                                                                    Page 1
 
 
                                                ***************************************
@@ -59,7 +59,7 @@
     50                        ;
     51                        ;/* The MPU ports require MPU_WRAPPERS_INCLUDED_FROM_API_FILE to be defined
     52                        ; * for the header files above, but not in this file, in order to generate the
-  Tue Sep 15 2026 17:44                                                                                                    Page 2
+  Wed Sep 16 2026 17:13                                                                                                    Page 2
 
 
     53                        ; * correct privileged Vs unprivileged linkage and placement. */
@@ -120,7 +120,7 @@
    100                        ;
    101                        ;/* The old xTIMER name is maintained above then typedefed to the new Timer_t
    102                        ; * name below to enable the use of older kernel aware debuggers. */
-  Tue Sep 15 2026 17:44                                                                                                    Page 3
+  Wed Sep 16 2026 17:13                                                                                                    Page 3
 
 
    103                        ;    typedef xTIMER Timer_t;
@@ -181,7 +181,7 @@
    155                        ;    PRIVILEGED_DATA static TaskHandle_t xTimerTaskHandle = NULL;
    156                        ;
    157                        ;/*-----------------------------------------------------------*/
-  Tue Sep 15 2026 17:44                                                                                                    Page 4
+  Wed Sep 16 2026 17:13                                                                                                    Page 4
 
 
    158                        ;
@@ -242,7 +242,7 @@
    212                        ; */
    213                        ;    static TickType_t prvSampleTimeNow( BaseType_t * const pxTimerListsWereSwitched ) PRIVILEGED_FUNC
                     TION;
-  Tue Sep 15 2026 17:44                                                                                                    Page 5
+  Wed Sep 16 2026 17:13                                                                                                    Page 5
 
 
    214                        ;
@@ -303,7 +303,7 @@
    268                        ;                                                                     NULL,
    269                        ;                                                                     ( ( UBaseType_t ) configTIMER_TA
                     SK_PRIORITY ) | portPRIVILEGE_BIT,
-  Tue Sep 15 2026 17:44                                                                                                    Page 6
+  Wed Sep 16 2026 17:13                                                                                                    Page 6
 
 
    270                        ;                                                                     pxTimerTaskStackBuffer,
@@ -364,7 +364,7 @@
    320                        ;                                           &xTimerTaskHandle );
    321                        ;                }
    322                        ;                #endif /* configSUPPORT_STATIC_ALLOCATION */
-  Tue Sep 15 2026 17:44                                                                                                    Page 7
+  Wed Sep 16 2026 17:13                                                                                                    Page 7
 
 
    323                        ;            }
@@ -425,7 +425,7 @@
    375                        ;        TimerHandle_t xTimerCreateStatic( const char * const pcTimerName,
    376                        ;                                          const TickType_t xTimerPeriodInTicks,
    377                        ;                                          const BaseType_t xAutoReload,
-  Tue Sep 15 2026 17:44                                                                                                    Page 8
+  Wed Sep 16 2026 17:13                                                                                                    Page 8
 
 
    378                        ;                                          void * const pvTimerID,
@@ -486,7 +486,7 @@
    429                        ;        /* 0 is not a valid value for xTimerPeriodInTicks. */
    430                        ;        configASSERT( ( xTimerPeriodInTicks > 0 ) );
    431                        ;
-  Tue Sep 15 2026 17:44                                                                                                    Page 9
+  Wed Sep 16 2026 17:13                                                                                                    Page 9
 
 
    432                        ;        /* Ensure the infrastructure used by the timer service task has been
@@ -547,7 +547,7 @@
    484                        ;                }
    485                        ;                else
    486                        ;                {
-  Tue Sep 15 2026 17:44                                                                                                    Page 10
+  Wed Sep 16 2026 17:13                                                                                                    Page 10
 
 
    487                        ;                    xReturn = xQueueSendToBack( xTimerQueue, &xMessage, tmrNO_DELAY );
@@ -608,7 +608,7 @@
    540                        ;        traceRETURN_xTimerGenericCommandFromISR( xReturn );
    541                        ;
    542                        ;        return xReturn;
-  Tue Sep 15 2026 17:44                                                                                                    Page 11
+  Wed Sep 16 2026 17:13                                                                                                    Page 11
 
 
    543                        ;    }
@@ -669,7 +669,7 @@
    598                        ;
    599                        ;    BaseType_t xTimerGetReloadMode( TimerHandle_t xTimer )
    600                        ;    {
-  Tue Sep 15 2026 17:44                                                                                                    Page 12
+  Wed Sep 16 2026 17:13                                                                                                    Page 12
 
 
    601                        ;        Timer_t * pxTimer = xTimer;
@@ -730,7 +730,7 @@
    656                        ;
    657                        ;    #if ( configSUPPORT_STATIC_ALLOCATION == 1 )
    658                        ;        BaseType_t xTimerGetStaticBuffer( TimerHandle_t xTimer,
-  Tue Sep 15 2026 17:44                                                                                                    Page 13
+  Wed Sep 16 2026 17:13                                                                                                    Page 13
 
 
    659                        ;                                          StaticTimer_t ** ppxTimerBuffer )
@@ -791,7 +791,7 @@
    712                        ;            xExpiredTime += pxTimer->xTimerPeriodInTicks;
    713                        ;
    714                        ;            /* Call the timer callback. */
-  Tue Sep 15 2026 17:44                                                                                                    Page 14
+  Wed Sep 16 2026 17:13                                                                                                    Page 14
 
 
    715                        ;            traceTIMER_EXPIRED( pxTimer );
@@ -852,7 +852,7 @@
    769                        ;        for( ; configCONTROL_INFINITE_LOOP(); )
    770                        ;        {
    771                        ;            /* Query the timers list to see if it contains any timers, and if so,
-  Tue Sep 15 2026 17:44                                                                                                    Page 15
+  Wed Sep 16 2026 17:13                                                                                                    Page 15
 
 
    772                        ;             * obtain the time at which the next timer will expire. */
@@ -913,7 +913,7 @@
    826                        ;                    {
    827                        ;                        /* Yield to wait for either a command to arrive, or the
    828                        ;                         * block time to expire.  If a command arrived between the
-  Tue Sep 15 2026 17:44                                                                                                    Page 16
+  Wed Sep 16 2026 17:13                                                                                                    Page 16
 
 
    829                        ;                         * critical section being exited and this yield then the yield
@@ -974,7 +974,7 @@
    884                        ;            *pxTimerListsWereSwitched = pdTRUE;
    885                        ;        }
    886                        ;        else
-  Tue Sep 15 2026 17:44                                                                                                    Page 17
+  Wed Sep 16 2026 17:13                                                                                                    Page 17
 
 
    887                        ;        {
@@ -1035,7 +1035,7 @@
    942                        ;    {
    943                        ;        DaemonTaskMessage_t xMessage = { 0 };
    944                        ;        Timer_t * pxTimer;
-  Tue Sep 15 2026 17:44                                                                                                    Page 18
+  Wed Sep 16 2026 17:13                                                                                                    Page 18
 
 
    945                        ;        BaseType_t xTimerListsWereSwitched;
@@ -1096,7 +1096,7 @@
    997                        ;                     *  possibility of a higher priority task adding a message to the message
    998                        ;                     *  queue with a time that is ahead of the timer daemon task (because it
    999                        ;                     *  pre-empted the timer daemon task after the xTimeNow value was set). */
-  Tue Sep 15 2026 17:44                                                                                                    Page 19
+  Wed Sep 16 2026 17:13                                                                                                    Page 19
 
 
   1000                        ;                    xTimeNow = prvSampleTimeNow( &xTimerListsWereSwitched );
@@ -1157,7 +1157,7 @@
   1053                        ;                            ( void ) prvInsertTimerInActiveList( pxTimer, ( xTimeNow + pxTimer->xTime
                     rPeriodInTicks ), xTimeNow, xTimeNow );
   1054                        ;                            break;
-  Tue Sep 15 2026 17:44                                                                                                    Page 20
+  Wed Sep 16 2026 17:13                                                                                                    Page 20
 
 
   1055                        ;
@@ -1218,7 +1218,7 @@
   1109                        ;            /* Process the expired timer.  For auto-reload timers, be careful to
   1110                        ;             * process only expirations that occur on the current list.  Further
   1111                        ;             * expirations must wait until after the lists are switched. */
-  Tue Sep 15 2026 17:44                                                                                                    Page 21
+  Wed Sep 16 2026 17:13                                                                                                    Page 21
 
 
   1112                        ;            prvProcessExpiredTimer( xNextExpireTime, tmrMAX_TIME_BEFORE_OVERFLOW );
@@ -1279,7 +1279,7 @@
   1164                        ;            {
   1165                        ;                mtCOVERAGE_TEST_MARKER();
   1166                        ;            }
-  Tue Sep 15 2026 17:44                                                                                                    Page 22
+  Wed Sep 16 2026 17:13                                                                                                    Page 22
 
 
   1167                        ;        }
@@ -1340,7 +1340,7 @@
   1222                        ;    void vTimerSetTimerID( TimerHandle_t xTimer,
   1223                        ;                           void * pvNewID )
   1224                        ;    {
-  Tue Sep 15 2026 17:44                                                                                                    Page 23
+  Wed Sep 16 2026 17:13                                                                                                    Page 23
 
 
   1225                        ;        Timer_t * const pxTimer = xTimer;
@@ -1401,7 +1401,7 @@
   1279                        ;            BaseType_t xReturn;
   1280                        ;
   1281                        ;            traceENTER_xTimerPendFunctionCall( xFunctionToPend, pvParameter1, ulParameter2, xTicksToW
-  Tue Sep 15 2026 17:44                                                                                                    Page 24
+  Wed Sep 16 2026 17:13                                                                                                    Page 24
 
 
                     ait );
@@ -1462,7 +1462,7 @@
   1336                        ; * Reset the state in this file. This state is normally initialized at start up.
   1337                        ; * This function must be called by the application before restarting the
   1338                        ; * scheduler.
-  Tue Sep 15 2026 17:44                                                                                                    Page 25
+  Wed Sep 16 2026 17:13                                                                                                    Page 25
 
 
   1339                        ; */

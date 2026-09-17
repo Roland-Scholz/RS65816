@@ -489,17 +489,17 @@ L10010:
 	lda	<L8+xWantedSize_0
 	and	#<$8000
 	beq	*+5
-	brl	L10057
+	brl	L10042
 ;            if( ( xWantedSize > 0 ) && ( xWantedSize <= xFreeBytesRemaining ) )
 ;            {
 	lda	#$0
 	cmp	<L8+xWantedSize_0
 	bcc	*+5
-	brl	L10057
+	brl	L10042
 	lda	|_~xFreeBytesRemaining
 	cmp	<L8+xWantedSize_0
 	bcs	*+5
-	brl	L10057
+	brl	L10042
 ;                /* Traverse the list from the start (lowest address) block until
 ;                 * one of adequate size is found. */
 ;				 
@@ -521,7 +521,7 @@ L10010:
 	cmp	|_~ucHeapStack
 	lda	<L9+pxBlock_1+2
 	sbc	|_~ucHeapStack+2
-	bcc	L10017
+	bcc	L18
 	lda	#$dfff
 	clc
 	adc	|_~ucHeapStack
@@ -533,25 +533,29 @@ L10010:
 	cmp	<L9+pxBlock_1
 	lda	<R0+2
 	sbc	<L9+pxBlock_1+2
-	bcs	L10020
-L10017:
-	bra	L10017
+	bcs	L10017
+L18:
+	asmstart
+	sei
+	asmend
+L10014:
+	bra	L10014
 ;				
 ;				//debug_ptr(pxPreviousBlock);
 ;				//debug_ptr(pxBlock);
 ;				
 ;                while( ( pxBlock->xBlockSize < xWantedSize ) && ( pxBlock->pxNextFreeBlock != heapPROTECT_BLOCK_POINTER( NULL ) ) )
 ;                }
-L10020:
+L10017:
 	ldy	#$4
 	lda	[<L9+pxBlock_1],Y
 	cmp	<L8+xWantedSize_0
-	bcs	L10021
+	bcs	L10018
 	lda	[<L9+pxBlock_1]
 	dey
 	dey
 	ora	[<L9+pxBlock_1],Y
-	beq	L10021
+	beq	L10018
 ;                {
 ;                    pxPreviousBlock = pxBlock;
 	lda	<L9+pxBlock_1
@@ -572,7 +576,7 @@ L10020:
 	cmp	|_~ucHeapStack
 	lda	<L9+pxBlock_1+2
 	sbc	|_~ucHeapStack+2
-	bcc	L10026
+	bcc	L23
 	lda	#$dfff
 	clc
 	adc	|_~ucHeapStack
@@ -584,10 +588,14 @@ L10020:
 	cmp	<L9+pxBlock_1
 	lda	<R0+2
 	sbc	<L9+pxBlock_1+2
-	bcs	L10020
-L10026:
-	bra	L10026
-L10021:
+	bcs	L10017
+L23:
+	asmstart
+	sei
+	asmend
+L10020:
+	bra	L10020
+L10018:
 ;
 ;                /* If the end marker was reached then a block of adequate size
 ;                 * was not found. */
@@ -600,7 +608,7 @@ L10021:
 	cmp	|_~pxEnd+2
 L26:
 	bne	*+5
-	brl	L10057
+	brl	L10042
 ;                    /* Return the memory space pointed to - jumping over the
 ;                     * BlockLink_t structure at its start. */
 ;                    pvReturn = ( void * ) ( ( ( uint8_t * ) heapPROTECT_BLOCK_POINTER( pxPreviousBlock->pxNextFreeBlock ) ) + xHeapStructSize );
@@ -617,7 +625,7 @@ L26:
 	cmp	|_~ucHeapStack
 	lda	<L9+pvReturn_1+2
 	sbc	|_~ucHeapStack+2
-	bcc	L10034
+	bcc	L28
 	lda	#$dfff
 	clc
 	adc	|_~ucHeapStack
@@ -629,10 +637,14 @@ L26:
 	cmp	<L9+pvReturn_1
 	lda	<R0+2
 	sbc	<L9+pvReturn_1+2
-	bcs	L10030
-L10034:
-	bra	L10034
-L10030:
+	bcs	L10024
+L28:
+	asmstart
+	sei
+	asmend
+L10025:
+	bra	L10025
+L10024:
 ;					
 ;					//debug_ptr(pvReturn);
 ;					
@@ -652,10 +664,13 @@ L10030:
 	iny
 	lda	[<L9+pxBlock_1],Y
 	cmp	<L8+xWantedSize_0
-	bcs	L10037
-L10041:
-	bra	L10041
-L10037:
+	bcs	L10028
+	asmstart
+	sei
+	asmend
+L10029:
+	bra	L10029
+L10028:
 ;
 ;                    if( ( pxBlock->xBlockSize - xWantedSize ) > heapMINIMUM_BLOCK_SIZE )
 ;                    {
@@ -666,7 +681,7 @@ L10037:
 	sta	<R0
 	lda	#$c
 	cmp	<R0
-	bcs	L10052
+	bcs	L10037
 ;                        /* This block is to be split into two.  Create a new
 ;                         * block following the number of bytes requested. The void
 ;                         * cast is used to prevent byte alignment warnings from the
@@ -711,7 +726,7 @@ L10037:
 	sta	[<L9+pxPreviousBlock_1],Y
 ;                    }
 ;                    else
-L10052:
+L10037:
 ;
 ;                    xFreeBytesRemaining -= pxBlock->xBlockSize;
 	sec
@@ -724,7 +739,7 @@ L10052:
 ;                    {
 	cmp	|_~xMinimumEverFreeBytesRemaining
 	bcc	L33
-L10054:
+L10039:
 ;
 ;                    xAllocatedBlockSize = pxBlock->xBlockSize;
 	ldy	#$4
@@ -756,7 +771,7 @@ L10054:
 ;                else
 ;        }
 ;        else
-L10057:
+L10042:
 ;
 ;        traceMALLOC( pvReturn, xAllocatedBlockSize );
 ;
@@ -794,8 +809,8 @@ L10057:
 	tcs
 	tya
 	rts
-L10049:
-	bra	L10049
+L10034:
+	bra	L10034
 ;                    {
 ;                        mtCOVERAGE_TEST_MARKER();
 ;                    }
@@ -805,7 +820,7 @@ L33:
 	sta	|_~xMinimumEverFreeBytesRemaining
 ;                    }
 ;                    else
-	bra	L10054
+	bra	L10039
 ;                    {
 ;                        mtCOVERAGE_TEST_MARKER();
 ;                    }
@@ -820,8 +835,8 @@ L33:
 ;        {
 ;            mtCOVERAGE_TEST_MARKER();
 ;        }
-L10062:
-	bra	L10062
+L10044:
+	bra	L10044
 ;}
 L8	equ	24
 L9	equ	5
@@ -882,7 +897,7 @@ pxLink_1	set	4
 	cmp	|_~ucHeapStack
 	lda	<L36+pxLink_1+2
 	sbc	|_~ucHeapStack+2
-	bcc	L10070
+	bcc	L38
 	lda	#$dfff
 	clc
 	adc	|_~ucHeapStack
@@ -894,26 +909,36 @@ pxLink_1	set	4
 	cmp	<L36+pxLink_1
 	lda	<R0+2
 	sbc	<L36+pxLink_1+2
-	bcs	L10066
-L10070:
-	bra	L10070
-L10066:
+	bcs	L10048
+L38:
+	asmstart
+	sei
+	asmend
+L10049:
+	bra	L10049
+L10048:
 ;        configASSERT( heapBLOCK_IS_ALLOCATED( pxLink ) != 0 );
 	ldy	#$4
 	lda	[<L36+pxLink_1],Y
 	and	#<$8000
-	bne	L10073
-L10077:
-	bra	L10077
-L10073:
+	bne	L10052
+	asmstart
+	sei
+	asmend
+L10053:
+	bra	L10053
+L10052:
 ;        configASSERT( pxLink->pxNextFreeBlock == heapPROTECT_BLOCK_POINTER( NULL ) );
 	lda	[<L36+pxLink_1]
 	ldy	#$2
 	ora	[<L36+pxLink_1],Y
-	beq	L10080
-L10084:
-	bra	L10084
-L10080:
+	beq	L10056
+	asmstart
+	sei
+	asmend
+L10057:
+	bra	L10057
+L10056:
 ;
 ;        if( heapBLOCK_IS_ALLOCATED( pxLink ) != 0 )
 ;        {
@@ -955,7 +980,7 @@ L10080:
 	bvs	L45
 	eor	#$8000
 L45:
-	bpl	L10089
+	bpl	L10062
 ;                        ( void ) memset( puc + xHeapStructSize, 0, pxLink->xBlockSize - xHeapStructSize );
 	ldy	#$4
 	lda	[<L36+pxLink_1],Y
@@ -983,7 +1008,7 @@ L45:
 	stx	<R2+2
 ;                    }
 ;                }
-L10089:
+L10062:
 ;                #endif
 ;
 ;                vTaskSuspendAll();
@@ -1137,7 +1162,7 @@ pv_1	set	0
 	xref	_~~udv
 	jsr	_~~udv
 	cmp	<L60+xSize_0
-	bcc	L10092
+	bcc	L10065
 L62:
 ;        pv = pvPortMalloc( xNum * xSize );
 	lda	<L60+xNum_0
@@ -1152,7 +1177,7 @@ L62:
 ;        if( pv != NULL )
 ;        {
 	ora	<L61+pv_1+2
-	beq	L10092
+	beq	L10065
 ;            ( void ) memset( pv, 0, xNum * xSize );
 	lda	<L60+xNum_0
 	ldx	<L60+xSize_0
@@ -1167,7 +1192,7 @@ L62:
 ;    }
 ;
 ;    return pv;
-L10092:
+L10065:
 	ldx	<L61+pv_1+2
 	lda	<L61+pv_1
 	tay
@@ -1369,7 +1394,7 @@ puc_1	set	4
 ;    {
 ;        /* Nothing to do here, just iterate to the right position. */
 ;    }
-L10095:
+L10068:
 	lda	[<L71+pxIterator_1]
 	sta	<R0
 	ldy	#$2
@@ -1385,7 +1410,7 @@ L20000:
 	ldy	#$2
 	lda	[<L71+pxIterator_1],Y
 	sbc	<L70+pxBlockToInsert_0+2
-	bcc	L10095
+	bcc	L10068
 ;
 ;    if( pxIterator != &xStart )
 ;    {
@@ -1400,13 +1425,13 @@ L20000:
 	lda	<L71+pxIterator_1+2
 	cmp	<R0+2
 L73:
-	beq	L10099
+	beq	L10072
 ;        heapVALIDATE_BLOCK_POINTER( pxIterator );
 	lda	<L71+pxIterator_1
 	cmp	|_~ucHeapStack
 	lda	<L71+pxIterator_1+2
 	sbc	|_~ucHeapStack+2
-	bcc	L10104
+	bcc	L75
 	lda	#$dfff
 	clc
 	adc	|_~ucHeapStack
@@ -1418,15 +1443,19 @@ L73:
 	cmp	<L71+pxIterator_1
 	lda	<R0+2
 	sbc	<L71+pxIterator_1+2
-	bcs	L10099
-L10104:
-	bra	L10104
+	bcs	L10072
+L75:
+	asmstart
+	sei
+	asmend
+L10074:
+	bra	L10074
 ;    }
 ;
 ;    /* Do the block being inserted, and the block it is being inserted after
 ;     * make a contiguous block of memory? */
 ;    puc = ( uint8_t * ) pxIterator;
-L10099:
+L10072:
 	lda	<L71+pxIterator_1
 	sta	<L71+puc_1
 	lda	<L71+pxIterator_1+2
@@ -1451,7 +1480,7 @@ L10099:
 	lda	<L70+pxBlockToInsert_0+2
 	cmp	<R1+2
 L78:
-	bne	L10108
+	bne	L10078
 ;        pxIterator->xBlockSize += pxBlockToInsert->xBlockSize;
 	lda	#$4
 	clc
@@ -1475,7 +1504,7 @@ L78:
 ;    {
 ;        mtCOVERAGE_TEST_MARKER();
 ;    }
-L10108:
+L10078:
 ;
 ;    /* Do the block being inserted, and the block it is being inserted before
 ;     * make a contiguous block of memory? */
@@ -1506,7 +1535,7 @@ L10108:
 	lda	[<L71+pxIterator_1],Y
 	cmp	<R1+2
 L80:
-	bne	L10109
+	bne	L10079
 ;        if( heapPROTECT_BLOCK_POINTER( pxIterator->pxNextFreeBlock ) != pxEnd )
 ;        {
 	lda	[<L71+pxIterator_1]
@@ -1516,7 +1545,7 @@ L80:
 	lda	[<L71+pxIterator_1],Y
 	cmp	|_~pxEnd+2
 L82:
-	beq	L10110
+	beq	L10080
 ;            /* Form one big block from the two blocks. */
 ;            pxBlockToInsert->xBlockSize += heapPROTECT_BLOCK_POINTER( pxIterator->pxNextFreeBlock )->xBlockSize;
 	lda	[<L71+pxIterator_1]
@@ -1550,7 +1579,7 @@ L82:
 	bra	L20002
 ;        }
 ;        else
-L10110:
+L10080:
 ;        {
 ;            pxBlockToInsert->pxNextFreeBlock = heapPROTECT_BLOCK_POINTER( pxEnd );
 	lda	|_~pxEnd
@@ -1560,7 +1589,7 @@ L10110:
 ;        }
 ;    }
 ;    else
-L10109:
+L10079:
 ;    {
 ;        pxBlockToInsert->pxNextFreeBlock = pxIterator->pxNextFreeBlock;
 	lda	[<L71+pxIterator_1]
@@ -1653,9 +1682,9 @@ xMinSize_1	set	8
 ;        {
 	lda	<L88+pxBlock_1
 	ora	<L88+pxBlock_1+2
-	bne	L10116
+	bne	L10086
 ;            while( pxBlock != pxEnd )
-	bra	L10115
+	bra	L10085
 L20004:
 ;            {
 ;                /* Increment the number of blocks and record the largest block seen
@@ -1668,19 +1697,19 @@ L20004:
 	lda	<L88+xMaxSize_1
 	ldy	#$4
 	cmp	[<L88+pxBlock_1],Y
-	bcs	L10118
+	bcs	L10088
 ;                    xMaxSize = pxBlock->xBlockSize;
 	lda	[<L88+pxBlock_1],Y
 	sta	<L88+xMaxSize_1
 ;                }
 ;
 ;                if( pxBlock->xBlockSize < xMinSize )
-L10118:
+L10088:
 ;                {
 	ldy	#$4
 	lda	[<L88+pxBlock_1],Y
 	cmp	<L88+xMinSize_1
-	bcs	L10119
+	bcs	L10089
 ;                    xMinSize = pxBlock->xBlockSize;
 	lda	[<L88+pxBlock_1],Y
 	sta	<L88+xMinSize_1
@@ -1689,7 +1718,7 @@ L10118:
 ;                /* Move to the next block in the chain until the last block is
 ;                 * reached. */
 ;                pxBlock = heapPROTECT_BLOCK_POINTER( pxBlock->pxNextFreeBlock );
-L10119:
+L10089:
 	lda	[<L88+pxBlock_1]
 	sta	<R0
 	ldy	#$2
@@ -1700,7 +1729,7 @@ L10119:
 	lda	<R0+2
 	sta	<L88+pxBlock_1+2
 ;            }
-L10116:
+L10086:
 	lda	<L88+pxBlock_1
 	cmp	|_~pxEnd
 	bne	L90
@@ -1710,7 +1739,7 @@ L90:
 	bne	L20004
 ;        }
 ;    }
-L10115:
+L10085:
 ;    ( void ) xTaskResumeAll();
 	jsr	_~xTaskResumeAll
 ;
@@ -1751,6 +1780,9 @@ L10115:
 	sta	[<L87+pxHeapStats_0],Y
 ;
 ;    taskENTER_CRITICAL();
+	asmstart
+	sei
+	asmend
 ;    {
 ;        pxHeapStats->xAvailableHeapSpaceInBytes = xFreeBytesRemaining;
 	lda	|_~xFreeBytesRemaining
@@ -1797,6 +1829,9 @@ L10115:
 	sta	[<L87+pxHeapStats_0],Y
 ;    }
 ;    taskEXIT_CRITICAL();
+	asmstart
+	cli
+	asmend
 ;}
 	lda	<L87+1
 	sta	<L87+1+4

@@ -82,8 +82,19 @@ void load_mem_wdc()
     read_file("..\\release\\wdc\\monitor\\monitor.bin", 0x0000);
     read_file("..\\release\\wdc\\rtos\\rtos.bin", 0x010000);
 
+    /*
+        set reset address
+    */
     memory[0xfffc] = 0x00;
     memory[0xfffd] = 0x02;
+
+    /*
+        set IRQ vector
+    */
+    memory[0xffee] = 0xfa;
+    memory[0xffef] = 0xdf;
+
+    memory[0xdffa] = 0x40;      //RTI
 }
 
 void load_mem_calypsi()
@@ -101,8 +112,9 @@ byte MEM_readMem(word32 address, word32 timestamp, word32 emulFlags)
     case 0xfffff2:
         recycle = true;
         return 0;
-    //case 0x01802F:
-        //for(;;) {}
+    //case 0x00ffee:
+        //CPU_setTrace(1);
+        //break;
     default:
         return memory[address];
     }
@@ -208,6 +220,7 @@ int main(int argc, char *argv[])
     fflush(stdout);
     */
     /* Thread erstellen und sofort starten */
+
     HANDLE hThread = (HANDLE)_beginthreadex(
                          NULL,                   /* Standard-Sicherheitsattribute */
                          0,                      /* Standard-Stackgröße (meist 1 MB) */

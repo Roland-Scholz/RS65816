@@ -276,28 +276,37 @@ xTimeoutOccurred_1	set	14
 	lda	<L6+uxBitsToWaitFor_0+2
 	and	#^$ff000000
 	beq	L10003
-L10007:
-	bra	L10007
+	asmstart
+	sei
+	asmend
+L10004:
+	bra	L10004
 L10003:
 ;        configASSERT( uxBitsToWaitFor != 0 );
 	lda	<L6+uxBitsToWaitFor_0
 	ora	<L6+uxBitsToWaitFor_0+2
-	bne	L10010
-L10014:
-	bra	L10014
-L10010:
+	bne	L10007
+	asmstart
+	sei
+	asmend
+L10008:
+	bra	L10008
+L10007:
 ;        #if ( ( INCLUDE_xTaskGetSchedulerState == 1 ) || ( configUSE_TIMERS == 1 ) )
 ;        {
 ;            configASSERT( !( ( xTaskGetSchedulerState() == taskSCHEDULER_SUSPENDED ) && ( xTicksToWait != 0 ) ) );
 	jsr	_~xTaskGetSchedulerState
 	tax
-	bne	L10017
+	bne	L10011
 	lda	<L6+xTicksToWait_0
 	ora	<L6+xTicksToWait_0+2
-	beq	L10017
-L10021:
-	bra	L10021
-L10017:
+	beq	L10011
+	asmstart
+	sei
+	asmend
+L10012:
+	bra	L10012
+L10011:
 ;        }
 ;        #endif
 ;
@@ -338,7 +347,7 @@ L10017:
 	lda	<R1+2
 	cmp	<L6+uxBitsToWaitFor_0+2
 L12:
-	bne	L10024
+	bne	L10015
 ;                /* All the rendezvous bits are now set - no need to block. */
 ;                uxReturn = ( uxOriginalBitValue | uxBitsToSet );
 	lda	<L6+uxBitsToSet_0
@@ -370,14 +379,14 @@ L12:
 	stz	<L6+xTicksToWait_0+2
 ;            }
 ;            else
-	bra	L10025
-L10024:
+	bra	L10016
+L10015:
 ;            {
 ;                if( xTicksToWait != ( TickType_t ) 0 )
 ;                {
 	lda	<L6+xTicksToWait_0
 	ora	<L6+xTicksToWait_0+2
-	beq	L10026
+	beq	L10017
 ;                    traceEVENT_GROUP_SYNC_BLOCK( xEventGroup, uxBitsToSet, uxBitsToWaitFor );
 ;
 ;                    /* Store the bits that the calling task is waiting for in the
@@ -411,8 +420,8 @@ L10024:
 	stz	<L7+uxReturn_1+2
 ;                }
 ;                else
-	bra	L10025
-L10026:
+	bra	L10016
+L10017:
 ;                {
 ;                    /* The rendezvous bits were not set, but no block time was
 ;                     * specified - just return the current event bit value. */
@@ -427,7 +436,7 @@ L10026:
 	sta	<L7+xTimeoutOccurred_1
 ;                }
 ;            }
-L10025:
+L10016:
 ;        }
 ;        xAlreadyYielded = xTaskResumeAll();
 	jsr	_~xTaskResumeAll
@@ -437,11 +446,11 @@ L10025:
 ;        {
 	lda	<L6+xTicksToWait_0
 	ora	<L6+xTicksToWait_0+2
-	beq	L10028
+	beq	L10019
 ;            if( xAlreadyYielded == pdFALSE )
 ;            {
 	lda	<L7+xAlreadyYielded_1
-	bne	L10030
+	bne	L10021
 ;                taskYIELD_WITHIN_API();
 	jsr	_~vPortYield
 ;            }
@@ -449,7 +458,7 @@ L10025:
 ;            {
 ;                mtCOVERAGE_TEST_MARKER();
 ;            }
-L10030:
+L10021:
 ;
 ;            /* The task blocked to wait for its required bits to be set - at this
 ;             * point either the required bits were set or the block time expired.  If
@@ -464,9 +473,12 @@ L10030:
 ;            {
 	lda	<L7+uxReturn_1+2
 	and	#^$2000000
-	bne	L10040
+	bne	L10025
 ;                /* The task timed out, just return the current event bit value. */
 ;                taskENTER_CRITICAL();
+	asmstart
+	sei
+	asmend
 ;                {
 ;                    uxReturn = pxEventBits->uxEventBits;
 	lda	[<L7+pxEventBits_1]
@@ -493,7 +505,7 @@ L10030:
 	lda	<R0+2
 	cmp	<L6+uxBitsToWaitFor_0+2
 L18:
-	bne	L10038
+	bne	L10024
 ;                        pxEventBits->uxEventBits &= ~uxBitsToWaitFor;
 	lda	<L6+uxBitsToWaitFor_0
 	eor	#<$ffffffff
@@ -513,9 +525,12 @@ L18:
 ;                    {
 ;                        mtCOVERAGE_TEST_MARKER();
 ;                    }
+L10024:
 ;                }
 ;                taskEXIT_CRITICAL();
-L10038:
+	asmstart
+	cli
+	asmend
 ;
 ;                xTimeoutOccurred = pdTRUE;
 	lda	#$1
@@ -525,7 +540,7 @@ L10038:
 ;            {
 ;                /* The task unblocked because the bits were set. */
 ;            }
-L10040:
+L10025:
 ;
 ;            /* Control bits might be set as the task had blocked should not be
 ;             * returned. */
@@ -536,7 +551,7 @@ L10040:
 ;        }
 ;
 ;        traceEVENT_GROUP_SYNC_END( xEventGroup, uxBitsToSet, uxBitsToWaitFor, xTimeoutOccurred );
-L10028:
+L10019:
 ;
 ;        /* Prevent compiler warnings when trace macros are not used. */
 ;        ( void ) xTimeoutOccurred;
@@ -611,36 +626,48 @@ xTimeoutOccurred_1	set	16
 ;        configASSERT( xEventGroup );
 	lda	<L21+xEventGroup_0
 	ora	<L21+xEventGroup_0+2
-	bne	L10041
-L10045:
-	bra	L10045
-L10041:
+	bne	L10026
+	asmstart
+	sei
+	asmend
+L10027:
+	bra	L10027
+L10026:
 ;        configASSERT( ( uxBitsToWaitFor & eventEVENT_BITS_CONTROL_BYTES ) == 0 );
 	lda	<L21+uxBitsToWaitFor_0+2
 	and	#^$ff000000
-	beq	L10048
-L10052:
-	bra	L10052
-L10048:
+	beq	L10030
+	asmstart
+	sei
+	asmend
+L10031:
+	bra	L10031
+L10030:
 ;        configASSERT( uxBitsToWaitFor != 0 );
 	lda	<L21+uxBitsToWaitFor_0
 	ora	<L21+uxBitsToWaitFor_0+2
-	bne	L10055
-L10059:
-	bra	L10059
-L10055:
+	bne	L10034
+	asmstart
+	sei
+	asmend
+L10035:
+	bra	L10035
+L10034:
 ;        #if ( ( INCLUDE_xTaskGetSchedulerState == 1 ) || ( configUSE_TIMERS == 1 ) )
 ;        {
 ;            configASSERT( !( ( xTaskGetSchedulerState() == taskSCHEDULER_SUSPENDED ) && ( xTicksToWait != 0 ) ) );
 	jsr	_~xTaskGetSchedulerState
 	tax
-	bne	L10062
+	bne	L10038
 	lda	<L21+xTicksToWait_0
 	ora	<L21+xTicksToWait_0+2
-	beq	L10062
-L10066:
-	bra	L10066
-L10062:
+	beq	L10038
+	asmstart
+	sei
+	asmend
+L10039:
+	bra	L10039
+L10038:
 ;        }
 ;        #endif
 ;
@@ -668,7 +695,7 @@ uxCurrentEventBits_2	set	18
 ;            if( xWaitConditionMet != pdFALSE )
 ;            {
 	lda	<L22+xWaitConditionMet_1
-	beq	L10069
+	beq	L10042
 ;                /* The wait condition has already been met so there is no need to
 ;                 * block. */
 ;                uxReturn = uxCurrentEventBits;
@@ -684,7 +711,7 @@ uxCurrentEventBits_2	set	18
 ;                if( xClearOnExit != pdFALSE )
 ;                {
 	lda	<L21+xClearOnExit_0
-	beq	L10072
+	beq	L10045
 ;                    pxEventBits->uxEventBits &= ~uxBitsToWaitFor;
 	lda	<L21+uxBitsToWaitFor_0
 	eor	#<$ffffffff
@@ -701,17 +728,17 @@ uxCurrentEventBits_2	set	18
 	sta	[<L22+pxEventBits_1],Y
 ;                }
 ;                else
-	bra	L10072
+	bra	L10045
 ;                {
 ;                    mtCOVERAGE_TEST_MARKER();
 ;                }
 ;            }
 ;            else if( xTicksToWait == ( TickType_t ) 0 )
-L10069:
+L10042:
 ;            {
 	lda	<L21+xTicksToWait_0
 	ora	<L21+xTicksToWait_0+2
-	bne	L10073
+	bne	L10046
 ;                /* The wait condition has not been met, but no block time was
 ;                 * specified, so just return the current value. */
 ;                uxReturn = uxCurrentEventBits;
@@ -724,8 +751,8 @@ L10069:
 	sta	<L22+xTimeoutOccurred_1
 ;            }
 ;            else
-	bra	L10072
-L10073:
+	bra	L10045
+L10046:
 ;            {
 ;                /* The task is going to block to wait for its required bits to be
 ;                 * set.  uxControlBits are used to remember the specified behaviour of
@@ -734,7 +761,7 @@ L10073:
 ;                if( xClearOnExit != pdFALSE )
 ;                {
 	lda	<L21+xClearOnExit_0
-	beq	L10076
+	beq	L10049
 ;                    uxControlBits |= eventCLEAR_EVENTS_ON_EXIT_BIT;
 	lda	<L22+uxControlBits_1+2
 	ora	#^$1000000
@@ -744,12 +771,12 @@ L10073:
 ;                {
 ;                    mtCOVERAGE_TEST_MARKER();
 ;                }
-L10076:
+L10049:
 ;
 ;                if( xWaitForAllBits != pdFALSE )
 ;                {
 	lda	<L21+xWaitForAllBits_0
-	beq	L10078
+	beq	L10051
 ;                    uxControlBits |= eventWAIT_FOR_ALL_BITS;
 	lda	<L22+uxControlBits_1+2
 	ora	#^$4000000
@@ -759,7 +786,7 @@ L10076:
 ;                {
 ;                    mtCOVERAGE_TEST_MARKER();
 ;                }
-L10078:
+L10051:
 ;
 ;                /* Store the bits that the calling task is waiting for in the
 ;                 * task's event list item so the kernel knows when a match is
@@ -793,7 +820,7 @@ L10078:
 ;
 ;                traceEVENT_GROUP_WAIT_BITS_BLOCK( xEventGroup, uxBitsToWaitFor );
 ;            }
-L10072:
+L10045:
 ;        }
 ;        xAlreadyYielded = xTaskResumeAll();
 	jsr	_~xTaskResumeAll
@@ -803,11 +830,11 @@ L10072:
 ;        {
 	lda	<L21+xTicksToWait_0
 	ora	<L21+xTicksToWait_0+2
-	beq	L10079
+	beq	L10052
 ;            if( xAlreadyYielded == pdFALSE )
 ;            {
 	lda	<L22+xAlreadyYielded_1
-	bne	L10081
+	bne	L10054
 ;                taskYIELD_WITHIN_API();
 	jsr	_~vPortYield
 ;            }
@@ -815,7 +842,7 @@ L10072:
 ;            {
 ;                mtCOVERAGE_TEST_MARKER();
 ;            }
-L10081:
+L10054:
 ;
 ;            /* The task blocked to wait for its required bits to be set - at this
 ;             * point either the required bits were set or the block time expired.  If
@@ -830,8 +857,11 @@ L10081:
 ;            {
 	lda	<L22+uxReturn_1+2
 	and	#^$2000000
-	bne	L10093
+	bne	L10060
 ;                taskENTER_CRITICAL();
+	asmstart
+	sei
+	asmend
 ;                {
 ;                    /* The task timed out, just return the current event bit value. */
 ;                    uxReturn = pxEventBits->uxEventBits;
@@ -852,11 +882,11 @@ L10081:
 	pei	<L22+uxReturn_1
 	jsr	_~prvTestWaitCondition
 	tax
-	beq	L10089
+	beq	L10059
 ;                        if( xClearOnExit != pdFALSE )
 ;                        {
 	lda	<L21+xClearOnExit_0
-	beq	L10089
+	beq	L10059
 ;                            pxEventBits->uxEventBits &= ~uxBitsToWaitFor;
 	lda	<L21+uxBitsToWaitFor_0
 	eor	#<$ffffffff
@@ -873,16 +903,19 @@ L10081:
 	sta	[<L22+pxEventBits_1],Y
 ;                        }
 ;                        else
-L10089:
+L10059:
 ;
 ;                    xTimeoutOccurred = pdTRUE;
 	lda	#$1
 	sta	<L22+xTimeoutOccurred_1
 ;                }
 ;                taskEXIT_CRITICAL();
+	asmstart
+	cli
+	asmend
 ;            }
 ;            else
-L10093:
+L10060:
 ;
 ;            /* The task blocked so control bits may have been set. */
 ;            uxReturn &= ~eventEVENT_BITS_CONTROL_BYTES;
@@ -892,7 +925,7 @@ L10093:
 ;        }
 ;
 ;        traceEVENT_GROUP_WAIT_BITS_END( xEventGroup, uxBitsToWaitFor, xTimeoutOccurred );
-L10079:
+L10052:
 ;
 ;        /* Prevent compiler warnings when trace macros are not used. */
 ;        ( void ) xTimeoutOccurred;
@@ -963,19 +996,28 @@ uxReturn_1	set	4
 ;        configASSERT( xEventGroup );
 	lda	<L39+xEventGroup_0
 	ora	<L39+xEventGroup_0+2
-	bne	L10094
-L10098:
-	bra	L10098
-L10094:
+	bne	L10061
+	asmstart
+	sei
+	asmend
+L10062:
+	bra	L10062
+L10061:
 ;        configASSERT( ( uxBitsToClear & eventEVENT_BITS_CONTROL_BYTES ) == 0 );
 	lda	<L39+uxBitsToClear_0+2
 	and	#^$ff000000
-	beq	L10109
-L10105:
-	bra	L10105
+	beq	L10065
+	asmstart
+	sei
+	asmend
+L10066:
+	bra	L10066
+L10065:
 ;
 ;        taskENTER_CRITICAL();
-L10109:
+	asmstart
+	sei
+	asmend
 ;        {
 ;            traceEVENT_GROUP_CLEAR_BITS( xEventGroup, uxBitsToClear );
 ;
@@ -1004,6 +1046,9 @@ L10109:
 	sta	[<L40+pxEventBits_1],Y
 ;        }
 ;        taskEXIT_CRITICAL();
+	asmstart
+	cli
+	asmend
 ;
 ;        traceRETURN_xEventGroupClearBits( uxReturn );
 ;
@@ -1161,17 +1206,23 @@ xMatchFound_1	set	36
 ;        configASSERT( xEventGroup );
 	lda	<L47+xEventGroup_0
 	ora	<L47+xEventGroup_0+2
-	bne	L10114
-L10118:
-	bra	L10118
-L10114:
+	bne	L10069
+	asmstart
+	sei
+	asmend
+L10070:
+	bra	L10070
+L10069:
 ;        configASSERT( ( uxBitsToSet & eventEVENT_BITS_CONTROL_BYTES ) == 0 );
 	lda	<L47+uxBitsToSet_0+2
 	and	#^$ff000000
-	beq	L10121
-L10125:
-	bra	L10125
-L10121:
+	beq	L10073
+	asmstart
+	sei
+	asmend
+L10074:
+	bra	L10074
+L10073:
 ;
 ;        pxList = &( pxEventBits->xTasksWaitingForBits );
 	lda	#$4
@@ -1215,7 +1266,7 @@ L10121:
 ;
 ;            /* See if the new bit value should unblock any tasks. */
 ;            while( pxListItem != pxListEnd )
-	brl	L10128
+	brl	L10077
 L20004:
 ;            {
 ;                pxNext = listGET_NEXT( pxListItem );
@@ -1251,7 +1302,7 @@ L20004:
 	lda	<L48+uxControlBits_1+2
 	and	#^$4000000
 	beq	*+5
-	brl	L10130
+	brl	L10079
 ;                    /* Just looking for single bit being set. */
 ;                    if( ( uxBitsWaitedFor & pxEventBits->uxEventBits ) != ( EventBits_t ) 0 )
 ;                    {
@@ -1263,19 +1314,19 @@ L20004:
 	sta	<R0+2
 	lda	<R0
 	ora	<R0+2
-	beq	L10133
+	beq	L10082
 ;                        xMatchFound = pdTRUE;
 L20005:
 	lda	#$1
 	sta	<L48+xMatchFound_1
 ;                    }
 ;                    else
-L10133:
+L10082:
 ;
 ;                if( xMatchFound != pdFALSE )
 ;                {
 	lda	<L48+xMatchFound_1
-	beq	L10136
+	beq	L10085
 ;                {
 ;                    /* Need all bits to be set, but not all the bits were set. */
 ;                }
@@ -1284,7 +1335,7 @@ L10133:
 ;                    {
 	lda	<L48+uxControlBits_1+2
 	and	#^$1000000
-	beq	L10138
+	beq	L10087
 ;                        uxBitsToClear |= uxBitsWaitedFor;
 	lda	<L48+uxBitsWaitedFor_1
 	ora	<L48+uxBitsToClear_1
@@ -1297,7 +1348,7 @@ L10133:
 ;                    {
 ;                        mtCOVERAGE_TEST_MARKER();
 ;                    }
-L10138:
+L10087:
 ;
 ;                    /* Store the actual event flag value in the task's event list
 ;                     * item before removing the task from the event list.  The
@@ -1321,13 +1372,13 @@ L10138:
 ;                 * used here as the list item may have been removed from the event list
 ;                 * and inserted into the ready/pending reading list. */
 ;                pxListItem = pxNext;
-L10136:
+L10085:
 	lda	<L48+pxNext_1
 	sta	<L48+pxListItem_1
 	lda	<L48+pxNext_1+2
 	sta	<L48+pxListItem_1+2
 ;            }
-L10128:
+L10077:
 	lda	<L48+pxListItem_1
 	cmp	<L48+pxListEnd_1
 	bne	L51
@@ -1384,7 +1435,7 @@ L51:
 ;                    }
 ;                }
 ;                else if( ( uxBitsWaitedFor & pxEventBits->uxEventBits ) == uxBitsWaitedFor )
-L10130:
+L10079:
 ;                {
 	lda	[<L48+pxEventBits_1]
 	and	<L48+uxBitsWaitedFor_1
@@ -1400,7 +1451,7 @@ L10130:
 	cmp	<L48+uxBitsWaitedFor_1+2
 L55:
 	beq	*+5
-	brl	L10133
+	brl	L10082
 ;                    /* All bits are set. */
 ;                    xMatchFound = pdTRUE;
 	brl	L20005
@@ -1442,10 +1493,13 @@ pxTasksWaitingForBits_1	set	4
 ;        configASSERT( pxEventBits );
 	lda	<L61+pxEventBits_1
 	ora	<L61+pxEventBits_1+2
-	bne	L10139
-L10143:
-	bra	L10143
-L10139:
+	bne	L10088
+	asmstart
+	sei
+	asmend
+L10089:
+	bra	L10089
+L10088:
 ;
 ;        pxTasksWaitingForBits = &( pxEventBits->xTasksWaitingForBits );
 	lda	#$4
@@ -1462,7 +1516,7 @@ L10139:
 ;            traceEVENT_GROUP_DELETE( xEventGroup );
 ;
 ;            while( listCURRENT_LIST_LENGTH( pxTasksWaitingForBits ) > ( UBaseType_t ) 0 )
-	bra	L10146
+	bra	L10092
 L20007:
 ;            {
 ;                /* Unblock the task, returning 0 as the event list is being deleted
@@ -1484,10 +1538,13 @@ L20007:
 	lda	[<L61+pxTasksWaitingForBits_1],Y
 	cmp	<R0+2
 L64:
-	bne	L10148
-L10152:
-	bra	L10152
-L10148:
+	bne	L10094
+	asmstart
+	sei
+	asmend
+L10095:
+	bra	L10095
+L10094:
 ;                vTaskRemoveFromUnorderedEventList( pxTasksWaitingForBits->xListEnd.pxNext, eventUNBLOCKED_DUE_TO_BIT_SET );
 	pea	#^$2000000
 	pea	#<$2000000
@@ -1500,7 +1557,7 @@ L10148:
 	pha
 	jsr	_~vTaskRemoveFromUnorderedEventList
 ;            }
-L10146:
+L10092:
 	lda	#$0
 	cmp	[<L61+pxTasksWaitingForBits_1]
 	bcc	L20007
@@ -1713,7 +1770,7 @@ xWaitConditionMet_1	set	0
 	stz	<L74+xWaitConditionMet_1
 ;        {
 	lda	<L73+xWaitForAllBits_0
-	bne	L10155
+	bne	L10098
 ;            /* Task only has to wait for one bit within uxBitsToWaitFor to be
 ;             * set.  Is one already set? */
 ;            if( ( uxCurrentEventBits & uxBitsToWaitFor ) != ( EventBits_t ) 0 )
@@ -1726,14 +1783,14 @@ xWaitConditionMet_1	set	0
 	sta	<R0+2
 	lda	<R0
 	ora	<R0+2
-	beq	L10158
+	beq	L10101
 ;                xWaitConditionMet = pdTRUE;
 L20009:
 	lda	#$1
 	sta	<L74+xWaitConditionMet_1
 ;            }
 ;            else
-L10158:
+L10101:
 ;
 ;        return xWaitConditionMet;
 	lda	<L74+xWaitConditionMet_1
@@ -1752,7 +1809,7 @@ L10158:
 ;            }
 ;        }
 ;        else
-L10155:
+L10098:
 ;        {
 ;            /* Task has to wait for all the bits in uxBitsToWaitFor to be set.
 ;             * Are they set already? */
@@ -1770,7 +1827,7 @@ L10155:
 	lda	<R0+2
 	cmp	<L73+uxBitsToWaitFor_0+2
 L77:
-	bne	L10158
+	bne	L10101
 ;                xWaitConditionMet = pdTRUE;
 	bra	L20009
 ;            }

@@ -71,3 +71,4 @@ exit /b
 pause
 
 :eof
+pause

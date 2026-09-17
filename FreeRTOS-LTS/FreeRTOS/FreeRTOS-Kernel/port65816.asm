@@ -79,7 +79,7 @@ _~vPortEndScheduler:
 
 _~xPortStartScheduler:
 
-	;jsl	_~prvSetupTimerInterrupt
+	jsr	_~prvSetupTimerInterrupt
 
 	lda	_~pxCurrentTCB+2
 	pha
@@ -122,11 +122,37 @@ _~xPortStartScheduler:
 ;----------------------------------------------------------------------------------
 ;       static void prvSetupTimerInterrupt( void )
 ;----------------------------------------------------------------------------------
-;	module	prvSetupTimerInterrupt
-;	code
-;	xdef	_~prvSetupTimerInterrupt
-;	xref	_~vPortYieldFromTick
-;	func
+	module	prvSetupTimerInterrupt
+	code
+	xdef	_~prvSetupTimerInterrupt
+	xref	_~vPortYieldFromTick
+	func
+	
+_~prvSetupTimerInterrupt:
+	;wdm 7
+
+	lda #$0642			;wdm 6
+	sta >$dffa
+	
+	sep #$20
+	longa off
+	lda #$5c
+	sta >$dffc
+	lda	#^_~vPortYieldFromTick
+	sta	>$dfff			; populate bank of JML() instruction
+	
+	rep #$20
+	longa on
+	lda	#<_~vPortYieldFromTick	
+	sta	>$dffd			; populate lo/hi of JML() instruction
+
+	;wdm 6	
+	rts
+		
+	ends
+	efunc
+	endmod
+	
 ;
 ;	include "homebrewWDC.inc"
 ;	
@@ -213,7 +239,7 @@ IX		 equ $10		; Index 8/16-bit
 	
 	sec
 	lda	<s_pxTopOfStack
-	sbc	#20
+	sbc	#19
 	sta	<s_pxTopOfStack
 
 	ldy	#11
@@ -245,10 +271,10 @@ istack0:
 	rep	#M
 	longa	on
 
-	ldy	#17
+	ldy	#16
 	lda	<s_pvParameters
 	sta	[s_pxTopOfStack],y
-	ldy	#19
+	ldy	#18
 	lda	<s_pvParameters+2
 	sta	[s_pxTopOfStack],y
 	
@@ -277,10 +303,10 @@ istack0:
 ;	return addr lo/hi	11
 ;	return addr bank	13
 ;
-;	pvParameters_lo		17
-;	pvParameters_hi		18
-;	pvParameters_bank	19
-;	pvParameters_dummy	20
+;	pvParameters_lo		16
+;	pvParameters_hi		17
+;	pvParameters_bank	18
+;	pvParameters_dummy	19
 	
 ;txt:	.byte "IStack: %04X %04X %04X", 10, 0
 
@@ -345,7 +371,7 @@ _~vPortYield:
 	adc	#4	
 	sta	[$1]
 	
-	jsl	_~vTaskSwitchContext
+	jsr	_~vTaskSwitchContext
 
 	lda	_~pxCurrentTCB+2
 	pha
@@ -388,9 +414,9 @@ IX		 equ $10		; Index 8/16-bit
 
 _~vPortYieldFromTick:
 
-	rep	#M+IX
 	longa	on
 	longi	on
+	rep	#M+IX
 	
 	pha
 	phx
@@ -399,50 +425,25 @@ _~vPortYieldFromTick:
 	phb
 	
 	;cld
+		
+;	phk			;data bank = program bank ($01)
+;	plb
 	
-	lda	#0		;set direct to 0
-	tcd
+	sep #M
+	longa off	
+	
+	lda #'i'
+	sta $fffff0
+	lda	_~pxCurrentTCB+2
+	sta $fffff1
+	lda	_~pxCurrentTCB+1
+	sta $fffff1
+	lda	_~pxCurrentTCB
+	sta $fffff1
 
-	sep	#M+IX
-	longa	off
-	longi	off
+	rep #M
+	longa on
 	
-	pha			;set data bank to 0
-	plb
-	
-;	lda	>PS2STATUS	;key available?
-;	bne	irqtimer	;Bit 0 = 0?, no =>
-;	jsl	jkgbirq		;perform key activities
-;	
-;irqtimer:		
-;	IF PLATFORM=0
-;	
-;	lda >TIMERST		;timer underrun?
-;	bpl irqend		;no, leave
-;
-;	lda #1			;reset status bit
-;	sta >TIMERST
-;	
-;;	lda >colorBorderLo	;colourize!
-;;	eor #$ff
-;;	sta >colorBorderLo	
-;
-;	ENDIF
-;	
-;	IF PLATFORM=1
-;	lda	SB+ISR		;IRQ caused by timer?
-;	and	#8
-;	beq	irqend		;no, leave
-;	lda	SB+STOPCNT	;reset status flag
-;	ENDIF
-	
-	phk			;data bank = program bank ($01)
-	plb
-	
-	rep	#M+IX
-	longa	on
-	longi	on
-
 	lda	_~pxCurrentTCB+2
 	pha
 	lda	_~pxCurrentTCB
@@ -453,9 +454,32 @@ _~vPortYieldFromTick:
 	adc	#4	
 	sta	[$1]
 
-	jsl	_~xTaskIncrementTick
-	jsl	_~vTaskSwitchContext
+	jsr	_~xTaskIncrementTick
+	beq noswitch
+	pha
+	jsr	_~vTaskSwitchContext
+	pla
 	
+noswitch:
+	sep #M
+	longa off
+	xba
+	sta $fffff1
+	xba
+	sta $fffff1
+	lda #':'
+	sta $fffff0		
+	lda	_~pxCurrentTCB+2
+	sta $fffff1
+	lda	_~pxCurrentTCB+1
+	sta $fffff1
+	lda	_~pxCurrentTCB
+	sta $fffff1
+
+	wdm 7
+	
+	rep #M
+	longa on
 	lda	_~pxCurrentTCB+2
 	pha
 	lda	_~pxCurrentTCB
@@ -464,14 +488,14 @@ _~vPortYieldFromTick:
 	tcd
 	lda	[$1]
 	tcs
+
 	
-irqend:
-	rep	#M+IX
 	plb
 	pld
 	ply
 	plx
 	pla
+	
 	rti
 
 	ends

@@ -392,14 +392,17 @@ ucFlags_1	set	4
 ;            configASSERT( xBufferSizeBytes > sbBYTES_TO_STORE_MESSAGE_LENGTH );
 	lda	#$2
 	cmp	<L2+xBufferSizeBytes_0
-	bcc	L10009
-L10006:
-	bra	L10006
+	bcc	L10006
+	asmstart
+	sei
+	asmend
+L10003:
+	bra	L10003
 L10001:
 ;        {
 	lda	<L2+xStreamBufferType_0
 	cmp	#<$2
-	bne	L10010
+	bne	L10007
 ;            /* Is a batching buffer but not statically allocated. */
 ;            ucFlags = sbFLAGS_IS_BATCHING_BUFFER;
 	sep	#$20
@@ -411,19 +414,22 @@ L10001:
 ;            configASSERT( xBufferSizeBytes > 0 );
 	lda	#$0
 	cmp	<L2+xBufferSizeBytes_0
-	bcc	L10009
-L10015:
-	bra	L10015
+	bcc	L10006
+	asmstart
+	sei
+	asmend
+L10009:
+	bra	L10009
 ;        }
 ;        else
 ;        }
 ;        else if( xStreamBufferType == sbTYPE_STREAM_BATCHING_BUFFER )
-L10009:
+L10006:
 ;
 ;        configASSERT( xTriggerLevelBytes <= xBufferSizeBytes );
 	lda	<L2+xBufferSizeBytes_0
 	cmp	<L2+xTriggerLevelBytes_0
-	bcc	L10030
+	bcc	L9
 ;
 ;        /* A trigger level of 0 would cause a waiting task to unblock even when
 ;         * the buffer was empty. */
@@ -431,8 +437,8 @@ L10009:
 ;        {
 	lda	<L2+xTriggerLevelBytes_0
 	beq	L10
-	bra	L10033
-L10010:
+	bra	L10021
+L10007:
 ;        {
 ;            /* Not a message buffer and not statically allocated. */
 ;            ucFlags = 0;
@@ -444,12 +450,19 @@ L10010:
 ;            configASSERT( xBufferSizeBytes > 0 );
 	lda	#$0
 	cmp	<L2+xBufferSizeBytes_0
-	bcc	L10009
-L10023:
-	bra	L10023
+	bcc	L10006
+	asmstart
+	sei
+	asmend
+L10014:
+	bra	L10014
 ;        }
-L10030:
-	bra	L10030
+L9:
+	asmstart
+	sei
+	asmend
+L10018:
+	bra	L10018
 L10:
 ;            xTriggerLevelBytes = ( size_t ) 1;
 	lda	#$1
@@ -465,7 +478,7 @@ L10:
 ;         * space would be reported as one byte smaller than would be logically
 ;         * expected. */
 ;        if( xBufferSizeBytes < ( xBufferSizeBytes + 1U + sizeof( StreamBuffer_t ) ) )
-L10033:
+L10021:
 ;        {
 	lda	#$18
 	clc
@@ -473,7 +486,7 @@ L10033:
 	sta	<R0
 	lda	<L2+xBufferSizeBytes_0
 	cmp	<R0
-	bcs	L10034
+	bcs	L10022
 ;            xBufferSizeBytes++;
 	inc	<L2+xBufferSizeBytes_0
 ;            pvAllocatedMemory = pvPortMalloc( xBufferSizeBytes + sizeof( StreamBuffer_t ) );
@@ -486,20 +499,20 @@ L10033:
 	stx	<L3+pvAllocatedMemory_1+2
 ;        }
 ;        else
-	bra	L10035
-L10034:
+	bra	L10023
+L10022:
 ;        {
 ;            pvAllocatedMemory = NULL;
 	stz	<L3+pvAllocatedMemory_1
 	stz	<L3+pvAllocatedMemory_1+2
 ;        }
-L10035:
+L10023:
 ;
 ;        if( pvAllocatedMemory != NULL )
 ;        {
 	lda	<L3+pvAllocatedMemory_1
 	ora	<L3+pvAllocatedMemory_1+2
-	beq	L10037
+	beq	L10025
 ;            /* MISRA Ref 11.5.1 [Malloc memory assignment] */
 ;            /* More details at: https://github.com/FreeRTOS/FreeRTOS-Kernel/blob/main/MISRA.md#rule-115 */
 ;            /* coverity[misra_c_2012_rule_11_5_violation] */
@@ -536,7 +549,7 @@ L10035:
 ;        {
 ;            traceSTREAM_BUFFER_CREATE_FAILED( xStreamBufferType );
 ;        }
-L10037:
+L10025:
 ;
 ;        traceRETURN_xStreamBufferGenericCreate( pvAllocatedMemory );
 ;
@@ -723,10 +736,13 @@ pxStreamBuffer_1	set	0
 ;    configASSERT( pxStreamBuffer );
 	lda	<L15+pxStreamBuffer_1
 	ora	<L15+pxStreamBuffer_1+2
-	bne	L10038
-L10042:
-	bra	L10042
-L10038:
+	bne	L10026
+	asmstart
+	sei
+	asmend
+L10027:
+	bra	L10027
+L10026:
 ;
 ;    traceSTREAM_BUFFER_DELETE( xStreamBuffer );
 ;
@@ -739,7 +755,7 @@ L10038:
 	and	#<$2
 	rep	#$20
 	longa	on
-	bne	L10045
+	bne	L10030
 ;        #if ( configSUPPORT_DYNAMIC_ALLOCATION == 1 )
 ;        {
 ;            /* Both the structure and the buffer were allocated using a single call
@@ -759,7 +775,7 @@ L10038:
 ;    }
 ;    else
 	bra	L18
-L10045:
+L10030:
 ;    {
 ;        /* The structure and buffer were not allocated dynamically and cannot be
 ;         * freed - just scrub the structure so future use will assert. */
@@ -832,9 +848,13 @@ pxReceiveCallback_1	set	8
 ;    configASSERT( pxStreamBuffer );
 	lda	<L20+pxStreamBuffer_1
 	ora	<L20+pxStreamBuffer_1+2
-	bne	L10055
-L10051:
-	bra	L10051
+	bne	L10032
+	asmstart
+	sei
+	asmend
+L10033:
+	bra	L10033
+L10032:
 ;
 ;    #if ( configUSE_TRACE_FACILITY == 1 )
 ;    {
@@ -846,7 +866,9 @@ L10051:
 ;
 ;    /* Can only reset a message buffer if there are no tasks blocked on it. */
 ;    taskENTER_CRITICAL();
-L10055:
+	asmstart
+	sei
+	asmend
 ;    {
 ;        if( ( pxStreamBuffer->xTaskWaitingToReceive == NULL ) && ( pxStreamBuffer->xTaskWaitingToSend == NULL ) )
 ;        {
@@ -855,14 +877,14 @@ L10055:
 	iny
 	iny
 	ora	[<L20+pxStreamBuffer_1],Y
-	bne	L10059
+	bne	L10036
 	iny
 	iny
 	lda	[<L20+pxStreamBuffer_1],Y
 	iny
 	iny
 	ora	[<L20+pxStreamBuffer_1],Y
-	bne	L10059
+	bne	L10036
 ;            #if ( configUSE_SB_COMPLETED_CALLBACK == 1 )
 ;            {
 ;                pxSendCallback = pxStreamBuffer->pxSendCompletedCallback;
@@ -913,8 +935,11 @@ L10055:
 	sta	<L20+xReturn_1
 ;        }
 ;    }
+L10036:
 ;    taskEXIT_CRITICAL();
-L10059:
+	asmstart
+	cli
+	asmend
 ;
 ;    traceRETURN_xStreamBufferReset( xReturn );
 ;
@@ -979,10 +1004,13 @@ uxSavedInterruptStatus_1	set	10
 ;    configASSERT( pxStreamBuffer );
 	lda	<L26+pxStreamBuffer_1
 	ora	<L26+pxStreamBuffer_1+2
-	bne	L10061
-L10065:
-	bra	L10065
-L10061:
+	bne	L10037
+	asmstart
+	sei
+	asmend
+L10038:
+	bra	L10038
+L10037:
 ;
 ;    #if ( configUSE_TRACE_FACILITY == 1 )
 ;    {
@@ -1006,14 +1034,14 @@ L10061:
 	iny
 	iny
 	ora	[<L26+pxStreamBuffer_1],Y
-	bne	L10068
+	bne	L10041
 	iny
 	iny
 	lda	[<L26+pxStreamBuffer_1],Y
 	iny
 	iny
 	ora	[<L26+pxStreamBuffer_1],Y
-	bne	L10068
+	bne	L10041
 ;            #if ( configUSE_SB_COMPLETED_CALLBACK == 1 )
 ;            {
 ;                pxSendCallback = pxStreamBuffer->pxSendCompletedCallback;
@@ -1064,7 +1092,7 @@ L10061:
 	sta	<L26+xReturn_1
 ;        }
 ;    }
-L10068:
+L10041:
 ;    taskEXIT_CRITICAL_FROM_ISR( uxSavedInterruptStatus );
 ;
 ;    traceRETURN_xStreamBufferResetFromISR( xReturn );
@@ -1119,16 +1147,19 @@ xReturn_1	set	4
 ;    configASSERT( pxStreamBuffer );
 	lda	<L32+pxStreamBuffer_1
 	ora	<L32+pxStreamBuffer_1+2
-	bne	L10069
-L10073:
-	bra	L10073
-L10069:
+	bne	L10042
+	asmstart
+	sei
+	asmend
+L10043:
+	bra	L10043
+L10042:
 ;
 ;    /* It is not valid for the trigger level to be 0. */
 ;    if( xTriggerLevel == ( size_t ) 0 )
 ;    {
 	lda	<L31+xTriggerLevel_0
-	bne	L10076
+	bne	L10046
 ;        xTriggerLevel = ( size_t ) 1;
 	lda	#$1
 	sta	<L31+xTriggerLevel_0
@@ -1137,12 +1168,12 @@ L10069:
 ;    /* The trigger level is the number of bytes that must be in the stream
 ;     * buffer before a task that is waiting for data is unblocked. */
 ;    if( xTriggerLevel < pxStreamBuffer->xLength )
-L10076:
+L10046:
 ;    {
 	lda	<L31+xTriggerLevel_0
 	ldy	#$4
 	cmp	[<L32+pxStreamBuffer_1],Y
-	bcs	L10077
+	bcs	L10047
 ;        pxStreamBuffer->xTriggerLevelBytes = xTriggerLevel;
 	lda	<L31+xTriggerLevel_0
 	iny
@@ -1153,13 +1184,13 @@ L10076:
 	sta	<L32+xReturn_1
 ;    }
 ;    else
-	bra	L10078
-L10077:
+	bra	L10048
+L10047:
 ;    {
 ;        xReturn = pdFALSE;
 	stz	<L32+xReturn_1
 ;    }
-L10078:
+L10048:
 ;
 ;    traceRETURN_xStreamBufferSetTriggerLevel( xReturn );
 ;
@@ -1213,15 +1244,18 @@ xOriginalTail_1	set	6
 ;    configASSERT( pxStreamBuffer );
 	lda	<L38+pxStreamBuffer_1
 	ora	<L38+pxStreamBuffer_1+2
-	bne	L10088
-L10083:
-	bra	L10083
+	bne	L10055
+	asmstart
+	sei
+	asmend
+L10050:
+	bra	L10050
 ;
 ;    /* The code below reads xTail and then xHead.  This is safe if the stream
 ;     * buffer is updated once between the two reads - but not if the stream buffer
 ;     * is updated more than once between the two reads - hence the loop. */
 ;    do
-L10088:
+L10055:
 ;    {
 ;        xOriginalTail = pxStreamBuffer->xTail;
 	lda	[<L38+pxStreamBuffer_1]
@@ -1241,7 +1275,7 @@ L10088:
 ;    } while( xOriginalTail != pxStreamBuffer->xTail );
 	lda	<L38+xOriginalTail_1
 	cmp	[<L38+pxStreamBuffer_1]
-	bne	L10088
+	bne	L10055
 ;
 ;    xSpace -= ( size_t ) 1;
 	dec	<L38+xSpace_1
@@ -1252,7 +1286,7 @@ L10088:
 	iny
 	iny
 	cmp	[<L38+pxStreamBuffer_1],Y
-	bcc	L10090
+	bcc	L10057
 ;        xSpace -= pxStreamBuffer->xLength;
 	sec
 	lda	<L38+xSpace_1
@@ -1263,7 +1297,7 @@ L10088:
 ;    {
 ;        mtCOVERAGE_TEST_MARKER();
 ;    }
-L10090:
+L10057:
 ;
 ;    traceRETURN_xStreamBufferSpacesAvailable( xSpace );
 ;
@@ -1315,10 +1349,13 @@ xReturn_1	set	4
 ;    configASSERT( pxStreamBuffer );
 	lda	<L44+pxStreamBuffer_1
 	ora	<L44+pxStreamBuffer_1+2
-	bne	L10091
-L10095:
-	bra	L10095
-L10091:
+	bne	L10058
+	asmstart
+	sei
+	asmend
+L10059:
+	bra	L10059
+L10058:
 ;
 ;    xReturn = prvBytesInBuffer( pxStreamBuffer );
 	pei	<L44+pxStreamBuffer_1+2
@@ -1392,17 +1429,23 @@ xMaxReportedSpace_1	set	16
 ;    configASSERT( pvTxData );
 	lda	<L47+pvTxData_0
 	ora	<L47+pvTxData_0+2
-	bne	L10098
-L10102:
-	bra	L10102
-L10098:
+	bne	L10062
+	asmstart
+	sei
+	asmend
+L10063:
+	bra	L10063
+L10062:
 ;    configASSERT( pxStreamBuffer );
 	lda	<L48+pxStreamBuffer_1
 	ora	<L48+pxStreamBuffer_1+2
-	bne	L10105
-L10109:
-	bra	L10109
-L10105:
+	bne	L10066
+	asmstart
+	sei
+	asmend
+L10067:
+	bra	L10067
+L10066:
 ;
 ;    /* The maximum amount of space a stream buffer will ever report is its length
 ;     * minus 1. */
@@ -1426,7 +1469,7 @@ L10105:
 	and	#<$1
 	rep	#$20
 	longa	on
-	beq	L10112
+	beq	L10070
 ;        xRequiredSpace += sbBYTES_TO_STORE_MESSAGE_LENGTH;
 	inc	<L48+xRequiredSpace_1
 	inc	<L48+xRequiredSpace_1
@@ -1435,10 +1478,13 @@ L10105:
 ;        configASSERT( xRequiredSpace > xDataLengthBytes );
 	lda	<L47+xDataLengthBytes_0
 	cmp	<L48+xRequiredSpace_1
-	bcc	L10113
-L10117:
-	bra	L10117
-L10113:
+	bcc	L10071
+	asmstart
+	sei
+	asmend
+L10072:
+	bra	L10072
+L10071:
 ;
 ;        /* If this is a message buffer then it must be possible to write the
 ;         * whole message. */
@@ -1446,7 +1492,7 @@ L10113:
 ;        {
 	lda	<L48+xMaxReportedSpace_1
 	cmp	<L48+xRequiredSpace_1
-	bcs	L10122
+	bcs	L10077
 ;            /* The message would not fit even if the entire buffer was empty,
 ;             * so don't wait for space. */
 ;            xTicksToWait = ( TickType_t ) 0;
@@ -1454,13 +1500,13 @@ L10113:
 	stz	<L47+xTicksToWait_0+2
 ;        }
 ;        else
-	bra	L10122
+	bra	L10077
 ;        {
 ;            mtCOVERAGE_TEST_MARKER();
 ;        }
 ;    }
 ;    else
-L10112:
+L10070:
 ;    {
 ;        /* If this is a stream buffer then it is acceptable to write only part
 ;         * of the message to the buffer.  Cap the length to the total length of
@@ -1469,20 +1515,20 @@ L10112:
 ;        {
 	lda	<L48+xMaxReportedSpace_1
 	cmp	<L48+xRequiredSpace_1
-	bcs	L10122
+	bcs	L10077
 ;            xRequiredSpace = xMaxReportedSpace;
 	lda	<L48+xMaxReportedSpace_1
 	sta	<L48+xRequiredSpace_1
 ;        }
 ;        else
-L10122:
+L10077:
 ;
 ;    if( xTicksToWait != ( TickType_t ) 0 )
 ;    {
 	lda	<L47+xTicksToWait_0
 	ora	<L47+xTicksToWait_0+2
 	bne	*+5
-	brl	L10147
+	brl	L10090
 ;        {
 ;            mtCOVERAGE_TEST_MARKER();
 ;        }
@@ -1496,11 +1542,7 @@ L10122:
 	jsr	_~vTaskSetTimeOutState
 ;
 ;        do
-;        {
-;            /* Wait until the required number of bytes are free in the message
-;             * buffer. */
-;            taskENTER_CRITICAL();
-	bra	L10130
+	brl	L10083
 L20002:
 ;                    /* Clear notification state as going to wait for space. */
 ;                    ( void ) xTaskNotifyStateClearIndexed( NULL, pxStreamBuffer->uxNotificationIndex );
@@ -1519,10 +1561,13 @@ L20002:
 	iny
 	iny
 	ora	[<L48+pxStreamBuffer_1],Y
-	beq	L10133
-L10137:
-	bra	L10137
-L10133:
+	beq	L10085
+	asmstart
+	sei
+	asmend
+L10086:
+	bra	L10086
+L10085:
 ;                    pxStreamBuffer->xTaskWaitingToSend = xTaskGetCurrentTaskHandle();
 	jsr	_~xTaskGetCurrentTaskHandle
 	stx	<R0+2
@@ -1534,6 +1579,11 @@ L10133:
 	sta	[<L48+pxStreamBuffer_1],Y
 ;                }
 ;                else
+;            }
+;            taskEXIT_CRITICAL();
+	asmstart
+	cli
+	asmend
 ;
 ;            traceBLOCKING_ON_STREAM_BUFFER_SEND( xStreamBuffer );
 ;            ( void ) xTaskNotifyWaitIndexed( pxStreamBuffer->uxNotificationIndex, ( uint32_t ) 0, ( uint32_t ) 0, NULL, xTicksToWait );
@@ -1570,8 +1620,15 @@ L10133:
 	pha
 	jsr	_~xTaskCheckForTimeOut
 	tax
-	bne	L10147
-L10130:
+	bne	L10090
+L10083:
+;        {
+;            /* Wait until the required number of bytes are free in the message
+;             * buffer. */
+;            taskENTER_CRITICAL();
+	asmstart
+	sei
+	asmend
 ;            {
 ;                xSpace = xStreamBufferSpacesAvailable( pxStreamBuffer );
 	pei	<L48+pxStreamBuffer_1+2
@@ -1586,16 +1643,17 @@ L10130:
 	brl	L20002
 ;                {
 ;                    taskEXIT_CRITICAL();
+	asmstart
+	cli
+	asmend
 ;                    break;
-L10147:
+L10090:
 ;
 ;    if( xSpace == ( size_t ) 0 )
 ;    {
 	lda	<L48+xSpace_1
-	bne	L10149
+	bne	L10092
 ;                }
-;            }
-;            taskEXIT_CRITICAL();
 ;    }
 ;    else
 ;    {
@@ -1608,7 +1666,7 @@ L10147:
 	sta	<L48+xSpace_1
 ;    }
 ;    else
-L10149:
+L10092:
 ;
 ;    xReturn = prvWriteMessageToBuffer( pxStreamBuffer, pvTxData, xDataLengthBytes, xSpace, xRequiredSpace );
 	pei	<L48+xRequiredSpace_1
@@ -1625,7 +1683,7 @@ L10149:
 ;    {
 	lda	#$0
 	cmp	<L48+xReturn_1
-	bcs	L10154
+	bcs	L10097
 ;    {
 ;        mtCOVERAGE_TEST_MARKER();
 ;    }
@@ -1642,7 +1700,7 @@ L10149:
 	pei	<L48+pxStreamBuffer_1
 	jsr	_~prvBytesInBufferMeetTriggerLevel
 	tax
-	beq	L10154
+	beq	L10097
 ;            prvSEND_COMPLETED( pxStreamBuffer );
 	jsr	_~vTaskSuspendAll
 	ldy	#$8
@@ -1650,7 +1708,7 @@ L10149:
 	iny
 	iny
 	ora	[<L48+pxStreamBuffer_1],Y
-	beq	L10152
+	beq	L10095
 	pea	#^$0
 	pea	#<$0
 	pea	#<$0
@@ -1674,11 +1732,11 @@ L10149:
 	iny
 	iny
 	sta	[<L48+pxStreamBuffer_1],Y
-L10152:
+L10095:
 	jsr	_~xTaskResumeAll
 ;        }
 ;        else
-L10154:
+L10097:
 ;
 ;    traceRETURN_xStreamBufferSend( xReturn );
 ;
@@ -1750,17 +1808,23 @@ xRequiredSpace_1	set	8
 ;    configASSERT( pvTxData );
 	lda	<L64+pvTxData_0
 	ora	<L64+pvTxData_0+2
-	bne	L10155
-L10159:
-	bra	L10159
-L10155:
+	bne	L10098
+	asmstart
+	sei
+	asmend
+L10099:
+	bra	L10099
+L10098:
 ;    configASSERT( pxStreamBuffer );
 	lda	<L65+pxStreamBuffer_1
 	ora	<L65+pxStreamBuffer_1+2
-	bne	L10162
-L10166:
-	bra	L10166
-L10162:
+	bne	L10102
+	asmstart
+	sei
+	asmend
+L10103:
+	bra	L10103
+L10102:
 ;
 ;    /* This send function is used to write to both message buffers and stream
 ;     * buffers.  If this is a message buffer then the space needed must be
@@ -1775,7 +1839,7 @@ L10162:
 	and	#<$1
 	rep	#$20
 	longa	on
-	beq	L10177
+	beq	L10111
 ;        xRequiredSpace += sbBYTES_TO_STORE_MESSAGE_LENGTH;
 	inc	<L65+xRequiredSpace_1
 	inc	<L65+xRequiredSpace_1
@@ -1784,15 +1848,18 @@ L10162:
 ;        configASSERT( xRequiredSpace > xDataLengthBytes );
 	lda	<L64+xDataLengthBytes_0
 	cmp	<L65+xRequiredSpace_1
-	bcc	L10177
-L10174:
-	bra	L10174
+	bcc	L10111
+	asmstart
+	sei
+	asmend
+L10108:
+	bra	L10108
 ;    }
 ;    else
 ;    {
 ;        mtCOVERAGE_TEST_MARKER();
 ;    }
-L10177:
+L10111:
 ;
 ;    xSpace = xStreamBufferSpacesAvailable( pxStreamBuffer );
 	pei	<L65+pxStreamBuffer_1+2
@@ -1814,7 +1881,7 @@ L10177:
 ;    {
 	lda	#$0
 	cmp	<L65+xReturn_1
-	bcs	L10185
+	bcs	L10119
 ;        /* Was a task waiting for the data? */
 ;        if( prvBytesInBufferMeetTriggerLevel( pxStreamBuffer, prvBytesInBuffer( pxStreamBuffer ) ) != pdFALSE )
 ;        {
@@ -1826,7 +1893,7 @@ L10177:
 	pei	<L65+pxStreamBuffer_1
 	jsr	_~prvBytesInBufferMeetTriggerLevel
 	tax
-	beq	L10185
+	beq	L10119
 ;            /* MISRA Ref 4.7.1 [Return value shall be checked] */
 ;            /* More details at: https://github.com/FreeRTOS/FreeRTOS-Kernel/blob/main/MISRA.md#dir-47 */
 ;            /* coverity[misra_c_2012_directive_4_7_violation] */
@@ -1838,7 +1905,7 @@ uxSavedInterruptStatus_2	set	10
 	iny
 	iny
 	ora	[<L65+pxStreamBuffer_1],Y
-	beq	L10185
+	beq	L10119
 	pei	<L64+pxHigherPriorityTaskWoken_0+2
 	pei	<L64+pxHigherPriorityTaskWoken_0
 	pea	#^$0
@@ -1866,7 +1933,7 @@ uxSavedInterruptStatus_2	set	10
 	sta	[<L65+pxStreamBuffer_1],Y
 ;        }
 ;        else
-L10185:
+L10119:
 ;
 ;    traceSTREAM_BUFFER_SEND_FROM_ISR( xStreamBuffer, xReturn );
 ;    traceRETURN_xStreamBufferSendFromISR( xReturn );
@@ -1937,7 +2004,7 @@ xMessageLength_1	set	2
 	and	#<$1
 	rep	#$20
 	longa	on
-	beq	L10186
+	beq	L10120
 ;        /* This is a message buffer, as opposed to a stream buffer. */
 ;
 ;        /* Convert xDataLengthBytes to the message length type. */
@@ -1948,16 +2015,19 @@ xMessageLength_1	set	2
 ;        /* Ensure the data length given fits within configMESSAGE_BUFFER_LENGTH_TYPE. */
 ;        configASSERT( ( size_t ) xMessageLength == xDataLengthBytes );
 	cmp	<L74+xDataLengthBytes_0
-	beq	L10187
-L10191:
-	bra	L10191
-L10187:
+	beq	L10121
+	asmstart
+	sei
+	asmend
+L10122:
+	bra	L10122
+L10121:
 ;
 ;        if( xSpace >= xRequiredSpace )
 ;        {
 	lda	<L74+xSpace_0
 	cmp	<L74+xRequiredSpace_0
-	bcc	L10194
+	bcc	L10125
 ;            /* There is enough space to write both the message length and the message
 ;             * itself into the buffer.  Start by writing the length of the data, the data
 ;             * itself will be written later in this function. */
@@ -1975,8 +2045,8 @@ L10187:
 	sta	<L75+xNextHead_1
 ;        }
 ;        else
-	bra	L10196
-L10194:
+	bra	L10127
+L10125:
 ;        {
 ;            /* Not enough space, so do not write data to the buffer. */
 ;            xDataLengthBytes = 0;
@@ -1984,8 +2054,8 @@ L10194:
 ;        }
 ;    }
 ;    else
-	bra	L10196
-L10186:
+	bra	L10127
+L10120:
 ;    {
 ;        /* This is a stream buffer, as opposed to a message buffer, so writing a
 ;         * stream of bytes rather than discrete messages.  Plan to write as many
@@ -2001,12 +2071,12 @@ L79:
 L81:
 	sta	<L74+xDataLengthBytes_0
 ;    }
-L10196:
+L10127:
 ;
 ;    if( xDataLengthBytes != ( size_t ) 0 )
 ;    {
 	lda	<L74+xDataLengthBytes_0
-	beq	L10197
+	beq	L10128
 ;        /* Write the data to the buffer. */
 ;        /* MISRA Ref 11.5.5 [Void pointer assignment] */
 ;        /* More details at: https://github.com/FreeRTOS/FreeRTOS-Kernel/blob/main/MISRA.md#rule-115 */
@@ -2024,7 +2094,7 @@ L10196:
 ;    }
 ;
 ;    return xDataLengthBytes;
-L10197:
+L10128:
 	lda	<L74+xDataLengthBytes_0
 	tay
 	lda	<L74+1
@@ -2081,17 +2151,23 @@ xBytesToStoreMessageLength_1	set	8
 ;    configASSERT( pvRxData );
 	lda	<L84+pvRxData_0
 	ora	<L84+pvRxData_0+2
-	bne	L10198
-L10202:
-	bra	L10202
-L10198:
+	bne	L10129
+	asmstart
+	sei
+	asmend
+L10130:
+	bra	L10130
+L10129:
 ;    configASSERT( pxStreamBuffer );
 	lda	<L85+pxStreamBuffer_1
 	ora	<L85+pxStreamBuffer_1+2
-	bne	L10205
-L10209:
-	bra	L10209
-L10205:
+	bne	L10133
+	asmstart
+	sei
+	asmend
+L10134:
+	bra	L10134
+L10133:
 ;
 ;    /* This receive function is used by both message buffers, which store
 ;     * discrete messages, and stream buffers, which store a continuous stream of
@@ -2107,7 +2183,7 @@ L10205:
 	and	#<$1
 	rep	#$20
 	longa	on
-	beq	L10212
+	beq	L10137
 ;        xBytesToStoreMessageLength = sbBYTES_TO_STORE_MESSAGE_LENGTH;
 	lda	#$2
 	bra	L20007
@@ -2123,8 +2199,8 @@ L20007:
 	sta	<L85+xBytesToStoreMessageLength_1
 ;    }
 ;    else if( ( pxStreamBuffer->ucFlags & sbFLAGS_IS_BATCHING_BUFFER ) != ( uint8_t ) 0 )
-	bra	L10213
-L10212:
+	bra	L10138
+L10137:
 ;    {
 	sep	#$20
 	longa	off
@@ -2138,16 +2214,20 @@ L10212:
 ;        xBytesToStoreMessageLength = 0;
 	stz	<L85+xBytesToStoreMessageLength_1
 ;    }
-L10213:
+L10138:
 ;
 ;    if( xTicksToWait != ( TickType_t ) 0 )
 ;    {
 	lda	<L84+xTicksToWait_0
 	ora	<L84+xTicksToWait_0+2
-	beq	L10216
+	bne	*+5
+	brl	L10141
 ;        /* Checking if there is data and clearing the notification state must be
 ;         * performed atomically. */
 ;        taskENTER_CRITICAL();
+	asmstart
+	sei
+	asmend
 ;        {
 ;            xBytesAvailable = prvBytesInBuffer( pxStreamBuffer );
 	pei	<L85+pxStreamBuffer_1+2
@@ -2166,7 +2246,7 @@ L10213:
 ;            {
 	lda	<L85+xBytesToStoreMessageLength_1
 	cmp	<L85+xBytesAvailable_1
-	bcc	L10230
+	bcc	L10147
 ;                /* Clear notification state as going to wait for data. */
 ;                ( void ) xTaskNotifyStateClearIndexed( NULL, pxStreamBuffer->uxNotificationIndex );
 	ldy	#$15
@@ -2184,10 +2264,13 @@ L10213:
 	iny
 	iny
 	ora	[<L85+pxStreamBuffer_1],Y
-	beq	L10221
-L10225:
-	bra	L10225
-L10221:
+	beq	L10143
+	asmstart
+	sei
+	asmend
+L10144:
+	bra	L10144
+L10143:
 ;                pxStreamBuffer->xTaskWaitingToReceive = xTaskGetCurrentTaskHandle();
 	jsr	_~xTaskGetCurrentTaskHandle
 	stx	<R0+2
@@ -2202,15 +2285,18 @@ L10221:
 ;            {
 ;                mtCOVERAGE_TEST_MARKER();
 ;            }
+L10147:
 ;        }
 ;        taskEXIT_CRITICAL();
-L10230:
+	asmstart
+	cli
+	asmend
 ;
 ;        if( xBytesAvailable <= xBytesToStoreMessageLength )
 ;        {
 	lda	<L85+xBytesToStoreMessageLength_1
 	cmp	<L85+xBytesAvailable_1
-	bcc	L10234
+	bcc	L10150
 ;            /* Wait for data to be available. */
 ;            traceBLOCKING_ON_STREAM_BUFFER_RECEIVE( xStreamBuffer );
 ;            ( void ) xTaskNotifyWaitIndexed( pxStreamBuffer->uxNotificationIndex, ( uint32_t ) 0, ( uint32_t ) 0, NULL, xTicksToWait );
@@ -2244,7 +2330,7 @@ L10230:
 ;        }
 ;    }
 ;    else
-L10216:
+L10141:
 ;    {
 ;        xBytesAvailable = prvBytesInBuffer( pxStreamBuffer );
 	pei	<L85+pxStreamBuffer_1+2
@@ -2252,7 +2338,7 @@ L10216:
 	jsr	_~prvBytesInBuffer
 	sta	<L85+xBytesAvailable_1
 ;    }
-L10234:
+L10150:
 ;
 ;    /* Whether receiving a discrete message (where xBytesToStoreMessageLength
 ;     * holds the number of bytes used to store the message length) or a stream of
@@ -2263,7 +2349,7 @@ L10234:
 ;    {
 	lda	<L85+xBytesToStoreMessageLength_1
 	cmp	<L85+xBytesAvailable_1
-	bcs	L10242
+	bcs	L10158
 ;        xReceivedLength = prvReadMessageFromBuffer( pxStreamBuffer, pvRxData, xBufferLengthBytes, xBytesAvailable );
 	pei	<L85+xBytesAvailable_1
 	pei	<L84+xBufferLengthBytes_0
@@ -2278,7 +2364,7 @@ L10234:
 ;        if( xReceivedLength != ( size_t ) 0 )
 ;        {
 	lda	<L85+xReceivedLength_1
-	beq	L10242
+	beq	L10158
 ;            traceSTREAM_BUFFER_RECEIVE( xStreamBuffer, xReceivedLength );
 ;            prvRECEIVE_COMPLETED( xStreamBuffer );
 	jsr	_~vTaskSuspendAll
@@ -2287,7 +2373,7 @@ L10234:
 	iny
 	iny
 	ora	[<L84+xStreamBuffer_0],Y
-	beq	L10240
+	beq	L10156
 	pea	#^$0
 	pea	#<$0
 	pea	#<$0
@@ -2311,11 +2397,11 @@ L10234:
 	iny
 	iny
 	sta	[<L84+xStreamBuffer_0],Y
-L10240:
+L10156:
 	jsr	_~xTaskResumeAll
 ;        }
 ;        else
-L10242:
+L10158:
 ;
 ;    traceRETURN_xStreamBufferReceive( xReceivedLength );
 ;
@@ -2379,10 +2465,13 @@ xTempReturn_1	set	8
 ;    configASSERT( pxStreamBuffer );
 	lda	<L99+pxStreamBuffer_1
 	ora	<L99+pxStreamBuffer_1+2
-	bne	L10243
-L10247:
-	bra	L10247
-L10243:
+	bne	L10159
+	asmstart
+	sei
+	asmend
+L10160:
+	bra	L10160
+L10159:
 ;
 ;    /* Ensure the stream buffer is being used as a message buffer. */
 ;    if( ( pxStreamBuffer->ucFlags & sbFLAGS_IS_MESSAGE_BUFFER ) != ( uint8_t ) 0 )
@@ -2394,7 +2483,7 @@ L10243:
 	and	#<$1
 	rep	#$20
 	longa	on
-	beq	L10250
+	beq	L10163
 ;        xBytesAvailable = prvBytesInBuffer( pxStreamBuffer );
 	pei	<L99+pxStreamBuffer_1+2
 	pei	<L99+pxStreamBuffer_1
@@ -2405,7 +2494,7 @@ L10243:
 ;        {
 	lda	#$2
 	cmp	<L99+xBytesAvailable_1
-	bcs	L10251
+	bcs	L10164
 ;            /* The number of bytes available is greater than the number of bytes
 ;             * required to hold the length of the next message, so another message
 ;             * is available. */
@@ -2427,8 +2516,8 @@ L10243:
 	sta	<L99+xReturn_1
 ;        }
 ;        else
-	bra	L10260
-L10251:
+	bra	L10170
+L10164:
 ;        {
 ;            /* The minimum amount of bytes in a message buffer is
 ;             * ( sbBYTES_TO_STORE_MESSAGE_LENGTH + 1 ), so if xBytesAvailable is
@@ -2436,19 +2525,22 @@ L10251:
 ;             * value is 0. */
 ;            configASSERT( xBytesAvailable == 0 );
 	lda	<L99+xBytesAvailable_1
-	beq	L10250
-L10257:
-	bra	L10257
+	beq	L10163
+	asmstart
+	sei
+	asmend
+L10167:
+	bra	L10167
 ;            xReturn = 0;
 ;        }
 ;    }
 ;    else
-L10250:
+L10163:
 ;    {
 ;        xReturn = 0;
 	stz	<L99+xReturn_1
 ;    }
-L10260:
+L10170:
 ;
 ;    traceRETURN_xStreamBufferNextMessageLengthBytes( xReturn );
 ;
@@ -2509,17 +2601,23 @@ xBytesToStoreMessageLength_1	set	8
 ;    configASSERT( pvRxData );
 	lda	<L105+pvRxData_0
 	ora	<L105+pvRxData_0+2
-	bne	L10261
-L10265:
-	bra	L10265
-L10261:
+	bne	L10171
+	asmstart
+	sei
+	asmend
+L10172:
+	bra	L10172
+L10171:
 ;    configASSERT( pxStreamBuffer );
 	lda	<L106+pxStreamBuffer_1
 	ora	<L106+pxStreamBuffer_1+2
-	bne	L10268
-L10272:
-	bra	L10272
-L10268:
+	bne	L10175
+	asmstart
+	sei
+	asmend
+L10176:
+	bra	L10176
+L10175:
 ;
 ;    /* This receive function is used by both message buffers, which store
 ;     * discrete messages, and stream buffers, which store a continuous stream of
@@ -2535,19 +2633,19 @@ L10268:
 	and	#<$1
 	rep	#$20
 	longa	on
-	beq	L10275
+	beq	L10179
 ;        xBytesToStoreMessageLength = sbBYTES_TO_STORE_MESSAGE_LENGTH;
 	lda	#$2
 	sta	<L106+xBytesToStoreMessageLength_1
 ;    }
 ;    else
-	bra	L10276
-L10275:
+	bra	L10180
+L10179:
 ;    {
 ;        xBytesToStoreMessageLength = 0;
 	stz	<L106+xBytesToStoreMessageLength_1
 ;    }
-L10276:
+L10180:
 ;
 ;    xBytesAvailable = prvBytesInBuffer( pxStreamBuffer );
 	pei	<L106+pxStreamBuffer_1+2
@@ -2564,7 +2662,7 @@ L10276:
 ;    {
 	lda	<L106+xBytesToStoreMessageLength_1
 	cmp	<L106+xBytesAvailable_1
-	bcs	L10284
+	bcs	L10188
 ;        xReceivedLength = prvReadMessageFromBuffer( pxStreamBuffer, pvRxData, xBufferLengthBytes, xBytesAvailable );
 	pei	<L106+xBytesAvailable_1
 	pei	<L105+xBufferLengthBytes_0
@@ -2579,7 +2677,7 @@ L10276:
 ;        if( xReceivedLength != ( size_t ) 0 )
 ;        {
 	lda	<L106+xReceivedLength_1
-	beq	L10284
+	beq	L10188
 ;            /* MISRA Ref 4.7.1 [Return value shall be checked] */
 ;            /* More details at: https://github.com/FreeRTOS/FreeRTOS-Kernel/blob/main/MISRA.md#dir-47 */
 ;            /* coverity[misra_c_2012_directive_4_7_violation] */
@@ -2591,7 +2689,7 @@ uxSavedInterruptStatus_2	set	10
 	iny
 	iny
 	ora	[<L106+pxStreamBuffer_1],Y
-	beq	L10284
+	beq	L10188
 	pei	<L105+pxHigherPriorityTaskWoken_0+2
 	pei	<L105+pxHigherPriorityTaskWoken_0
 	pea	#^$0
@@ -2619,7 +2717,7 @@ uxSavedInterruptStatus_2	set	10
 	sta	[<L106+pxStreamBuffer_1],Y
 ;        }
 ;        else
-L10284:
+L10188:
 ;
 ;    traceSTREAM_BUFFER_RECEIVE_FROM_ISR( xStreamBuffer, xReceivedLength );
 ;    traceRETURN_xStreamBufferReceiveFromISR( xReceivedLength );
@@ -2690,7 +2788,7 @@ xNextTail_1	set	6
 	and	#<$1
 	rep	#$20
 	longa	on
-	beq	L10285
+	beq	L10189
 ;        /* A discrete message is being received.  First receive the length
 ;         * of the message. */
 ;        xNextTail = prvReadBytesFromBuffer( pxStreamBuffer, ( uint8_t * ) &xTempNextMessageLength, sbBYTES_TO_STORE_MESSAGE_LENGTH, xNextTail );
@@ -2721,19 +2819,19 @@ xNextTail_1	set	6
 ;        {
 	lda	<L114+xBufferLengthBytes_0
 	cmp	<L115+xNextMessageLength_1
-	bcs	L10288
+	bcs	L10192
 ;            /* The user has provided insufficient space to read the message. */
 ;            xNextMessageLength = 0;
 	stz	<L115+xNextMessageLength_1
 ;        }
 ;        else
-	bra	L10288
+	bra	L10192
 ;        {
 ;            mtCOVERAGE_TEST_MARKER();
 ;        }
 ;    }
 ;    else
-L10285:
+L10189:
 ;    {
 ;        /* A stream of bytes is being received (as opposed to a discrete
 ;         * message), so read as many bytes as possible. */
@@ -2741,7 +2839,7 @@ L10285:
 	lda	<L114+xBufferLengthBytes_0
 	sta	<L115+xNextMessageLength_1
 ;    }
-L10288:
+L10192:
 ;
 ;    /* Use the minimum of the wanted bytes and the available bytes. */
 ;    xCount = configMIN( xNextMessageLength, xBytesAvailable );
@@ -2758,7 +2856,7 @@ L120:
 ;    if( xCount != ( size_t ) 0 )
 ;    {
 	lda	<L115+xCount_1
-	beq	L10289
+	beq	L10193
 ;        /* Read the actual data and update the tail to mark the data as officially consumed. */
 ;        /* MISRA Ref 11.5.5 [Void pointer assignment] */
 ;        /* More details at: https://github.com/FreeRTOS/FreeRTOS-Kernel/blob/main/MISRA.md#rule-115 */
@@ -2775,7 +2873,7 @@ L120:
 ;    }
 ;
 ;    return xCount;
-L10289:
+L10193:
 	lda	<L115+xCount_1
 	tay
 	lda	<L114+1
@@ -2825,10 +2923,13 @@ xTail_1	set	6
 ;    configASSERT( pxStreamBuffer );
 	lda	<L124+pxStreamBuffer_1
 	ora	<L124+pxStreamBuffer_1+2
-	bne	L10290
-L10294:
-	bra	L10294
-L10290:
+	bne	L10194
+	asmstart
+	sei
+	asmend
+L10195:
+	bra	L10195
+L10194:
 ;
 ;    /* True if no bytes are available. */
 ;    xTail = pxStreamBuffer->xTail;
@@ -2840,19 +2941,19 @@ L10290:
 	ldy	#$2
 	lda	[<L124+pxStreamBuffer_1],Y
 	cmp	<L124+xTail_1
-	bne	L10297
+	bne	L10198
 ;        xReturn = pdTRUE;
 	lda	#$1
 	sta	<L124+xReturn_1
 ;    }
 ;    else
-	bra	L10298
-L10297:
+	bra	L10199
+L10198:
 ;    {
 ;        xReturn = pdFALSE;
 	stz	<L124+xReturn_1
 ;    }
-L10298:
+L10199:
 ;
 ;    traceRETURN_xStreamBufferIsEmpty( xReturn );
 ;
@@ -2906,10 +3007,13 @@ pxStreamBuffer_1	set	4
 ;    configASSERT( pxStreamBuffer );
 	lda	<L129+pxStreamBuffer_1
 	ora	<L129+pxStreamBuffer_1+2
-	bne	L10299
-L10303:
-	bra	L10303
-L10299:
+	bne	L10200
+	asmstart
+	sei
+	asmend
+L10201:
+	bra	L10201
+L10200:
 ;
 ;    /* This generic version of the receive function is used by both message
 ;     * buffers, which store discrete messages, and stream buffers, which store a
@@ -2924,19 +3028,19 @@ L10299:
 	and	#<$1
 	rep	#$20
 	longa	on
-	beq	L10306
+	beq	L10204
 ;        xBytesToStoreMessageLength = sbBYTES_TO_STORE_MESSAGE_LENGTH;
 	lda	#$2
 	sta	<L129+xBytesToStoreMessageLength_1
 ;    }
 ;    else
-	bra	L10307
-L10306:
+	bra	L10205
+L10204:
 ;    {
 ;        xBytesToStoreMessageLength = 0;
 	stz	<L129+xBytesToStoreMessageLength_1
 ;    }
-L10307:
+L10205:
 ;
 ;    /* True if the available space equals zero. */
 ;    if( xStreamBufferSpacesAvailable( xStreamBuffer ) <= xBytesToStoreMessageLength )
@@ -2947,19 +3051,19 @@ L10307:
 	sta	<R0
 	lda	<L129+xBytesToStoreMessageLength_1
 	cmp	<R0
-	bcc	L10308
+	bcc	L10206
 ;        xReturn = pdTRUE;
 	lda	#$1
 	sta	<L129+xReturn_1
 ;    }
 ;    else
-	bra	L10309
-L10308:
+	bra	L10207
+L10206:
 ;    {
 ;        xReturn = pdFALSE;
 	stz	<L129+xReturn_1
 ;    }
-L10309:
+L10207:
 ;
 ;    traceRETURN_xStreamBufferIsFull( xReturn );
 ;
@@ -3015,10 +3119,13 @@ uxSavedInterruptStatus_1	set	6
 ;    configASSERT( pxStreamBuffer );
 	lda	<L135+pxStreamBuffer_1
 	ora	<L135+pxStreamBuffer_1+2
-	bne	L10310
-L10314:
-	bra	L10314
-L10310:
+	bne	L10208
+	asmstart
+	sei
+	asmend
+L10209:
+	bra	L10209
+L10208:
 ;
 ;    /* MISRA Ref 4.7.1 [Return value shall be checked] */
 ;    /* More details at: https://github.com/FreeRTOS/FreeRTOS-Kernel/blob/main/MISRA.md#dir-47 */
@@ -3033,7 +3140,7 @@ L10310:
 	iny
 	iny
 	ora	[<L135+pxStreamBuffer_1],Y
-	beq	L10317
+	beq	L10212
 ;            ( void ) xTaskNotifyIndexedFromISR( ( pxStreamBuffer )->xTaskWaitingToReceive,
 ;                                                ( pxStreamBuffer )->uxNotificationIndex,
 ;                                                ( uint32_t ) 0,
@@ -3070,13 +3177,13 @@ L10310:
 	sta	<L135+xReturn_1
 ;        }
 ;        else
-	bra	L10318
-L10317:
+	bra	L10213
+L10212:
 ;        {
 ;            xReturn = pdFALSE;
 	stz	<L135+xReturn_1
 ;        }
-L10318:
+L10213:
 ;    }
 ;    taskEXIT_CRITICAL_FROM_ISR( uxSavedInterruptStatus );
 ;
@@ -3134,10 +3241,13 @@ uxSavedInterruptStatus_1	set	6
 ;    configASSERT( pxStreamBuffer );
 	lda	<L140+pxStreamBuffer_1
 	ora	<L140+pxStreamBuffer_1+2
-	bne	L10319
-L10323:
-	bra	L10323
-L10319:
+	bne	L10214
+	asmstart
+	sei
+	asmend
+L10215:
+	bra	L10215
+L10214:
 ;
 ;    /* MISRA Ref 4.7.1 [Return value shall be checked] */
 ;    /* More details at: https://github.com/FreeRTOS/FreeRTOS-Kernel/blob/main/MISRA.md#dir-47 */
@@ -3152,7 +3262,7 @@ L10319:
 	iny
 	iny
 	ora	[<L140+pxStreamBuffer_1],Y
-	beq	L10326
+	beq	L10218
 ;            ( void ) xTaskNotifyIndexedFromISR( ( pxStreamBuffer )->xTaskWaitingToSend,
 ;                                                ( pxStreamBuffer )->uxNotificationIndex,
 ;                                                ( uint32_t ) 0,
@@ -3189,13 +3299,13 @@ L10319:
 	sta	<L140+xReturn_1
 ;        }
 ;        else
-	bra	L10327
-L10326:
+	bra	L10219
+L10218:
 ;        {
 ;            xReturn = pdFALSE;
 	stz	<L140+xReturn_1
 ;        }
-L10327:
+L10219:
 ;    }
 ;    taskEXIT_CRITICAL_FROM_ISR( uxSavedInterruptStatus );
 ;
@@ -3246,10 +3356,13 @@ xHead_0	set	13
 xFirstLength_1	set	0
 	lda	#$0
 	cmp	<L144+xCount_0
-	bcc	L10328
-L10332:
-	bra	L10332
-L10328:
+	bcc	L10220
+	asmstart
+	sei
+	asmend
+L10221:
+	bra	L10221
+L10220:
 ;
 ;    /* Calculate the number of bytes that can be added in the first write -
 ;     * which may be less than the total number of bytes that need to be added if
@@ -3275,10 +3388,13 @@ L149:
 	ldy	#$4
 	lda	[<L144+pxStreamBuffer_0],Y
 	cmp	<R0
-	bcs	L10335
-L10339:
-	bra	L10339
-L10335:
+	bcs	L10224
+	asmstart
+	sei
+	asmend
+L10225:
+	bra	L10225
+L10224:
 ;    ( void ) memcpy( ( void * ) ( &( pxStreamBuffer->pucBuffer[ xHead ] ) ), ( const void * ) pucData, xFirstLength );
 	pei	<L145+xFirstLength_1
 	pei	<L144+pucData_0+2
@@ -3307,7 +3423,7 @@ L10335:
 ;    {
 	lda	<L145+xFirstLength_1
 	cmp	<L144+xCount_0
-	bcs	L10350
+	bcs	L10233
 ;        /* ...then write the remaining bytes to the start of the buffer. */
 ;        configASSERT( ( xCount - xFirstLength ) <= pxStreamBuffer->xLength );
 	sec
@@ -3317,10 +3433,13 @@ L10335:
 	ldy	#$4
 	lda	[<L144+pxStreamBuffer_0],Y
 	cmp	<R0
-	bcs	L10343
-L10347:
-	bra	L10347
-L10343:
+	bcs	L10229
+	asmstart
+	sei
+	asmend
+L10230:
+	bra	L10230
+L10229:
 ;        ( void ) memcpy( ( void * ) pxStreamBuffer->pucBuffer, ( const void * ) &( pucData[ xFirstLength ] ), xCount - xFirstLength );
 	sec
 	lda	<L144+xCount_0
@@ -3352,7 +3471,7 @@ L10343:
 ;    {
 ;        mtCOVERAGE_TEST_MARKER();
 ;    }
-L10350:
+L10233:
 ;
 ;    xHead += xCount;
 	lda	<L144+xHead_0
@@ -3364,7 +3483,7 @@ L10350:
 ;    {
 	ldy	#$4
 	cmp	[<L144+pxStreamBuffer_0],Y
-	bcc	L10352
+	bcc	L10235
 ;        xHead -= pxStreamBuffer->xLength;
 	sec
 	lda	<L144+xHead_0
@@ -3375,7 +3494,7 @@ L10350:
 ;    {
 ;        mtCOVERAGE_TEST_MARKER();
 ;    }
-L10352:
+L10235:
 ;
 ;    return xHead;
 	lda	<L144+xHead_0
@@ -3421,10 +3540,13 @@ xTail_0	set	13
 ;    configASSERT( xCount != ( size_t ) 0 );
 xFirstLength_1	set	0
 	lda	<L155+xCount_0
-	bne	L10353
-L10357:
-	bra	L10357
-L10353:
+	bne	L10236
+	asmstart
+	sei
+	asmend
+L10237:
+	bra	L10237
+L10236:
 ;
 ;    /* Calculate the number of bytes that can be read - which may be
 ;     * less than the number wanted if the data wraps around to the start of
@@ -3450,10 +3572,13 @@ L160:
 ;    configASSERT( xFirstLength <= xCount );
 	lda	<L155+xCount_0
 	cmp	<L156+xFirstLength_1
-	bcs	L10360
-L10364:
-	bra	L10364
-L10360:
+	bcs	L10240
+	asmstart
+	sei
+	asmend
+L10241:
+	bra	L10241
+L10240:
 ;    configASSERT( ( xTail + xFirstLength ) <= pxStreamBuffer->xLength );
 	lda	<L155+xTail_0
 	clc
@@ -3462,10 +3587,13 @@ L10360:
 	ldy	#$4
 	lda	[<L155+pxStreamBuffer_0],Y
 	cmp	<R0
-	bcs	L10367
-L10371:
-	bra	L10371
-L10367:
+	bcs	L10244
+	asmstart
+	sei
+	asmend
+L10245:
+	bra	L10245
+L10244:
 ;    ( void ) memcpy( ( void * ) pucData, ( const void * ) &( pxStreamBuffer->pucBuffer[ xTail ] ), xFirstLength );
 	pei	<L156+xFirstLength_1
 	lda	<L155+xTail_0
@@ -3494,7 +3622,7 @@ L10367:
 ;    {
 	lda	<L156+xFirstLength_1
 	cmp	<L155+xCount_0
-	bcs	L10375
+	bcs	L10249
 ;        /* ...then read the remaining bytes from the start of the buffer. */
 ;        ( void ) memcpy( ( void * ) &( pucData[ xFirstLength ] ), ( void * ) ( pxStreamBuffer->pucBuffer ), xCount - xFirstLength );
 	sec
@@ -3527,7 +3655,7 @@ L10367:
 ;    {
 ;        mtCOVERAGE_TEST_MARKER();
 ;    }
-L10375:
+L10249:
 ;
 ;    /* Move the tail pointer to effectively remove the data read from the buffer. */
 ;    xTail += xCount;
@@ -3540,7 +3668,7 @@ L10375:
 ;    {
 	ldy	#$4
 	cmp	[<L155+pxStreamBuffer_0],Y
-	bcc	L10376
+	bcc	L10250
 ;        xTail -= pxStreamBuffer->xLength;
 	sec
 	lda	<L155+xTail_0
@@ -3549,7 +3677,7 @@ L10375:
 ;    }
 ;
 ;    return xTail;
-L10376:
+L10250:
 	lda	<L155+xTail_0
 	tay
 	lda	<L155+1
@@ -3604,7 +3732,7 @@ xCount_1	set	0
 	iny
 	iny
 	cmp	[<L166+pxStreamBuffer_0],Y
-	bcc	L10378
+	bcc	L10252
 ;        xCount -= pxStreamBuffer->xLength;
 	sec
 	lda	<L167+xCount_1
@@ -3615,7 +3743,7 @@ xCount_1	set	0
 ;    {
 ;        mtCOVERAGE_TEST_MARKER();
 ;    }
-L10378:
+L10252:
 ;
 ;    return xCount;
 	lda	<L167+xCount_1
@@ -3665,20 +3793,20 @@ xReturn_1	set	0
 	and	#<$4
 	rep	#$20
 	longa	on
-	beq	L10379
+	beq	L10253
 ;        if( xBytesInBuffer > pxStreamBuffer->xTriggerLevelBytes )
 ;        {
 	ldy	#$6
 	lda	[<L170+pxStreamBuffer_0],Y
 	cmp	<L170+xBytesInBuffer_0
-	bcs	L10382
+	bcs	L10256
 ;            xReturn = pdTRUE;
 L20011:
 	lda	#$1
 	sta	<L171+xReturn_1
 ;        }
 ;        else
-L10382:
+L10256:
 ;
 ;    return xReturn;
 	lda	<L171+xReturn_1
@@ -3697,12 +3825,12 @@ L10382:
 ;        }
 ;    }
 ;    else if( xBytesInBuffer >= pxStreamBuffer->xTriggerLevelBytes )
-L10379:
+L10253:
 ;    {
 	lda	<L170+xBytesInBuffer_0
 	ldy	#$6
 	cmp	[<L170+pxStreamBuffer_0],Y
-	bcc	L10382
+	bcc	L10256
 ;        xReturn = pdTRUE;
 	bra	L20011
 ;    }
@@ -3764,10 +3892,13 @@ pxReceiveCompletedCallback_0	set	19
 	lda	<R0+2
 	cmp	<L176+pucBuffer_0+2
 L178:
-	beq	L10385
-L10389:
-	bra	L10389
-L10385:
+	beq	L10259
+	asmstart
+	sei
+	asmend
+L10260:
+	bra	L10260
+L10259:
 ;    }
 ;    #endif
 ;
@@ -3866,10 +3997,13 @@ pxStreamBuffer_1	set	0
 ;    configASSERT( pxStreamBuffer );
 	lda	<L182+pxStreamBuffer_1
 	ora	<L182+pxStreamBuffer_1+2
-	bne	L10392
-L10396:
-	bra	L10396
-L10392:
+	bne	L10263
+	asmstart
+	sei
+	asmend
+L10264:
+	bra	L10264
+L10263:
 ;
 ;    traceRETURN_uxStreamBufferGetStreamBufferNotificationIndex( pxStreamBuffer->uxNotificationIndex );
 ;
@@ -3923,38 +4057,49 @@ pxStreamBuffer_1	set	0
 ;    configASSERT( ( pxStreamBuffer != NULL ) && ( pxStreamBuffer->xTaskWaitingToReceive == NULL ) );
 	lda	<L186+pxStreamBuffer_1
 	ora	<L186+pxStreamBuffer_1+2
-	beq	L10403
+	beq	L187
 	ldy	#$8
 	lda	[<L186+pxStreamBuffer_1],Y
 	iny
 	iny
 	ora	[<L186+pxStreamBuffer_1],Y
-	beq	L10399
-L10403:
-	bra	L10403
-L10399:
+	beq	L10267
+L187:
+	asmstart
+	sei
+	asmend
+L10268:
+	bra	L10268
+L10267:
 ;    configASSERT( ( pxStreamBuffer != NULL ) && ( pxStreamBuffer->xTaskWaitingToSend == NULL ) );
 	lda	<L186+pxStreamBuffer_1
 	ora	<L186+pxStreamBuffer_1+2
-	beq	L10410
+	beq	L190
 	ldy	#$c
 	lda	[<L186+pxStreamBuffer_1],Y
 	iny
 	iny
 	ora	[<L186+pxStreamBuffer_1],Y
-	beq	L10406
-L10410:
-	bra	L10410
-L10406:
+	beq	L10271
+L190:
+	asmstart
+	sei
+	asmend
+L10272:
+	bra	L10272
+L10271:
 ;
 ;    /* Check that the task notification index is valid. */
 ;    configASSERT( uxNotificationIndex < configTASK_NOTIFICATION_ARRAY_ENTRIES );
 	lda	<L185+uxNotificationIndex_0
 	cmp	#<$1
-	bcc	L10413
-L10417:
-	bra	L10417
-L10413:
+	bcc	L10275
+	asmstart
+	sei
+	asmend
+L10276:
+	bra	L10276
+L10275:
 ;
 ;    pxStreamBuffer->uxNotificationIndex = uxNotificationIndex;
 	lda	<L185+uxNotificationIndex_0

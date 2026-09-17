@@ -188,6 +188,10 @@ debug_resume:
 irq_return:
     if (cpu_wait) { cpu_cycle_count++; goto dispatch; }
     opcode = M_READ_OPCODE(PC.A);
+    if (opcode == 0) {
+        for(;;)
+            ;
+    }
     PC.W.PC++;
 
 #ifdef OLDCYCLES

@@ -6,6 +6,10 @@ void *heap_end = (void *)0x03ffff;
 
 
 #asm
+	jmp startup
+	jml ($dffc)
+	
+startup
 	clc
 	xce
 	rep #$30

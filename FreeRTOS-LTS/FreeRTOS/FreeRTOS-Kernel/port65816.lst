@@ -1,4 +1,4 @@
-  Tue Sep 15 2026 17:44                                                                                                    Page 1
+  Wed Sep 16 2026 17:13                                                                                                    Page 1
 
 
                                                ***************************************
@@ -59,7 +59,7 @@
     50                        
     51                        
     52                        ;----------------------------------------------------------------------------------
-  Tue Sep 15 2026 17:44                                                                                                    Page 2
+  Wed Sep 16 2026 17:13                                                                                                    Page 2
 
 
     53                        ;       void vPortEndScheduler( void )
@@ -91,24 +91,24 @@
     79                        
     80                        _~xPortStartScheduler:
     81                        
-    82                        	;jsl	_~prvSetupTimerInterrupt
+    82 00:0000: 20 xx xx     	jsr	_~prvSetupTimerInterrupt
     83                        
-    84 00:0000: AD xx xx     	lda	_~pxCurrentTCB+2
-    85 00:0003: 48           	pha
-    86 00:0004: AD xx xx     	lda	_~pxCurrentTCB
-    87 00:0007: 48           	pha
-    88 00:0008: 3B           	tsc
-    89 00:0009: 5B           	tcd
-    90 00:000A: A7 01        	lda	[$1]
+    84 00:0003: AD xx xx     	lda	_~pxCurrentTCB+2
+    85 00:0006: 48           	pha
+    86 00:0007: AD xx xx     	lda	_~pxCurrentTCB
+    87 00:000A: 48           	pha
+    88 00:000B: 3B           	tsc
+    89 00:000C: 5B           	tcd
+    90 00:000D: A7 01        	lda	[$1]
     91                        
-    92 00:000C: 1B           	tcs
+    92 00:000F: 1B           	tcs
     93                        	
-    94 00:000D: AB           	plb
-    95 00:000E: 2B           	pld
-    96 00:000F: 7A           	ply
-    97 00:0010: FA           	plx
-    98 00:0011: 68           	pla
-    99 00:0012: 40           	rti
+    94 00:0010: AB           	plb
+    95 00:0011: 2B           	pld
+    96 00:0012: 7A           	ply
+    97 00:0013: FA           	plx
+    98 00:0014: 68           	pla
+    99 00:0015: 40           	rti
    100                        	
    101                        	ends
    102                        	efunc
@@ -120,7 +120,7 @@
    108                        ;	13	Program-Bank
    109                        ;	12	PC-hi
    110                        ;	11	PC-lo
-  Tue Sep 15 2026 17:44                                                                                                    Page 3
+  Wed Sep 16 2026 17:13                                                                                                    Page 3
 
 
    111                        ;	10	Flags
@@ -137,380 +137,405 @@
    122                        ;----------------------------------------------------------------------------------
    123                        ;       static void prvSetupTimerInterrupt( void )
    124                        ;----------------------------------------------------------------------------------
-   125                        ;	module	prvSetupTimerInterrupt
-   126                        ;	code
-   127                        ;	xdef	_~prvSetupTimerInterrupt
-   128                        ;	xref	_~vPortYieldFromTick
-   129                        ;	func
-   130                        ;
-   131                        ;	include "homebrewWDC.inc"
-   132                        ;	
-   133                        ;_~prvSetupTimerInterrupt:
-   134                        ;
-   135                        ;	lda	#JMLOP			; point IRQ-vec to JML instruction
-   136                        ;	sta	>IRQVEC
-   137                        ;	
-   138                        ;	lda	#_~vPortYieldFromTick	
-   139                        ;	sta	>JMLADR			; populate lo/hi of JML instruction
-   140                        ;	
-   141                        ;
-   142                        ;	IF PLATFORM=0
-   143                        ;	lda	>CONST5MS		;8.333333Mhz / 200Hz
-   144                        ;	sta	>TIMERLO
-   145                        ;	
-   146                        ;	sep	#M
-   147                        ;	longa	off
-   148                        ;
-   149                        ;	lda	#$5C			;JML opcode
-   150                        ;	sta	>JMLOP
-   151                        ;	lda	#^_~vPortYieldFromTick	; populate bank of JML instruction
-   152                        ;	sta	>JMLADR+2
-   153                        ;	
-   154                        ;	lda	#3
-   155                        ;	sta	>TIMERST
-   156                        ;	
-   157                        ;;	lda	#$ff
-   158                        ;;	sta	>ColBorder
-   159                        ;	
-   160                        ;	rep	#M
-   161                        ;	longa	on
-   162                        ;	ENDIF
+   125                        	module	prvSetupTimerInterrupt
+   126                        	code
+   127                        	xdef	_~prvSetupTimerInterrupt
+   128                        	xref	_~vPortYieldFromTick
+   129                        	func
+   130                        	
+   131                        _~prvSetupTimerInterrupt:
+   132                        	;wdm 7
+   133                        
+   134 00:0000: A9 42 06     	lda #$0642			;wdm 6
+   135 00:0003: 8F FA DF 00  	sta >$dffa
+   136                        	
+   137 00:0007: E2 20        	sep #$20
+   138                        	longa off
+   139 00:0009: A9 5C        	lda #$5c
+   140 00:000B: 8F FC DF 00  	sta >$dffc
+   141 00:000F: A9 xx        	lda	#^_~vPortYieldFromTick
+   142 00:0011: 8F FF DF 00  	sta	>$dfff			; populate bank of JML() instruction
+   143                        	
+   144 00:0015: C2 20        	rep #$20
+   145                        	longa on
+   146 00:0017: A9 xx xx     	lda	#<_~vPortYieldFromTick	
+   147 00:001A: 8F FD DF 00  	sta	>$dffd			; populate lo/hi of JML() instruction
+   148                        
+   149                        	;wdm 6	
+   150 00:001E: 60           	rts
+   151                        		
+   152                        	ends
+   153                        	efunc
+   154                        	endmod
+   155                        	
+   156                        ;
+   157                        ;	include "homebrewWDC.inc"
+   158                        ;	
+   159                        ;_~prvSetupTimerInterrupt:
+   160                        ;
+   161                        ;	lda	#JMLOP			; point IRQ-vec to JML instruction
+   162                        ;	sta	>IRQVEC
    163                        ;	
-   164                        ;	IF PLATFORM=1
-   165                        ;	sep	#M
-   166                        ;	longa	off
-   167                        ;	
-   168                        ;	lda	#<9216	;3686400 / 2 = 1843200; 1843200Hz / 200Hz (5ms) = 9216; 36864
-  Tue Sep 15 2026 17:44                                                                                                    Page 4
+   164                        ;	lda	#_~vPortYieldFromTick	
+   165                        ;	sta	>JMLADR			; populate lo/hi of JML instruction
+   166                        ;	
+   167                        ;
+   168                        ;	IF PLATFORM=0
+  Wed Sep 16 2026 17:13                                                                                                    Page 4
 
 
-   169                        ;	sta	SB+CNTLSB
-   170                        ;	lda	#>9216
-   171                        ;	sta	SB+CNTMSB
-   172                        ;		
-   173                        ;	lda	#8
-   174                        ;	sta	SB+IMR
-   175                        ;		
-   176                        ;	rep	#M
-   177                        ;	longa	on
-   178                        ;	ENDIF
+   169                        ;	lda	>CONST5MS		;8.333333Mhz / 200Hz
+   170                        ;	sta	>TIMERLO
+   171                        ;	
+   172                        ;	sep	#M
+   173                        ;	longa	off
+   174                        ;
+   175                        ;	lda	#$5C			;JML opcode
+   176                        ;	sta	>JMLOP
+   177                        ;	lda	#^_~vPortYieldFromTick	; populate bank of JML instruction
+   178                        ;	sta	>JMLADR+2
    179                        ;	
-   180                        ;	rts
-   181                        ;		
-   182                        ;	ends
-   183                        ;	efunc
-   184                        ;	endmod
-   185                        
-   186                        
-   187                        ;----------------------------------------------------------------------------------
-   188                        ;       pxNewTCB->pxTopOfStack = _~pxPortInitialiseStack( pxTopOfStack, pxTaskCode, pvParameters );
-   189                        ;
-   190                        ; X-reg: pxNewTCB hi (always 0 as stack in in bank 00)
-   191                        ; A-reg: pxNewTCB lo
-   192                        ;----------------------------------------------------------------------------------
-   193                        	module	pxPortInitialiseStack
-   194                        	code
-   195                        	xdef	_~pxPortInitialiseStack
-   196                        	func
-   197                        
-   198                        	;include	"homebrewWDC.inc"
-   199                        
-   200                        _~pxPortInitialiseStack:
-   201             0000000B   s_pvParameters	set 11		;12, 13, 14
-   202             00000007   s_pxTaskCode	set 7		;8 , 9, 10
-   203             00000003   s_pxTopOfStack	set 3		;4, 5, 6
-   204             00000002   return_adr_hi	set 2
-   205             00000001   return_adr_lo	set 1
-   206                        
-   207             00000020   M		 equ $20		; Accu 8/16-bit
-   208             00000010   IX		 equ $10		; Index 8/16-bit
-   209                        
-   210 00:0000: 3B           	tsc
-   211 00:0001: 0B           	phd
-   212 00:0002: 5B           	tcd
-   213                        	
-   214 00:0003: 38           	sec
-   215 00:0004: A5 03        	lda	<s_pxTopOfStack
-   216 00:0006: E9 14 00     	sbc	#20
-   217 00:0009: 85 03        	sta	<s_pxTopOfStack
-   218                        
-   219 00:000B: A0 0B 00     	ldy	#11
-   220 00:000E: A5 07        	lda	<s_pxTaskCode
-   221 00:0010: 97 03        	sta	[s_pxTopOfStack],y
-   222                        	
-   223 00:0012: 88           	dey
-   224 00:0013: A9 00 00     	lda	#0
-   225 00:0016: AA           	tax
-   226                        	
-  Tue Sep 15 2026 17:44                                                                                                    Page 5
+   180                        ;	lda	#3
+   181                        ;	sta	>TIMERST
+   182                        ;	
+   183                        ;;	lda	#$ff
+   184                        ;;	sta	>ColBorder
+   185                        ;	
+   186                        ;	rep	#M
+   187                        ;	longa	on
+   188                        ;	ENDIF
+   189                        ;	
+   190                        ;	IF PLATFORM=1
+   191                        ;	sep	#M
+   192                        ;	longa	off
+   193                        ;	
+   194                        ;	lda	#<9216	;3686400 / 2 = 1843200; 1843200Hz / 200Hz (5ms) = 9216; 36864
+   195                        ;	sta	SB+CNTLSB
+   196                        ;	lda	#>9216
+   197                        ;	sta	SB+CNTMSB
+   198                        ;		
+   199                        ;	lda	#8
+   200                        ;	sta	SB+IMR
+   201                        ;		
+   202                        ;	rep	#M
+   203                        ;	longa	on
+   204                        ;	ENDIF
+   205                        ;	
+   206                        ;	rts
+   207                        ;		
+   208                        ;	ends
+   209                        ;	efunc
+   210                        ;	endmod
+   211                        
+   212                        
+   213                        ;----------------------------------------------------------------------------------
+   214                        ;       pxNewTCB->pxTopOfStack = _~pxPortInitialiseStack( pxTopOfStack, pxTaskCode, pvParameters );
+   215                        ;
+   216                        ; X-reg: pxNewTCB hi (always 0 as stack in in bank 00)
+   217                        ; A-reg: pxNewTCB lo
+   218                        ;----------------------------------------------------------------------------------
+   219                        	module	pxPortInitialiseStack
+   220                        	code
+   221                        	xdef	_~pxPortInitialiseStack
+   222                        	func
+   223                        
+   224                        	;include	"homebrewWDC.inc"
+   225                        
+   226                        _~pxPortInitialiseStack:
+  Wed Sep 16 2026 17:13                                                                                                    Page 5
 
 
-   227 00:0017: E2 20        	sep	#M
-   228                        	longa	off
-   229                        	
-   230                        istack0:
-   231 00:0019: 97 03        	sta	[s_pxTopOfStack],y
-   232 00:001B: 88           	dey	
-   233 00:001C: D0 FB        	bne	istack0
-   234                        
-   235                        	
-   236 00:001E: A0 0D 00     	ldy	#13
-   237 00:0021: A5 09        	lda	<s_pxTaskCode+2
-   238 00:0023: 97 03        	sta	[s_pxTopOfStack],y
-   239                        
-   240                        		
-   241 00:0025: A0 01 00     	ldy	#1			; data bank = program bank
-   242 00:0028: 97 03        	sta	[s_pxTopOfStack],y
-   243                        	
-   244                        	
-   245 00:002A: C2 20        	rep	#M
-   246                        	longa	on
-   247                        
-   248 00:002C: A0 11 00     	ldy	#17
-   249 00:002F: A5 0B        	lda	<s_pvParameters
-   250 00:0031: 97 03        	sta	[s_pxTopOfStack],y
-   251 00:0033: A0 13 00     	ldy	#19
-   252 00:0036: A5 0D        	lda	<s_pvParameters+2
-   253 00:0038: 97 03        	sta	[s_pxTopOfStack],y
-   254                        	
-   255 00:003A: A5 01        	lda	<1
-   256 00:003C: 85 0D        	sta	<13
-   257                        
-   258 00:003E: A4 03        	ldy	<s_pxTopOfStack
-   259                        	
-   260 00:0040: 2B           	pld
+   227             0000000B   s_pvParameters	set 11		;12, 13, 14
+   228             00000007   s_pxTaskCode	set 7		;8 , 9, 10
+   229             00000003   s_pxTopOfStack	set 3		;4, 5, 6
+   230             00000002   return_adr_hi	set 2
+   231             00000001   return_adr_lo	set 1
+   232                        
+   233             00000020   M		 equ $20		; Accu 8/16-bit
+   234             00000010   IX		 equ $10		; Index 8/16-bit
+   235                        
+   236 00:0000: 3B           	tsc
+   237 00:0001: 0B           	phd
+   238 00:0002: 5B           	tcd
+   239                        	
+   240 00:0003: 38           	sec
+   241 00:0004: A5 03        	lda	<s_pxTopOfStack
+   242 00:0006: E9 13 00     	sbc	#19
+   243 00:0009: 85 03        	sta	<s_pxTopOfStack
+   244                        
+   245 00:000B: A0 0B 00     	ldy	#11
+   246 00:000E: A5 07        	lda	<s_pxTaskCode
+   247 00:0010: 97 03        	sta	[s_pxTopOfStack],y
+   248                        	
+   249 00:0012: 88           	dey
+   250 00:0013: A9 00 00     	lda	#0
+   251 00:0016: AA           	tax
+   252                        	
+   253 00:0017: E2 20        	sep	#M
+   254                        	longa	off
+   255                        	
+   256                        istack0:
+   257 00:0019: 97 03        	sta	[s_pxTopOfStack],y
+   258 00:001B: 88           	dey	
+   259 00:001C: D0 FB        	bne	istack0
+   260                        
    261                        	
-   262 00:0041: 18           	clc
-   263 00:0042: 3B           	tsc
-   264 00:0043: 69 0C 00     	adc	#12
-   265 00:0046: 1B           	tcs
-   266                        	
-   267 00:0047: 98           	tya
-   268                        
-   269 00:0048: 60           	rts
-   270                        
-   271                        ;	plb		offset 	1
-   272                        ;	pld			2
-   273                        ;	ply			4
-   274                        ;	plx			6
-   275                        ;	pla			8
-   276                        ;	status			10
-   277                        ;	return addr lo/hi	11
-   278                        ;	return addr bank	13
-   279                        ;
-   280                        ;	pvParameters_lo		17
-   281                        ;	pvParameters_hi		18
-   282                        ;	pvParameters_bank	19
-   283                        ;	pvParameters_dummy	20
-   284                        	
-  Tue Sep 15 2026 17:44                                                                                                    Page 6
+   262 00:001E: A0 0D 00     	ldy	#13
+   263 00:0021: A5 09        	lda	<s_pxTaskCode+2
+   264 00:0023: 97 03        	sta	[s_pxTopOfStack],y
+   265                        
+   266                        		
+   267 00:0025: A0 01 00     	ldy	#1			; data bank = program bank
+   268 00:0028: 97 03        	sta	[s_pxTopOfStack],y
+   269                        	
+   270                        	
+   271 00:002A: C2 20        	rep	#M
+   272                        	longa	on
+   273                        
+   274 00:002C: A0 10 00     	ldy	#16
+   275 00:002F: A5 0B        	lda	<s_pvParameters
+   276 00:0031: 97 03        	sta	[s_pxTopOfStack],y
+   277 00:0033: A0 12 00     	ldy	#18
+   278 00:0036: A5 0D        	lda	<s_pvParameters+2
+   279 00:0038: 97 03        	sta	[s_pxTopOfStack],y
+   280                        	
+   281 00:003A: A5 01        	lda	<1
+   282 00:003C: 85 0D        	sta	<13
+   283                        
+   284 00:003E: A4 03        	ldy	<s_pxTopOfStack
+  Wed Sep 16 2026 17:13                                                                                                    Page 6
 
 
-   285                        ;txt:	.byte "IStack: %04X %04X %04X", 10, 0
-   286                        
-   287                        	ends
-   288                        	efunc
-   289                        	endmod
-   290                        	
-   291                        	
-   292                        ;----------------------------------------------------------------------------------
-   293                        ;	void vPortYield( void )
-   294                        ;----------------------------------------------------------------------------------
-   295                        	module	vPortYield
-   296                        	code
-   297                        	xdef	_~vPortYield
-   298                        	xref	_~vTaskSwitchContext
-   299                        	xref	_~pxCurrentTCB
-   300                        	func
-   301                        	
-   302                        	;include	"homebrewWDC.inc"
-   303             00000020   M		 equ $20		; Accu 8/16-bit
-   304             00000010   IX		 equ $10		; Index 8/16-bit	
-   305                        
-   306                        _~vPortYield:
-   307                        
-   308 00:0000: 08           	php
-   309 00:0001: 78           	sei
-   310                        
-   311 00:0002: C2 30        	rep	#M+IX
-   312                        	longa	on
-   313                        	longi	on
-   314                        	
-   315 00:0004: 8D xx xx     	sta	saveAccu
-   316 00:0007: 8E xx xx     	stx	saveX
-   317                        
-   318 00:000A: E2 20        	sep	#M
-   319                        	longa	off
-   320                        	
-   321 00:000C: 68           	pla			;pop status
-   322 00:000D: FA           	plx			;pop RTS-Addr
-   323 00:000E: E8           	inx			;add 1
-   324 00:000F: DA           	phx			;push return addr for RTI
-   325 00:0010: 48           	pha			;push status
-   326                        	
-   327 00:0011: C2 20        	rep	#M
-   328                        	longa	on
-   329                        
-   330 00:0013: AD xx xx     	lda	saveAccu
-   331 00:0016: 48           	pha
-   332 00:0017: AE xx xx     	ldx	saveX
-   333 00:001A: DA           	phx
-   334 00:001B: 5A           	phy
-   335 00:001C: 0B           	phd
-   336 00:001D: 8B           	phb	
+   285                        	
+   286 00:0040: 2B           	pld
+   287                        	
+   288 00:0041: 18           	clc
+   289 00:0042: 3B           	tsc
+   290 00:0043: 69 0C 00     	adc	#12
+   291 00:0046: 1B           	tcs
+   292                        	
+   293 00:0047: 98           	tya
+   294                        
+   295 00:0048: 60           	rts
+   296                        
+   297                        ;	plb		offset 	1
+   298                        ;	pld			2
+   299                        ;	ply			4
+   300                        ;	plx			6
+   301                        ;	pla			8
+   302                        ;	status			10
+   303                        ;	return addr lo/hi	11
+   304                        ;	return addr bank	13
+   305                        ;
+   306                        ;	pvParameters_lo		16
+   307                        ;	pvParameters_hi		17
+   308                        ;	pvParameters_bank	18
+   309                        ;	pvParameters_dummy	19
+   310                        	
+   311                        ;txt:	.byte "IStack: %04X %04X %04X", 10, 0
+   312                        
+   313                        	ends
+   314                        	efunc
+   315                        	endmod
+   316                        	
+   317                        	
+   318                        ;----------------------------------------------------------------------------------
+   319                        ;	void vPortYield( void )
+   320                        ;----------------------------------------------------------------------------------
+   321                        	module	vPortYield
+   322                        	code
+   323                        	xdef	_~vPortYield
+   324                        	xref	_~vTaskSwitchContext
+   325                        	xref	_~pxCurrentTCB
+   326                        	func
+   327                        	
+   328                        	;include	"homebrewWDC.inc"
+   329             00000020   M		 equ $20		; Accu 8/16-bit
+   330             00000010   IX		 equ $10		; Index 8/16-bit	
+   331                        
+   332                        _~vPortYield:
+   333                        
+   334 00:0000: 4B           	phk
+   335 00:0001: 08           	php
+   336 00:0002: 78           	sei
    337                        
-   338 00:001E: AD xx xx     	lda	_~pxCurrentTCB+2		;store new stack value in pxCurrentTCB
-   339 00:0021: 48           	pha
-   340 00:0022: AD xx xx     	lda	_~pxCurrentTCB
-   341 00:0025: 48           	pha
-   342 00:0026: 3B           	tsc
-  Tue Sep 15 2026 17:44                                                                                                    Page 7
+   338 00:0003: C2 30        	rep	#M+IX
+   339                        	longa	on
+   340                        	longi	on
+   341                        	
+   342 00:0005: 8D xx xx     	sta	saveAccu
+  Wed Sep 16 2026 17:13                                                                                                    Page 7
 
 
-   343 00:0027: 5B           	tcd
-   344 00:0028: 18           	clc
-   345 00:0029: 69 04 00     	adc	#4	
-   346 00:002C: 87 01        	sta	[$1]
+   343 00:0008: 8E xx xx     	stx	saveX
+   344                        
+   345                        ;	sep	#M
+   346                        ;	longa	off
    347                        	
-   348 00:002E: 22 xx xx xx  	jsl	_~vTaskSwitchContext
-   349                        
-   350 00:0032: AD xx xx     	lda	_~pxCurrentTCB+2
-   351 00:0035: 48           	pha
-   352 00:0036: AD xx xx     	lda	_~pxCurrentTCB
-   353 00:0039: 48           	pha	
-   354 00:003A: 3B           	tsc
-   355 00:003B: 5B           	tcd
-   356 00:003C: A7 01        	lda	[$1]
-   357 00:003E: 1B           	tcs
-   358                        	
-   359 00:003F: AB           	plb
-   360 00:0040: 2B           	pld
-   361 00:0041: 7A           	ply
-   362 00:0042: FA           	plx
-   363 00:0043: 68           	pla	
-   364 00:0044: 40           	rti
-   365                        	
-   366                        saveAccu:
-   367 00:0045: 00 00        	.word 0
-   368                        saveX:
-   369 00:0047: 00 00        	.word 0
-   370                        	
-   371                        	ends
-   372                        	efunc
-   373                        	endmod
-   374                        ;----------------------------------------------------------------------------------
-   375                        ;	vPortYieldFromTick;
-   376                        ;----------------------------------------------------------------------------------
-   377                        	module	vPortYieldFromTick
-   378                        	code
-   379                        	xdef	_~vPortYieldFromTick
-   380                        	xref	_~xTaskIncrementTick
-   381                        	xref	_~vTaskSwitchContext
-   382                        	xref	_~pxCurrentTCB
-   383                        	func
-   384                        
-   385                        	;include "homebrewWDC.inc"
-   386             00000020   M		 equ $20		; Accu 8/16-bit
-   387             00000010   IX		 equ $10		; Index 8/16-bit
-   388                        
-   389                        _~vPortYieldFromTick:
-   390                        
-   391 00:0000: C2 30        	rep	#M+IX
-   392                        	longa	on
-   393                        	longi	on
-   394                        	
-   395 00:0002: 48           	pha
-   396 00:0003: DA           	phx
-   397 00:0004: 5A           	phy
-   398 00:0005: 0B           	phd
-   399 00:0006: 8B           	phb
-   400                        	
-  Tue Sep 15 2026 17:44                                                                                                    Page 8
+   348 00:000B: 68           	pla			;pop status + program bank
+   349 00:000C: FA           	plx			;pop RTS-Addr
+   350 00:000D: E8           	inx			;add 1
+   351 00:000E: DA           	phx			;push return addr for RTI
+   352 00:000F: 48           	pha			;push status
+   353                        	
+   354                        ;	rep	#M
+   355                        ;	longa	on
+   356                        
+   357 00:0010: AD xx xx     	lda	saveAccu
+   358 00:0013: 48           	pha
+   359 00:0014: AE xx xx     	ldx	saveX
+   360 00:0017: DA           	phx
+   361 00:0018: 5A           	phy
+   362 00:0019: 0B           	phd
+   363 00:001A: 8B           	phb	
+   364                        
+   365 00:001B: AD xx xx     	lda	_~pxCurrentTCB+2		;store new stack value in pxCurrentTCB
+   366 00:001E: 48           	pha
+   367 00:001F: AD xx xx     	lda	_~pxCurrentTCB
+   368 00:0022: 48           	pha
+   369 00:0023: 3B           	tsc
+   370 00:0024: 5B           	tcd
+   371 00:0025: 18           	clc
+   372 00:0026: 69 04 00     	adc	#4	
+   373 00:0029: 87 01        	sta	[$1]
+   374                        	
+   375 00:002B: 20 xx xx     	jsr	_~vTaskSwitchContext
+   376                        
+   377 00:002E: AD xx xx     	lda	_~pxCurrentTCB+2
+   378 00:0031: 48           	pha
+   379 00:0032: AD xx xx     	lda	_~pxCurrentTCB
+   380 00:0035: 48           	pha	
+   381 00:0036: 3B           	tsc
+   382 00:0037: 5B           	tcd
+   383 00:0038: A7 01        	lda	[$1]
+   384 00:003A: 1B           	tcs
+   385                        	
+   386 00:003B: AB           	plb
+   387 00:003C: 2B           	pld
+   388 00:003D: 7A           	ply
+   389 00:003E: FA           	plx
+   390 00:003F: 68           	pla	
+   391 00:0040: 40           	rti
+   392                        	
+   393                        saveAccu:
+   394 00:0041: 00 00        	.word 0
+   395                        saveX:
+   396 00:0043: 00 00        	.word 0
+   397                        	
+   398                        	ends
+   399                        	efunc
+   400                        	endmod
+  Wed Sep 16 2026 17:13                                                                                                    Page 8
 
 
-   401                        	;cld
-   402                        	
-   403 00:0007: A9 00 00     	lda	#0		;set direct to 0
-   404 00:000A: 5B           	tcd
-   405                        
-   406 00:000B: E2 30        	sep	#M+IX
-   407                        	longa	off
-   408                        	longi	off
-   409                        	
-   410 00:000D: 48           	pha			;set data bank to 0
-   411 00:000E: AB           	plb
-   412                        	
-   413                        ;	lda	>PS2STATUS	;key available?
-   414                        ;	bne	irqtimer	;Bit 0 = 0?, no =>
-   415                        ;	jsl	jkgbirq		;perform key activities
-   416                        ;	
-   417                        ;irqtimer:		
-   418                        ;	IF PLATFORM=0
-   419                        ;	
-   420                        ;	lda >TIMERST		;timer underrun?
-   421                        ;	bpl irqend		;no, leave
-   422                        ;
-   423                        ;	lda #1			;reset status bit
-   424                        ;	sta >TIMERST
-   425                        ;	
-   426                        ;;	lda >colorBorderLo	;colourize!
-   427                        ;;	eor #$ff
-   428                        ;;	sta >colorBorderLo	
-   429                        ;
-   430                        ;	ENDIF
-   431                        ;	
-   432                        ;	IF PLATFORM=1
-   433                        ;	lda	SB+ISR		;IRQ caused by timer?
-   434                        ;	and	#8
-   435                        ;	beq	irqend		;no, leave
-   436                        ;	lda	SB+STOPCNT	;reset status flag
-   437                        ;	ENDIF
-   438                        	
-   439 00:000F: 4B           	phk			;data bank = program bank ($01)
-   440 00:0010: AB           	plb
-   441                        	
-   442 00:0011: C2 30        	rep	#M+IX
-   443                        	longa	on
-   444                        	longi	on
-   445                        
-   446 00:0013: AD xx xx     	lda	_~pxCurrentTCB+2
-   447 00:0016: 48           	pha
-   448 00:0017: AD xx xx     	lda	_~pxCurrentTCB
-   449 00:001A: 48           	pha
-   450 00:001B: 3B           	tsc
-   451 00:001C: 5B           	tcd
-   452 00:001D: 18           	clc
-   453 00:001E: 69 04 00     	adc	#4	
-   454 00:0021: 87 01        	sta	[$1]
-   455                        
-   456 00:0023: 22 xx xx xx  	jsl	_~xTaskIncrementTick
-   457 00:0027: 22 xx xx xx  	jsl	_~vTaskSwitchContext
-   458                        	
-  Tue Sep 15 2026 17:44                                                                                                    Page 9
+   401                        ;----------------------------------------------------------------------------------
+   402                        ;	vPortYieldFromTick;
+   403                        ;----------------------------------------------------------------------------------
+   404                        	module	vPortYieldFromTick
+   405                        	code
+   406                        	xdef	_~vPortYieldFromTick
+   407                        	xref	_~xTaskIncrementTick
+   408                        	xref	_~vTaskSwitchContext
+   409                        	xref	_~pxCurrentTCB
+   410                        	func
+   411                        
+   412                        	;include "homebrewWDC.inc"
+   413             00000020   M		 equ $20		; Accu 8/16-bit
+   414             00000010   IX		 equ $10		; Index 8/16-bit
+   415                        
+   416                        _~vPortYieldFromTick:
+   417                        
+   418                        	longa	on
+   419                        	longi	on
+   420 00:0000: C2 30        	rep	#M+IX
+   421                        	
+   422 00:0002: 48           	pha
+   423 00:0003: DA           	phx
+   424 00:0004: 5A           	phy
+   425 00:0005: 0B           	phd
+   426 00:0006: 8B           	phb
+   427                        	
+   428                        	;cld
+   429                        		
+   430                        ;	phk			;data bank = program bank ($01)
+   431                        ;	plb
+   432                        	
+   433 00:0007: E2 20        	sep #M
+   434                        	longa off	
+   435                        	
+   436 00:0009: A9 69        	lda #'i'
+   437 00:000B: 8F F0 FF FF  	sta $fffff0
+   438 00:000F: AD xx xx     	lda	_~pxCurrentTCB+2
+   439 00:0012: 8F F1 FF FF  	sta $fffff1
+   440 00:0016: AD xx xx     	lda	_~pxCurrentTCB+1
+   441 00:0019: 8F F1 FF FF  	sta $fffff1
+   442 00:001D: AD xx xx     	lda	_~pxCurrentTCB
+   443 00:0020: 8F F1 FF FF  	sta $fffff1
+   444                        
+   445 00:0024: C2 20        	rep #M
+   446                        	longa on
+   447                        	
+   448 00:0026: AD xx xx     	lda	_~pxCurrentTCB+2
+   449 00:0029: 48           	pha
+   450 00:002A: AD xx xx     	lda	_~pxCurrentTCB
+   451 00:002D: 48           	pha
+   452 00:002E: 3B           	tsc
+   453 00:002F: 5B           	tcd
+   454 00:0030: 18           	clc
+   455 00:0031: 69 04 00     	adc	#4	
+   456 00:0034: 87 01        	sta	[$1]
+   457                        
+   458 00:0036: 20 xx xx     	jsr	_~xTaskIncrementTick
+  Wed Sep 16 2026 17:13                                                                                                    Page 9
 
 
-   459 00:002B: AD xx xx     	lda	_~pxCurrentTCB+2
-   460 00:002E: 48           	pha
-   461 00:002F: AD xx xx     	lda	_~pxCurrentTCB
-   462 00:0032: 48           	pha	
-   463 00:0033: 3B           	tsc
-   464 00:0034: 5B           	tcd
-   465 00:0035: A7 01        	lda	[$1]
-   466 00:0037: 1B           	tcs
-   467                        	
-   468                        irqend:
-   469 00:0038: C2 30        	rep	#M+IX
-   470 00:003A: AB           	plb
-   471 00:003B: 2B           	pld
-   472 00:003C: 7A           	ply
-   473 00:003D: FA           	plx
-   474 00:003E: 68           	pla
-   475 00:003F: 40           	rti
-   476                        
-   477                        	ends
-   478                        	efunc
-   479                        	endmod
+   459 00:0039: F0 05        	beq noswitch
+   460 00:003B: 48           	pha
+   461 00:003C: 20 xx xx     	jsr	_~vTaskSwitchContext
+   462 00:003F: 68           	pla
+   463                        	
+   464                        noswitch:
+   465 00:0040: E2 20        	sep #M
+   466                        	longa off
+   467 00:0042: EB           	xba
+   468 00:0043: 8F F1 FF FF  	sta $fffff1
+   469 00:0047: EB           	xba
+   470 00:0048: 8F F1 FF FF  	sta $fffff1
+   471 00:004C: A9 3A        	lda #':'
+   472 00:004E: 8F F0 FF FF  	sta $fffff0		
+   473 00:0052: AD xx xx     	lda	_~pxCurrentTCB+2
+   474 00:0055: 8F F1 FF FF  	sta $fffff1
+   475 00:0059: AD xx xx     	lda	_~pxCurrentTCB+1
+   476 00:005C: 8F F1 FF FF  	sta $fffff1
+   477 00:0060: AD xx xx     	lda	_~pxCurrentTCB
+   478 00:0063: 8F F1 FF FF  	sta $fffff1
+   479                        
+   480 00:0067: 42 07        	wdm 7
+   481                        	
+   482 00:0069: C2 20        	rep #M
+   483                        	longa on
+   484 00:006B: AD xx xx     	lda	_~pxCurrentTCB+2
+   485 00:006E: 48           	pha
+   486 00:006F: AD xx xx     	lda	_~pxCurrentTCB
+   487 00:0072: 48           	pha	
+   488 00:0073: 3B           	tsc
+   489 00:0074: 5B           	tcd
+   490 00:0075: A7 01        	lda	[$1]
+   491 00:0077: 1B           	tcs
+   492                        
+   493                        	
+   494 00:0078: AB           	plb
+   495 00:0079: 2B           	pld
+   496 00:007A: 7A           	ply
+   497 00:007B: FA           	plx
+   498 00:007C: 68           	pla
+   499                        	
+   500 00:007D: 40           	rti
+   501                        
+   502                        	ends
+   503                        	efunc
+   504                        	endmod
 
 
-      Lines assembled: 479
+      Lines assembled: 504
       Errors: 0

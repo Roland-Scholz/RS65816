@@ -77,6 +77,14 @@ L4:
 	db	$1B,$5B,$32,$4A,$1B,$5B,$48,$00
 	ends
 ;
+;const char parm[] = "parameter 98429";
+	data
+	xdef	_~parm
+_~parm:
+	db	$70,$61,$72,$61,$6D,$65,$74,$65,$72,$20
+	db	$39,$38,$34,$32,$39,$0
+	ends
+;
 ;const HeapRegion_t xHeapRegions[] = 
 	data
 	xdef	_~xHeapRegions
@@ -145,6 +153,10 @@ _~heap_end:
 	dl	$3FFFF
 	ends
 	asmstart
+	jmp startup
+	jml ($dffc)
+	
+startup
 	clc
 	xce
 	rep #$30
@@ -763,45 +775,98 @@ _~shellTask:
 	tcd
 pvParameters_0	set	3
 ;	char c = ' ';
+;	char *p = (char *) pvParameters;
+;	TaskStatus_t tStat;
+;	char *dffa = (char *)0xdffa;
 ;	
-;	for(;;) {
+;	
+;	while(*p) {
 c_1	set	0
+p_1	set	1
+tStat_1	set	5
+dffa_1	set	31
 	sep	#$20
 	longa	off
 	lda	#$20
 	sta	<L52+c_1
 	rep	#$20
 	longa	on
-L10016:
-;		*debug_char = c;
+	lda	<L51+pvParameters_0
+	sta	<L52+p_1
+	lda	<L51+pvParameters_0+2
+	sta	<L52+p_1+2
+	lda	#$dffa
+	sta	<L52+dffa_1
+	lda	#$0
+	sta	<L52+dffa_1+2
+	bra	L10014
+L20004:
+;		*debug_char = *p;
 	lda	|_~debug_char
 	sta	<R0
 	lda	|_~debug_char+2
 	sta	<R0+2
 	sep	#$20
 	longa	off
-	lda	<L52+c_1
+	lda	[<L52+p_1]
 	sta	[<R0]
-;		c++;
-	inc	<L52+c_1
-;		if (c > 126) c = ' ';
-	lda	#$7e
-	cmp	<L52+c_1
 	rep	#$20
 	longa	on
-	bcs	L10016
+;		p++;
+	inc	<L52+p_1
+	bne	L10014
+	inc	<L52+p_1+2
+;	}
+L10014:
+	lda	[<L52+p_1]
+	and	#$ff
+	bne	L20004
+;
+;	for (c = 0; c < 6; c++) {
 	sep	#$20
 	longa	off
-	lda	#$20
-	sta	<L52+c_1
+	stz	<L52+c_1
 	rep	#$20
 	longa	on
+	bra	L10019
+L10018:
+;		*debug_hex = *(dffa+c);
+	lda	|_~debug_hex
+	sta	<R0
+	lda	|_~debug_hex+2
+	sta	<R0+2
+	lda	<L52+c_1
+	and	#$ff
+	tay
+	sep	#$20
+	longa	off
+	lda	[<L52+dffa_1],Y
+	sta	[<R0]
 ;	}
-	bra	L10016
-;		
+	inc	<L52+c_1
+	rep	#$20
+	longa	on
+L10019:
+	sep	#$20
+	longa	off
+	lda	<L52+c_1
+	cmp	#<$6
+	rep	#$20
+	longa	on
+	bcc	L10018
+;	
+;	for(;;) {
+;
+;	}
+L10020:
+	bra	L10020
+;
+;	//vTaskGetInfo(NULL, &tStat, pdFALSE, eInvalid);
+;	
+;	//printf("task name: %s\n", tStat.pcTaskName);
 ;}
-L51	equ	5
-L52	equ	5
+L51	equ	43
+L52	equ	9
 	ends
 	efunc
 ;
@@ -814,7 +879,7 @@ _~main:
 	longi	on
 	tsc
 	sec
-	sbc	#L54
+	sbc	#L56
 	tcs
 	phd
 	tcd
@@ -824,47 +889,53 @@ argv_0	set	5
 ;	BaseType_t rc;
 ;	HeapRegion_t reg;
 ;	HeapRegion_t *pxHeapReg;
+;	TaskHandle_t * pxCreatedTask;
 ;	char *p;
 ;	int i;
 ;
+;	//asm wdm 7;
+;	
 ;	pxHeapReg = (HeapRegion_t *)pvPortMallocStack(sizeof(reg) * 100);
 rc_1	set	0
 reg_1	set	2
 pxHeapReg_1	set	10
-p_1	set	14
-i_1	set	18
+pxCreatedTask_1	set	14
+p_1	set	18
+i_1	set	22
 	pea	#<$320
 	jsr	_~pvPortMallocStack
-	sta	<L55+pxHeapReg_1
-	stx	<L55+pxHeapReg_1+2
+	sta	<L57+pxHeapReg_1
+	stx	<L57+pxHeapReg_1+2
 ;	printf("pxHeapReg:%p %u\n", pxHeapReg, sizeof(reg) * 100);
 	pea	#<$320
-	pei	<L55+pxHeapReg_1+2
-	pei	<L55+pxHeapReg_1
+	pei	<L57+pxHeapReg_1+2
+	pei	<L57+pxHeapReg_1
 	pea	#^L50
 	pea	#<L50
 	pea	#12
 	jsr	_~printf
 ;	
+;	//asm wdm 6;
+;	
 ;	reg.xSizeInBytes = 0x010000;
 	lda	#$0
-	sta	<L55+reg_1+4
+	sta	<L57+reg_1+4
 	ina
-	sta	<L55+reg_1+6
+	sta	<L57+reg_1+6
 ;	
 ;	for(i = 0; i < 99; i++) {
-	stz	<L55+i_1
-L10020:
+	stz	<L57+i_1
+L10025:
 ;		reg.pucStartAddress = (char *)((i+2) * 0x010000U);
 	lda	#$2
 	clc
-	adc	<L55+i_1
+	adc	<L57+i_1
 	sta	<R1
 	ldy	#$0
 	lda	<R1
-	bpl	L56
+	bpl	L58
 	dey
-L56:
+L58:
 	sta	<R1
 	sty	<R1+2
 	pei	<R1+2
@@ -873,22 +944,22 @@ L56:
 	xref	_~~lasl
 	jsr	_~~lasl
 	stx	<R0+2
-	sta	<L55+reg_1
+	sta	<L57+reg_1
 	lda	<R0+2
-	sta	<L55+reg_1+2
+	sta	<L57+reg_1+2
 ;		pxHeapReg[i] = reg;
 	clc
 	tdc
-	adc	#<L55+reg_1
+	adc	#<L57+reg_1
 	sta	<R0
 	lda	#$0
 	pha
 	pei	<R0
 	tay
-	lda	<L55+i_1
-	bpl	L57
+	lda	<L57+i_1
+	bpl	L59
 	dey
-L57:
+L59:
 	sta	<R1
 	sty	<R1+2
 	pei	<R1+2
@@ -898,11 +969,11 @@ L57:
 	jsr	_~~lasl
 	sta	<R0
 	stx	<R0+2
-	lda	<L55+pxHeapReg_1
+	lda	<L57+pxHeapReg_1
 	clc
 	adc	<R0
 	sta	<R2
-	lda	<L55+pxHeapReg_1+2
+	lda	<L57+pxHeapReg_1+2
 	adc	<R0+2
 	pha
 	pei	<R2
@@ -911,33 +982,33 @@ L57:
 	jsr	_~~fmov
 ;		
 ;	}
-	inc	<L55+i_1
+	inc	<L57+i_1
 	sec
-	lda	<L55+i_1
+	lda	<L57+i_1
 	sbc	#<$63
-	bvs	L58
+	bvs	L60
 	eor	#$8000
-L58:
-	bpl	L10020
+L60:
+	bpl	L10025
 ;	reg.pucStartAddress = NULL;
-	stz	<L55+reg_1
-	stz	<L55+reg_1+2
+	stz	<L57+reg_1
+	stz	<L57+reg_1+2
 ;	reg.xSizeInBytes = 0;
-	stz	<L55+reg_1+4
-	stz	<L55+reg_1+6
+	stz	<L57+reg_1+4
+	stz	<L57+reg_1+6
 ;	pxHeapReg[i] = reg;
 	clc
 	tdc
-	adc	#<L55+reg_1
+	adc	#<L57+reg_1
 	sta	<R0
 	lda	#$0
 	pha
 	pei	<R0
 	tay
-	lda	<L55+i_1
-	bpl	L60
+	lda	<L57+i_1
+	bpl	L62
 	dey
-L60:
+L62:
 	sta	<R1
 	sty	<R1+2
 	pei	<R1+2
@@ -947,11 +1018,11 @@ L60:
 	jsr	_~~lasl
 	sta	<R0
 	stx	<R0+2
-	lda	<L55+pxHeapReg_1
+	lda	<L57+pxHeapReg_1
 	clc
 	adc	<R0
 	sta	<R2
-	lda	<L55+pxHeapReg_1+2
+	lda	<L57+pxHeapReg_1+2
 	adc	<R0+2
 	pha
 	pei	<R2
@@ -979,35 +1050,45 @@ L60:
 	pea	#6
 	jsr	_~printf
 ;	vPortDefineHeapRegions( pxHeapReg );
-	pei	<L55+pxHeapReg_1+2
-	pei	<L55+pxHeapReg_1
+	pei	<L57+pxHeapReg_1+2
+	pei	<L57+pxHeapReg_1
 	jsr	_~vPortDefineHeapRegions
 ;	
 ;	vPortFreeStack(pxHeapReg);
-	pei	<L55+pxHeapReg_1+2
-	pei	<L55+pxHeapReg_1
+	pei	<L57+pxHeapReg_1+2
+	pei	<L57+pxHeapReg_1
 	jsr	_~vPortFreeStack
 ;	
 ;	printHeapStats();
 	jsr	_~printHeapStats
+;
 ;	
-;	rc = xTaskCreate( shellTask, "SHELL", 512, NULL, 0, NULL);
-	pea	#^$0
+;	
+;	rc = xTaskCreate( shellTask, "SHELL", 512, (void *)parm, 0, &pxCreatedTask);
+	pea	#0
+	clc
+	tdc
+	adc	#<L57+pxCreatedTask_1
+	pha
 	pea	#<$0
-	pea	#<$0
-	pea	#^$0
-	pea	#<$0
-	pea	#<$200
-	pea	#^L50+98
-	pea	#<L50+98
-	lda	#<_~shellTask
+	lda	#<_~parm
 	sta	<R0
 	xref	_BEG_DATA
 	lda	#_BEG_DATA>>16
 	pha
 	pei	<R0
+	pea	#<$200
+	pea	#^L50+98
+	pea	#<L50+98
+	lda	#<_~shellTask
+	sta	<R1
+	xref	_BEG_DATA
+	lda	#_BEG_DATA>>16
+	pha
+	pei	<R1
 	jsr	_~xTaskCreate
-	sta	<L55+rc_1
+	sta	<L57+rc_1
+;	
 ;	printf("task create rc: %d\n", rc);
 	pha
 	pea	#^L50+104
@@ -1017,25 +1098,25 @@ L60:
 ;	
 ;	
 ;	if (rc != pdPASS) {
-	lda	<L55+rc_1
+	lda	<L57+rc_1
 	cmp	#<$1
-	beq	L10021
+	beq	L10026
 ;		printf("shell could not be created rc: %d\n", rc);
-	pei	<L55+rc_1
+	pei	<L57+rc_1
 	pea	#^L50+124
 	pea	#<L50+124
 	pea	#8
 	jsr	_~printf
 ;		return pdPASS;
 	lda	#$1
-L62:
+L64:
 	tay
-	lda	<L54+1
-	sta	<L54+1+6
+	lda	<L56+1
+	sta	<L56+1+6
 	pld
 	tsc
 	clc
-	adc	#L54+6
+	adc	#L56+6
 	tcs
 	tya
 	rts
@@ -1044,7 +1125,7 @@ L62:
 ;	/* Start the scheduler so the tasks start executing. */
 ;
 ;	vTaskStartScheduler();
-L10021:
+L10026:
 	jsr	_~vTaskStartScheduler
 ;
 ;	/* If all is well then main() will never reach here as the scheduler will
@@ -1059,7 +1140,7 @@ L10021:
 ;
 ;	return pdFAIL;
 	lda	#$0
-	bra	L62
+	bra	L64
 ;
 ;
 ;/*	
@@ -1087,8 +1168,8 @@ L10021:
 ;	for (;;) {}
 ;*/	
 ;}
-L54	equ	32
-L55	equ	13
+L56	equ	36
+L57	equ	13
 	ends
 	efunc
 	data

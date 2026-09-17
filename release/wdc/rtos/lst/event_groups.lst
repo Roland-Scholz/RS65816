@@ -1,4 +1,4 @@
-  Tue Sep 15 2026 17:44                                                                                                    Page 1
+  Wed Sep 16 2026 17:13                                                                                                    Page 1
 
 
                                                ***************************************
@@ -59,7 +59,7 @@
     50                        ; * correct privileged Vs unprivileged linkage and placement. */
     51                        ;#undef MPU_WRAPPERS_INCLUDED_FROM_API_FILE
     52                        ;
-  Tue Sep 15 2026 17:44                                                                                                    Page 2
+  Wed Sep 16 2026 17:13                                                                                                    Page 2
 
 
     53                        ;/* This entire source file will be skipped if the application is not configured
@@ -120,7 +120,7 @@
    107                        ;            }
    108                        ;            #endif /* configASSERT_DEFINED */
    109                        ;
-  Tue Sep 15 2026 17:44                                                                                                    Page 3
+  Wed Sep 16 2026 17:13                                                                                                    Page 3
 
 
    110                        ;            /* The user has provided a statically allocated event group - use it. */
@@ -181,7 +181,7 @@
    164                        ;            EventGroup_t * pxEventBits;
    165                        ;
    166                        ;            traceENTER_xEventGroupCreate();
-  Tue Sep 15 2026 17:44                                                                                                    Page 4
+  Wed Sep 16 2026 17:13                                                                                                    Page 4
 
 
    167             00000000   pxEventBits_1	set	0
@@ -242,7 +242,7 @@
    221 00:0038: 2B           	pld
    222 00:0039: 3B           	tsc
    223 00:003A: 18           	clc
-  Tue Sep 15 2026 17:44                                                                                                    Page 5
+  Wed Sep 16 2026 17:13                                                                                                    Page 5
 
 
    224 00:003B: 69 08 00     	adc	#L2
@@ -299,1706 +299,1766 @@
    275                        ;        configASSERT( ( uxBitsToWaitFor & eventEVENT_BITS_CONTROL_BYTES ) == 0 );
    276 00:0053: A5 25        	lda	<L6+uxBitsToWaitFor_0+2
    277 00:0055: 29 00 FF     	and	#^$ff000000
-   278 00:0058: F0 02        	beq	L10003
-   279                        L10007:
-   280 00:005A: 80 FE        	bra	L10007
-   281                        L10003:
-  Tue Sep 15 2026 17:44                                                                                                    Page 6
+   278 00:0058: F0 03        	beq	L10003
+   279                        	asmstart
+   280 00:005A: 78           	sei
+   281                        	asmend
+  Wed Sep 16 2026 17:13                                                                                                    Page 6
 
 
-   282                        ;        configASSERT( uxBitsToWaitFor != 0 );
-   283 00:005C: A5 23        	lda	<L6+uxBitsToWaitFor_0
-   284 00:005E: 05 25        	ora	<L6+uxBitsToWaitFor_0+2
-   285 00:0060: D0 02        	bne	L10010
-   286                        L10014:
-   287 00:0062: 80 FE        	bra	L10014
-   288                        L10010:
-   289                        ;        #if ( ( INCLUDE_xTaskGetSchedulerState == 1 ) || ( configUSE_TIMERS == 1 ) )
-   290                        ;        {
-   291                        ;            configASSERT( !( ( xTaskGetSchedulerState() == taskSCHEDULER_SUSPENDED ) && ( xTicksToWai
+   282                        L10004:
+   283 00:005B: 80 FE        	bra	L10004
+   284                        L10003:
+   285                        ;        configASSERT( uxBitsToWaitFor != 0 );
+   286 00:005D: A5 23        	lda	<L6+uxBitsToWaitFor_0
+   287 00:005F: 05 25        	ora	<L6+uxBitsToWaitFor_0+2
+   288 00:0061: D0 03        	bne	L10007
+   289                        	asmstart
+   290 00:0063: 78           	sei
+   291                        	asmend
+   292                        L10008:
+   293 00:0064: 80 FE        	bra	L10008
+   294                        L10007:
+   295                        ;        #if ( ( INCLUDE_xTaskGetSchedulerState == 1 ) || ( configUSE_TIMERS == 1 ) )
+   296                        ;        {
+   297                        ;            configASSERT( !( ( xTaskGetSchedulerState() == taskSCHEDULER_SUSPENDED ) && ( xTicksToWai
                     t != 0 ) ) );
-   292 00:0064: 20 xx xx     	jsr	_~xTaskGetSchedulerState
-   293 00:0067: AA           	tax
-   294 00:0068: D0 08        	bne	L10017
-   295 00:006A: A5 27        	lda	<L6+xTicksToWait_0
-   296 00:006C: 05 29        	ora	<L6+xTicksToWait_0+2
-   297 00:006E: F0 02        	beq	L10017
-   298                        L10021:
-   299 00:0070: 80 FE        	bra	L10021
-   300                        L10017:
-   301                        ;        }
-   302                        ;        #endif
-   303                        ;
-   304                        ;        vTaskSuspendAll();
-   305 00:0072: 20 xx xx     	jsr	_~vTaskSuspendAll
-   306                        ;        {
-   307                        ;            uxOriginalBitValue = pxEventBits->uxEventBits;
-   308 00:0075: A7 11        	lda	[<L7+pxEventBits_1]
-   309 00:0077: 85 09        	sta	<L7+uxOriginalBitValue_1
-   310 00:0079: A0 02 00     	ldy	#$2
-   311 00:007C: B7 11        	lda	[<L7+pxEventBits_1],Y
-   312 00:007E: 85 0B        	sta	<L7+uxOriginalBitValue_1+2
-   313                        ;
-   314                        ;            ( void ) xEventGroupSetBits( xEventGroup, uxBitsToSet );
-   315 00:0080: D4 21        	pei	<L6+uxBitsToSet_0+2
-   316 00:0082: D4 1F        	pei	<L6+uxBitsToSet_0
-   317 00:0084: D4 1D        	pei	<L6+xEventGroup_0+2
-   318 00:0086: D4 1B        	pei	<L6+xEventGroup_0
-   319 00:0088: 20 xx xx     	jsr	_~xEventGroupSetBits
-   320                        ;
-   321                        ;            if( ( ( uxOriginalBitValue | uxBitsToSet ) & uxBitsToWaitFor ) == uxBitsToWaitFor )
-   322                        ;            {
-   323 00:008B: A5 1F        	lda	<L6+uxBitsToSet_0
-   324 00:008D: 05 09        	ora	<L7+uxOriginalBitValue_1
-   325 00:008F: 85 01        	sta	<R0
-   326 00:0091: A5 21        	lda	<L6+uxBitsToSet_0+2
-   327 00:0093: 05 0B        	ora	<L7+uxOriginalBitValue_1+2
-   328 00:0095: 85 03        	sta	<R0+2
-   329 00:0097: A5 23        	lda	<L6+uxBitsToWaitFor_0
-   330 00:0099: 25 01        	and	<R0
-   331 00:009B: 85 05        	sta	<R1
-   332 00:009D: A5 25        	lda	<L6+uxBitsToWaitFor_0+2
-   333 00:009F: 25 03        	and	<R0+2
-   334 00:00A1: 85 07        	sta	<R1+2
-   335 00:00A3: A5 05        	lda	<R1
-   336 00:00A5: C5 23        	cmp	<L6+uxBitsToWaitFor_0
-   337 00:00A7: D0 04        	bne	L12
-   338 00:00A9: A5 07        	lda	<R1+2
-  Tue Sep 15 2026 17:44                                                                                                    Page 7
+   298 00:0066: 20 xx xx     	jsr	_~xTaskGetSchedulerState
+   299 00:0069: AA           	tax
+   300 00:006A: D0 09        	bne	L10011
+   301 00:006C: A5 27        	lda	<L6+xTicksToWait_0
+   302 00:006E: 05 29        	ora	<L6+xTicksToWait_0+2
+   303 00:0070: F0 03        	beq	L10011
+   304                        	asmstart
+   305 00:0072: 78           	sei
+   306                        	asmend
+   307                        L10012:
+   308 00:0073: 80 FE        	bra	L10012
+   309                        L10011:
+   310                        ;        }
+   311                        ;        #endif
+   312                        ;
+   313                        ;        vTaskSuspendAll();
+   314 00:0075: 20 xx xx     	jsr	_~vTaskSuspendAll
+   315                        ;        {
+   316                        ;            uxOriginalBitValue = pxEventBits->uxEventBits;
+   317 00:0078: A7 11        	lda	[<L7+pxEventBits_1]
+   318 00:007A: 85 09        	sta	<L7+uxOriginalBitValue_1
+   319 00:007C: A0 02 00     	ldy	#$2
+   320 00:007F: B7 11        	lda	[<L7+pxEventBits_1],Y
+   321 00:0081: 85 0B        	sta	<L7+uxOriginalBitValue_1+2
+   322                        ;
+   323                        ;            ( void ) xEventGroupSetBits( xEventGroup, uxBitsToSet );
+   324 00:0083: D4 21        	pei	<L6+uxBitsToSet_0+2
+   325 00:0085: D4 1F        	pei	<L6+uxBitsToSet_0
+   326 00:0087: D4 1D        	pei	<L6+xEventGroup_0+2
+   327 00:0089: D4 1B        	pei	<L6+xEventGroup_0
+   328 00:008B: 20 xx xx     	jsr	_~xEventGroupSetBits
+   329                        ;
+   330                        ;            if( ( ( uxOriginalBitValue | uxBitsToSet ) & uxBitsToWaitFor ) == uxBitsToWaitFor )
+   331                        ;            {
+   332 00:008E: A5 1F        	lda	<L6+uxBitsToSet_0
+   333 00:0090: 05 09        	ora	<L7+uxOriginalBitValue_1
+   334 00:0092: 85 01        	sta	<R0
+   335 00:0094: A5 21        	lda	<L6+uxBitsToSet_0+2
+   336 00:0096: 05 0B        	ora	<L7+uxOriginalBitValue_1+2
+   337 00:0098: 85 03        	sta	<R0+2
+   338 00:009A: A5 23        	lda	<L6+uxBitsToWaitFor_0
+  Wed Sep 16 2026 17:13                                                                                                    Page 7
 
 
-   339 00:00AB: C5 25        	cmp	<L6+uxBitsToWaitFor_0+2
-   340                        L12:
-   341 00:00AD: D0 2F        	bne	L10024
-   342                        ;                /* All the rendezvous bits are now set - no need to block. */
-   343                        ;                uxReturn = ( uxOriginalBitValue | uxBitsToSet );
-   344 00:00AF: A5 1F        	lda	<L6+uxBitsToSet_0
-   345 00:00B1: 05 09        	ora	<L7+uxOriginalBitValue_1
-   346 00:00B3: 85 0D        	sta	<L7+uxReturn_1
-   347 00:00B5: A5 21        	lda	<L6+uxBitsToSet_0+2
-   348 00:00B7: 05 0B        	ora	<L7+uxOriginalBitValue_1+2
-   349 00:00B9: 85 0F        	sta	<L7+uxReturn_1+2
-   350                        ;
-   351                        ;                /* Rendezvous always clear the bits.  They will have been cleared
-   352                        ;                 * already unless this is the only task in the rendezvous. */
-   353                        ;                pxEventBits->uxEventBits &= ~uxBitsToWaitFor;
-   354 00:00BB: A5 23        	lda	<L6+uxBitsToWaitFor_0
-   355 00:00BD: 49 FF FF     	eor	#<$ffffffff
-   356 00:00C0: 85 01        	sta	<R0
-   357 00:00C2: A5 25        	lda	<L6+uxBitsToWaitFor_0+2
-   358 00:00C4: 49 FF FF     	eor	#^$ffffffff
-   359 00:00C7: 85 03        	sta	<R0+2
-   360 00:00C9: A7 11        	lda	[<L7+pxEventBits_1]
-   361 00:00CB: 25 01        	and	<R0
-   362 00:00CD: 87 11        	sta	[<L7+pxEventBits_1]
-   363 00:00CF: A0 02 00     	ldy	#$2
-   364 00:00D2: B7 11        	lda	[<L7+pxEventBits_1],Y
-   365 00:00D4: 25 03        	and	<R0+2
-   366 00:00D6: 97 11        	sta	[<L7+pxEventBits_1],Y
-   367                        ;
-   368                        ;                xTicksToWait = 0;
-   369 00:00D8: 64 27        	stz	<L6+xTicksToWait_0
-   370 00:00DA: 64 29        	stz	<L6+xTicksToWait_0+2
-   371                        ;            }
-   372                        ;            else
-   373 00:00DC: 80 3F        	bra	L10025
-   374                        L10024:
-   375                        ;            {
-   376                        ;                if( xTicksToWait != ( TickType_t ) 0 )
-   377                        ;                {
-   378 00:00DE: A5 27        	lda	<L6+xTicksToWait_0
-   379 00:00E0: 05 29        	ora	<L6+xTicksToWait_0+2
-   380 00:00E2: F0 29        	beq	L10026
-   381                        ;                    traceEVENT_GROUP_SYNC_BLOCK( xEventGroup, uxBitsToSet, uxBitsToWaitFor );
-   382                        ;
-   383                        ;                    /* Store the bits that the calling task is waiting for in the
-   384                        ;                     * task's event list item so the kernel knows when a match is
-   385                        ;                     * found.  Then enter the blocked state. */
-   386                        ;                    vTaskPlaceOnUnorderedEventList( &( pxEventBits->xTasksWaitingForBits ), ( uxBitsT
+   339 00:009C: 25 01        	and	<R0
+   340 00:009E: 85 05        	sta	<R1
+   341 00:00A0: A5 25        	lda	<L6+uxBitsToWaitFor_0+2
+   342 00:00A2: 25 03        	and	<R0+2
+   343 00:00A4: 85 07        	sta	<R1+2
+   344 00:00A6: A5 05        	lda	<R1
+   345 00:00A8: C5 23        	cmp	<L6+uxBitsToWaitFor_0
+   346 00:00AA: D0 04        	bne	L12
+   347 00:00AC: A5 07        	lda	<R1+2
+   348 00:00AE: C5 25        	cmp	<L6+uxBitsToWaitFor_0+2
+   349                        L12:
+   350 00:00B0: D0 2F        	bne	L10015
+   351                        ;                /* All the rendezvous bits are now set - no need to block. */
+   352                        ;                uxReturn = ( uxOriginalBitValue | uxBitsToSet );
+   353 00:00B2: A5 1F        	lda	<L6+uxBitsToSet_0
+   354 00:00B4: 05 09        	ora	<L7+uxOriginalBitValue_1
+   355 00:00B6: 85 0D        	sta	<L7+uxReturn_1
+   356 00:00B8: A5 21        	lda	<L6+uxBitsToSet_0+2
+   357 00:00BA: 05 0B        	ora	<L7+uxOriginalBitValue_1+2
+   358 00:00BC: 85 0F        	sta	<L7+uxReturn_1+2
+   359                        ;
+   360                        ;                /* Rendezvous always clear the bits.  They will have been cleared
+   361                        ;                 * already unless this is the only task in the rendezvous. */
+   362                        ;                pxEventBits->uxEventBits &= ~uxBitsToWaitFor;
+   363 00:00BE: A5 23        	lda	<L6+uxBitsToWaitFor_0
+   364 00:00C0: 49 FF FF     	eor	#<$ffffffff
+   365 00:00C3: 85 01        	sta	<R0
+   366 00:00C5: A5 25        	lda	<L6+uxBitsToWaitFor_0+2
+   367 00:00C7: 49 FF FF     	eor	#^$ffffffff
+   368 00:00CA: 85 03        	sta	<R0+2
+   369 00:00CC: A7 11        	lda	[<L7+pxEventBits_1]
+   370 00:00CE: 25 01        	and	<R0
+   371 00:00D0: 87 11        	sta	[<L7+pxEventBits_1]
+   372 00:00D2: A0 02 00     	ldy	#$2
+   373 00:00D5: B7 11        	lda	[<L7+pxEventBits_1],Y
+   374 00:00D7: 25 03        	and	<R0+2
+   375 00:00D9: 97 11        	sta	[<L7+pxEventBits_1],Y
+   376                        ;
+   377                        ;                xTicksToWait = 0;
+   378 00:00DB: 64 27        	stz	<L6+xTicksToWait_0
+   379 00:00DD: 64 29        	stz	<L6+xTicksToWait_0+2
+   380                        ;            }
+   381                        ;            else
+   382 00:00DF: 80 3F        	bra	L10016
+   383                        L10015:
+   384                        ;            {
+   385                        ;                if( xTicksToWait != ( TickType_t ) 0 )
+   386                        ;                {
+   387 00:00E1: A5 27        	lda	<L6+xTicksToWait_0
+   388 00:00E3: 05 29        	ora	<L6+xTicksToWait_0+2
+   389 00:00E5: F0 29        	beq	L10017
+   390                        ;                    traceEVENT_GROUP_SYNC_BLOCK( xEventGroup, uxBitsToSet, uxBitsToWaitFor );
+   391                        ;
+   392                        ;                    /* Store the bits that the calling task is waiting for in the
+   393                        ;                     * task's event list item so the kernel knows when a match is
+   394                        ;                     * found.  Then enter the blocked state. */
+   395                        ;                    vTaskPlaceOnUnorderedEventList( &( pxEventBits->xTasksWaitingForBits ), ( uxBitsT
                     oWaitFor | eventCLEAR_EVENTS_ON_EXIT_BIT | eventWAIT_FOR_ALL_BITS ), xTicksToWait );
-   387 00:00E4: D4 29        	pei	<L6+xTicksToWait_0+2
-   388 00:00E6: D4 27        	pei	<L6+xTicksToWait_0
-   389 00:00E8: A5 23        	lda	<L6+uxBitsToWaitFor_0
-   390 00:00EA: 85 01        	sta	<R0
-   391 00:00EC: A5 25        	lda	<L6+uxBitsToWaitFor_0+2
-   392 00:00EE: 09 00 05     	ora	#^$5000000
-   393 00:00F1: 48           	pha
-   394 00:00F2: D4 01        	pei	<R0
-   395 00:00F4: A9 04 00     	lda	#$4
-  Tue Sep 15 2026 17:44                                                                                                    Page 8
+  Wed Sep 16 2026 17:13                                                                                                    Page 8
 
 
-   396 00:00F7: 18           	clc
-   397 00:00F8: 65 11        	adc	<L7+pxEventBits_1
-   398 00:00FA: 85 05        	sta	<R1
-   399 00:00FC: A9 00 00     	lda	#$0
-   400 00:00FF: 65 13        	adc	<L7+pxEventBits_1+2
-   401 00:0101: 48           	pha
-   402 00:0102: D4 05        	pei	<R1
-   403 00:0104: 20 xx xx     	jsr	_~vTaskPlaceOnUnorderedEventList
-   404                        ;
-   405                        ;                    /* This assignment is obsolete as uxReturn will get set after
-   406                        ;                     * the task unblocks, but some compilers mistakenly generate a
-   407                        ;                     * warning about uxReturn being returned without being set if the
-   408                        ;                     * assignment is omitted. */
-   409                        ;                    uxReturn = 0;
-   410 00:0107: 64 0D        	stz	<L7+uxReturn_1
-   411 00:0109: 64 0F        	stz	<L7+uxReturn_1+2
-   412                        ;                }
-   413                        ;                else
-   414 00:010B: 80 10        	bra	L10025
-   415                        L10026:
-   416                        ;                {
-   417                        ;                    /* The rendezvous bits were not set, but no block time was
-   418                        ;                     * specified - just return the current event bit value. */
-   419                        ;                    uxReturn = pxEventBits->uxEventBits;
-   420 00:010D: A7 11        	lda	[<L7+pxEventBits_1]
-   421 00:010F: 85 0D        	sta	<L7+uxReturn_1
-   422 00:0111: A0 02 00     	ldy	#$2
-   423 00:0114: B7 11        	lda	[<L7+pxEventBits_1],Y
-   424 00:0116: 85 0F        	sta	<L7+uxReturn_1+2
-   425                        ;                    xTimeoutOccurred = pdTRUE;
-   426 00:0118: A9 01 00     	lda	#$1
-   427 00:011B: 85 17        	sta	<L7+xTimeoutOccurred_1
-   428                        ;                }
-   429                        ;            }
-   430                        L10025:
-   431                        ;        }
-   432                        ;        xAlreadyYielded = xTaskResumeAll();
-   433 00:011D: 20 xx xx     	jsr	_~xTaskResumeAll
-   434 00:0120: 85 15        	sta	<L7+xAlreadyYielded_1
-   435                        ;
-   436                        ;        if( xTicksToWait != ( TickType_t ) 0 )
-   437                        ;        {
-   438 00:0122: A5 27        	lda	<L6+xTicksToWait_0
-   439 00:0124: 05 29        	ora	<L6+xTicksToWait_0+2
-   440 00:0126: F0 61        	beq	L10028
-   441                        ;            if( xAlreadyYielded == pdFALSE )
-   442                        ;            {
-   443 00:0128: A5 15        	lda	<L7+xAlreadyYielded_1
-   444 00:012A: D0 03        	bne	L10030
-   445                        ;                taskYIELD_WITHIN_API();
-   446 00:012C: 20 xx xx     	jsr	_~vPortYield
-   447                        ;            }
-   448                        ;            else
-   449                        ;            {
-   450                        ;                mtCOVERAGE_TEST_MARKER();
-   451                        ;            }
-   452                        L10030:
-   453                        ;
-  Tue Sep 15 2026 17:44                                                                                                    Page 9
+   396 00:00E7: D4 29        	pei	<L6+xTicksToWait_0+2
+   397 00:00E9: D4 27        	pei	<L6+xTicksToWait_0
+   398 00:00EB: A5 23        	lda	<L6+uxBitsToWaitFor_0
+   399 00:00ED: 85 01        	sta	<R0
+   400 00:00EF: A5 25        	lda	<L6+uxBitsToWaitFor_0+2
+   401 00:00F1: 09 00 05     	ora	#^$5000000
+   402 00:00F4: 48           	pha
+   403 00:00F5: D4 01        	pei	<R0
+   404 00:00F7: A9 04 00     	lda	#$4
+   405 00:00FA: 18           	clc
+   406 00:00FB: 65 11        	adc	<L7+pxEventBits_1
+   407 00:00FD: 85 05        	sta	<R1
+   408 00:00FF: A9 00 00     	lda	#$0
+   409 00:0102: 65 13        	adc	<L7+pxEventBits_1+2
+   410 00:0104: 48           	pha
+   411 00:0105: D4 05        	pei	<R1
+   412 00:0107: 20 xx xx     	jsr	_~vTaskPlaceOnUnorderedEventList
+   413                        ;
+   414                        ;                    /* This assignment is obsolete as uxReturn will get set after
+   415                        ;                     * the task unblocks, but some compilers mistakenly generate a
+   416                        ;                     * warning about uxReturn being returned without being set if the
+   417                        ;                     * assignment is omitted. */
+   418                        ;                    uxReturn = 0;
+   419 00:010A: 64 0D        	stz	<L7+uxReturn_1
+   420 00:010C: 64 0F        	stz	<L7+uxReturn_1+2
+   421                        ;                }
+   422                        ;                else
+   423 00:010E: 80 10        	bra	L10016
+   424                        L10017:
+   425                        ;                {
+   426                        ;                    /* The rendezvous bits were not set, but no block time was
+   427                        ;                     * specified - just return the current event bit value. */
+   428                        ;                    uxReturn = pxEventBits->uxEventBits;
+   429 00:0110: A7 11        	lda	[<L7+pxEventBits_1]
+   430 00:0112: 85 0D        	sta	<L7+uxReturn_1
+   431 00:0114: A0 02 00     	ldy	#$2
+   432 00:0117: B7 11        	lda	[<L7+pxEventBits_1],Y
+   433 00:0119: 85 0F        	sta	<L7+uxReturn_1+2
+   434                        ;                    xTimeoutOccurred = pdTRUE;
+   435 00:011B: A9 01 00     	lda	#$1
+   436 00:011E: 85 17        	sta	<L7+xTimeoutOccurred_1
+   437                        ;                }
+   438                        ;            }
+   439                        L10016:
+   440                        ;        }
+   441                        ;        xAlreadyYielded = xTaskResumeAll();
+   442 00:0120: 20 xx xx     	jsr	_~xTaskResumeAll
+   443 00:0123: 85 15        	sta	<L7+xAlreadyYielded_1
+   444                        ;
+   445                        ;        if( xTicksToWait != ( TickType_t ) 0 )
+   446                        ;        {
+   447 00:0125: A5 27        	lda	<L6+xTicksToWait_0
+   448 00:0127: 05 29        	ora	<L6+xTicksToWait_0+2
+   449 00:0129: F0 63        	beq	L10019
+   450                        ;            if( xAlreadyYielded == pdFALSE )
+   451                        ;            {
+   452 00:012B: A5 15        	lda	<L7+xAlreadyYielded_1
+   453 00:012D: D0 03        	bne	L10021
+  Wed Sep 16 2026 17:13                                                                                                    Page 9
 
 
-   454                        ;            /* The task blocked to wait for its required bits to be set - at this
-   455                        ;             * point either the required bits were set or the block time expired.  If
-   456                        ;             * the required bits were set they will have been stored in the task's
-   457                        ;             * event list item, and they should now be retrieved then cleared. */
-   458                        ;            uxReturn = uxTaskResetEventItemValue();
-   459 00:012F: 20 xx xx     	jsr	_~uxTaskResetEventItemValue
-   460 00:0132: 85 0D        	sta	<L7+uxReturn_1
-   461 00:0134: 86 0F        	stx	<L7+uxReturn_1+2
+   454                        ;                taskYIELD_WITHIN_API();
+   455 00:012F: 20 xx xx     	jsr	_~vPortYield
+   456                        ;            }
+   457                        ;            else
+   458                        ;            {
+   459                        ;                mtCOVERAGE_TEST_MARKER();
+   460                        ;            }
+   461                        L10021:
    462                        ;
-   463                        ;            if( ( uxReturn & eventUNBLOCKED_DUE_TO_BIT_SET ) == ( EventBits_t ) 0 )
-   464                        ;            {
-   465 00:0136: A5 0F        	lda	<L7+uxReturn_1+2
-   466 00:0138: 29 00 02     	and	#^$2000000
-   467 00:013B: D0 45        	bne	L10040
-   468                        ;                /* The task timed out, just return the current event bit value. */
-   469                        ;                taskENTER_CRITICAL();
-   470                        ;                {
-   471                        ;                    uxReturn = pxEventBits->uxEventBits;
-   472 00:013D: A7 11        	lda	[<L7+pxEventBits_1]
-   473 00:013F: 85 0D        	sta	<L7+uxReturn_1
-   474 00:0141: A0 02 00     	ldy	#$2
-   475 00:0144: B7 11        	lda	[<L7+pxEventBits_1],Y
-   476 00:0146: 85 0F        	sta	<L7+uxReturn_1+2
-   477                        ;
-   478                        ;                    /* Although the task got here because it timed out before the
-   479                        ;                     * bits it was waiting for were set, it is possible that since it
-   480                        ;                     * unblocked another task has set the bits.  If this is the case
-   481                        ;                     * then it needs to clear the bits before exiting. */
-   482                        ;                    if( ( uxReturn & uxBitsToWaitFor ) == uxBitsToWaitFor )
-   483                        ;                    {
-   484 00:0148: A5 23        	lda	<L6+uxBitsToWaitFor_0
-   485 00:014A: 25 0D        	and	<L7+uxReturn_1
-   486 00:014C: 85 01        	sta	<R0
-   487 00:014E: A5 25        	lda	<L6+uxBitsToWaitFor_0+2
-   488 00:0150: 25 0F        	and	<L7+uxReturn_1+2
-   489 00:0152: 85 03        	sta	<R0+2
-   490 00:0154: A5 01        	lda	<R0
-   491 00:0156: C5 23        	cmp	<L6+uxBitsToWaitFor_0
-   492 00:0158: D0 04        	bne	L18
-   493 00:015A: A5 03        	lda	<R0+2
-   494 00:015C: C5 25        	cmp	<L6+uxBitsToWaitFor_0+2
-   495                        L18:
-   496 00:015E: D0 1D        	bne	L10038
-   497                        ;                        pxEventBits->uxEventBits &= ~uxBitsToWaitFor;
-   498 00:0160: A5 23        	lda	<L6+uxBitsToWaitFor_0
-   499 00:0162: 49 FF FF     	eor	#<$ffffffff
-   500 00:0165: 85 01        	sta	<R0
-   501 00:0167: A5 25        	lda	<L6+uxBitsToWaitFor_0+2
-   502 00:0169: 49 FF FF     	eor	#^$ffffffff
-   503 00:016C: 85 03        	sta	<R0+2
-   504 00:016E: A7 11        	lda	[<L7+pxEventBits_1]
-   505 00:0170: 25 01        	and	<R0
-   506 00:0172: 87 11        	sta	[<L7+pxEventBits_1]
-   507 00:0174: A0 02 00     	ldy	#$2
-   508 00:0177: B7 11        	lda	[<L7+pxEventBits_1],Y
-   509 00:0179: 25 03        	and	<R0+2
-   510 00:017B: 97 11        	sta	[<L7+pxEventBits_1],Y
-   511                        ;                    }
-  Tue Sep 15 2026 17:44                                                                                                    Page 10
+   463                        ;            /* The task blocked to wait for its required bits to be set - at this
+   464                        ;             * point either the required bits were set or the block time expired.  If
+   465                        ;             * the required bits were set they will have been stored in the task's
+   466                        ;             * event list item, and they should now be retrieved then cleared. */
+   467                        ;            uxReturn = uxTaskResetEventItemValue();
+   468 00:0132: 20 xx xx     	jsr	_~uxTaskResetEventItemValue
+   469 00:0135: 85 0D        	sta	<L7+uxReturn_1
+   470 00:0137: 86 0F        	stx	<L7+uxReturn_1+2
+   471                        ;
+   472                        ;            if( ( uxReturn & eventUNBLOCKED_DUE_TO_BIT_SET ) == ( EventBits_t ) 0 )
+   473                        ;            {
+   474 00:0139: A5 0F        	lda	<L7+uxReturn_1+2
+   475 00:013B: 29 00 02     	and	#^$2000000
+   476 00:013E: D0 47        	bne	L10025
+   477                        ;                /* The task timed out, just return the current event bit value. */
+   478                        ;                taskENTER_CRITICAL();
+   479                        	asmstart
+   480 00:0140: 78           	sei
+   481                        	asmend
+   482                        ;                {
+   483                        ;                    uxReturn = pxEventBits->uxEventBits;
+   484 00:0141: A7 11        	lda	[<L7+pxEventBits_1]
+   485 00:0143: 85 0D        	sta	<L7+uxReturn_1
+   486 00:0145: A0 02 00     	ldy	#$2
+   487 00:0148: B7 11        	lda	[<L7+pxEventBits_1],Y
+   488 00:014A: 85 0F        	sta	<L7+uxReturn_1+2
+   489                        ;
+   490                        ;                    /* Although the task got here because it timed out before the
+   491                        ;                     * bits it was waiting for were set, it is possible that since it
+   492                        ;                     * unblocked another task has set the bits.  If this is the case
+   493                        ;                     * then it needs to clear the bits before exiting. */
+   494                        ;                    if( ( uxReturn & uxBitsToWaitFor ) == uxBitsToWaitFor )
+   495                        ;                    {
+   496 00:014C: A5 23        	lda	<L6+uxBitsToWaitFor_0
+   497 00:014E: 25 0D        	and	<L7+uxReturn_1
+   498 00:0150: 85 01        	sta	<R0
+   499 00:0152: A5 25        	lda	<L6+uxBitsToWaitFor_0+2
+   500 00:0154: 25 0F        	and	<L7+uxReturn_1+2
+   501 00:0156: 85 03        	sta	<R0+2
+   502 00:0158: A5 01        	lda	<R0
+   503 00:015A: C5 23        	cmp	<L6+uxBitsToWaitFor_0
+   504 00:015C: D0 04        	bne	L18
+   505 00:015E: A5 03        	lda	<R0+2
+   506 00:0160: C5 25        	cmp	<L6+uxBitsToWaitFor_0+2
+   507                        L18:
+   508 00:0162: D0 1D        	bne	L10024
+   509                        ;                        pxEventBits->uxEventBits &= ~uxBitsToWaitFor;
+   510 00:0164: A5 23        	lda	<L6+uxBitsToWaitFor_0
+   511 00:0166: 49 FF FF     	eor	#<$ffffffff
+  Wed Sep 16 2026 17:13                                                                                                    Page 10
 
 
-   512                        ;                    else
-   513                        ;                    {
-   514                        ;                        mtCOVERAGE_TEST_MARKER();
-   515                        ;                    }
-   516                        ;                }
-   517                        ;                taskEXIT_CRITICAL();
-   518                        L10038:
-   519                        ;
-   520                        ;                xTimeoutOccurred = pdTRUE;
-   521 00:017D: A9 01 00     	lda	#$1
-   522 00:0180: 85 17        	sta	<L7+xTimeoutOccurred_1
-   523                        ;            }
-   524                        ;            else
-   525                        ;            {
-   526                        ;                /* The task unblocked because the bits were set. */
-   527                        ;            }
-   528                        L10040:
-   529                        ;
-   530                        ;            /* Control bits might be set as the task had blocked should not be
-   531                        ;             * returned. */
-   532                        ;            uxReturn &= ~eventEVENT_BITS_CONTROL_BYTES;
-   533 00:0182: A5 0F        	lda	<L7+uxReturn_1+2
-   534 00:0184: 29 FF 00     	and	#^$ffffff
-   535 00:0187: 85 0F        	sta	<L7+uxReturn_1+2
-   536                        ;        }
-   537                        ;
-   538                        ;        traceEVENT_GROUP_SYNC_END( xEventGroup, uxBitsToSet, uxBitsToWaitFor, xTimeoutOccurred );
-   539                        L10028:
-   540                        ;
-   541                        ;        /* Prevent compiler warnings when trace macros are not used. */
-   542                        ;        ( void ) xTimeoutOccurred;
-   543                        ;
-   544                        ;        traceRETURN_xEventGroupSync( uxReturn );
-   545                        ;
-   546                        ;        return uxReturn;
-   547 00:0189: A6 0F        	ldx	<L7+uxReturn_1+2
-   548 00:018B: A5 0D        	lda	<L7+uxReturn_1
-   549 00:018D: A8           	tay
-   550 00:018E: A5 19        	lda	<L6+1
-   551 00:0190: 85 29        	sta	<L6+1+16
-   552 00:0192: 2B           	pld
-   553 00:0193: 3B           	tsc
-   554 00:0194: 18           	clc
-   555 00:0195: 69 28 00     	adc	#L6+16
-   556 00:0198: 1B           	tcs
-   557 00:0199: 98           	tya
-   558 00:019A: 60           	rts
-   559                        ;    }
-   560             00000018   L6	equ	24
-   561             00000009   L7	equ	9
-   562                        	ends
-   563                        	efunc
-   564                        ;/*-----------------------------------------------------------*/
-   565                        ;
-   566                        ;    EventBits_t xEventGroupWaitBits( EventGroupHandle_t xEventGroup,
-   567                        ;                                     const EventBits_t uxBitsToWaitFor,
-   568                        ;                                     const BaseType_t xClearOnExit,
-   569                        ;                                     const BaseType_t xWaitForAllBits,
-  Tue Sep 15 2026 17:44                                                                                                    Page 11
+   512 00:0169: 85 01        	sta	<R0
+   513 00:016B: A5 25        	lda	<L6+uxBitsToWaitFor_0+2
+   514 00:016D: 49 FF FF     	eor	#^$ffffffff
+   515 00:0170: 85 03        	sta	<R0+2
+   516 00:0172: A7 11        	lda	[<L7+pxEventBits_1]
+   517 00:0174: 25 01        	and	<R0
+   518 00:0176: 87 11        	sta	[<L7+pxEventBits_1]
+   519 00:0178: A0 02 00     	ldy	#$2
+   520 00:017B: B7 11        	lda	[<L7+pxEventBits_1],Y
+   521 00:017D: 25 03        	and	<R0+2
+   522 00:017F: 97 11        	sta	[<L7+pxEventBits_1],Y
+   523                        ;                    }
+   524                        ;                    else
+   525                        ;                    {
+   526                        ;                        mtCOVERAGE_TEST_MARKER();
+   527                        ;                    }
+   528                        L10024:
+   529                        ;                }
+   530                        ;                taskEXIT_CRITICAL();
+   531                        	asmstart
+   532 00:0181: 58           	cli
+   533                        	asmend
+   534                        ;
+   535                        ;                xTimeoutOccurred = pdTRUE;
+   536 00:0182: A9 01 00     	lda	#$1
+   537 00:0185: 85 17        	sta	<L7+xTimeoutOccurred_1
+   538                        ;            }
+   539                        ;            else
+   540                        ;            {
+   541                        ;                /* The task unblocked because the bits were set. */
+   542                        ;            }
+   543                        L10025:
+   544                        ;
+   545                        ;            /* Control bits might be set as the task had blocked should not be
+   546                        ;             * returned. */
+   547                        ;            uxReturn &= ~eventEVENT_BITS_CONTROL_BYTES;
+   548 00:0187: A5 0F        	lda	<L7+uxReturn_1+2
+   549 00:0189: 29 FF 00     	and	#^$ffffff
+   550 00:018C: 85 0F        	sta	<L7+uxReturn_1+2
+   551                        ;        }
+   552                        ;
+   553                        ;        traceEVENT_GROUP_SYNC_END( xEventGroup, uxBitsToSet, uxBitsToWaitFor, xTimeoutOccurred );
+   554                        L10019:
+   555                        ;
+   556                        ;        /* Prevent compiler warnings when trace macros are not used. */
+   557                        ;        ( void ) xTimeoutOccurred;
+   558                        ;
+   559                        ;        traceRETURN_xEventGroupSync( uxReturn );
+   560                        ;
+   561                        ;        return uxReturn;
+   562 00:018E: A6 0F        	ldx	<L7+uxReturn_1+2
+   563 00:0190: A5 0D        	lda	<L7+uxReturn_1
+   564 00:0192: A8           	tay
+   565 00:0193: A5 19        	lda	<L6+1
+   566 00:0195: 85 29        	sta	<L6+1+16
+   567 00:0197: 2B           	pld
+   568 00:0198: 3B           	tsc
+   569 00:0199: 18           	clc
+  Wed Sep 16 2026 17:13                                                                                                    Page 11
 
 
-   570                        ;                                     TickType_t xTicksToWait )
-   571                        ;    {
-   572                        	code
-   573                        	xdef	_~xEventGroupWaitBits
-   574                        	func
-   575                        _~xEventGroupWaitBits:
-   576                        	longa	on
-   577                        	longi	on
-   578 00:019B: 3B           	tsc
-   579 00:019C: 38           	sec
-   580 00:019D: E9 1E 00     	sbc	#L21
-   581 00:01A0: 1B           	tcs
-   582 00:01A1: 0B           	phd
-   583 00:01A2: 5B           	tcd
-   584             00000003   xEventGroup_0	set	3
-   585             00000007   uxBitsToWaitFor_0	set	7
-   586             0000000B   xClearOnExit_0	set	11
-   587             0000000D   xWaitForAllBits_0	set	13
-   588             0000000F   xTicksToWait_0	set	15
-   589                        ;        EventGroup_t * pxEventBits = xEventGroup;
-   590                        ;        EventBits_t uxReturn, uxControlBits = 0;
-   591                        ;        BaseType_t xWaitConditionMet, xAlreadyYielded;
-   592                        ;        BaseType_t xTimeoutOccurred = pdFALSE;
-   593                        ;
-   594                        ;        traceENTER_xEventGroupWaitBits( xEventGroup, uxBitsToWaitFor, xClearOnExit, xWaitForAllBits, 
-                    xTicksToWait );
-   595             00000000   pxEventBits_1	set	0
-   596             00000004   uxReturn_1	set	4
-   597             00000008   uxControlBits_1	set	8
-   598             0000000C   xWaitConditionMet_1	set	12
-   599             0000000E   xAlreadyYielded_1	set	14
-   600             00000010   xTimeoutOccurred_1	set	16
-   601 00:01A3: A5 21        	lda	<L21+xEventGroup_0
-   602 00:01A5: 85 09        	sta	<L22+pxEventBits_1
-   603 00:01A7: A5 23        	lda	<L21+xEventGroup_0+2
-   604 00:01A9: 85 0B        	sta	<L22+pxEventBits_1+2
-   605 00:01AB: 64 11        	stz	<L22+uxControlBits_1
-   606 00:01AD: 64 13        	stz	<L22+uxControlBits_1+2
-   607 00:01AF: 64 19        	stz	<L22+xTimeoutOccurred_1
+   570 00:019A: 69 28 00     	adc	#L6+16
+   571 00:019D: 1B           	tcs
+   572 00:019E: 98           	tya
+   573 00:019F: 60           	rts
+   574                        ;    }
+   575             00000018   L6	equ	24
+   576             00000009   L7	equ	9
+   577                        	ends
+   578                        	efunc
+   579                        ;/*-----------------------------------------------------------*/
+   580                        ;
+   581                        ;    EventBits_t xEventGroupWaitBits( EventGroupHandle_t xEventGroup,
+   582                        ;                                     const EventBits_t uxBitsToWaitFor,
+   583                        ;                                     const BaseType_t xClearOnExit,
+   584                        ;                                     const BaseType_t xWaitForAllBits,
+   585                        ;                                     TickType_t xTicksToWait )
+   586                        ;    {
+   587                        	code
+   588                        	xdef	_~xEventGroupWaitBits
+   589                        	func
+   590                        _~xEventGroupWaitBits:
+   591                        	longa	on
+   592                        	longi	on
+   593 00:01A0: 3B           	tsc
+   594 00:01A1: 38           	sec
+   595 00:01A2: E9 1E 00     	sbc	#L21
+   596 00:01A5: 1B           	tcs
+   597 00:01A6: 0B           	phd
+   598 00:01A7: 5B           	tcd
+   599             00000003   xEventGroup_0	set	3
+   600             00000007   uxBitsToWaitFor_0	set	7
+   601             0000000B   xClearOnExit_0	set	11
+   602             0000000D   xWaitForAllBits_0	set	13
+   603             0000000F   xTicksToWait_0	set	15
+   604                        ;        EventGroup_t * pxEventBits = xEventGroup;
+   605                        ;        EventBits_t uxReturn, uxControlBits = 0;
+   606                        ;        BaseType_t xWaitConditionMet, xAlreadyYielded;
+   607                        ;        BaseType_t xTimeoutOccurred = pdFALSE;
    608                        ;
-   609                        ;        /* Check the user is not attempting to wait on the bits used by the kernel
-   610                        ;         * itself, and that at least one bit is being requested. */
-   611                        ;        configASSERT( xEventGroup );
-   612 00:01B1: A5 21        	lda	<L21+xEventGroup_0
-   613 00:01B3: 05 23        	ora	<L21+xEventGroup_0+2
-   614 00:01B5: D0 02        	bne	L10041
-   615                        L10045:
-   616 00:01B7: 80 FE        	bra	L10045
-   617                        L10041:
-   618                        ;        configASSERT( ( uxBitsToWaitFor & eventEVENT_BITS_CONTROL_BYTES ) == 0 );
-   619 00:01B9: A5 27        	lda	<L21+uxBitsToWaitFor_0+2
-   620 00:01BB: 29 00 FF     	and	#^$ff000000
-   621 00:01BE: F0 02        	beq	L10048
-   622                        L10052:
-   623 00:01C0: 80 FE        	bra	L10052
-   624                        L10048:
-   625                        ;        configASSERT( uxBitsToWaitFor != 0 );
-   626 00:01C2: A5 25        	lda	<L21+uxBitsToWaitFor_0
-  Tue Sep 15 2026 17:44                                                                                                    Page 12
+   609                        ;        traceENTER_xEventGroupWaitBits( xEventGroup, uxBitsToWaitFor, xClearOnExit, xWaitForAllBits, 
+                    xTicksToWait );
+   610             00000000   pxEventBits_1	set	0
+   611             00000004   uxReturn_1	set	4
+   612             00000008   uxControlBits_1	set	8
+   613             0000000C   xWaitConditionMet_1	set	12
+   614             0000000E   xAlreadyYielded_1	set	14
+   615             00000010   xTimeoutOccurred_1	set	16
+   616 00:01A8: A5 21        	lda	<L21+xEventGroup_0
+   617 00:01AA: 85 09        	sta	<L22+pxEventBits_1
+   618 00:01AC: A5 23        	lda	<L21+xEventGroup_0+2
+   619 00:01AE: 85 0B        	sta	<L22+pxEventBits_1+2
+   620 00:01B0: 64 11        	stz	<L22+uxControlBits_1
+   621 00:01B2: 64 13        	stz	<L22+uxControlBits_1+2
+   622 00:01B4: 64 19        	stz	<L22+xTimeoutOccurred_1
+   623                        ;
+   624                        ;        /* Check the user is not attempting to wait on the bits used by the kernel
+   625                        ;         * itself, and that at least one bit is being requested. */
+   626                        ;        configASSERT( xEventGroup );
+  Wed Sep 16 2026 17:13                                                                                                    Page 12
 
 
-   627 00:01C4: 05 27        	ora	<L21+uxBitsToWaitFor_0+2
-   628 00:01C6: D0 02        	bne	L10055
-   629                        L10059:
-   630 00:01C8: 80 FE        	bra	L10059
-   631                        L10055:
-   632                        ;        #if ( ( INCLUDE_xTaskGetSchedulerState == 1 ) || ( configUSE_TIMERS == 1 ) )
-   633                        ;        {
-   634                        ;            configASSERT( !( ( xTaskGetSchedulerState() == taskSCHEDULER_SUSPENDED ) && ( xTicksToWai
+   627 00:01B6: A5 21        	lda	<L21+xEventGroup_0
+   628 00:01B8: 05 23        	ora	<L21+xEventGroup_0+2
+   629 00:01BA: D0 03        	bne	L10026
+   630                        	asmstart
+   631 00:01BC: 78           	sei
+   632                        	asmend
+   633                        L10027:
+   634 00:01BD: 80 FE        	bra	L10027
+   635                        L10026:
+   636                        ;        configASSERT( ( uxBitsToWaitFor & eventEVENT_BITS_CONTROL_BYTES ) == 0 );
+   637 00:01BF: A5 27        	lda	<L21+uxBitsToWaitFor_0+2
+   638 00:01C1: 29 00 FF     	and	#^$ff000000
+   639 00:01C4: F0 03        	beq	L10030
+   640                        	asmstart
+   641 00:01C6: 78           	sei
+   642                        	asmend
+   643                        L10031:
+   644 00:01C7: 80 FE        	bra	L10031
+   645                        L10030:
+   646                        ;        configASSERT( uxBitsToWaitFor != 0 );
+   647 00:01C9: A5 25        	lda	<L21+uxBitsToWaitFor_0
+   648 00:01CB: 05 27        	ora	<L21+uxBitsToWaitFor_0+2
+   649 00:01CD: D0 03        	bne	L10034
+   650                        	asmstart
+   651 00:01CF: 78           	sei
+   652                        	asmend
+   653                        L10035:
+   654 00:01D0: 80 FE        	bra	L10035
+   655                        L10034:
+   656                        ;        #if ( ( INCLUDE_xTaskGetSchedulerState == 1 ) || ( configUSE_TIMERS == 1 ) )
+   657                        ;        {
+   658                        ;            configASSERT( !( ( xTaskGetSchedulerState() == taskSCHEDULER_SUSPENDED ) && ( xTicksToWai
                     t != 0 ) ) );
-   635 00:01CA: 20 xx xx     	jsr	_~xTaskGetSchedulerState
-   636 00:01CD: AA           	tax
-   637 00:01CE: D0 08        	bne	L10062
-   638 00:01D0: A5 2D        	lda	<L21+xTicksToWait_0
-   639 00:01D2: 05 2F        	ora	<L21+xTicksToWait_0+2
-   640 00:01D4: F0 02        	beq	L10062
-   641                        L10066:
-   642 00:01D6: 80 FE        	bra	L10066
-   643                        L10062:
-   644                        ;        }
-   645                        ;        #endif
-   646                        ;
-   647                        ;        vTaskSuspendAll();
-   648 00:01D8: 20 xx xx     	jsr	_~vTaskSuspendAll
-   649                        ;        {
-   650                        ;            const EventBits_t uxCurrentEventBits = pxEventBits->uxEventBits;
-   651                        ;
-   652                        ;            /* Check to see if the wait condition is already met or not. */
-   653                        ;            xWaitConditionMet = prvTestWaitCondition( uxCurrentEventBits, uxBitsToWaitFor, xWaitForAl
+   659 00:01D2: 20 xx xx     	jsr	_~xTaskGetSchedulerState
+   660 00:01D5: AA           	tax
+   661 00:01D6: D0 09        	bne	L10038
+   662 00:01D8: A5 2D        	lda	<L21+xTicksToWait_0
+   663 00:01DA: 05 2F        	ora	<L21+xTicksToWait_0+2
+   664 00:01DC: F0 03        	beq	L10038
+   665                        	asmstart
+   666 00:01DE: 78           	sei
+   667                        	asmend
+   668                        L10039:
+   669 00:01DF: 80 FE        	bra	L10039
+   670                        L10038:
+   671                        ;        }
+   672                        ;        #endif
+   673                        ;
+   674                        ;        vTaskSuspendAll();
+   675 00:01E1: 20 xx xx     	jsr	_~vTaskSuspendAll
+   676                        ;        {
+   677                        ;            const EventBits_t uxCurrentEventBits = pxEventBits->uxEventBits;
+   678                        ;
+   679                        ;            /* Check to see if the wait condition is already met or not. */
+   680                        ;            xWaitConditionMet = prvTestWaitCondition( uxCurrentEventBits, uxBitsToWaitFor, xWaitForAl
                     lBits );
-   654             00000012   uxCurrentEventBits_2	set	18
-   655 00:01DB: A7 09        	lda	[<L22+pxEventBits_1]
-   656 00:01DD: 85 1B        	sta	<L22+uxCurrentEventBits_2
-   657 00:01DF: A0 02 00     	ldy	#$2
-   658 00:01E2: B7 09        	lda	[<L22+pxEventBits_1],Y
-   659 00:01E4: 85 1D        	sta	<L22+uxCurrentEventBits_2+2
-   660 00:01E6: D4 2B        	pei	<L21+xWaitForAllBits_0
-   661 00:01E8: D4 27        	pei	<L21+uxBitsToWaitFor_0+2
-   662 00:01EA: D4 25        	pei	<L21+uxBitsToWaitFor_0
-   663 00:01EC: D4 1D        	pei	<L22+uxCurrentEventBits_2+2
-   664 00:01EE: D4 1B        	pei	<L22+uxCurrentEventBits_2
-   665 00:01F0: 20 xx xx     	jsr	_~prvTestWaitCondition
-   666 00:01F3: 85 15        	sta	<L22+xWaitConditionMet_1
-   667                        ;
-   668                        ;            if( xWaitConditionMet != pdFALSE )
-   669                        ;            {
-   670 00:01F5: A5 15        	lda	<L22+xWaitConditionMet_1
-   671 00:01F7: F0 2F        	beq	L10069
-   672                        ;                /* The wait condition has already been met so there is no need to
-   673                        ;                 * block. */
-   674                        ;                uxReturn = uxCurrentEventBits;
-   675 00:01F9: A5 1B        	lda	<L22+uxCurrentEventBits_2
-   676 00:01FB: 85 0D        	sta	<L22+uxReturn_1
-   677 00:01FD: A5 1D        	lda	<L22+uxCurrentEventBits_2+2
-   678 00:01FF: 85 0F        	sta	<L22+uxReturn_1+2
-   679                        ;                xTicksToWait = ( TickType_t ) 0;
-   680 00:0201: 64 2D        	stz	<L21+xTicksToWait_0
-   681 00:0203: 64 2F        	stz	<L21+xTicksToWait_0+2
-   682                        ;
-  Tue Sep 15 2026 17:44                                                                                                    Page 13
+   681             00000012   uxCurrentEventBits_2	set	18
+   682 00:01E4: A7 09        	lda	[<L22+pxEventBits_1]
+  Wed Sep 16 2026 17:13                                                                                                    Page 13
 
 
-   683                        ;                /* Clear the wait bits if requested to do so. */
-   684                        ;                if( xClearOnExit != pdFALSE )
-   685                        ;                {
-   686 00:0205: A5 29        	lda	<L21+xClearOnExit_0
-   687 00:0207: F0 72        	beq	L10072
-   688                        ;                    pxEventBits->uxEventBits &= ~uxBitsToWaitFor;
-   689 00:0209: A5 25        	lda	<L21+uxBitsToWaitFor_0
-   690 00:020B: 49 FF FF     	eor	#<$ffffffff
-   691 00:020E: 85 01        	sta	<R0
-   692 00:0210: A5 27        	lda	<L21+uxBitsToWaitFor_0+2
-   693 00:0212: 49 FF FF     	eor	#^$ffffffff
-   694 00:0215: 85 03        	sta	<R0+2
-   695 00:0217: A7 09        	lda	[<L22+pxEventBits_1]
-   696 00:0219: 25 01        	and	<R0
-   697 00:021B: 87 09        	sta	[<L22+pxEventBits_1]
-   698 00:021D: A0 02 00     	ldy	#$2
-   699 00:0220: B7 09        	lda	[<L22+pxEventBits_1],Y
-   700 00:0222: 25 03        	and	<R0+2
-   701 00:0224: 97 09        	sta	[<L22+pxEventBits_1],Y
-   702                        ;                }
-   703                        ;                else
-   704 00:0226: 80 53        	bra	L10072
-   705                        ;                {
-   706                        ;                    mtCOVERAGE_TEST_MARKER();
-   707                        ;                }
-   708                        ;            }
-   709                        ;            else if( xTicksToWait == ( TickType_t ) 0 )
-   710                        L10069:
-   711                        ;            {
-   712 00:0228: A5 2D        	lda	<L21+xTicksToWait_0
-   713 00:022A: 05 2F        	ora	<L21+xTicksToWait_0+2
-   714 00:022C: D0 0F        	bne	L10073
-   715                        ;                /* The wait condition has not been met, but no block time was
-   716                        ;                 * specified, so just return the current value. */
-   717                        ;                uxReturn = uxCurrentEventBits;
-   718 00:022E: A5 1B        	lda	<L22+uxCurrentEventBits_2
-   719 00:0230: 85 0D        	sta	<L22+uxReturn_1
-   720 00:0232: A5 1D        	lda	<L22+uxCurrentEventBits_2+2
-   721 00:0234: 85 0F        	sta	<L22+uxReturn_1+2
-   722                        ;                xTimeoutOccurred = pdTRUE;
-   723 00:0236: A9 01 00     	lda	#$1
-   724 00:0239: 85 19        	sta	<L22+xTimeoutOccurred_1
-   725                        ;            }
-   726                        ;            else
-   727 00:023B: 80 3E        	bra	L10072
-   728                        L10073:
-   729                        ;            {
-   730                        ;                /* The task is going to block to wait for its required bits to be
-   731                        ;                 * set.  uxControlBits are used to remember the specified behaviour of
-   732                        ;                 * this call to xEventGroupWaitBits() - for use when the event bits
-   733                        ;                 * unblock the task. */
-   734                        ;                if( xClearOnExit != pdFALSE )
-   735                        ;                {
-   736 00:023D: A5 29        	lda	<L21+xClearOnExit_0
-   737 00:023F: F0 07        	beq	L10076
-   738                        ;                    uxControlBits |= eventCLEAR_EVENTS_ON_EXIT_BIT;
-   739 00:0241: A5 13        	lda	<L22+uxControlBits_1+2
-   740 00:0243: 09 00 01     	ora	#^$1000000
-  Tue Sep 15 2026 17:44                                                                                                    Page 14
+   683 00:01E6: 85 1B        	sta	<L22+uxCurrentEventBits_2
+   684 00:01E8: A0 02 00     	ldy	#$2
+   685 00:01EB: B7 09        	lda	[<L22+pxEventBits_1],Y
+   686 00:01ED: 85 1D        	sta	<L22+uxCurrentEventBits_2+2
+   687 00:01EF: D4 2B        	pei	<L21+xWaitForAllBits_0
+   688 00:01F1: D4 27        	pei	<L21+uxBitsToWaitFor_0+2
+   689 00:01F3: D4 25        	pei	<L21+uxBitsToWaitFor_0
+   690 00:01F5: D4 1D        	pei	<L22+uxCurrentEventBits_2+2
+   691 00:01F7: D4 1B        	pei	<L22+uxCurrentEventBits_2
+   692 00:01F9: 20 xx xx     	jsr	_~prvTestWaitCondition
+   693 00:01FC: 85 15        	sta	<L22+xWaitConditionMet_1
+   694                        ;
+   695                        ;            if( xWaitConditionMet != pdFALSE )
+   696                        ;            {
+   697 00:01FE: A5 15        	lda	<L22+xWaitConditionMet_1
+   698 00:0200: F0 2F        	beq	L10042
+   699                        ;                /* The wait condition has already been met so there is no need to
+   700                        ;                 * block. */
+   701                        ;                uxReturn = uxCurrentEventBits;
+   702 00:0202: A5 1B        	lda	<L22+uxCurrentEventBits_2
+   703 00:0204: 85 0D        	sta	<L22+uxReturn_1
+   704 00:0206: A5 1D        	lda	<L22+uxCurrentEventBits_2+2
+   705 00:0208: 85 0F        	sta	<L22+uxReturn_1+2
+   706                        ;                xTicksToWait = ( TickType_t ) 0;
+   707 00:020A: 64 2D        	stz	<L21+xTicksToWait_0
+   708 00:020C: 64 2F        	stz	<L21+xTicksToWait_0+2
+   709                        ;
+   710                        ;                /* Clear the wait bits if requested to do so. */
+   711                        ;                if( xClearOnExit != pdFALSE )
+   712                        ;                {
+   713 00:020E: A5 29        	lda	<L21+xClearOnExit_0
+   714 00:0210: F0 72        	beq	L10045
+   715                        ;                    pxEventBits->uxEventBits &= ~uxBitsToWaitFor;
+   716 00:0212: A5 25        	lda	<L21+uxBitsToWaitFor_0
+   717 00:0214: 49 FF FF     	eor	#<$ffffffff
+   718 00:0217: 85 01        	sta	<R0
+   719 00:0219: A5 27        	lda	<L21+uxBitsToWaitFor_0+2
+   720 00:021B: 49 FF FF     	eor	#^$ffffffff
+   721 00:021E: 85 03        	sta	<R0+2
+   722 00:0220: A7 09        	lda	[<L22+pxEventBits_1]
+   723 00:0222: 25 01        	and	<R0
+   724 00:0224: 87 09        	sta	[<L22+pxEventBits_1]
+   725 00:0226: A0 02 00     	ldy	#$2
+   726 00:0229: B7 09        	lda	[<L22+pxEventBits_1],Y
+   727 00:022B: 25 03        	and	<R0+2
+   728 00:022D: 97 09        	sta	[<L22+pxEventBits_1],Y
+   729                        ;                }
+   730                        ;                else
+   731 00:022F: 80 53        	bra	L10045
+   732                        ;                {
+   733                        ;                    mtCOVERAGE_TEST_MARKER();
+   734                        ;                }
+   735                        ;            }
+   736                        ;            else if( xTicksToWait == ( TickType_t ) 0 )
+   737                        L10042:
+   738                        ;            {
+   739 00:0231: A5 2D        	lda	<L21+xTicksToWait_0
+   740 00:0233: 05 2F        	ora	<L21+xTicksToWait_0+2
+  Wed Sep 16 2026 17:13                                                                                                    Page 14
 
 
-   741 00:0246: 85 13        	sta	<L22+uxControlBits_1+2
-   742                        ;                }
-   743                        ;                else
-   744                        ;                {
-   745                        ;                    mtCOVERAGE_TEST_MARKER();
-   746                        ;                }
-   747                        L10076:
-   748                        ;
-   749                        ;                if( xWaitForAllBits != pdFALSE )
-   750                        ;                {
-   751 00:0248: A5 2B        	lda	<L21+xWaitForAllBits_0
-   752 00:024A: F0 07        	beq	L10078
-   753                        ;                    uxControlBits |= eventWAIT_FOR_ALL_BITS;
-   754 00:024C: A5 13        	lda	<L22+uxControlBits_1+2
-   755 00:024E: 09 00 04     	ora	#^$4000000
-   756 00:0251: 85 13        	sta	<L22+uxControlBits_1+2
-   757                        ;                }
-   758                        ;                else
-   759                        ;                {
-   760                        ;                    mtCOVERAGE_TEST_MARKER();
-   761                        ;                }
-   762                        L10078:
-   763                        ;
-   764                        ;                /* Store the bits that the calling task is waiting for in the
-   765                        ;                 * task's event list item so the kernel knows when a match is
-   766                        ;                 * found.  Then enter the blocked state. */
-   767                        ;                vTaskPlaceOnUnorderedEventList( &( pxEventBits->xTasksWaitingForBits ), ( uxBitsToWai
+   741 00:0235: D0 0F        	bne	L10046
+   742                        ;                /* The wait condition has not been met, but no block time was
+   743                        ;                 * specified, so just return the current value. */
+   744                        ;                uxReturn = uxCurrentEventBits;
+   745 00:0237: A5 1B        	lda	<L22+uxCurrentEventBits_2
+   746 00:0239: 85 0D        	sta	<L22+uxReturn_1
+   747 00:023B: A5 1D        	lda	<L22+uxCurrentEventBits_2+2
+   748 00:023D: 85 0F        	sta	<L22+uxReturn_1+2
+   749                        ;                xTimeoutOccurred = pdTRUE;
+   750 00:023F: A9 01 00     	lda	#$1
+   751 00:0242: 85 19        	sta	<L22+xTimeoutOccurred_1
+   752                        ;            }
+   753                        ;            else
+   754 00:0244: 80 3E        	bra	L10045
+   755                        L10046:
+   756                        ;            {
+   757                        ;                /* The task is going to block to wait for its required bits to be
+   758                        ;                 * set.  uxControlBits are used to remember the specified behaviour of
+   759                        ;                 * this call to xEventGroupWaitBits() - for use when the event bits
+   760                        ;                 * unblock the task. */
+   761                        ;                if( xClearOnExit != pdFALSE )
+   762                        ;                {
+   763 00:0246: A5 29        	lda	<L21+xClearOnExit_0
+   764 00:0248: F0 07        	beq	L10049
+   765                        ;                    uxControlBits |= eventCLEAR_EVENTS_ON_EXIT_BIT;
+   766 00:024A: A5 13        	lda	<L22+uxControlBits_1+2
+   767 00:024C: 09 00 01     	ora	#^$1000000
+   768 00:024F: 85 13        	sta	<L22+uxControlBits_1+2
+   769                        ;                }
+   770                        ;                else
+   771                        ;                {
+   772                        ;                    mtCOVERAGE_TEST_MARKER();
+   773                        ;                }
+   774                        L10049:
+   775                        ;
+   776                        ;                if( xWaitForAllBits != pdFALSE )
+   777                        ;                {
+   778 00:0251: A5 2B        	lda	<L21+xWaitForAllBits_0
+   779 00:0253: F0 07        	beq	L10051
+   780                        ;                    uxControlBits |= eventWAIT_FOR_ALL_BITS;
+   781 00:0255: A5 13        	lda	<L22+uxControlBits_1+2
+   782 00:0257: 09 00 04     	ora	#^$4000000
+   783 00:025A: 85 13        	sta	<L22+uxControlBits_1+2
+   784                        ;                }
+   785                        ;                else
+   786                        ;                {
+   787                        ;                    mtCOVERAGE_TEST_MARKER();
+   788                        ;                }
+   789                        L10051:
+   790                        ;
+   791                        ;                /* Store the bits that the calling task is waiting for in the
+   792                        ;                 * task's event list item so the kernel knows when a match is
+   793                        ;                 * found.  Then enter the blocked state. */
+   794                        ;                vTaskPlaceOnUnorderedEventList( &( pxEventBits->xTasksWaitingForBits ), ( uxBitsToWai
                     tFor | uxControlBits ), xTicksToWait );
-   768 00:0253: D4 2F        	pei	<L21+xTicksToWait_0+2
-   769 00:0255: D4 2D        	pei	<L21+xTicksToWait_0
-   770 00:0257: A5 11        	lda	<L22+uxControlBits_1
-   771 00:0259: 05 25        	ora	<L21+uxBitsToWaitFor_0
-   772 00:025B: 85 01        	sta	<R0
-   773 00:025D: A5 13        	lda	<L22+uxControlBits_1+2
-   774 00:025F: 05 27        	ora	<L21+uxBitsToWaitFor_0+2
-   775 00:0261: 48           	pha
-   776 00:0262: D4 01        	pei	<R0
-   777 00:0264: A9 04 00     	lda	#$4
-   778 00:0267: 18           	clc
-   779 00:0268: 65 09        	adc	<L22+pxEventBits_1
-   780 00:026A: 85 05        	sta	<R1
-   781 00:026C: A9 00 00     	lda	#$0
-   782 00:026F: 65 0B        	adc	<L22+pxEventBits_1+2
-   783 00:0271: 48           	pha
-   784 00:0272: D4 05        	pei	<R1
-   785 00:0274: 20 xx xx     	jsr	_~vTaskPlaceOnUnorderedEventList
-   786                        ;
-   787                        ;                /* This is obsolete as it will get set after the task unblocks, but
-   788                        ;                 * some compilers mistakenly generate a warning about the variable
-   789                        ;                 * being returned without being set if it is not done. */
-   790                        ;                uxReturn = 0;
-   791 00:0277: 64 0D        	stz	<L22+uxReturn_1
-   792 00:0279: 64 0F        	stz	<L22+uxReturn_1+2
-   793                        ;
-   794                        ;                traceEVENT_GROUP_WAIT_BITS_BLOCK( xEventGroup, uxBitsToWaitFor );
-   795                        ;            }
-   796                        L10072:
-   797                        ;        }
-  Tue Sep 15 2026 17:44                                                                                                    Page 15
+   795 00:025C: D4 2F        	pei	<L21+xTicksToWait_0+2
+   796 00:025E: D4 2D        	pei	<L21+xTicksToWait_0
+   797 00:0260: A5 11        	lda	<L22+uxControlBits_1
+  Wed Sep 16 2026 17:13                                                                                                    Page 15
 
 
-   798                        ;        xAlreadyYielded = xTaskResumeAll();
-   799 00:027B: 20 xx xx     	jsr	_~xTaskResumeAll
-   800 00:027E: 85 17        	sta	<L22+xAlreadyYielded_1
-   801                        ;
-   802                        ;        if( xTicksToWait != ( TickType_t ) 0 )
-   803                        ;        {
-   804 00:0280: A5 2D        	lda	<L21+xTicksToWait_0
-   805 00:0282: 05 2F        	ora	<L21+xTicksToWait_0+2
-   806 00:0284: F0 5D        	beq	L10079
-   807                        ;            if( xAlreadyYielded == pdFALSE )
-   808                        ;            {
-   809 00:0286: A5 17        	lda	<L22+xAlreadyYielded_1
-   810 00:0288: D0 03        	bne	L10081
-   811                        ;                taskYIELD_WITHIN_API();
-   812 00:028A: 20 xx xx     	jsr	_~vPortYield
-   813                        ;            }
-   814                        ;            else
-   815                        ;            {
-   816                        ;                mtCOVERAGE_TEST_MARKER();
-   817                        ;            }
-   818                        L10081:
-   819                        ;
-   820                        ;            /* The task blocked to wait for its required bits to be set - at this
-   821                        ;             * point either the required bits were set or the block time expired.  If
-   822                        ;             * the required bits were set they will have been stored in the task's
-   823                        ;             * event list item, and they should now be retrieved then cleared. */
-   824                        ;            uxReturn = uxTaskResetEventItemValue();
-   825 00:028D: 20 xx xx     	jsr	_~uxTaskResetEventItemValue
-   826 00:0290: 85 0D        	sta	<L22+uxReturn_1
-   827 00:0292: 86 0F        	stx	<L22+uxReturn_1+2
+   798 00:0262: 05 25        	ora	<L21+uxBitsToWaitFor_0
+   799 00:0264: 85 01        	sta	<R0
+   800 00:0266: A5 13        	lda	<L22+uxControlBits_1+2
+   801 00:0268: 05 27        	ora	<L21+uxBitsToWaitFor_0+2
+   802 00:026A: 48           	pha
+   803 00:026B: D4 01        	pei	<R0
+   804 00:026D: A9 04 00     	lda	#$4
+   805 00:0270: 18           	clc
+   806 00:0271: 65 09        	adc	<L22+pxEventBits_1
+   807 00:0273: 85 05        	sta	<R1
+   808 00:0275: A9 00 00     	lda	#$0
+   809 00:0278: 65 0B        	adc	<L22+pxEventBits_1+2
+   810 00:027A: 48           	pha
+   811 00:027B: D4 05        	pei	<R1
+   812 00:027D: 20 xx xx     	jsr	_~vTaskPlaceOnUnorderedEventList
+   813                        ;
+   814                        ;                /* This is obsolete as it will get set after the task unblocks, but
+   815                        ;                 * some compilers mistakenly generate a warning about the variable
+   816                        ;                 * being returned without being set if it is not done. */
+   817                        ;                uxReturn = 0;
+   818 00:0280: 64 0D        	stz	<L22+uxReturn_1
+   819 00:0282: 64 0F        	stz	<L22+uxReturn_1+2
+   820                        ;
+   821                        ;                traceEVENT_GROUP_WAIT_BITS_BLOCK( xEventGroup, uxBitsToWaitFor );
+   822                        ;            }
+   823                        L10045:
+   824                        ;        }
+   825                        ;        xAlreadyYielded = xTaskResumeAll();
+   826 00:0284: 20 xx xx     	jsr	_~xTaskResumeAll
+   827 00:0287: 85 17        	sta	<L22+xAlreadyYielded_1
    828                        ;
-   829                        ;            if( ( uxReturn & eventUNBLOCKED_DUE_TO_BIT_SET ) == ( EventBits_t ) 0 )
-   830                        ;            {
-   831 00:0294: A5 0F        	lda	<L22+uxReturn_1+2
-   832 00:0296: 29 00 02     	and	#^$2000000
-   833 00:0299: D0 41        	bne	L10093
-   834                        ;                taskENTER_CRITICAL();
-   835                        ;                {
-   836                        ;                    /* The task timed out, just return the current event bit value. */
-   837                        ;                    uxReturn = pxEventBits->uxEventBits;
-   838 00:029B: A7 09        	lda	[<L22+pxEventBits_1]
-   839 00:029D: 85 0D        	sta	<L22+uxReturn_1
-   840 00:029F: A0 02 00     	ldy	#$2
-   841 00:02A2: B7 09        	lda	[<L22+pxEventBits_1],Y
-   842 00:02A4: 85 0F        	sta	<L22+uxReturn_1+2
-   843                        ;
-   844                        ;                    /* It is possible that the event bits were updated between this
-   845                        ;                     * task leaving the Blocked state and running again. */
-   846                        ;                    if( prvTestWaitCondition( uxReturn, uxBitsToWaitFor, xWaitForAllBits ) != pdFALSE
+   829                        ;        if( xTicksToWait != ( TickType_t ) 0 )
+   830                        ;        {
+   831 00:0289: A5 2D        	lda	<L21+xTicksToWait_0
+   832 00:028B: 05 2F        	ora	<L21+xTicksToWait_0+2
+   833 00:028D: F0 5F        	beq	L10052
+   834                        ;            if( xAlreadyYielded == pdFALSE )
+   835                        ;            {
+   836 00:028F: A5 17        	lda	<L22+xAlreadyYielded_1
+   837 00:0291: D0 03        	bne	L10054
+   838                        ;                taskYIELD_WITHIN_API();
+   839 00:0293: 20 xx xx     	jsr	_~vPortYield
+   840                        ;            }
+   841                        ;            else
+   842                        ;            {
+   843                        ;                mtCOVERAGE_TEST_MARKER();
+   844                        ;            }
+   845                        L10054:
+   846                        ;
+   847                        ;            /* The task blocked to wait for its required bits to be set - at this
+   848                        ;             * point either the required bits were set or the block time expired.  If
+   849                        ;             * the required bits were set they will have been stored in the task's
+   850                        ;             * event list item, and they should now be retrieved then cleared. */
+   851                        ;            uxReturn = uxTaskResetEventItemValue();
+   852 00:0296: 20 xx xx     	jsr	_~uxTaskResetEventItemValue
+   853 00:0299: 85 0D        	sta	<L22+uxReturn_1
+   854 00:029B: 86 0F        	stx	<L22+uxReturn_1+2
+   855                        ;
+  Wed Sep 16 2026 17:13                                                                                                    Page 16
+
+
+   856                        ;            if( ( uxReturn & eventUNBLOCKED_DUE_TO_BIT_SET ) == ( EventBits_t ) 0 )
+   857                        ;            {
+   858 00:029D: A5 0F        	lda	<L22+uxReturn_1+2
+   859 00:029F: 29 00 02     	and	#^$2000000
+   860 00:02A2: D0 43        	bne	L10060
+   861                        ;                taskENTER_CRITICAL();
+   862                        	asmstart
+   863 00:02A4: 78           	sei
+   864                        	asmend
+   865                        ;                {
+   866                        ;                    /* The task timed out, just return the current event bit value. */
+   867                        ;                    uxReturn = pxEventBits->uxEventBits;
+   868 00:02A5: A7 09        	lda	[<L22+pxEventBits_1]
+   869 00:02A7: 85 0D        	sta	<L22+uxReturn_1
+   870 00:02A9: A0 02 00     	ldy	#$2
+   871 00:02AC: B7 09        	lda	[<L22+pxEventBits_1],Y
+   872 00:02AE: 85 0F        	sta	<L22+uxReturn_1+2
+   873                        ;
+   874                        ;                    /* It is possible that the event bits were updated between this
+   875                        ;                     * task leaving the Blocked state and running again. */
+   876                        ;                    if( prvTestWaitCondition( uxReturn, uxBitsToWaitFor, xWaitForAllBits ) != pdFALSE
                      )
-   847                        ;                    {
-   848 00:02A6: D4 2B        	pei	<L21+xWaitForAllBits_0
-   849 00:02A8: D4 27        	pei	<L21+uxBitsToWaitFor_0+2
-   850 00:02AA: D4 25        	pei	<L21+uxBitsToWaitFor_0
-   851 00:02AC: D4 0F        	pei	<L22+uxReturn_1+2
-   852 00:02AE: D4 0D        	pei	<L22+uxReturn_1
-   853 00:02B0: 20 xx xx     	jsr	_~prvTestWaitCondition
-   854 00:02B3: AA           	tax
-  Tue Sep 15 2026 17:44                                                                                                    Page 16
+   877                        ;                    {
+   878 00:02B0: D4 2B        	pei	<L21+xWaitForAllBits_0
+   879 00:02B2: D4 27        	pei	<L21+uxBitsToWaitFor_0+2
+   880 00:02B4: D4 25        	pei	<L21+uxBitsToWaitFor_0
+   881 00:02B6: D4 0F        	pei	<L22+uxReturn_1+2
+   882 00:02B8: D4 0D        	pei	<L22+uxReturn_1
+   883 00:02BA: 20 xx xx     	jsr	_~prvTestWaitCondition
+   884 00:02BD: AA           	tax
+   885 00:02BE: F0 21        	beq	L10059
+   886                        ;                        if( xClearOnExit != pdFALSE )
+   887                        ;                        {
+   888 00:02C0: A5 29        	lda	<L21+xClearOnExit_0
+   889 00:02C2: F0 1D        	beq	L10059
+   890                        ;                            pxEventBits->uxEventBits &= ~uxBitsToWaitFor;
+   891 00:02C4: A5 25        	lda	<L21+uxBitsToWaitFor_0
+   892 00:02C6: 49 FF FF     	eor	#<$ffffffff
+   893 00:02C9: 85 01        	sta	<R0
+   894 00:02CB: A5 27        	lda	<L21+uxBitsToWaitFor_0+2
+   895 00:02CD: 49 FF FF     	eor	#^$ffffffff
+   896 00:02D0: 85 03        	sta	<R0+2
+   897 00:02D2: A7 09        	lda	[<L22+pxEventBits_1]
+   898 00:02D4: 25 01        	and	<R0
+   899 00:02D6: 87 09        	sta	[<L22+pxEventBits_1]
+   900 00:02D8: A0 02 00     	ldy	#$2
+   901 00:02DB: B7 09        	lda	[<L22+pxEventBits_1],Y
+   902 00:02DD: 25 03        	and	<R0+2
+   903 00:02DF: 97 09        	sta	[<L22+pxEventBits_1],Y
+   904                        ;                        }
+   905                        ;                        else
+   906                        L10059:
+   907                        ;
+   908                        ;                    xTimeoutOccurred = pdTRUE;
+   909 00:02E1: A9 01 00     	lda	#$1
+   910 00:02E4: 85 19        	sta	<L22+xTimeoutOccurred_1
+   911                        ;                }
+   912                        ;                taskEXIT_CRITICAL();
+  Wed Sep 16 2026 17:13                                                                                                    Page 17
 
 
-   855 00:02B4: F0 21        	beq	L10089
-   856                        ;                        if( xClearOnExit != pdFALSE )
-   857                        ;                        {
-   858 00:02B6: A5 29        	lda	<L21+xClearOnExit_0
-   859 00:02B8: F0 1D        	beq	L10089
-   860                        ;                            pxEventBits->uxEventBits &= ~uxBitsToWaitFor;
-   861 00:02BA: A5 25        	lda	<L21+uxBitsToWaitFor_0
-   862 00:02BC: 49 FF FF     	eor	#<$ffffffff
-   863 00:02BF: 85 01        	sta	<R0
-   864 00:02C1: A5 27        	lda	<L21+uxBitsToWaitFor_0+2
-   865 00:02C3: 49 FF FF     	eor	#^$ffffffff
-   866 00:02C6: 85 03        	sta	<R0+2
-   867 00:02C8: A7 09        	lda	[<L22+pxEventBits_1]
-   868 00:02CA: 25 01        	and	<R0
-   869 00:02CC: 87 09        	sta	[<L22+pxEventBits_1]
-   870 00:02CE: A0 02 00     	ldy	#$2
-   871 00:02D1: B7 09        	lda	[<L22+pxEventBits_1],Y
-   872 00:02D3: 25 03        	and	<R0+2
-   873 00:02D5: 97 09        	sta	[<L22+pxEventBits_1],Y
-   874                        ;                        }
-   875                        ;                        else
-   876                        L10089:
-   877                        ;
-   878                        ;                    xTimeoutOccurred = pdTRUE;
-   879 00:02D7: A9 01 00     	lda	#$1
-   880 00:02DA: 85 19        	sta	<L22+xTimeoutOccurred_1
-   881                        ;                }
-   882                        ;                taskEXIT_CRITICAL();
-   883                        ;            }
-   884                        ;            else
-   885                        L10093:
-   886                        ;
-   887                        ;            /* The task blocked so control bits may have been set. */
-   888                        ;            uxReturn &= ~eventEVENT_BITS_CONTROL_BYTES;
-   889 00:02DC: A5 0F        	lda	<L22+uxReturn_1+2
-   890 00:02DE: 29 FF 00     	and	#^$ffffff
-   891 00:02E1: 85 0F        	sta	<L22+uxReturn_1+2
-   892                        ;        }
-   893                        ;
-   894                        ;        traceEVENT_GROUP_WAIT_BITS_END( xEventGroup, uxBitsToWaitFor, xTimeoutOccurred );
-   895                        L10079:
-   896                        ;
-   897                        ;        /* Prevent compiler warnings when trace macros are not used. */
-   898                        ;        ( void ) xTimeoutOccurred;
-   899                        ;
-   900                        ;        traceRETURN_xEventGroupWaitBits( uxReturn );
-   901                        ;
-   902                        ;        return uxReturn;
-   903 00:02E3: A6 0F        	ldx	<L22+uxReturn_1+2
-   904 00:02E5: A5 0D        	lda	<L22+uxReturn_1
-   905 00:02E7: A8           	tay
-   906 00:02E8: A5 1F        	lda	<L21+1
-   907 00:02EA: 85 2F        	sta	<L21+1+16
-   908 00:02EC: 2B           	pld
-   909 00:02ED: 3B           	tsc
-   910 00:02EE: 18           	clc
-   911 00:02EF: 69 2E 00     	adc	#L21+16
-   912 00:02F2: 1B           	tcs
-  Tue Sep 15 2026 17:44                                                                                                    Page 17
-
-
-   913 00:02F3: 98           	tya
-   914 00:02F4: 60           	rts
-   915                        ;                        {
-   916                        ;                            mtCOVERAGE_TEST_MARKER();
-   917                        ;                        }
-   918                        ;                    }
-   919                        ;                    else
-   920                        ;                    {
-   921                        ;                        mtCOVERAGE_TEST_MARKER();
-   922                        ;                    }
-   923                        ;            {
-   924                        ;                /* The task unblocked because the bits were set. */
-   925                        ;            }
-   926                        ;    }
-   927             0000001E   L21	equ	30
-   928             00000009   L22	equ	9
-   929                        	ends
-   930                        	efunc
-   931                        ;/*-----------------------------------------------------------*/
+   913                        	asmstart
+   914 00:02E6: 58           	cli
+   915                        	asmend
+   916                        ;            }
+   917                        ;            else
+   918                        L10060:
+   919                        ;
+   920                        ;            /* The task blocked so control bits may have been set. */
+   921                        ;            uxReturn &= ~eventEVENT_BITS_CONTROL_BYTES;
+   922 00:02E7: A5 0F        	lda	<L22+uxReturn_1+2
+   923 00:02E9: 29 FF 00     	and	#^$ffffff
+   924 00:02EC: 85 0F        	sta	<L22+uxReturn_1+2
+   925                        ;        }
+   926                        ;
+   927                        ;        traceEVENT_GROUP_WAIT_BITS_END( xEventGroup, uxBitsToWaitFor, xTimeoutOccurred );
+   928                        L10052:
+   929                        ;
+   930                        ;        /* Prevent compiler warnings when trace macros are not used. */
+   931                        ;        ( void ) xTimeoutOccurred;
    932                        ;
-   933                        ;    EventBits_t xEventGroupClearBits( EventGroupHandle_t xEventGroup,
-   934                        ;                                      const EventBits_t uxBitsToClear )
-   935                        ;    {
-   936                        	code
-   937                        	xdef	_~xEventGroupClearBits
-   938                        	func
-   939                        _~xEventGroupClearBits:
-   940                        	longa	on
-   941                        	longi	on
-   942 00:02F5: 3B           	tsc
-   943 00:02F6: 38           	sec
-   944 00:02F7: E9 0C 00     	sbc	#L39
-   945 00:02FA: 1B           	tcs
-   946 00:02FB: 0B           	phd
-   947 00:02FC: 5B           	tcd
-   948             00000003   xEventGroup_0	set	3
-   949             00000007   uxBitsToClear_0	set	7
-   950                        ;        EventGroup_t * pxEventBits = xEventGroup;
-   951                        ;        EventBits_t uxReturn;
-   952                        ;
-   953                        ;        traceENTER_xEventGroupClearBits( xEventGroup, uxBitsToClear );
-   954             00000000   pxEventBits_1	set	0
-   955             00000004   uxReturn_1	set	4
-   956 00:02FD: A5 0F        	lda	<L39+xEventGroup_0
-   957 00:02FF: 85 05        	sta	<L40+pxEventBits_1
-   958 00:0301: A5 11        	lda	<L39+xEventGroup_0+2
-   959 00:0303: 85 07        	sta	<L40+pxEventBits_1+2
-   960                        ;
-   961                        ;        /* Check the user is not attempting to clear the bits used by the kernel
-   962                        ;         * itself. */
-   963                        ;        configASSERT( xEventGroup );
-   964 00:0305: A5 0F        	lda	<L39+xEventGroup_0
-   965 00:0307: 05 11        	ora	<L39+xEventGroup_0+2
-   966 00:0309: D0 02        	bne	L10094
-   967                        L10098:
-   968 00:030B: 80 FE        	bra	L10098
-   969                        L10094:
-   970                        ;        configASSERT( ( uxBitsToClear & eventEVENT_BITS_CONTROL_BYTES ) == 0 );
-  Tue Sep 15 2026 17:44                                                                                                    Page 18
+   933                        ;        traceRETURN_xEventGroupWaitBits( uxReturn );
+   934                        ;
+   935                        ;        return uxReturn;
+   936 00:02EE: A6 0F        	ldx	<L22+uxReturn_1+2
+   937 00:02F0: A5 0D        	lda	<L22+uxReturn_1
+   938 00:02F2: A8           	tay
+   939 00:02F3: A5 1F        	lda	<L21+1
+   940 00:02F5: 85 2F        	sta	<L21+1+16
+   941 00:02F7: 2B           	pld
+   942 00:02F8: 3B           	tsc
+   943 00:02F9: 18           	clc
+   944 00:02FA: 69 2E 00     	adc	#L21+16
+   945 00:02FD: 1B           	tcs
+   946 00:02FE: 98           	tya
+   947 00:02FF: 60           	rts
+   948                        ;                        {
+   949                        ;                            mtCOVERAGE_TEST_MARKER();
+   950                        ;                        }
+   951                        ;                    }
+   952                        ;                    else
+   953                        ;                    {
+   954                        ;                        mtCOVERAGE_TEST_MARKER();
+   955                        ;                    }
+   956                        ;            {
+   957                        ;                /* The task unblocked because the bits were set. */
+   958                        ;            }
+   959                        ;    }
+   960             0000001E   L21	equ	30
+   961             00000009   L22	equ	9
+   962                        	ends
+   963                        	efunc
+   964                        ;/*-----------------------------------------------------------*/
+   965                        ;
+   966                        ;    EventBits_t xEventGroupClearBits( EventGroupHandle_t xEventGroup,
+   967                        ;                                      const EventBits_t uxBitsToClear )
+   968                        ;    {
+   969                        	code
+   970                        	xdef	_~xEventGroupClearBits
+  Wed Sep 16 2026 17:13                                                                                                    Page 18
 
 
-   971 00:030D: A5 15        	lda	<L39+uxBitsToClear_0+2
-   972 00:030F: 29 00 FF     	and	#^$ff000000
-   973 00:0312: F0 02        	beq	L10109
-   974                        L10105:
-   975 00:0314: 80 FE        	bra	L10105
-   976                        ;
-   977                        ;        taskENTER_CRITICAL();
-   978                        L10109:
-   979                        ;        {
-   980                        ;            traceEVENT_GROUP_CLEAR_BITS( xEventGroup, uxBitsToClear );
-   981                        ;
-   982                        ;            /* The value returned is the event group value prior to the bits being
-   983                        ;             * cleared. */
-   984                        ;            uxReturn = pxEventBits->uxEventBits;
-   985 00:0316: A7 05        	lda	[<L40+pxEventBits_1]
-   986 00:0318: 85 09        	sta	<L40+uxReturn_1
-   987 00:031A: A0 02 00     	ldy	#$2
-   988 00:031D: B7 05        	lda	[<L40+pxEventBits_1],Y
-   989 00:031F: 85 0B        	sta	<L40+uxReturn_1+2
-   990                        ;
-   991                        ;            /* Clear the bits. */
-   992                        ;            pxEventBits->uxEventBits &= ~uxBitsToClear;
-   993 00:0321: A5 13        	lda	<L39+uxBitsToClear_0
-   994 00:0323: 49 FF FF     	eor	#<$ffffffff
-   995 00:0326: 85 01        	sta	<R0
-   996 00:0328: A5 15        	lda	<L39+uxBitsToClear_0+2
-   997 00:032A: 49 FF FF     	eor	#^$ffffffff
-   998 00:032D: 85 03        	sta	<R0+2
-   999 00:032F: A7 05        	lda	[<L40+pxEventBits_1]
-  1000 00:0331: 25 01        	and	<R0
-  1001 00:0333: 87 05        	sta	[<L40+pxEventBits_1]
-  1002 00:0335: B7 05        	lda	[<L40+pxEventBits_1],Y
-  1003 00:0337: 25 03        	and	<R0+2
-  1004 00:0339: 97 05        	sta	[<L40+pxEventBits_1],Y
-  1005                        ;        }
-  1006                        ;        taskEXIT_CRITICAL();
-  1007                        ;
-  1008                        ;        traceRETURN_xEventGroupClearBits( uxReturn );
-  1009                        ;
-  1010                        ;        return uxReturn;
-  1011 00:033B: A6 0B        	ldx	<L40+uxReturn_1+2
-  1012 00:033D: A5 09        	lda	<L40+uxReturn_1
-  1013 00:033F: A8           	tay
-  1014 00:0340: A5 0D        	lda	<L39+1
-  1015 00:0342: 85 15        	sta	<L39+1+8
-  1016 00:0344: 2B           	pld
-  1017 00:0345: 3B           	tsc
-  1018 00:0346: 18           	clc
-  1019 00:0347: 69 14 00     	adc	#L39+8
-  1020 00:034A: 1B           	tcs
-  1021 00:034B: 98           	tya
-  1022 00:034C: 60           	rts
-  1023                        ;    }
-  1024             0000000C   L39	equ	12
-  1025             00000005   L40	equ	5
-  1026                        	ends
-  1027                        	efunc
-  1028                        ;/*-----------------------------------------------------------*/
-  Tue Sep 15 2026 17:44                                                                                                    Page 19
+   971                        	func
+   972                        _~xEventGroupClearBits:
+   973                        	longa	on
+   974                        	longi	on
+   975 00:0300: 3B           	tsc
+   976 00:0301: 38           	sec
+   977 00:0302: E9 0C 00     	sbc	#L39
+   978 00:0305: 1B           	tcs
+   979 00:0306: 0B           	phd
+   980 00:0307: 5B           	tcd
+   981             00000003   xEventGroup_0	set	3
+   982             00000007   uxBitsToClear_0	set	7
+   983                        ;        EventGroup_t * pxEventBits = xEventGroup;
+   984                        ;        EventBits_t uxReturn;
+   985                        ;
+   986                        ;        traceENTER_xEventGroupClearBits( xEventGroup, uxBitsToClear );
+   987             00000000   pxEventBits_1	set	0
+   988             00000004   uxReturn_1	set	4
+   989 00:0308: A5 0F        	lda	<L39+xEventGroup_0
+   990 00:030A: 85 05        	sta	<L40+pxEventBits_1
+   991 00:030C: A5 11        	lda	<L39+xEventGroup_0+2
+   992 00:030E: 85 07        	sta	<L40+pxEventBits_1+2
+   993                        ;
+   994                        ;        /* Check the user is not attempting to clear the bits used by the kernel
+   995                        ;         * itself. */
+   996                        ;        configASSERT( xEventGroup );
+   997 00:0310: A5 0F        	lda	<L39+xEventGroup_0
+   998 00:0312: 05 11        	ora	<L39+xEventGroup_0+2
+   999 00:0314: D0 03        	bne	L10061
+  1000                        	asmstart
+  1001 00:0316: 78           	sei
+  1002                        	asmend
+  1003                        L10062:
+  1004 00:0317: 80 FE        	bra	L10062
+  1005                        L10061:
+  1006                        ;        configASSERT( ( uxBitsToClear & eventEVENT_BITS_CONTROL_BYTES ) == 0 );
+  1007 00:0319: A5 15        	lda	<L39+uxBitsToClear_0+2
+  1008 00:031B: 29 00 FF     	and	#^$ff000000
+  1009 00:031E: F0 03        	beq	L10065
+  1010                        	asmstart
+  1011 00:0320: 78           	sei
+  1012                        	asmend
+  1013                        L10066:
+  1014 00:0321: 80 FE        	bra	L10066
+  1015                        L10065:
+  1016                        ;
+  1017                        ;        taskENTER_CRITICAL();
+  1018                        	asmstart
+  1019 00:0323: 78           	sei
+  1020                        	asmend
+  1021                        ;        {
+  1022                        ;            traceEVENT_GROUP_CLEAR_BITS( xEventGroup, uxBitsToClear );
+  1023                        ;
+  1024                        ;            /* The value returned is the event group value prior to the bits being
+  1025                        ;             * cleared. */
+  1026                        ;            uxReturn = pxEventBits->uxEventBits;
+  1027 00:0324: A7 05        	lda	[<L40+pxEventBits_1]
+  1028 00:0326: 85 09        	sta	<L40+uxReturn_1
+  Wed Sep 16 2026 17:13                                                                                                    Page 19
 
 
-  1029                        ;
-  1030                        ;    #if ( ( INCLUDE_xTimerPendFunctionCall == 1 ) && ( configUSE_TIMERS == 1 ) )
-  1031                        ;
-  1032                        ;        BaseType_t xEventGroupClearBitsFromISR( EventGroupHandle_t xEventGroup,
-  1033                        ;                                                const EventBits_t uxBitsToClear )
-  1034                        ;        {
-  1035                        ;            BaseType_t xReturn;
-  1036                        ;
-  1037                        ;            traceENTER_xEventGroupClearBitsFromISR( xEventGroup, uxBitsToClear );
-  1038                        ;
-  1039                        ;            traceEVENT_GROUP_CLEAR_BITS_FROM_ISR( xEventGroup, uxBitsToClear );
-  1040                        ;            xReturn = xTimerPendFunctionCallFromISR( &vEventGroupClearBitsCallback, ( void * ) xEvent
+  1029 00:0328: A0 02 00     	ldy	#$2
+  1030 00:032B: B7 05        	lda	[<L40+pxEventBits_1],Y
+  1031 00:032D: 85 0B        	sta	<L40+uxReturn_1+2
+  1032                        ;
+  1033                        ;            /* Clear the bits. */
+  1034                        ;            pxEventBits->uxEventBits &= ~uxBitsToClear;
+  1035 00:032F: A5 13        	lda	<L39+uxBitsToClear_0
+  1036 00:0331: 49 FF FF     	eor	#<$ffffffff
+  1037 00:0334: 85 01        	sta	<R0
+  1038 00:0336: A5 15        	lda	<L39+uxBitsToClear_0+2
+  1039 00:0338: 49 FF FF     	eor	#^$ffffffff
+  1040 00:033B: 85 03        	sta	<R0+2
+  1041 00:033D: A7 05        	lda	[<L40+pxEventBits_1]
+  1042 00:033F: 25 01        	and	<R0
+  1043 00:0341: 87 05        	sta	[<L40+pxEventBits_1]
+  1044 00:0343: B7 05        	lda	[<L40+pxEventBits_1],Y
+  1045 00:0345: 25 03        	and	<R0+2
+  1046 00:0347: 97 05        	sta	[<L40+pxEventBits_1],Y
+  1047                        ;        }
+  1048                        ;        taskEXIT_CRITICAL();
+  1049                        	asmstart
+  1050 00:0349: 58           	cli
+  1051                        	asmend
+  1052                        ;
+  1053                        ;        traceRETURN_xEventGroupClearBits( uxReturn );
+  1054                        ;
+  1055                        ;        return uxReturn;
+  1056 00:034A: A6 0B        	ldx	<L40+uxReturn_1+2
+  1057 00:034C: A5 09        	lda	<L40+uxReturn_1
+  1058 00:034E: A8           	tay
+  1059 00:034F: A5 0D        	lda	<L39+1
+  1060 00:0351: 85 15        	sta	<L39+1+8
+  1061 00:0353: 2B           	pld
+  1062 00:0354: 3B           	tsc
+  1063 00:0355: 18           	clc
+  1064 00:0356: 69 14 00     	adc	#L39+8
+  1065 00:0359: 1B           	tcs
+  1066 00:035A: 98           	tya
+  1067 00:035B: 60           	rts
+  1068                        ;    }
+  1069             0000000C   L39	equ	12
+  1070             00000005   L40	equ	5
+  1071                        	ends
+  1072                        	efunc
+  1073                        ;/*-----------------------------------------------------------*/
+  1074                        ;
+  1075                        ;    #if ( ( INCLUDE_xTimerPendFunctionCall == 1 ) && ( configUSE_TIMERS == 1 ) )
+  1076                        ;
+  1077                        ;        BaseType_t xEventGroupClearBitsFromISR( EventGroupHandle_t xEventGroup,
+  1078                        ;                                                const EventBits_t uxBitsToClear )
+  1079                        ;        {
+  1080                        ;            BaseType_t xReturn;
+  1081                        ;
+  1082                        ;            traceENTER_xEventGroupClearBitsFromISR( xEventGroup, uxBitsToClear );
+  1083                        ;
+  1084                        ;            traceEVENT_GROUP_CLEAR_BITS_FROM_ISR( xEventGroup, uxBitsToClear );
+  1085                        ;            xReturn = xTimerPendFunctionCallFromISR( &vEventGroupClearBitsCallback, ( void * ) xEvent
                     Group, ( uint32_t ) uxBitsToClear, NULL );
-  1041                        ;
-  1042                        ;            traceRETURN_xEventGroupClearBitsFromISR( xReturn );
-  1043                        ;
-  1044                        ;            return xReturn;
-  1045                        ;        }
-  1046                        ;
-  1047                        ;    #endif /* if ( ( INCLUDE_xTimerPendFunctionCall == 1 ) && ( configUSE_TIMERS == 1 ) ) */
-  1048                        ;/*-----------------------------------------------------------*/
-  1049                        ;
-  1050                        ;    EventBits_t xEventGroupGetBitsFromISR( EventGroupHandle_t xEventGroup )
-  1051                        ;    {
-  1052                        	code
-  1053                        	xdef	_~xEventGroupGetBitsFromISR
-  1054                        	func
-  1055                        _~xEventGroupGetBitsFromISR:
-  1056                        	longa	on
-  1057                        	longi	on
-  1058 00:034D: 3B           	tsc
-  1059 00:034E: 38           	sec
-  1060 00:034F: E9 0A 00     	sbc	#L44
-  1061 00:0352: 1B           	tcs
-  1062 00:0353: 0B           	phd
-  1063 00:0354: 5B           	tcd
-  1064             00000003   xEventGroup_0	set	3
-  1065                        ;        UBaseType_t uxSavedInterruptStatus;
-  1066                        ;        EventGroup_t const * const pxEventBits = xEventGroup;
-  1067                        ;        EventBits_t uxReturn;
-  1068                        ;
-  1069                        ;        traceENTER_xEventGroupGetBitsFromISR( xEventGroup );
-  1070             00000000   uxSavedInterruptStatus_1	set	0
-  1071             00000002   pxEventBits_1	set	2
-  1072             00000006   uxReturn_1	set	6
-  1073 00:0355: A5 0D        	lda	<L44+xEventGroup_0
-  1074 00:0357: 85 03        	sta	<L45+pxEventBits_1
-  1075 00:0359: A5 0F        	lda	<L44+xEventGroup_0+2
-  1076 00:035B: 85 05        	sta	<L45+pxEventBits_1+2
-  1077                        ;
-  1078                        ;        /* MISRA Ref 4.7.1 [Return value shall be checked] */
-  1079                        ;        /* More details at: https://github.com/FreeRTOS/FreeRTOS-Kernel/blob/main/MISRA.md#dir-47 */
-  1080                        ;        /* coverity[misra_c_2012_directive_4_7_violation] */
-  1081                        ;        uxSavedInterruptStatus = taskENTER_CRITICAL_FROM_ISR();
-  1082 00:035D: 64 01        	stz	<L45+uxSavedInterruptStatus_1
-  1083                        ;        {
-  1084                        ;            uxReturn = pxEventBits->uxEventBits;
-  1085 00:035F: A7 03        	lda	[<L45+pxEventBits_1]
-  Tue Sep 15 2026 17:44                                                                                                    Page 20
+  Wed Sep 16 2026 17:13                                                                                                    Page 20
 
 
-  1086 00:0361: 85 07        	sta	<L45+uxReturn_1
-  1087 00:0363: A0 02 00     	ldy	#$2
-  1088 00:0366: B7 03        	lda	[<L45+pxEventBits_1],Y
-  1089 00:0368: 85 09        	sta	<L45+uxReturn_1+2
+  1086                        ;
+  1087                        ;            traceRETURN_xEventGroupClearBitsFromISR( xReturn );
+  1088                        ;
+  1089                        ;            return xReturn;
   1090                        ;        }
-  1091                        ;        taskEXIT_CRITICAL_FROM_ISR( uxSavedInterruptStatus );
-  1092                        ;
-  1093                        ;        traceRETURN_xEventGroupGetBitsFromISR( uxReturn );
+  1091                        ;
+  1092                        ;    #endif /* if ( ( INCLUDE_xTimerPendFunctionCall == 1 ) && ( configUSE_TIMERS == 1 ) ) */
+  1093                        ;/*-----------------------------------------------------------*/
   1094                        ;
-  1095                        ;        return uxReturn;
-  1096 00:036A: A6 09        	ldx	<L45+uxReturn_1+2
-  1097 00:036C: A5 07        	lda	<L45+uxReturn_1
-  1098 00:036E: A8           	tay
-  1099 00:036F: A5 0B        	lda	<L44+1
-  1100 00:0371: 85 0F        	sta	<L44+1+4
-  1101 00:0373: 2B           	pld
-  1102 00:0374: 3B           	tsc
-  1103 00:0375: 18           	clc
-  1104 00:0376: 69 0E 00     	adc	#L44+4
-  1105 00:0379: 1B           	tcs
-  1106 00:037A: 98           	tya
-  1107 00:037B: 60           	rts
-  1108                        ;    }
-  1109             0000000A   L44	equ	10
-  1110             00000001   L45	equ	1
-  1111                        	ends
-  1112                        	efunc
-  1113                        ;/*-----------------------------------------------------------*/
-  1114                        ;
-  1115                        ;    EventBits_t xEventGroupSetBits( EventGroupHandle_t xEventGroup,
-  1116                        ;                                    const EventBits_t uxBitsToSet )
-  1117                        ;    {
-  1118                        	code
-  1119                        	xdef	_~xEventGroupSetBits
-  1120                        	func
-  1121                        _~xEventGroupSetBits:
-  1122                        	longa	on
-  1123                        	longi	on
-  1124 00:037C: 3B           	tsc
-  1125 00:037D: 38           	sec
-  1126 00:037E: E9 2A 00     	sbc	#L47
-  1127 00:0381: 1B           	tcs
-  1128 00:0382: 0B           	phd
-  1129 00:0383: 5B           	tcd
-  1130             00000003   xEventGroup_0	set	3
-  1131             00000007   uxBitsToSet_0	set	7
-  1132                        ;        ListItem_t * pxListItem;
-  1133                        ;        ListItem_t * pxNext;
-  1134                        ;        ListItem_t const * pxListEnd;
-  1135                        ;        List_t const * pxList;
-  1136                        ;        EventBits_t uxBitsToClear = 0, uxBitsWaitedFor, uxControlBits, uxReturnBits;
-  1137                        ;        EventGroup_t * pxEventBits = xEventGroup;
-  1138                        ;        BaseType_t xMatchFound = pdFALSE;
+  1095                        ;    EventBits_t xEventGroupGetBitsFromISR( EventGroupHandle_t xEventGroup )
+  1096                        ;    {
+  1097                        	code
+  1098                        	xdef	_~xEventGroupGetBitsFromISR
+  1099                        	func
+  1100                        _~xEventGroupGetBitsFromISR:
+  1101                        	longa	on
+  1102                        	longi	on
+  1103 00:035C: 3B           	tsc
+  1104 00:035D: 38           	sec
+  1105 00:035E: E9 0A 00     	sbc	#L44
+  1106 00:0361: 1B           	tcs
+  1107 00:0362: 0B           	phd
+  1108 00:0363: 5B           	tcd
+  1109             00000003   xEventGroup_0	set	3
+  1110                        ;        UBaseType_t uxSavedInterruptStatus;
+  1111                        ;        EventGroup_t const * const pxEventBits = xEventGroup;
+  1112                        ;        EventBits_t uxReturn;
+  1113                        ;
+  1114                        ;        traceENTER_xEventGroupGetBitsFromISR( xEventGroup );
+  1115             00000000   uxSavedInterruptStatus_1	set	0
+  1116             00000002   pxEventBits_1	set	2
+  1117             00000006   uxReturn_1	set	6
+  1118 00:0364: A5 0D        	lda	<L44+xEventGroup_0
+  1119 00:0366: 85 03        	sta	<L45+pxEventBits_1
+  1120 00:0368: A5 0F        	lda	<L44+xEventGroup_0+2
+  1121 00:036A: 85 05        	sta	<L45+pxEventBits_1+2
+  1122                        ;
+  1123                        ;        /* MISRA Ref 4.7.1 [Return value shall be checked] */
+  1124                        ;        /* More details at: https://github.com/FreeRTOS/FreeRTOS-Kernel/blob/main/MISRA.md#dir-47 */
+  1125                        ;        /* coverity[misra_c_2012_directive_4_7_violation] */
+  1126                        ;        uxSavedInterruptStatus = taskENTER_CRITICAL_FROM_ISR();
+  1127 00:036C: 64 01        	stz	<L45+uxSavedInterruptStatus_1
+  1128                        ;        {
+  1129                        ;            uxReturn = pxEventBits->uxEventBits;
+  1130 00:036E: A7 03        	lda	[<L45+pxEventBits_1]
+  1131 00:0370: 85 07        	sta	<L45+uxReturn_1
+  1132 00:0372: A0 02 00     	ldy	#$2
+  1133 00:0375: B7 03        	lda	[<L45+pxEventBits_1],Y
+  1134 00:0377: 85 09        	sta	<L45+uxReturn_1+2
+  1135                        ;        }
+  1136                        ;        taskEXIT_CRITICAL_FROM_ISR( uxSavedInterruptStatus );
+  1137                        ;
+  1138                        ;        traceRETURN_xEventGroupGetBitsFromISR( uxReturn );
   1139                        ;
-  1140                        ;        traceENTER_xEventGroupSetBits( xEventGroup, uxBitsToSet );
-  1141             00000000   pxListItem_1	set	0
-  1142             00000004   pxNext_1	set	4
-  1143             00000008   pxListEnd_1	set	8
-  Tue Sep 15 2026 17:44                                                                                                    Page 21
+  1140                        ;        return uxReturn;
+  1141 00:0379: A6 09        	ldx	<L45+uxReturn_1+2
+  1142 00:037B: A5 07        	lda	<L45+uxReturn_1
+  1143 00:037D: A8           	tay
+  Wed Sep 16 2026 17:13                                                                                                    Page 21
 
 
-  1144             0000000C   pxList_1	set	12
-  1145             00000010   uxBitsToClear_1	set	16
-  1146             00000014   uxBitsWaitedFor_1	set	20
-  1147             00000018   uxControlBits_1	set	24
-  1148             0000001C   uxReturnBits_1	set	28
-  1149             00000020   pxEventBits_1	set	32
-  1150             00000024   xMatchFound_1	set	36
-  1151 00:0384: 64 15        	stz	<L48+uxBitsToClear_1
-  1152 00:0386: 64 17        	stz	<L48+uxBitsToClear_1+2
-  1153 00:0388: A5 2D        	lda	<L47+xEventGroup_0
-  1154 00:038A: 85 25        	sta	<L48+pxEventBits_1
-  1155 00:038C: A5 2F        	lda	<L47+xEventGroup_0+2
-  1156 00:038E: 85 27        	sta	<L48+pxEventBits_1+2
-  1157 00:0390: 64 29        	stz	<L48+xMatchFound_1
-  1158                        ;
-  1159                        ;        /* Check the user is not attempting to set the bits used by the kernel
-  1160                        ;         * itself. */
-  1161                        ;        configASSERT( xEventGroup );
-  1162 00:0392: A5 2D        	lda	<L47+xEventGroup_0
-  1163 00:0394: 05 2F        	ora	<L47+xEventGroup_0+2
-  1164 00:0396: D0 02        	bne	L10114
-  1165                        L10118:
-  1166 00:0398: 80 FE        	bra	L10118
-  1167                        L10114:
-  1168                        ;        configASSERT( ( uxBitsToSet & eventEVENT_BITS_CONTROL_BYTES ) == 0 );
-  1169 00:039A: A5 33        	lda	<L47+uxBitsToSet_0+2
-  1170 00:039C: 29 00 FF     	and	#^$ff000000
-  1171 00:039F: F0 02        	beq	L10121
-  1172                        L10125:
-  1173 00:03A1: 80 FE        	bra	L10125
-  1174                        L10121:
-  1175                        ;
-  1176                        ;        pxList = &( pxEventBits->xTasksWaitingForBits );
-  1177 00:03A3: A9 04 00     	lda	#$4
-  1178 00:03A6: 18           	clc
-  1179 00:03A7: 65 25        	adc	<L48+pxEventBits_1
-  1180 00:03A9: 85 11        	sta	<L48+pxList_1
-  1181 00:03AB: A9 00 00     	lda	#$0
-  1182 00:03AE: 65 27        	adc	<L48+pxEventBits_1+2
-  1183 00:03B0: 85 13        	sta	<L48+pxList_1+2
-  1184                        ;        pxListEnd = listGET_END_MARKER( pxList );
-  1185 00:03B2: A9 06 00     	lda	#$6
-  1186 00:03B5: 18           	clc
-  1187 00:03B6: 65 11        	adc	<L48+pxList_1
-  1188 00:03B8: 85 0D        	sta	<L48+pxListEnd_1
-  1189 00:03BA: A9 00 00     	lda	#$0
-  1190 00:03BD: 65 13        	adc	<L48+pxList_1+2
-  1191 00:03BF: 85 0F        	sta	<L48+pxListEnd_1+2
-  1192                        ;        vTaskSuspendAll();
-  1193 00:03C1: 20 xx xx     	jsr	_~vTaskSuspendAll
-  1194                        ;        {
-  1195                        ;            traceEVENT_GROUP_SET_BITS( xEventGroup, uxBitsToSet );
-  1196                        ;
-  1197                        ;            pxListItem = listGET_HEAD_ENTRY( pxList );
-  1198 00:03C4: A0 0A 00     	ldy	#$a
-  1199 00:03C7: B7 11        	lda	[<L48+pxList_1],Y
-  1200 00:03C9: 85 05        	sta	<L48+pxListItem_1
-  1201 00:03CB: C8           	iny
-  Tue Sep 15 2026 17:44                                                                                                    Page 22
+  1144 00:037E: A5 0B        	lda	<L44+1
+  1145 00:0380: 85 0F        	sta	<L44+1+4
+  1146 00:0382: 2B           	pld
+  1147 00:0383: 3B           	tsc
+  1148 00:0384: 18           	clc
+  1149 00:0385: 69 0E 00     	adc	#L44+4
+  1150 00:0388: 1B           	tcs
+  1151 00:0389: 98           	tya
+  1152 00:038A: 60           	rts
+  1153                        ;    }
+  1154             0000000A   L44	equ	10
+  1155             00000001   L45	equ	1
+  1156                        	ends
+  1157                        	efunc
+  1158                        ;/*-----------------------------------------------------------*/
+  1159                        ;
+  1160                        ;    EventBits_t xEventGroupSetBits( EventGroupHandle_t xEventGroup,
+  1161                        ;                                    const EventBits_t uxBitsToSet )
+  1162                        ;    {
+  1163                        	code
+  1164                        	xdef	_~xEventGroupSetBits
+  1165                        	func
+  1166                        _~xEventGroupSetBits:
+  1167                        	longa	on
+  1168                        	longi	on
+  1169 00:038B: 3B           	tsc
+  1170 00:038C: 38           	sec
+  1171 00:038D: E9 2A 00     	sbc	#L47
+  1172 00:0390: 1B           	tcs
+  1173 00:0391: 0B           	phd
+  1174 00:0392: 5B           	tcd
+  1175             00000003   xEventGroup_0	set	3
+  1176             00000007   uxBitsToSet_0	set	7
+  1177                        ;        ListItem_t * pxListItem;
+  1178                        ;        ListItem_t * pxNext;
+  1179                        ;        ListItem_t const * pxListEnd;
+  1180                        ;        List_t const * pxList;
+  1181                        ;        EventBits_t uxBitsToClear = 0, uxBitsWaitedFor, uxControlBits, uxReturnBits;
+  1182                        ;        EventGroup_t * pxEventBits = xEventGroup;
+  1183                        ;        BaseType_t xMatchFound = pdFALSE;
+  1184                        ;
+  1185                        ;        traceENTER_xEventGroupSetBits( xEventGroup, uxBitsToSet );
+  1186             00000000   pxListItem_1	set	0
+  1187             00000004   pxNext_1	set	4
+  1188             00000008   pxListEnd_1	set	8
+  1189             0000000C   pxList_1	set	12
+  1190             00000010   uxBitsToClear_1	set	16
+  1191             00000014   uxBitsWaitedFor_1	set	20
+  1192             00000018   uxControlBits_1	set	24
+  1193             0000001C   uxReturnBits_1	set	28
+  1194             00000020   pxEventBits_1	set	32
+  1195             00000024   xMatchFound_1	set	36
+  1196 00:0393: 64 15        	stz	<L48+uxBitsToClear_1
+  1197 00:0395: 64 17        	stz	<L48+uxBitsToClear_1+2
+  1198 00:0397: A5 2D        	lda	<L47+xEventGroup_0
+  1199 00:0399: 85 25        	sta	<L48+pxEventBits_1
+  1200 00:039B: A5 2F        	lda	<L47+xEventGroup_0+2
+  1201 00:039D: 85 27        	sta	<L48+pxEventBits_1+2
+  Wed Sep 16 2026 17:13                                                                                                    Page 22
 
 
-  1202 00:03CC: C8           	iny
-  1203 00:03CD: B7 11        	lda	[<L48+pxList_1],Y
-  1204 00:03CF: 85 07        	sta	<L48+pxListItem_1+2
-  1205                        ;
-  1206                        ;            /* Set the bits. */
-  1207                        ;            pxEventBits->uxEventBits |= uxBitsToSet;
-  1208 00:03D1: A5 31        	lda	<L47+uxBitsToSet_0
-  1209 00:03D3: 07 25        	ora	[<L48+pxEventBits_1]
-  1210 00:03D5: 87 25        	sta	[<L48+pxEventBits_1]
-  1211 00:03D7: A5 33        	lda	<L47+uxBitsToSet_0+2
-  1212 00:03D9: A0 02 00     	ldy	#$2
-  1213 00:03DC: 17 25        	ora	[<L48+pxEventBits_1],Y
-  1214 00:03DE: 97 25        	sta	[<L48+pxEventBits_1],Y
-  1215                        ;
-  1216                        ;            /* See if the new bit value should unblock any tasks. */
-  1217                        ;            while( pxListItem != pxListEnd )
-  1218 00:03E0: 82 80 00     	brl	L10128
-  1219                        L20004:
-  1220                        ;            {
-  1221                        ;                pxNext = listGET_NEXT( pxListItem );
-  1222 00:03E3: A0 04 00     	ldy	#$4
-  1223 00:03E6: B7 05        	lda	[<L48+pxListItem_1],Y
-  1224 00:03E8: 85 09        	sta	<L48+pxNext_1
-  1225 00:03EA: C8           	iny
-  1226 00:03EB: C8           	iny
-  1227 00:03EC: B7 05        	lda	[<L48+pxListItem_1],Y
-  1228 00:03EE: 85 0B        	sta	<L48+pxNext_1+2
-  1229                        ;                uxBitsWaitedFor = listGET_LIST_ITEM_VALUE( pxListItem );
-  1230 00:03F0: A7 05        	lda	[<L48+pxListItem_1]
-  1231 00:03F2: 85 19        	sta	<L48+uxBitsWaitedFor_1
-  1232 00:03F4: A0 02 00     	ldy	#$2
-  1233 00:03F7: B7 05        	lda	[<L48+pxListItem_1],Y
-  1234 00:03F9: 85 1B        	sta	<L48+uxBitsWaitedFor_1+2
-  1235                        ;                xMatchFound = pdFALSE;
-  1236 00:03FB: 64 29        	stz	<L48+xMatchFound_1
-  1237                        ;
-  1238                        ;                /* Split the bits waited for from the control bits. */
-  1239                        ;                uxControlBits = uxBitsWaitedFor & eventEVENT_BITS_CONTROL_BYTES;
-  1240 00:03FD: 64 1D        	stz	<L48+uxControlBits_1
-  1241 00:03FF: A5 1B        	lda	<L48+uxBitsWaitedFor_1+2
-  1242 00:0401: 29 00 FF     	and	#^$ff000000
-  1243 00:0404: 85 1F        	sta	<L48+uxControlBits_1+2
-  1244                        ;                uxBitsWaitedFor &= ~eventEVENT_BITS_CONTROL_BYTES;
-  1245 00:0406: A5 1B        	lda	<L48+uxBitsWaitedFor_1+2
-  1246 00:0408: 29 FF 00     	and	#^$ffffff
-  1247 00:040B: 85 1B        	sta	<L48+uxBitsWaitedFor_1+2
-  1248                        ;
-  1249                        ;                if( ( uxControlBits & eventWAIT_FOR_ALL_BITS ) == ( EventBits_t ) 0 )
-  1250                        ;                {
-  1251 00:040D: A5 1F        	lda	<L48+uxControlBits_1+2
-  1252 00:040F: 29 00 04     	and	#^$4000000
-  1253 00:0412: F0 03        	beq	*+5
-  1254 00:0414: 82 95 00     	brl	L10130
-  1255                        ;                    /* Just looking for single bit being set. */
-  1256                        ;                    if( ( uxBitsWaitedFor & pxEventBits->uxEventBits ) != ( EventBits_t ) 0 )
-  1257                        ;                    {
-  1258 00:0417: A7 25        	lda	[<L48+pxEventBits_1]
-  1259 00:0419: 25 19        	and	<L48+uxBitsWaitedFor_1
-  Tue Sep 15 2026 17:44                                                                                                    Page 23
+  1202 00:039F: 64 29        	stz	<L48+xMatchFound_1
+  1203                        ;
+  1204                        ;        /* Check the user is not attempting to set the bits used by the kernel
+  1205                        ;         * itself. */
+  1206                        ;        configASSERT( xEventGroup );
+  1207 00:03A1: A5 2D        	lda	<L47+xEventGroup_0
+  1208 00:03A3: 05 2F        	ora	<L47+xEventGroup_0+2
+  1209 00:03A5: D0 03        	bne	L10069
+  1210                        	asmstart
+  1211 00:03A7: 78           	sei
+  1212                        	asmend
+  1213                        L10070:
+  1214 00:03A8: 80 FE        	bra	L10070
+  1215                        L10069:
+  1216                        ;        configASSERT( ( uxBitsToSet & eventEVENT_BITS_CONTROL_BYTES ) == 0 );
+  1217 00:03AA: A5 33        	lda	<L47+uxBitsToSet_0+2
+  1218 00:03AC: 29 00 FF     	and	#^$ff000000
+  1219 00:03AF: F0 03        	beq	L10073
+  1220                        	asmstart
+  1221 00:03B1: 78           	sei
+  1222                        	asmend
+  1223                        L10074:
+  1224 00:03B2: 80 FE        	bra	L10074
+  1225                        L10073:
+  1226                        ;
+  1227                        ;        pxList = &( pxEventBits->xTasksWaitingForBits );
+  1228 00:03B4: A9 04 00     	lda	#$4
+  1229 00:03B7: 18           	clc
+  1230 00:03B8: 65 25        	adc	<L48+pxEventBits_1
+  1231 00:03BA: 85 11        	sta	<L48+pxList_1
+  1232 00:03BC: A9 00 00     	lda	#$0
+  1233 00:03BF: 65 27        	adc	<L48+pxEventBits_1+2
+  1234 00:03C1: 85 13        	sta	<L48+pxList_1+2
+  1235                        ;        pxListEnd = listGET_END_MARKER( pxList );
+  1236 00:03C3: A9 06 00     	lda	#$6
+  1237 00:03C6: 18           	clc
+  1238 00:03C7: 65 11        	adc	<L48+pxList_1
+  1239 00:03C9: 85 0D        	sta	<L48+pxListEnd_1
+  1240 00:03CB: A9 00 00     	lda	#$0
+  1241 00:03CE: 65 13        	adc	<L48+pxList_1+2
+  1242 00:03D0: 85 0F        	sta	<L48+pxListEnd_1+2
+  1243                        ;        vTaskSuspendAll();
+  1244 00:03D2: 20 xx xx     	jsr	_~vTaskSuspendAll
+  1245                        ;        {
+  1246                        ;            traceEVENT_GROUP_SET_BITS( xEventGroup, uxBitsToSet );
+  1247                        ;
+  1248                        ;            pxListItem = listGET_HEAD_ENTRY( pxList );
+  1249 00:03D5: A0 0A 00     	ldy	#$a
+  1250 00:03D8: B7 11        	lda	[<L48+pxList_1],Y
+  1251 00:03DA: 85 05        	sta	<L48+pxListItem_1
+  1252 00:03DC: C8           	iny
+  1253 00:03DD: C8           	iny
+  1254 00:03DE: B7 11        	lda	[<L48+pxList_1],Y
+  1255 00:03E0: 85 07        	sta	<L48+pxListItem_1+2
+  1256                        ;
+  1257                        ;            /* Set the bits. */
+  1258                        ;            pxEventBits->uxEventBits |= uxBitsToSet;
+  1259 00:03E2: A5 31        	lda	<L47+uxBitsToSet_0
+  Wed Sep 16 2026 17:13                                                                                                    Page 23
 
 
-  1260 00:041B: 85 01        	sta	<R0
-  1261 00:041D: B7 25        	lda	[<L48+pxEventBits_1],Y
-  1262 00:041F: 25 1B        	and	<L48+uxBitsWaitedFor_1+2
-  1263 00:0421: 85 03        	sta	<R0+2
-  1264 00:0423: A5 01        	lda	<R0
-  1265 00:0425: 05 03        	ora	<R0+2
-  1266 00:0427: F0 05        	beq	L10133
-  1267                        ;                        xMatchFound = pdTRUE;
-  1268                        L20005:
-  1269 00:0429: A9 01 00     	lda	#$1
-  1270 00:042C: 85 29        	sta	<L48+xMatchFound_1
-  1271                        ;                    }
-  1272                        ;                    else
-  1273                        L10133:
-  1274                        ;
-  1275                        ;                if( xMatchFound != pdFALSE )
-  1276                        ;                {
-  1277 00:042E: A5 29        	lda	<L48+xMatchFound_1
-  1278 00:0430: F0 29        	beq	L10136
-  1279                        ;                {
-  1280                        ;                    /* Need all bits to be set, but not all the bits were set. */
-  1281                        ;                }
-  1282                        ;                    /* The bits match.  Should the bits be cleared on exit? */
-  1283                        ;                    if( ( uxControlBits & eventCLEAR_EVENTS_ON_EXIT_BIT ) != ( EventBits_t ) 0 )
-  1284                        ;                    {
-  1285 00:0432: A5 1F        	lda	<L48+uxControlBits_1+2
-  1286 00:0434: 29 00 01     	and	#^$1000000
-  1287 00:0437: F0 0C        	beq	L10138
-  1288                        ;                        uxBitsToClear |= uxBitsWaitedFor;
-  1289 00:0439: A5 19        	lda	<L48+uxBitsWaitedFor_1
-  1290 00:043B: 05 15        	ora	<L48+uxBitsToClear_1
-  1291 00:043D: 85 15        	sta	<L48+uxBitsToClear_1
-  1292 00:043F: A5 1B        	lda	<L48+uxBitsWaitedFor_1+2
-  1293 00:0441: 05 17        	ora	<L48+uxBitsToClear_1+2
-  1294 00:0443: 85 17        	sta	<L48+uxBitsToClear_1+2
-  1295                        ;                    }
-  1296                        ;                    else
-  1297                        ;                    {
-  1298                        ;                        mtCOVERAGE_TEST_MARKER();
-  1299                        ;                    }
-  1300                        L10138:
-  1301                        ;
-  1302                        ;                    /* Store the actual event flag value in the task's event list
-  1303                        ;                     * item before removing the task from the event list.  The
-  1304                        ;                     * eventUNBLOCKED_DUE_TO_BIT_SET bit is set so the task knows
-  1305                        ;                     * that is was unblocked due to its required bits matching, rather
-  1306                        ;                     * than because it timed out. */
-  1307                        ;                    vTaskRemoveFromUnorderedEventList( pxListItem, pxEventBits->uxEventBits | eventUN
+  1260 00:03E4: 07 25        	ora	[<L48+pxEventBits_1]
+  1261 00:03E6: 87 25        	sta	[<L48+pxEventBits_1]
+  1262 00:03E8: A5 33        	lda	<L47+uxBitsToSet_0+2
+  1263 00:03EA: A0 02 00     	ldy	#$2
+  1264 00:03ED: 17 25        	ora	[<L48+pxEventBits_1],Y
+  1265 00:03EF: 97 25        	sta	[<L48+pxEventBits_1],Y
+  1266                        ;
+  1267                        ;            /* See if the new bit value should unblock any tasks. */
+  1268                        ;            while( pxListItem != pxListEnd )
+  1269 00:03F1: 82 80 00     	brl	L10077
+  1270                        L20004:
+  1271                        ;            {
+  1272                        ;                pxNext = listGET_NEXT( pxListItem );
+  1273 00:03F4: A0 04 00     	ldy	#$4
+  1274 00:03F7: B7 05        	lda	[<L48+pxListItem_1],Y
+  1275 00:03F9: 85 09        	sta	<L48+pxNext_1
+  1276 00:03FB: C8           	iny
+  1277 00:03FC: C8           	iny
+  1278 00:03FD: B7 05        	lda	[<L48+pxListItem_1],Y
+  1279 00:03FF: 85 0B        	sta	<L48+pxNext_1+2
+  1280                        ;                uxBitsWaitedFor = listGET_LIST_ITEM_VALUE( pxListItem );
+  1281 00:0401: A7 05        	lda	[<L48+pxListItem_1]
+  1282 00:0403: 85 19        	sta	<L48+uxBitsWaitedFor_1
+  1283 00:0405: A0 02 00     	ldy	#$2
+  1284 00:0408: B7 05        	lda	[<L48+pxListItem_1],Y
+  1285 00:040A: 85 1B        	sta	<L48+uxBitsWaitedFor_1+2
+  1286                        ;                xMatchFound = pdFALSE;
+  1287 00:040C: 64 29        	stz	<L48+xMatchFound_1
+  1288                        ;
+  1289                        ;                /* Split the bits waited for from the control bits. */
+  1290                        ;                uxControlBits = uxBitsWaitedFor & eventEVENT_BITS_CONTROL_BYTES;
+  1291 00:040E: 64 1D        	stz	<L48+uxControlBits_1
+  1292 00:0410: A5 1B        	lda	<L48+uxBitsWaitedFor_1+2
+  1293 00:0412: 29 00 FF     	and	#^$ff000000
+  1294 00:0415: 85 1F        	sta	<L48+uxControlBits_1+2
+  1295                        ;                uxBitsWaitedFor &= ~eventEVENT_BITS_CONTROL_BYTES;
+  1296 00:0417: A5 1B        	lda	<L48+uxBitsWaitedFor_1+2
+  1297 00:0419: 29 FF 00     	and	#^$ffffff
+  1298 00:041C: 85 1B        	sta	<L48+uxBitsWaitedFor_1+2
+  1299                        ;
+  1300                        ;                if( ( uxControlBits & eventWAIT_FOR_ALL_BITS ) == ( EventBits_t ) 0 )
+  1301                        ;                {
+  1302 00:041E: A5 1F        	lda	<L48+uxControlBits_1+2
+  1303 00:0420: 29 00 04     	and	#^$4000000
+  1304 00:0423: F0 03        	beq	*+5
+  1305 00:0425: 82 95 00     	brl	L10079
+  1306                        ;                    /* Just looking for single bit being set. */
+  1307                        ;                    if( ( uxBitsWaitedFor & pxEventBits->uxEventBits ) != ( EventBits_t ) 0 )
+  1308                        ;                    {
+  1309 00:0428: A7 25        	lda	[<L48+pxEventBits_1]
+  1310 00:042A: 25 19        	and	<L48+uxBitsWaitedFor_1
+  1311 00:042C: 85 01        	sta	<R0
+  1312 00:042E: B7 25        	lda	[<L48+pxEventBits_1],Y
+  1313 00:0430: 25 1B        	and	<L48+uxBitsWaitedFor_1+2
+  1314 00:0432: 85 03        	sta	<R0+2
+  1315 00:0434: A5 01        	lda	<R0
+  1316 00:0436: 05 03        	ora	<R0+2
+  1317 00:0438: F0 05        	beq	L10082
+  Wed Sep 16 2026 17:13                                                                                                    Page 24
+
+
+  1318                        ;                        xMatchFound = pdTRUE;
+  1319                        L20005:
+  1320 00:043A: A9 01 00     	lda	#$1
+  1321 00:043D: 85 29        	sta	<L48+xMatchFound_1
+  1322                        ;                    }
+  1323                        ;                    else
+  1324                        L10082:
+  1325                        ;
+  1326                        ;                if( xMatchFound != pdFALSE )
+  1327                        ;                {
+  1328 00:043F: A5 29        	lda	<L48+xMatchFound_1
+  1329 00:0441: F0 29        	beq	L10085
+  1330                        ;                {
+  1331                        ;                    /* Need all bits to be set, but not all the bits were set. */
+  1332                        ;                }
+  1333                        ;                    /* The bits match.  Should the bits be cleared on exit? */
+  1334                        ;                    if( ( uxControlBits & eventCLEAR_EVENTS_ON_EXIT_BIT ) != ( EventBits_t ) 0 )
+  1335                        ;                    {
+  1336 00:0443: A5 1F        	lda	<L48+uxControlBits_1+2
+  1337 00:0445: 29 00 01     	and	#^$1000000
+  1338 00:0448: F0 0C        	beq	L10087
+  1339                        ;                        uxBitsToClear |= uxBitsWaitedFor;
+  1340 00:044A: A5 19        	lda	<L48+uxBitsWaitedFor_1
+  1341 00:044C: 05 15        	ora	<L48+uxBitsToClear_1
+  1342 00:044E: 85 15        	sta	<L48+uxBitsToClear_1
+  1343 00:0450: A5 1B        	lda	<L48+uxBitsWaitedFor_1+2
+  1344 00:0452: 05 17        	ora	<L48+uxBitsToClear_1+2
+  1345 00:0454: 85 17        	sta	<L48+uxBitsToClear_1+2
+  1346                        ;                    }
+  1347                        ;                    else
+  1348                        ;                    {
+  1349                        ;                        mtCOVERAGE_TEST_MARKER();
+  1350                        ;                    }
+  1351                        L10087:
+  1352                        ;
+  1353                        ;                    /* Store the actual event flag value in the task's event list
+  1354                        ;                     * item before removing the task from the event list.  The
+  1355                        ;                     * eventUNBLOCKED_DUE_TO_BIT_SET bit is set so the task knows
+  1356                        ;                     * that is was unblocked due to its required bits matching, rather
+  1357                        ;                     * than because it timed out. */
+  1358                        ;                    vTaskRemoveFromUnorderedEventList( pxListItem, pxEventBits->uxEventBits | eventUN
                     BLOCKED_DUE_TO_BIT_SET );
-  1308 00:0445: A7 25        	lda	[<L48+pxEventBits_1]
-  1309 00:0447: 85 01        	sta	<R0
-  1310 00:0449: A0 02 00     	ldy	#$2
-  1311 00:044C: B7 25        	lda	[<L48+pxEventBits_1],Y
-  1312 00:044E: 09 00 02     	ora	#^$2000000
-  1313 00:0451: 48           	pha
-  1314 00:0452: D4 01        	pei	<R0
-  1315 00:0454: D4 07        	pei	<L48+pxListItem_1+2
-  1316 00:0456: D4 05        	pei	<L48+pxListItem_1
-  Tue Sep 15 2026 17:44                                                                                                    Page 24
+  1359 00:0456: A7 25        	lda	[<L48+pxEventBits_1]
+  1360 00:0458: 85 01        	sta	<R0
+  1361 00:045A: A0 02 00     	ldy	#$2
+  1362 00:045D: B7 25        	lda	[<L48+pxEventBits_1],Y
+  1363 00:045F: 09 00 02     	ora	#^$2000000
+  1364 00:0462: 48           	pha
+  1365 00:0463: D4 01        	pei	<R0
+  1366 00:0465: D4 07        	pei	<L48+pxListItem_1+2
+  1367 00:0467: D4 05        	pei	<L48+pxListItem_1
+  1368 00:0469: 20 xx xx     	jsr	_~vTaskRemoveFromUnorderedEventList
+  1369                        ;                }
+  1370                        ;
+  1371                        ;                /* Move onto the next list item.  Note pxListItem->pxNext is not
+  1372                        ;                 * used here as the list item may have been removed from the event list
+  1373                        ;                 * and inserted into the ready/pending reading list. */
+  1374                        ;                pxListItem = pxNext;
+  Wed Sep 16 2026 17:13                                                                                                    Page 25
 
 
-  1317 00:0458: 20 xx xx     	jsr	_~vTaskRemoveFromUnorderedEventList
-  1318                        ;                }
-  1319                        ;
-  1320                        ;                /* Move onto the next list item.  Note pxListItem->pxNext is not
-  1321                        ;                 * used here as the list item may have been removed from the event list
-  1322                        ;                 * and inserted into the ready/pending reading list. */
-  1323                        ;                pxListItem = pxNext;
-  1324                        L10136:
-  1325 00:045B: A5 09        	lda	<L48+pxNext_1
-  1326 00:045D: 85 05        	sta	<L48+pxListItem_1
-  1327 00:045F: A5 0B        	lda	<L48+pxNext_1+2
-  1328 00:0461: 85 07        	sta	<L48+pxListItem_1+2
-  1329                        ;            }
-  1330                        L10128:
-  1331 00:0463: A5 05        	lda	<L48+pxListItem_1
-  1332 00:0465: C5 0D        	cmp	<L48+pxListEnd_1
-  1333 00:0467: D0 04        	bne	L51
-  1334 00:0469: A5 07        	lda	<L48+pxListItem_1+2
-  1335 00:046B: C5 0F        	cmp	<L48+pxListEnd_1+2
-  1336                        L51:
-  1337 00:046D: F0 03        	beq	*+5
-  1338 00:046F: 82 71 FF     	brl	L20004
-  1339                        ;
-  1340                        ;            /* Clear any bits that matched when the eventCLEAR_EVENTS_ON_EXIT_BIT
-  1341                        ;             * bit was set in the control word. */
-  1342                        ;            pxEventBits->uxEventBits &= ~uxBitsToClear;
-  1343 00:0472: A5 15        	lda	<L48+uxBitsToClear_1
-  1344 00:0474: 49 FF FF     	eor	#<$ffffffff
-  1345 00:0477: 85 01        	sta	<R0
-  1346 00:0479: A5 17        	lda	<L48+uxBitsToClear_1+2
-  1347 00:047B: 49 FF FF     	eor	#^$ffffffff
-  1348 00:047E: 85 03        	sta	<R0+2
-  1349 00:0480: A7 25        	lda	[<L48+pxEventBits_1]
-  1350 00:0482: 25 01        	and	<R0
-  1351 00:0484: 87 25        	sta	[<L48+pxEventBits_1]
-  1352 00:0486: A0 02 00     	ldy	#$2
-  1353 00:0489: B7 25        	lda	[<L48+pxEventBits_1],Y
-  1354 00:048B: 25 03        	and	<R0+2
-  1355 00:048D: 97 25        	sta	[<L48+pxEventBits_1],Y
-  1356                        ;
-  1357                        ;            /* Snapshot resulting bits. */
-  1358                        ;            uxReturnBits = pxEventBits->uxEventBits;
-  1359 00:048F: A7 25        	lda	[<L48+pxEventBits_1]
-  1360 00:0491: 85 21        	sta	<L48+uxReturnBits_1
-  1361 00:0493: B7 25        	lda	[<L48+pxEventBits_1],Y
-  1362 00:0495: 85 23        	sta	<L48+uxReturnBits_1+2
-  1363                        ;        }
-  1364                        ;        ( void ) xTaskResumeAll();
-  1365 00:0497: 20 xx xx     	jsr	_~xTaskResumeAll
-  1366                        ;
-  1367                        ;        traceRETURN_xEventGroupSetBits( uxReturnBits );
-  1368                        ;
-  1369                        ;        return uxReturnBits;
-  1370 00:049A: A6 23        	ldx	<L48+uxReturnBits_1+2
-  1371 00:049C: A5 21        	lda	<L48+uxReturnBits_1
-  1372 00:049E: A8           	tay
-  1373 00:049F: A5 2B        	lda	<L47+1
-  1374 00:04A1: 85 33        	sta	<L47+1+8
-  Tue Sep 15 2026 17:44                                                                                                    Page 25
+  1375                        L10085:
+  1376 00:046C: A5 09        	lda	<L48+pxNext_1
+  1377 00:046E: 85 05        	sta	<L48+pxListItem_1
+  1378 00:0470: A5 0B        	lda	<L48+pxNext_1+2
+  1379 00:0472: 85 07        	sta	<L48+pxListItem_1+2
+  1380                        ;            }
+  1381                        L10077:
+  1382 00:0474: A5 05        	lda	<L48+pxListItem_1
+  1383 00:0476: C5 0D        	cmp	<L48+pxListEnd_1
+  1384 00:0478: D0 04        	bne	L51
+  1385 00:047A: A5 07        	lda	<L48+pxListItem_1+2
+  1386 00:047C: C5 0F        	cmp	<L48+pxListEnd_1+2
+  1387                        L51:
+  1388 00:047E: F0 03        	beq	*+5
+  1389 00:0480: 82 71 FF     	brl	L20004
+  1390                        ;
+  1391                        ;            /* Clear any bits that matched when the eventCLEAR_EVENTS_ON_EXIT_BIT
+  1392                        ;             * bit was set in the control word. */
+  1393                        ;            pxEventBits->uxEventBits &= ~uxBitsToClear;
+  1394 00:0483: A5 15        	lda	<L48+uxBitsToClear_1
+  1395 00:0485: 49 FF FF     	eor	#<$ffffffff
+  1396 00:0488: 85 01        	sta	<R0
+  1397 00:048A: A5 17        	lda	<L48+uxBitsToClear_1+2
+  1398 00:048C: 49 FF FF     	eor	#^$ffffffff
+  1399 00:048F: 85 03        	sta	<R0+2
+  1400 00:0491: A7 25        	lda	[<L48+pxEventBits_1]
+  1401 00:0493: 25 01        	and	<R0
+  1402 00:0495: 87 25        	sta	[<L48+pxEventBits_1]
+  1403 00:0497: A0 02 00     	ldy	#$2
+  1404 00:049A: B7 25        	lda	[<L48+pxEventBits_1],Y
+  1405 00:049C: 25 03        	and	<R0+2
+  1406 00:049E: 97 25        	sta	[<L48+pxEventBits_1],Y
+  1407                        ;
+  1408                        ;            /* Snapshot resulting bits. */
+  1409                        ;            uxReturnBits = pxEventBits->uxEventBits;
+  1410 00:04A0: A7 25        	lda	[<L48+pxEventBits_1]
+  1411 00:04A2: 85 21        	sta	<L48+uxReturnBits_1
+  1412 00:04A4: B7 25        	lda	[<L48+pxEventBits_1],Y
+  1413 00:04A6: 85 23        	sta	<L48+uxReturnBits_1+2
+  1414                        ;        }
+  1415                        ;        ( void ) xTaskResumeAll();
+  1416 00:04A8: 20 xx xx     	jsr	_~xTaskResumeAll
+  1417                        ;
+  1418                        ;        traceRETURN_xEventGroupSetBits( uxReturnBits );
+  1419                        ;
+  1420                        ;        return uxReturnBits;
+  1421 00:04AB: A6 23        	ldx	<L48+uxReturnBits_1+2
+  1422 00:04AD: A5 21        	lda	<L48+uxReturnBits_1
+  1423 00:04AF: A8           	tay
+  1424 00:04B0: A5 2B        	lda	<L47+1
+  1425 00:04B2: 85 33        	sta	<L47+1+8
+  1426 00:04B4: 2B           	pld
+  1427 00:04B5: 3B           	tsc
+  1428 00:04B6: 18           	clc
+  1429 00:04B7: 69 32 00     	adc	#L47+8
+  1430 00:04BA: 1B           	tcs
+  1431 00:04BB: 98           	tya
+  1432 00:04BC: 60           	rts
+  Wed Sep 16 2026 17:13                                                                                                    Page 26
 
 
-  1375 00:04A3: 2B           	pld
-  1376 00:04A4: 3B           	tsc
-  1377 00:04A5: 18           	clc
-  1378 00:04A6: 69 32 00     	adc	#L47+8
-  1379 00:04A9: 1B           	tcs
-  1380 00:04AA: 98           	tya
-  1381 00:04AB: 60           	rts
-  1382                        ;                    {
-  1383                        ;                        mtCOVERAGE_TEST_MARKER();
-  1384                        ;                    }
-  1385                        ;                }
-  1386                        ;                else if( ( uxBitsWaitedFor & pxEventBits->uxEventBits ) == uxBitsWaitedFor )
-  1387                        L10130:
-  1388                        ;                {
-  1389 00:04AC: A7 25        	lda	[<L48+pxEventBits_1]
-  1390 00:04AE: 25 19        	and	<L48+uxBitsWaitedFor_1
-  1391 00:04B0: 85 01        	sta	<R0
-  1392 00:04B2: A0 02 00     	ldy	#$2
-  1393 00:04B5: B7 25        	lda	[<L48+pxEventBits_1],Y
-  1394 00:04B7: 25 1B        	and	<L48+uxBitsWaitedFor_1+2
-  1395 00:04B9: 85 03        	sta	<R0+2
-  1396 00:04BB: A5 01        	lda	<R0
-  1397 00:04BD: C5 19        	cmp	<L48+uxBitsWaitedFor_1
-  1398 00:04BF: D0 04        	bne	L55
-  1399 00:04C1: A5 03        	lda	<R0+2
-  1400 00:04C3: C5 1B        	cmp	<L48+uxBitsWaitedFor_1+2
-  1401                        L55:
-  1402 00:04C5: F0 03        	beq	*+5
-  1403 00:04C7: 82 64 FF     	brl	L10133
-  1404                        ;                    /* All bits are set. */
-  1405                        ;                    xMatchFound = pdTRUE;
-  1406 00:04CA: 82 5C FF     	brl	L20005
-  1407                        ;                }
-  1408                        ;                else
-  1409                        ;    }
-  1410             0000002A   L47	equ	42
-  1411             00000005   L48	equ	5
-  1412                        	ends
-  1413                        	efunc
-  1414                        ;/*-----------------------------------------------------------*/
-  1415                        ;
-  1416                        ;    void vEventGroupDelete( EventGroupHandle_t xEventGroup )
-  1417                        ;    {
-  1418                        	code
-  1419                        	xdef	_~vEventGroupDelete
-  1420                        	func
-  1421                        _~vEventGroupDelete:
-  1422                        	longa	on
-  1423                        	longi	on
-  1424 00:04CD: 3B           	tsc
-  1425 00:04CE: 38           	sec
-  1426 00:04CF: E9 0C 00     	sbc	#L60
-  1427 00:04D2: 1B           	tcs
-  1428 00:04D3: 0B           	phd
-  1429 00:04D4: 5B           	tcd
-  1430             00000003   xEventGroup_0	set	3
-  1431                        ;        EventGroup_t * pxEventBits = xEventGroup;
-  1432                        ;        const List_t * pxTasksWaitingForBits;
-  Tue Sep 15 2026 17:44                                                                                                    Page 26
+  1433                        ;                    {
+  1434                        ;                        mtCOVERAGE_TEST_MARKER();
+  1435                        ;                    }
+  1436                        ;                }
+  1437                        ;                else if( ( uxBitsWaitedFor & pxEventBits->uxEventBits ) == uxBitsWaitedFor )
+  1438                        L10079:
+  1439                        ;                {
+  1440 00:04BD: A7 25        	lda	[<L48+pxEventBits_1]
+  1441 00:04BF: 25 19        	and	<L48+uxBitsWaitedFor_1
+  1442 00:04C1: 85 01        	sta	<R0
+  1443 00:04C3: A0 02 00     	ldy	#$2
+  1444 00:04C6: B7 25        	lda	[<L48+pxEventBits_1],Y
+  1445 00:04C8: 25 1B        	and	<L48+uxBitsWaitedFor_1+2
+  1446 00:04CA: 85 03        	sta	<R0+2
+  1447 00:04CC: A5 01        	lda	<R0
+  1448 00:04CE: C5 19        	cmp	<L48+uxBitsWaitedFor_1
+  1449 00:04D0: D0 04        	bne	L55
+  1450 00:04D2: A5 03        	lda	<R0+2
+  1451 00:04D4: C5 1B        	cmp	<L48+uxBitsWaitedFor_1+2
+  1452                        L55:
+  1453 00:04D6: F0 03        	beq	*+5
+  1454 00:04D8: 82 64 FF     	brl	L10082
+  1455                        ;                    /* All bits are set. */
+  1456                        ;                    xMatchFound = pdTRUE;
+  1457 00:04DB: 82 5C FF     	brl	L20005
+  1458                        ;                }
+  1459                        ;                else
+  1460                        ;    }
+  1461             0000002A   L47	equ	42
+  1462             00000005   L48	equ	5
+  1463                        	ends
+  1464                        	efunc
+  1465                        ;/*-----------------------------------------------------------*/
+  1466                        ;
+  1467                        ;    void vEventGroupDelete( EventGroupHandle_t xEventGroup )
+  1468                        ;    {
+  1469                        	code
+  1470                        	xdef	_~vEventGroupDelete
+  1471                        	func
+  1472                        _~vEventGroupDelete:
+  1473                        	longa	on
+  1474                        	longi	on
+  1475 00:04DE: 3B           	tsc
+  1476 00:04DF: 38           	sec
+  1477 00:04E0: E9 0C 00     	sbc	#L60
+  1478 00:04E3: 1B           	tcs
+  1479 00:04E4: 0B           	phd
+  1480 00:04E5: 5B           	tcd
+  1481             00000003   xEventGroup_0	set	3
+  1482                        ;        EventGroup_t * pxEventBits = xEventGroup;
+  1483                        ;        const List_t * pxTasksWaitingForBits;
+  1484                        ;
+  1485                        ;        traceENTER_vEventGroupDelete( xEventGroup );
+  1486             00000000   pxEventBits_1	set	0
+  1487             00000004   pxTasksWaitingForBits_1	set	4
+  1488 00:04E6: A5 0F        	lda	<L60+xEventGroup_0
+  1489 00:04E8: 85 05        	sta	<L61+pxEventBits_1
+  1490 00:04EA: A5 11        	lda	<L60+xEventGroup_0+2
+  Wed Sep 16 2026 17:13                                                                                                    Page 27
 
 
-  1433                        ;
-  1434                        ;        traceENTER_vEventGroupDelete( xEventGroup );
-  1435             00000000   pxEventBits_1	set	0
-  1436             00000004   pxTasksWaitingForBits_1	set	4
-  1437 00:04D5: A5 0F        	lda	<L60+xEventGroup_0
-  1438 00:04D7: 85 05        	sta	<L61+pxEventBits_1
-  1439 00:04D9: A5 11        	lda	<L60+xEventGroup_0+2
-  1440 00:04DB: 85 07        	sta	<L61+pxEventBits_1+2
-  1441                        ;
-  1442                        ;        configASSERT( pxEventBits );
-  1443 00:04DD: A5 05        	lda	<L61+pxEventBits_1
-  1444 00:04DF: 05 07        	ora	<L61+pxEventBits_1+2
-  1445 00:04E1: D0 02        	bne	L10139
-  1446                        L10143:
-  1447 00:04E3: 80 FE        	bra	L10143
-  1448                        L10139:
-  1449                        ;
-  1450                        ;        pxTasksWaitingForBits = &( pxEventBits->xTasksWaitingForBits );
-  1451 00:04E5: A9 04 00     	lda	#$4
-  1452 00:04E8: 18           	clc
-  1453 00:04E9: 65 05        	adc	<L61+pxEventBits_1
-  1454 00:04EB: 85 09        	sta	<L61+pxTasksWaitingForBits_1
-  1455 00:04ED: A9 00 00     	lda	#$0
-  1456 00:04F0: 65 07        	adc	<L61+pxEventBits_1+2
-  1457 00:04F2: 85 0B        	sta	<L61+pxTasksWaitingForBits_1+2
-  1458                        ;
-  1459                        ;        vTaskSuspendAll();
-  1460 00:04F4: 20 xx xx     	jsr	_~vTaskSuspendAll
-  1461                        ;        {
-  1462                        ;            traceEVENT_GROUP_DELETE( xEventGroup );
-  1463                        ;
-  1464                        ;            while( listCURRENT_LIST_LENGTH( pxTasksWaitingForBits ) > ( UBaseType_t ) 0 )
-  1465 00:04F7: 80 36        	bra	L10146
-  1466                        L20007:
-  1467                        ;            {
-  1468                        ;                /* Unblock the task, returning 0 as the event list is being deleted
-  1469                        ;                 * and cannot therefore have any bits set. */
-  1470                        ;                configASSERT( pxTasksWaitingForBits->xListEnd.pxNext != ( const ListItem_t * ) &( pxT
+  1491 00:04EC: 85 07        	sta	<L61+pxEventBits_1+2
+  1492                        ;
+  1493                        ;        configASSERT( pxEventBits );
+  1494 00:04EE: A5 05        	lda	<L61+pxEventBits_1
+  1495 00:04F0: 05 07        	ora	<L61+pxEventBits_1+2
+  1496 00:04F2: D0 03        	bne	L10088
+  1497                        	asmstart
+  1498 00:04F4: 78           	sei
+  1499                        	asmend
+  1500                        L10089:
+  1501 00:04F5: 80 FE        	bra	L10089
+  1502                        L10088:
+  1503                        ;
+  1504                        ;        pxTasksWaitingForBits = &( pxEventBits->xTasksWaitingForBits );
+  1505 00:04F7: A9 04 00     	lda	#$4
+  1506 00:04FA: 18           	clc
+  1507 00:04FB: 65 05        	adc	<L61+pxEventBits_1
+  1508 00:04FD: 85 09        	sta	<L61+pxTasksWaitingForBits_1
+  1509 00:04FF: A9 00 00     	lda	#$0
+  1510 00:0502: 65 07        	adc	<L61+pxEventBits_1+2
+  1511 00:0504: 85 0B        	sta	<L61+pxTasksWaitingForBits_1+2
+  1512                        ;
+  1513                        ;        vTaskSuspendAll();
+  1514 00:0506: 20 xx xx     	jsr	_~vTaskSuspendAll
+  1515                        ;        {
+  1516                        ;            traceEVENT_GROUP_DELETE( xEventGroup );
+  1517                        ;
+  1518                        ;            while( listCURRENT_LIST_LENGTH( pxTasksWaitingForBits ) > ( UBaseType_t ) 0 )
+  1519 00:0509: 80 37        	bra	L10092
+  1520                        L20007:
+  1521                        ;            {
+  1522                        ;                /* Unblock the task, returning 0 as the event list is being deleted
+  1523                        ;                 * and cannot therefore have any bits set. */
+  1524                        ;                configASSERT( pxTasksWaitingForBits->xListEnd.pxNext != ( const ListItem_t * ) &( pxT
                     asksWaitingForBits->xListEnd ) );
-  1471 00:04F9: A9 06 00     	lda	#$6
-  1472 00:04FC: 18           	clc
-  1473 00:04FD: 65 09        	adc	<L61+pxTasksWaitingForBits_1
-  1474 00:04FF: 85 01        	sta	<R0
-  1475 00:0501: A9 00 00     	lda	#$0
-  1476 00:0504: 65 0B        	adc	<L61+pxTasksWaitingForBits_1+2
-  1477 00:0506: 85 03        	sta	<R0+2
-  1478 00:0508: A0 0A 00     	ldy	#$a
-  1479 00:050B: B7 09        	lda	[<L61+pxTasksWaitingForBits_1],Y
-  1480 00:050D: C5 01        	cmp	<R0
-  1481 00:050F: D0 06        	bne	L64
-  1482 00:0511: C8           	iny
-  1483 00:0512: C8           	iny
-  1484 00:0513: B7 09        	lda	[<L61+pxTasksWaitingForBits_1],Y
-  1485 00:0515: C5 03        	cmp	<R0+2
-  1486                        L64:
-  1487 00:0517: D0 02        	bne	L10148
-  1488                        L10152:
-  1489 00:0519: 80 FE        	bra	L10152
-  Tue Sep 15 2026 17:44                                                                                                    Page 27
+  1525 00:050B: A9 06 00     	lda	#$6
+  1526 00:050E: 18           	clc
+  1527 00:050F: 65 09        	adc	<L61+pxTasksWaitingForBits_1
+  1528 00:0511: 85 01        	sta	<R0
+  1529 00:0513: A9 00 00     	lda	#$0
+  1530 00:0516: 65 0B        	adc	<L61+pxTasksWaitingForBits_1+2
+  1531 00:0518: 85 03        	sta	<R0+2
+  1532 00:051A: A0 0A 00     	ldy	#$a
+  1533 00:051D: B7 09        	lda	[<L61+pxTasksWaitingForBits_1],Y
+  1534 00:051F: C5 01        	cmp	<R0
+  1535 00:0521: D0 06        	bne	L64
+  1536 00:0523: C8           	iny
+  1537 00:0524: C8           	iny
+  1538 00:0525: B7 09        	lda	[<L61+pxTasksWaitingForBits_1],Y
+  1539 00:0527: C5 03        	cmp	<R0+2
+  1540                        L64:
+  1541 00:0529: D0 03        	bne	L10094
+  1542                        	asmstart
+  1543 00:052B: 78           	sei
+  1544                        	asmend
+  1545                        L10095:
+  1546 00:052C: 80 FE        	bra	L10095
+  1547                        L10094:
+  Wed Sep 16 2026 17:13                                                                                                    Page 28
 
 
-  1490                        L10148:
-  1491                        ;                vTaskRemoveFromUnorderedEventList( pxTasksWaitingForBits->xListEnd.pxNext, eventUNBLO
+  1548                        ;                vTaskRemoveFromUnorderedEventList( pxTasksWaitingForBits->xListEnd.pxNext, eventUNBLO
                     CKED_DUE_TO_BIT_SET );
-  1492 00:051B: F4 00 02     	pea	#^$2000000
-  1493 00:051E: F4 00 00     	pea	#<$2000000
-  1494 00:0521: A0 0C 00     	ldy	#$c
-  1495 00:0524: B7 09        	lda	[<L61+pxTasksWaitingForBits_1],Y
-  1496 00:0526: 48           	pha
-  1497 00:0527: 88           	dey
-  1498 00:0528: 88           	dey
-  1499 00:0529: B7 09        	lda	[<L61+pxTasksWaitingForBits_1],Y
-  1500 00:052B: 48           	pha
-  1501 00:052C: 20 xx xx     	jsr	_~vTaskRemoveFromUnorderedEventList
-  1502                        ;            }
-  1503                        L10146:
-  1504 00:052F: A9 00 00     	lda	#$0
-  1505 00:0532: C7 09        	cmp	[<L61+pxTasksWaitingForBits_1]
-  1506 00:0534: 90 C3        	bcc	L20007
-  1507                        ;        }
-  1508                        ;        ( void ) xTaskResumeAll();
-  1509 00:0536: 20 xx xx     	jsr	_~xTaskResumeAll
-  1510                        ;
-  1511                        ;        #if ( ( configSUPPORT_DYNAMIC_ALLOCATION == 1 ) && ( configSUPPORT_STATIC_ALLOCATION == 0 ) )
-  1512                        ;        {
-  1513                        ;            /* The event group can only have been allocated dynamically - free
-  1514                        ;             * it again. */
-  1515                        ;            vPortFree( pxEventBits );
-  1516 00:0539: D4 07        	pei	<L61+pxEventBits_1+2
-  1517 00:053B: D4 05        	pei	<L61+pxEventBits_1
-  1518 00:053D: 20 xx xx     	jsr	_~vPortFree
-  1519                        ;        }
-  1520                        ;        #elif ( ( configSUPPORT_DYNAMIC_ALLOCATION == 1 ) && ( configSUPPORT_STATIC_ALLOCATION == 1 )
+  1549 00:052E: F4 00 02     	pea	#^$2000000
+  1550 00:0531: F4 00 00     	pea	#<$2000000
+  1551 00:0534: A0 0C 00     	ldy	#$c
+  1552 00:0537: B7 09        	lda	[<L61+pxTasksWaitingForBits_1],Y
+  1553 00:0539: 48           	pha
+  1554 00:053A: 88           	dey
+  1555 00:053B: 88           	dey
+  1556 00:053C: B7 09        	lda	[<L61+pxTasksWaitingForBits_1],Y
+  1557 00:053E: 48           	pha
+  1558 00:053F: 20 xx xx     	jsr	_~vTaskRemoveFromUnorderedEventList
+  1559                        ;            }
+  1560                        L10092:
+  1561 00:0542: A9 00 00     	lda	#$0
+  1562 00:0545: C7 09        	cmp	[<L61+pxTasksWaitingForBits_1]
+  1563 00:0547: 90 C2        	bcc	L20007
+  1564                        ;        }
+  1565                        ;        ( void ) xTaskResumeAll();
+  1566 00:0549: 20 xx xx     	jsr	_~xTaskResumeAll
+  1567                        ;
+  1568                        ;        #if ( ( configSUPPORT_DYNAMIC_ALLOCATION == 1 ) && ( configSUPPORT_STATIC_ALLOCATION == 0 ) )
+  1569                        ;        {
+  1570                        ;            /* The event group can only have been allocated dynamically - free
+  1571                        ;             * it again. */
+  1572                        ;            vPortFree( pxEventBits );
+  1573 00:054C: D4 07        	pei	<L61+pxEventBits_1+2
+  1574 00:054E: D4 05        	pei	<L61+pxEventBits_1
+  1575 00:0550: 20 xx xx     	jsr	_~vPortFree
+  1576                        ;        }
+  1577                        ;        #elif ( ( configSUPPORT_DYNAMIC_ALLOCATION == 1 ) && ( configSUPPORT_STATIC_ALLOCATION == 1 )
                      )
-  1521                        ;        {
-  1522                        ;            /* The event group could have been allocated statically or
-  1523                        ;             * dynamically, so check before attempting to free the memory. */
-  1524                        ;            if( pxEventBits->ucStaticallyAllocated == ( uint8_t ) pdFALSE )
-  1525                        ;            {
-  1526                        ;                vPortFree( pxEventBits );
-  1527                        ;            }
-  1528                        ;            else
-  1529                        ;            {
-  1530                        ;                mtCOVERAGE_TEST_MARKER();
-  1531                        ;            }
-  1532                        ;        }
-  1533                        ;        #endif /* configSUPPORT_DYNAMIC_ALLOCATION */
-  1534                        ;
-  1535                        ;        traceRETURN_vEventGroupDelete();
-  1536                        ;    }
-  1537 00:0540: A5 0D        	lda	<L60+1
-  1538 00:0542: 85 11        	sta	<L60+1+4
-  1539 00:0544: 2B           	pld
-  1540 00:0545: 3B           	tsc
-  1541 00:0546: 18           	clc
-  1542 00:0547: 69 10 00     	adc	#L60+4
-  1543 00:054A: 1B           	tcs
-  1544 00:054B: 60           	rts
-  1545             0000000C   L60	equ	12
-  Tue Sep 15 2026 17:44                                                                                                    Page 28
-
-
-  1546             00000005   L61	equ	5
-  1547                        	ends
-  1548                        	efunc
-  1549                        ;/*-----------------------------------------------------------*/
-  1550                        ;
-  1551                        ;    #if ( configSUPPORT_STATIC_ALLOCATION == 1 )
-  1552                        ;        BaseType_t xEventGroupGetStaticBuffer( EventGroupHandle_t xEventGroup,
-  1553                        ;                                               StaticEventGroup_t ** ppxEventGroupBuffer )
-  1554                        ;        {
-  1555                        ;            BaseType_t xReturn;
-  1556                        ;            EventGroup_t * pxEventBits = xEventGroup;
-  1557                        ;
-  1558                        ;            traceENTER_xEventGroupGetStaticBuffer( xEventGroup, ppxEventGroupBuffer );
-  1559                        ;
-  1560                        ;            configASSERT( pxEventBits );
-  1561                        ;            configASSERT( ppxEventGroupBuffer );
-  1562                        ;
-  1563                        ;            #if ( configSUPPORT_DYNAMIC_ALLOCATION == 1 )
-  1564                        ;            {
-  1565                        ;                /* Check if the event group was statically allocated. */
-  1566                        ;                if( pxEventBits->ucStaticallyAllocated == ( uint8_t ) pdTRUE )
-  1567                        ;                {
-  1568                        ;                    /* MISRA Ref 11.3.1 [Misaligned access] */
-  1569                        ;                    /* More details at: https://github.com/FreeRTOS/FreeRTOS-Kernel/blob/main/MISRA.m
-                    d#rule-113 */
-  1570                        ;                    /* coverity[misra_c_2012_rule_11_3_violation] */
-  1571                        ;                    *ppxEventGroupBuffer = ( StaticEventGroup_t * ) pxEventBits;
-  1572                        ;                    xReturn = pdTRUE;
-  1573                        ;                }
-  1574                        ;                else
-  1575                        ;                {
-  1576                        ;                    xReturn = pdFALSE;
-  1577                        ;                }
-  1578                        ;            }
-  1579                        ;            #else /* configSUPPORT_DYNAMIC_ALLOCATION */
-  1580                        ;            {
-  1581                        ;                /* Event group must have been statically allocated. */
-  1582                        ;                /* MISRA Ref 11.3.1 [Misaligned access] */
-  1583                        ;                /* More details at: https://github.com/FreeRTOS/FreeRTOS-Kernel/blob/main/MISRA.md#ru
-                    le-113 */
-  1584                        ;                /* coverity[misra_c_2012_rule_11_3_violation] */
-  1585                        ;                *ppxEventGroupBuffer = ( StaticEventGroup_t * ) pxEventBits;
-  1586                        ;                xReturn = pdTRUE;
-  1587                        ;            }
-  1588                        ;            #endif /* configSUPPORT_DYNAMIC_ALLOCATION */
-  1589                        ;
-  1590                        ;            traceRETURN_xEventGroupGetStaticBuffer( xReturn );
+  1578                        ;        {
+  1579                        ;            /* The event group could have been allocated statically or
+  1580                        ;             * dynamically, so check before attempting to free the memory. */
+  1581                        ;            if( pxEventBits->ucStaticallyAllocated == ( uint8_t ) pdFALSE )
+  1582                        ;            {
+  1583                        ;                vPortFree( pxEventBits );
+  1584                        ;            }
+  1585                        ;            else
+  1586                        ;            {
+  1587                        ;                mtCOVERAGE_TEST_MARKER();
+  1588                        ;            }
+  1589                        ;        }
+  1590                        ;        #endif /* configSUPPORT_DYNAMIC_ALLOCATION */
   1591                        ;
-  1592                        ;            return xReturn;
-  1593                        ;        }
-  1594                        ;    #endif /* configSUPPORT_STATIC_ALLOCATION */
-  1595                        ;/*-----------------------------------------------------------*/
-  1596                        ;
-  1597                        ;/* For internal use only - execute a 'set bits' command that was pended from
-  1598                        ; * an interrupt. */
-  1599                        ;    void vEventGroupSetBitsCallback( void * pvEventGroup,
-  1600                        ;                                     uint32_t ulBitsToSet )
-  1601                        ;    {
-  Tue Sep 15 2026 17:44                                                                                                    Page 29
+  1592                        ;        traceRETURN_vEventGroupDelete();
+  1593                        ;    }
+  1594 00:0553: A5 0D        	lda	<L60+1
+  1595 00:0555: 85 11        	sta	<L60+1+4
+  1596 00:0557: 2B           	pld
+  1597 00:0558: 3B           	tsc
+  1598 00:0559: 18           	clc
+  1599 00:055A: 69 10 00     	adc	#L60+4
+  1600 00:055D: 1B           	tcs
+  1601 00:055E: 60           	rts
+  1602             0000000C   L60	equ	12
+  1603             00000005   L61	equ	5
+  Wed Sep 16 2026 17:13                                                                                                    Page 29
 
 
-  1602                        	code
-  1603                        	xdef	_~vEventGroupSetBitsCallback
-  1604                        	func
-  1605                        _~vEventGroupSetBitsCallback:
-  1606                        	longa	on
-  1607                        	longi	on
-  1608 00:054C: 3B           	tsc
-  1609 00:054D: 38           	sec
-  1610 00:054E: E9 04 00     	sbc	#L67
-  1611 00:0551: 1B           	tcs
-  1612 00:0552: 0B           	phd
-  1613 00:0553: 5B           	tcd
-  1614             00000003   pvEventGroup_0	set	3
-  1615             00000007   ulBitsToSet_0	set	7
-  1616                        ;        traceENTER_vEventGroupSetBitsCallback( pvEventGroup, ulBitsToSet );
-  1617                        ;
-  1618                        ;        /* MISRA Ref 11.5.4 [Callback function parameter] */
-  1619                        ;        /* More details at: https://github.com/FreeRTOS/FreeRTOS-Kernel/blob/main/MISRA.md#rule-115 *
-                    /
-  1620                        ;        /* coverity[misra_c_2012_rule_11_5_violation] */
-  1621                        ;        ( void ) xEventGroupSetBits( pvEventGroup, ( EventBits_t ) ulBitsToSet );
-  1622 00:0554: D4 0D        	pei	<L67+ulBitsToSet_0+2
-  1623 00:0556: D4 0B        	pei	<L67+ulBitsToSet_0
-  1624 00:0558: D4 09        	pei	<L67+pvEventGroup_0+2
-  1625 00:055A: D4 07        	pei	<L67+pvEventGroup_0
-  1626 00:055C: 20 xx xx     	jsr	_~xEventGroupSetBits
-  1627                        ;
-  1628                        ;        traceRETURN_vEventGroupSetBitsCallback();
-  1629                        ;    }
-  1630 00:055F: A5 05        	lda	<L67+1
-  1631 00:0561: 85 0D        	sta	<L67+1+8
-  1632 00:0563: 2B           	pld
-  1633 00:0564: 3B           	tsc
-  1634 00:0565: 18           	clc
-  1635 00:0566: 69 0C 00     	adc	#L67+8
-  1636 00:0569: 1B           	tcs
-  1637 00:056A: 60           	rts
-  1638             00000004   L67	equ	4
-  1639             00000005   L68	equ	5
-  1640                        	ends
-  1641                        	efunc
-  1642                        ;/*-----------------------------------------------------------*/
-  1643                        ;
-  1644                        ;/* For internal use only - execute a 'clear bits' command that was pended from
-  1645                        ; * an interrupt. */
-  1646                        ;    void vEventGroupClearBitsCallback( void * pvEventGroup,
-  1647                        ;                                       uint32_t ulBitsToClear )
-  1648                        ;    {
-  1649                        	code
-  1650                        	xdef	_~vEventGroupClearBitsCallback
-  1651                        	func
-  1652                        _~vEventGroupClearBitsCallback:
-  1653                        	longa	on
-  1654                        	longi	on
-  1655 00:056B: 3B           	tsc
-  1656 00:056C: 38           	sec
-  1657 00:056D: E9 04 00     	sbc	#L70
-  1658 00:0570: 1B           	tcs
-  Tue Sep 15 2026 17:44                                                                                                    Page 30
+  1604                        	ends
+  1605                        	efunc
+  1606                        ;/*-----------------------------------------------------------*/
+  1607                        ;
+  1608                        ;    #if ( configSUPPORT_STATIC_ALLOCATION == 1 )
+  1609                        ;        BaseType_t xEventGroupGetStaticBuffer( EventGroupHandle_t xEventGroup,
+  1610                        ;                                               StaticEventGroup_t ** ppxEventGroupBuffer )
+  1611                        ;        {
+  1612                        ;            BaseType_t xReturn;
+  1613                        ;            EventGroup_t * pxEventBits = xEventGroup;
+  1614                        ;
+  1615                        ;            traceENTER_xEventGroupGetStaticBuffer( xEventGroup, ppxEventGroupBuffer );
+  1616                        ;
+  1617                        ;            configASSERT( pxEventBits );
+  1618                        ;            configASSERT( ppxEventGroupBuffer );
+  1619                        ;
+  1620                        ;            #if ( configSUPPORT_DYNAMIC_ALLOCATION == 1 )
+  1621                        ;            {
+  1622                        ;                /* Check if the event group was statically allocated. */
+  1623                        ;                if( pxEventBits->ucStaticallyAllocated == ( uint8_t ) pdTRUE )
+  1624                        ;                {
+  1625                        ;                    /* MISRA Ref 11.3.1 [Misaligned access] */
+  1626                        ;                    /* More details at: https://github.com/FreeRTOS/FreeRTOS-Kernel/blob/main/MISRA.m
+                    d#rule-113 */
+  1627                        ;                    /* coverity[misra_c_2012_rule_11_3_violation] */
+  1628                        ;                    *ppxEventGroupBuffer = ( StaticEventGroup_t * ) pxEventBits;
+  1629                        ;                    xReturn = pdTRUE;
+  1630                        ;                }
+  1631                        ;                else
+  1632                        ;                {
+  1633                        ;                    xReturn = pdFALSE;
+  1634                        ;                }
+  1635                        ;            }
+  1636                        ;            #else /* configSUPPORT_DYNAMIC_ALLOCATION */
+  1637                        ;            {
+  1638                        ;                /* Event group must have been statically allocated. */
+  1639                        ;                /* MISRA Ref 11.3.1 [Misaligned access] */
+  1640                        ;                /* More details at: https://github.com/FreeRTOS/FreeRTOS-Kernel/blob/main/MISRA.md#ru
+                    le-113 */
+  1641                        ;                /* coverity[misra_c_2012_rule_11_3_violation] */
+  1642                        ;                *ppxEventGroupBuffer = ( StaticEventGroup_t * ) pxEventBits;
+  1643                        ;                xReturn = pdTRUE;
+  1644                        ;            }
+  1645                        ;            #endif /* configSUPPORT_DYNAMIC_ALLOCATION */
+  1646                        ;
+  1647                        ;            traceRETURN_xEventGroupGetStaticBuffer( xReturn );
+  1648                        ;
+  1649                        ;            return xReturn;
+  1650                        ;        }
+  1651                        ;    #endif /* configSUPPORT_STATIC_ALLOCATION */
+  1652                        ;/*-----------------------------------------------------------*/
+  1653                        ;
+  1654                        ;/* For internal use only - execute a 'set bits' command that was pended from
+  1655                        ; * an interrupt. */
+  1656                        ;    void vEventGroupSetBitsCallback( void * pvEventGroup,
+  1657                        ;                                     uint32_t ulBitsToSet )
+  1658                        ;    {
+  1659                        	code
+  Wed Sep 16 2026 17:13                                                                                                    Page 30
 
 
-  1659 00:0571: 0B           	phd
-  1660 00:0572: 5B           	tcd
-  1661             00000003   pvEventGroup_0	set	3
-  1662             00000007   ulBitsToClear_0	set	7
-  1663                        ;        traceENTER_vEventGroupClearBitsCallback( pvEventGroup, ulBitsToClear );
-  1664                        ;
-  1665                        ;        /* MISRA Ref 11.5.4 [Callback function parameter] */
-  1666                        ;        /* More details at: https://github.com/FreeRTOS/FreeRTOS-Kernel/blob/main/MISRA.md#rule-115 *
-                    /
-  1667                        ;        /* coverity[misra_c_2012_rule_11_5_violation] */
-  1668                        ;        ( void ) xEventGroupClearBits( pvEventGroup, ( EventBits_t ) ulBitsToClear );
-  1669 00:0573: D4 0D        	pei	<L70+ulBitsToClear_0+2
-  1670 00:0575: D4 0B        	pei	<L70+ulBitsToClear_0
-  1671 00:0577: D4 09        	pei	<L70+pvEventGroup_0+2
-  1672 00:0579: D4 07        	pei	<L70+pvEventGroup_0
-  1673 00:057B: 20 xx xx     	jsr	_~xEventGroupClearBits
+  1660                        	xdef	_~vEventGroupSetBitsCallback
+  1661                        	func
+  1662                        _~vEventGroupSetBitsCallback:
+  1663                        	longa	on
+  1664                        	longi	on
+  1665 00:055F: 3B           	tsc
+  1666 00:0560: 38           	sec
+  1667 00:0561: E9 04 00     	sbc	#L67
+  1668 00:0564: 1B           	tcs
+  1669 00:0565: 0B           	phd
+  1670 00:0566: 5B           	tcd
+  1671             00000003   pvEventGroup_0	set	3
+  1672             00000007   ulBitsToSet_0	set	7
+  1673                        ;        traceENTER_vEventGroupSetBitsCallback( pvEventGroup, ulBitsToSet );
   1674                        ;
-  1675                        ;        traceRETURN_vEventGroupClearBitsCallback();
-  1676                        ;    }
-  1677 00:057E: A5 05        	lda	<L70+1
-  1678 00:0580: 85 0D        	sta	<L70+1+8
-  1679 00:0582: 2B           	pld
-  1680 00:0583: 3B           	tsc
-  1681 00:0584: 18           	clc
-  1682 00:0585: 69 0C 00     	adc	#L70+8
-  1683 00:0588: 1B           	tcs
-  1684 00:0589: 60           	rts
-  1685             00000004   L70	equ	4
-  1686             00000005   L71	equ	5
-  1687                        	ends
-  1688                        	efunc
-  1689                        ;/*-----------------------------------------------------------*/
-  1690                        ;
-  1691                        ;    static BaseType_t prvTestWaitCondition( const EventBits_t uxCurrentEventBits,
-  1692                        ;                                            const EventBits_t uxBitsToWaitFor,
-  1693                        ;                                            const BaseType_t xWaitForAllBits )
-  1694                        ;    {
-  1695                        	code
-  1696                        	func
-  1697                        _~prvTestWaitCondition:
-  1698                        	longa	on
-  1699                        	longi	on
-  1700 00:058A: 3B           	tsc
-  1701 00:058B: 38           	sec
-  1702 00:058C: E9 06 00     	sbc	#L73
-  1703 00:058F: 1B           	tcs
-  1704 00:0590: 0B           	phd
-  1705 00:0591: 5B           	tcd
-  1706             00000003   uxCurrentEventBits_0	set	3
-  1707             00000007   uxBitsToWaitFor_0	set	7
-  1708             0000000B   xWaitForAllBits_0	set	11
-  1709                        ;        BaseType_t xWaitConditionMet = pdFALSE;
-  1710                        ;
-  1711                        ;        if( xWaitForAllBits == pdFALSE )
-  1712             00000000   xWaitConditionMet_1	set	0
-  1713 00:0592: 64 05        	stz	<L74+xWaitConditionMet_1
-  1714                        ;        {
-  1715 00:0594: A5 11        	lda	<L73+xWaitForAllBits_0
-  Tue Sep 15 2026 17:44                                                                                                    Page 31
+  1675                        ;        /* MISRA Ref 11.5.4 [Callback function parameter] */
+  1676                        ;        /* More details at: https://github.com/FreeRTOS/FreeRTOS-Kernel/blob/main/MISRA.md#rule-115 *
+                    /
+  1677                        ;        /* coverity[misra_c_2012_rule_11_5_violation] */
+  1678                        ;        ( void ) xEventGroupSetBits( pvEventGroup, ( EventBits_t ) ulBitsToSet );
+  1679 00:0567: D4 0D        	pei	<L67+ulBitsToSet_0+2
+  1680 00:0569: D4 0B        	pei	<L67+ulBitsToSet_0
+  1681 00:056B: D4 09        	pei	<L67+pvEventGroup_0+2
+  1682 00:056D: D4 07        	pei	<L67+pvEventGroup_0
+  1683 00:056F: 20 xx xx     	jsr	_~xEventGroupSetBits
+  1684                        ;
+  1685                        ;        traceRETURN_vEventGroupSetBitsCallback();
+  1686                        ;    }
+  1687 00:0572: A5 05        	lda	<L67+1
+  1688 00:0574: 85 0D        	sta	<L67+1+8
+  1689 00:0576: 2B           	pld
+  1690 00:0577: 3B           	tsc
+  1691 00:0578: 18           	clc
+  1692 00:0579: 69 0C 00     	adc	#L67+8
+  1693 00:057C: 1B           	tcs
+  1694 00:057D: 60           	rts
+  1695             00000004   L67	equ	4
+  1696             00000005   L68	equ	5
+  1697                        	ends
+  1698                        	efunc
+  1699                        ;/*-----------------------------------------------------------*/
+  1700                        ;
+  1701                        ;/* For internal use only - execute a 'clear bits' command that was pended from
+  1702                        ; * an interrupt. */
+  1703                        ;    void vEventGroupClearBitsCallback( void * pvEventGroup,
+  1704                        ;                                       uint32_t ulBitsToClear )
+  1705                        ;    {
+  1706                        	code
+  1707                        	xdef	_~vEventGroupClearBitsCallback
+  1708                        	func
+  1709                        _~vEventGroupClearBitsCallback:
+  1710                        	longa	on
+  1711                        	longi	on
+  1712 00:057E: 3B           	tsc
+  1713 00:057F: 38           	sec
+  1714 00:0580: E9 04 00     	sbc	#L70
+  1715 00:0583: 1B           	tcs
+  1716 00:0584: 0B           	phd
+  Wed Sep 16 2026 17:13                                                                                                    Page 31
 
 
-  1716 00:0596: D0 27        	bne	L10155
-  1717                        ;            /* Task only has to wait for one bit within uxBitsToWaitFor to be
-  1718                        ;             * set.  Is one already set? */
-  1719                        ;            if( ( uxCurrentEventBits & uxBitsToWaitFor ) != ( EventBits_t ) 0 )
-  1720                        ;            {
-  1721 00:0598: A5 0D        	lda	<L73+uxBitsToWaitFor_0
-  1722 00:059A: 25 09        	and	<L73+uxCurrentEventBits_0
-  1723 00:059C: 85 01        	sta	<R0
-  1724 00:059E: A5 0F        	lda	<L73+uxBitsToWaitFor_0+2
-  1725 00:05A0: 25 0B        	and	<L73+uxCurrentEventBits_0+2
-  1726 00:05A2: 85 03        	sta	<R0+2
-  1727 00:05A4: A5 01        	lda	<R0
-  1728 00:05A6: 05 03        	ora	<R0+2
-  1729 00:05A8: F0 05        	beq	L10158
-  1730                        ;                xWaitConditionMet = pdTRUE;
-  1731                        L20009:
-  1732 00:05AA: A9 01 00     	lda	#$1
-  1733 00:05AD: 85 05        	sta	<L74+xWaitConditionMet_1
-  1734                        ;            }
-  1735                        ;            else
-  1736                        L10158:
-  1737                        ;
-  1738                        ;        return xWaitConditionMet;
-  1739 00:05AF: A5 05        	lda	<L74+xWaitConditionMet_1
-  1740 00:05B1: A8           	tay
-  1741 00:05B2: A5 07        	lda	<L73+1
-  1742 00:05B4: 85 11        	sta	<L73+1+10
-  1743 00:05B6: 2B           	pld
-  1744 00:05B7: 3B           	tsc
-  1745 00:05B8: 18           	clc
-  1746 00:05B9: 69 10 00     	adc	#L73+10
-  1747 00:05BC: 1B           	tcs
-  1748 00:05BD: 98           	tya
-  1749 00:05BE: 60           	rts
-  1750                        ;            {
-  1751                        ;                mtCOVERAGE_TEST_MARKER();
-  1752                        ;            }
-  1753                        ;        }
-  1754                        ;        else
-  1755                        L10155:
-  1756                        ;        {
-  1757                        ;            /* Task has to wait for all the bits in uxBitsToWaitFor to be set.
-  1758                        ;             * Are they set already? */
-  1759                        ;            if( ( uxCurrentEventBits & uxBitsToWaitFor ) == uxBitsToWaitFor )
-  1760                        ;            {
-  1761 00:05BF: A5 0D        	lda	<L73+uxBitsToWaitFor_0
-  1762 00:05C1: 25 09        	and	<L73+uxCurrentEventBits_0
-  1763 00:05C3: 85 01        	sta	<R0
-  1764 00:05C5: A5 0F        	lda	<L73+uxBitsToWaitFor_0+2
-  1765 00:05C7: 25 0B        	and	<L73+uxCurrentEventBits_0+2
-  1766 00:05C9: 85 03        	sta	<R0+2
-  1767 00:05CB: A5 01        	lda	<R0
-  1768 00:05CD: C5 0D        	cmp	<L73+uxBitsToWaitFor_0
-  1769 00:05CF: D0 04        	bne	L77
-  1770 00:05D1: A5 03        	lda	<R0+2
-  1771 00:05D3: C5 0F        	cmp	<L73+uxBitsToWaitFor_0+2
-  1772                        L77:
-  1773 00:05D5: D0 D8        	bne	L10158
-  Tue Sep 15 2026 17:44                                                                                                    Page 32
+  1717 00:0585: 5B           	tcd
+  1718             00000003   pvEventGroup_0	set	3
+  1719             00000007   ulBitsToClear_0	set	7
+  1720                        ;        traceENTER_vEventGroupClearBitsCallback( pvEventGroup, ulBitsToClear );
+  1721                        ;
+  1722                        ;        /* MISRA Ref 11.5.4 [Callback function parameter] */
+  1723                        ;        /* More details at: https://github.com/FreeRTOS/FreeRTOS-Kernel/blob/main/MISRA.md#rule-115 *
+                    /
+  1724                        ;        /* coverity[misra_c_2012_rule_11_5_violation] */
+  1725                        ;        ( void ) xEventGroupClearBits( pvEventGroup, ( EventBits_t ) ulBitsToClear );
+  1726 00:0586: D4 0D        	pei	<L70+ulBitsToClear_0+2
+  1727 00:0588: D4 0B        	pei	<L70+ulBitsToClear_0
+  1728 00:058A: D4 09        	pei	<L70+pvEventGroup_0+2
+  1729 00:058C: D4 07        	pei	<L70+pvEventGroup_0
+  1730 00:058E: 20 xx xx     	jsr	_~xEventGroupClearBits
+  1731                        ;
+  1732                        ;        traceRETURN_vEventGroupClearBitsCallback();
+  1733                        ;    }
+  1734 00:0591: A5 05        	lda	<L70+1
+  1735 00:0593: 85 0D        	sta	<L70+1+8
+  1736 00:0595: 2B           	pld
+  1737 00:0596: 3B           	tsc
+  1738 00:0597: 18           	clc
+  1739 00:0598: 69 0C 00     	adc	#L70+8
+  1740 00:059B: 1B           	tcs
+  1741 00:059C: 60           	rts
+  1742             00000004   L70	equ	4
+  1743             00000005   L71	equ	5
+  1744                        	ends
+  1745                        	efunc
+  1746                        ;/*-----------------------------------------------------------*/
+  1747                        ;
+  1748                        ;    static BaseType_t prvTestWaitCondition( const EventBits_t uxCurrentEventBits,
+  1749                        ;                                            const EventBits_t uxBitsToWaitFor,
+  1750                        ;                                            const BaseType_t xWaitForAllBits )
+  1751                        ;    {
+  1752                        	code
+  1753                        	func
+  1754                        _~prvTestWaitCondition:
+  1755                        	longa	on
+  1756                        	longi	on
+  1757 00:059D: 3B           	tsc
+  1758 00:059E: 38           	sec
+  1759 00:059F: E9 06 00     	sbc	#L73
+  1760 00:05A2: 1B           	tcs
+  1761 00:05A3: 0B           	phd
+  1762 00:05A4: 5B           	tcd
+  1763             00000003   uxCurrentEventBits_0	set	3
+  1764             00000007   uxBitsToWaitFor_0	set	7
+  1765             0000000B   xWaitForAllBits_0	set	11
+  1766                        ;        BaseType_t xWaitConditionMet = pdFALSE;
+  1767                        ;
+  1768                        ;        if( xWaitForAllBits == pdFALSE )
+  1769             00000000   xWaitConditionMet_1	set	0
+  1770 00:05A5: 64 05        	stz	<L74+xWaitConditionMet_1
+  1771                        ;        {
+  1772 00:05A7: A5 11        	lda	<L73+xWaitForAllBits_0
+  1773 00:05A9: D0 27        	bne	L10098
+  Wed Sep 16 2026 17:13                                                                                                    Page 32
 
 
-  1774                        ;                xWaitConditionMet = pdTRUE;
-  1775 00:05D7: 80 D1        	bra	L20009
-  1776                        ;            }
-  1777                        ;            else
-  1778                        ;            {
-  1779                        ;                mtCOVERAGE_TEST_MARKER();
-  1780                        ;            }
-  1781                        ;        }
-  1782                        ;    }
-  1783             00000006   L73	equ	6
-  1784             00000005   L74	equ	5
-  1785                        	ends
-  1786                        	efunc
-  1787                        ;/*-----------------------------------------------------------*/
-  1788                        ;
-  1789                        ;    #if ( ( INCLUDE_xTimerPendFunctionCall == 1 ) && ( configUSE_TIMERS == 1 ) )
-  1790                        ;
-  1791                        ;        BaseType_t xEventGroupSetBitsFromISR( EventGroupHandle_t xEventGroup,
-  1792                        ;                                              const EventBits_t uxBitsToSet,
-  1793                        ;                                              BaseType_t * pxHigherPriorityTaskWoken )
-  1794                        ;        {
-  1795                        ;            BaseType_t xReturn;
-  1796                        ;
-  1797                        ;            traceENTER_xEventGroupSetBitsFromISR( xEventGroup, uxBitsToSet, pxHigherPriorityTaskWoken
-                     );
-  1798                        ;
-  1799                        ;            traceEVENT_GROUP_SET_BITS_FROM_ISR( xEventGroup, uxBitsToSet );
-  1800                        ;            xReturn = xTimerPendFunctionCallFromISR( &vEventGroupSetBitsCallback, ( void * ) xEventGr
-                    oup, ( uint32_t ) uxBitsToSet, pxHigherPriorityTaskWoken );
-  1801                        ;
-  1802                        ;            traceRETURN_xEventGroupSetBitsFromISR( xReturn );
-  1803                        ;
-  1804                        ;            return xReturn;
-  1805                        ;        }
-  1806                        ;
-  1807                        ;    #endif /* if ( ( INCLUDE_xTimerPendFunctionCall == 1 ) && ( configUSE_TIMERS == 1 ) ) */
-  1808                        ;/*-----------------------------------------------------------*/
-  1809                        ;
-  1810                        ;    #if ( configUSE_TRACE_FACILITY == 1 )
-  1811                        ;
-  1812                        ;        UBaseType_t uxEventGroupGetNumber( void * xEventGroup )
+  1774                        ;            /* Task only has to wait for one bit within uxBitsToWaitFor to be
+  1775                        ;             * set.  Is one already set? */
+  1776                        ;            if( ( uxCurrentEventBits & uxBitsToWaitFor ) != ( EventBits_t ) 0 )
+  1777                        ;            {
+  1778 00:05AB: A5 0D        	lda	<L73+uxBitsToWaitFor_0
+  1779 00:05AD: 25 09        	and	<L73+uxCurrentEventBits_0
+  1780 00:05AF: 85 01        	sta	<R0
+  1781 00:05B1: A5 0F        	lda	<L73+uxBitsToWaitFor_0+2
+  1782 00:05B3: 25 0B        	and	<L73+uxCurrentEventBits_0+2
+  1783 00:05B5: 85 03        	sta	<R0+2
+  1784 00:05B7: A5 01        	lda	<R0
+  1785 00:05B9: 05 03        	ora	<R0+2
+  1786 00:05BB: F0 05        	beq	L10101
+  1787                        ;                xWaitConditionMet = pdTRUE;
+  1788                        L20009:
+  1789 00:05BD: A9 01 00     	lda	#$1
+  1790 00:05C0: 85 05        	sta	<L74+xWaitConditionMet_1
+  1791                        ;            }
+  1792                        ;            else
+  1793                        L10101:
+  1794                        ;
+  1795                        ;        return xWaitConditionMet;
+  1796 00:05C2: A5 05        	lda	<L74+xWaitConditionMet_1
+  1797 00:05C4: A8           	tay
+  1798 00:05C5: A5 07        	lda	<L73+1
+  1799 00:05C7: 85 11        	sta	<L73+1+10
+  1800 00:05C9: 2B           	pld
+  1801 00:05CA: 3B           	tsc
+  1802 00:05CB: 18           	clc
+  1803 00:05CC: 69 10 00     	adc	#L73+10
+  1804 00:05CF: 1B           	tcs
+  1805 00:05D0: 98           	tya
+  1806 00:05D1: 60           	rts
+  1807                        ;            {
+  1808                        ;                mtCOVERAGE_TEST_MARKER();
+  1809                        ;            }
+  1810                        ;        }
+  1811                        ;        else
+  1812                        L10098:
   1813                        ;        {
-  1814                        ;            UBaseType_t xReturn;
-  1815                        ;
-  1816                        ;            /* MISRA Ref 11.5.2 [Opaque pointer] */
-  1817                        ;            /* More details at: https://github.com/FreeRTOS/FreeRTOS-Kernel/blob/main/MISRA.md#rule-1
+  1814                        ;            /* Task has to wait for all the bits in uxBitsToWaitFor to be set.
+  1815                        ;             * Are they set already? */
+  1816                        ;            if( ( uxCurrentEventBits & uxBitsToWaitFor ) == uxBitsToWaitFor )
+  1817                        ;            {
+  1818 00:05D2: A5 0D        	lda	<L73+uxBitsToWaitFor_0
+  1819 00:05D4: 25 09        	and	<L73+uxCurrentEventBits_0
+  1820 00:05D6: 85 01        	sta	<R0
+  1821 00:05D8: A5 0F        	lda	<L73+uxBitsToWaitFor_0+2
+  1822 00:05DA: 25 0B        	and	<L73+uxCurrentEventBits_0+2
+  1823 00:05DC: 85 03        	sta	<R0+2
+  1824 00:05DE: A5 01        	lda	<R0
+  1825 00:05E0: C5 0D        	cmp	<L73+uxBitsToWaitFor_0
+  1826 00:05E2: D0 04        	bne	L77
+  1827 00:05E4: A5 03        	lda	<R0+2
+  1828 00:05E6: C5 0F        	cmp	<L73+uxBitsToWaitFor_0+2
+  1829                        L77:
+  1830 00:05E8: D0 D8        	bne	L10101
+  1831                        ;                xWaitConditionMet = pdTRUE;
+  Wed Sep 16 2026 17:13                                                                                                    Page 33
+
+
+  1832 00:05EA: 80 D1        	bra	L20009
+  1833                        ;            }
+  1834                        ;            else
+  1835                        ;            {
+  1836                        ;                mtCOVERAGE_TEST_MARKER();
+  1837                        ;            }
+  1838                        ;        }
+  1839                        ;    }
+  1840             00000006   L73	equ	6
+  1841             00000005   L74	equ	5
+  1842                        	ends
+  1843                        	efunc
+  1844                        ;/*-----------------------------------------------------------*/
+  1845                        ;
+  1846                        ;    #if ( ( INCLUDE_xTimerPendFunctionCall == 1 ) && ( configUSE_TIMERS == 1 ) )
+  1847                        ;
+  1848                        ;        BaseType_t xEventGroupSetBitsFromISR( EventGroupHandle_t xEventGroup,
+  1849                        ;                                              const EventBits_t uxBitsToSet,
+  1850                        ;                                              BaseType_t * pxHigherPriorityTaskWoken )
+  1851                        ;        {
+  1852                        ;            BaseType_t xReturn;
+  1853                        ;
+  1854                        ;            traceENTER_xEventGroupSetBitsFromISR( xEventGroup, uxBitsToSet, pxHigherPriorityTaskWoken
+                     );
+  1855                        ;
+  1856                        ;            traceEVENT_GROUP_SET_BITS_FROM_ISR( xEventGroup, uxBitsToSet );
+  1857                        ;            xReturn = xTimerPendFunctionCallFromISR( &vEventGroupSetBitsCallback, ( void * ) xEventGr
+                    oup, ( uint32_t ) uxBitsToSet, pxHigherPriorityTaskWoken );
+  1858                        ;
+  1859                        ;            traceRETURN_xEventGroupSetBitsFromISR( xReturn );
+  1860                        ;
+  1861                        ;            return xReturn;
+  1862                        ;        }
+  1863                        ;
+  1864                        ;    #endif /* if ( ( INCLUDE_xTimerPendFunctionCall == 1 ) && ( configUSE_TIMERS == 1 ) ) */
+  1865                        ;/*-----------------------------------------------------------*/
+  1866                        ;
+  1867                        ;    #if ( configUSE_TRACE_FACILITY == 1 )
+  1868                        ;
+  1869                        ;        UBaseType_t uxEventGroupGetNumber( void * xEventGroup )
+  1870                        ;        {
+  1871                        ;            UBaseType_t xReturn;
+  1872                        ;
+  1873                        ;            /* MISRA Ref 11.5.2 [Opaque pointer] */
+  1874                        ;            /* More details at: https://github.com/FreeRTOS/FreeRTOS-Kernel/blob/main/MISRA.md#rule-1
                     15 */
-  1818                        ;            /* coverity[misra_c_2012_rule_11_5_violation] */
-  1819                        ;            EventGroup_t const * pxEventBits = ( EventGroup_t * ) xEventGroup;
-  1820                        ;
-  1821                        ;            traceENTER_uxEventGroupGetNumber( xEventGroup );
-  1822                        ;
-  1823                        ;            if( xEventGroup == NULL )
-  1824                        ;            {
-  1825                        ;                xReturn = 0;
-  1826                        ;            }
-  1827                        ;            else
-  1828                        ;            {
-  Tue Sep 15 2026 17:44                                                                                                    Page 33
+  1875                        ;            /* coverity[misra_c_2012_rule_11_5_violation] */
+  1876                        ;            EventGroup_t const * pxEventBits = ( EventGroup_t * ) xEventGroup;
+  1877                        ;
+  1878                        ;            traceENTER_uxEventGroupGetNumber( xEventGroup );
+  1879                        ;
+  1880                        ;            if( xEventGroup == NULL )
+  1881                        ;            {
+  1882                        ;                xReturn = 0;
+  1883                        ;            }
+  1884                        ;            else
+  1885                        ;            {
+  1886                        ;                xReturn = pxEventBits->uxEventGroupNumber;
+  Wed Sep 16 2026 17:13                                                                                                    Page 34
 
 
-  1829                        ;                xReturn = pxEventBits->uxEventGroupNumber;
-  1830                        ;            }
-  1831                        ;
-  1832                        ;            traceRETURN_uxEventGroupGetNumber( xReturn );
-  1833                        ;
-  1834                        ;            return xReturn;
-  1835                        ;        }
-  1836                        ;
-  1837                        ;    #endif /* configUSE_TRACE_FACILITY */
-  1838                        ;/*-----------------------------------------------------------*/
-  1839                        ;
-  1840                        ;    #if ( configUSE_TRACE_FACILITY == 1 )
-  1841                        ;
-  1842                        ;        void vEventGroupSetNumber( void * xEventGroup,
-  1843                        ;                                   UBaseType_t uxEventGroupNumber )
-  1844                        ;        {
-  1845                        ;            traceENTER_vEventGroupSetNumber( xEventGroup, uxEventGroupNumber );
-  1846                        ;
-  1847                        ;            /* MISRA Ref 11.5.2 [Opaque pointer] */
-  1848                        ;            /* More details at: https://github.com/FreeRTOS/FreeRTOS-Kernel/blob/main/MISRA.md#rule-1
+  1887                        ;            }
+  1888                        ;
+  1889                        ;            traceRETURN_uxEventGroupGetNumber( xReturn );
+  1890                        ;
+  1891                        ;            return xReturn;
+  1892                        ;        }
+  1893                        ;
+  1894                        ;    #endif /* configUSE_TRACE_FACILITY */
+  1895                        ;/*-----------------------------------------------------------*/
+  1896                        ;
+  1897                        ;    #if ( configUSE_TRACE_FACILITY == 1 )
+  1898                        ;
+  1899                        ;        void vEventGroupSetNumber( void * xEventGroup,
+  1900                        ;                                   UBaseType_t uxEventGroupNumber )
+  1901                        ;        {
+  1902                        ;            traceENTER_vEventGroupSetNumber( xEventGroup, uxEventGroupNumber );
+  1903                        ;
+  1904                        ;            /* MISRA Ref 11.5.2 [Opaque pointer] */
+  1905                        ;            /* More details at: https://github.com/FreeRTOS/FreeRTOS-Kernel/blob/main/MISRA.md#rule-1
                     15 */
-  1849                        ;            /* coverity[misra_c_2012_rule_11_5_violation] */
-  1850                        ;            ( ( EventGroup_t * ) xEventGroup )->uxEventGroupNumber = uxEventGroupNumber;
-  1851                        ;
-  1852                        ;            traceRETURN_vEventGroupSetNumber();
-  1853                        ;        }
-  1854                        ;
-  1855                        ;    #endif /* configUSE_TRACE_FACILITY */
-  1856                        ;/*-----------------------------------------------------------*/
-  1857                        ;
-  1858                        ;/* This entire source file will be skipped if the application is not configured
-  1859                        ; * to include event groups functionality. If you want to include event groups
-  1860                        ; * then ensure configUSE_EVENT_GROUPS is set to 1 in FreeRTOSConfig.h. */
-  1861                        ;#endif /* configUSE_EVENT_GROUPS == 1 */
-  1862                        ;
-  1863                        	xref	_~xTaskGetSchedulerState
-  1864                        	xref	_~uxTaskResetEventItemValue
-  1865                        	xref	_~vTaskRemoveFromUnorderedEventList
-  1866                        	xref	_~vTaskPlaceOnUnorderedEventList
-  1867                        	xref	_~xTaskResumeAll
-  1868                        	xref	_~vTaskSuspendAll
-  1869                        	xref	_~vListInitialise
-  1870                        	xref	_~vPortFree
-  1871                        	xref	_~pvPortMalloc
-  1872                        	xref	_~vPortYield
+  1906                        ;            /* coverity[misra_c_2012_rule_11_5_violation] */
+  1907                        ;            ( ( EventGroup_t * ) xEventGroup )->uxEventGroupNumber = uxEventGroupNumber;
+  1908                        ;
+  1909                        ;            traceRETURN_vEventGroupSetNumber();
+  1910                        ;        }
+  1911                        ;
+  1912                        ;    #endif /* configUSE_TRACE_FACILITY */
+  1913                        ;/*-----------------------------------------------------------*/
+  1914                        ;
+  1915                        ;/* This entire source file will be skipped if the application is not configured
+  1916                        ; * to include event groups functionality. If you want to include event groups
+  1917                        ; * then ensure configUSE_EVENT_GROUPS is set to 1 in FreeRTOSConfig.h. */
+  1918                        ;#endif /* configUSE_EVENT_GROUPS == 1 */
+  1919                        ;
+  1920                        	xref	_~xTaskGetSchedulerState
+  1921                        	xref	_~uxTaskResetEventItemValue
+  1922                        	xref	_~vTaskRemoveFromUnorderedEventList
+  1923                        	xref	_~vTaskPlaceOnUnorderedEventList
+  1924                        	xref	_~xTaskResumeAll
+  1925                        	xref	_~vTaskSuspendAll
+  1926                        	xref	_~vListInitialise
+  1927                        	xref	_~vPortFree
+  1928                        	xref	_~pvPortMalloc
+  1929                        	xref	_~vPortYield
 
 
-      Lines assembled: 1872
+      Lines assembled: 1929
       Errors: 0

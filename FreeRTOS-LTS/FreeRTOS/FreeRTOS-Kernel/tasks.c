@@ -1776,6 +1776,8 @@ STATIC void prvAddNewTaskToReadyList( TCB_t * pxNewTCB ) PRIVILEGED_FUNCTION;
 
         traceRETURN_xTaskCreate( xReturn );
 		
+		debug_ptr(pxNewTCB);
+		
         return xReturn;
     }
 /*-----------------------------------------------------------*/
@@ -2051,9 +2053,9 @@ STATIC void prvInitialiseNewTask( TaskFunction_t pxTaskCode,
         mtCOVERAGE_TEST_MARKER();
     }
 	
-	debug_ptr((void *)0xcafe);
-	debug_ptr(pxTopOfStack);
-	debug_ptr(pxNewTCB->pxStack);
+	//debug_ptr((void *)0xcafe);
+	//debug_ptr(pxTopOfStack);
+	//debug_ptr(pxNewTCB->pxStack);
 }
 /*-----------------------------------------------------------*/
 
@@ -5952,6 +5954,8 @@ STATIC portTASK_FUNCTION( prvIdleTask,
 
     for( ; configCONTROL_INFINITE_LOOP(); )
     {
+		*debug_char = '*';
+		
         /* See if any tasks have deleted themselves - if so then the idle task
          * is responsible for freeing the deleted task's TCB and stack. */
         prvCheckTasksWaitingTermination();
@@ -5980,6 +5984,7 @@ STATIC portTASK_FUNCTION( prvIdleTask,
              * then a task other than the idle task is ready to execute. */
             if( listCURRENT_LIST_LENGTH( &( pxReadyTasksLists[ tskIDLE_PRIORITY ] ) ) > ( UBaseType_t ) configNUMBER_OF_CORES )
             {
+				*debug_char = 'Y';
                 taskYIELD();
             }
             else

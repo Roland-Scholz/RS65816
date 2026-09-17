@@ -16,6 +16,8 @@ const char *ansi_red = "\033[31m";
 const char *ansi_yellow = "\033[33;1m";
 const char *ansi_clrhome = "\033[2J\033[H";
 
+const char parm[] = "parameter 98429";
+
 const HeapRegion_t xHeapRegions[] = 
 {
     /* Region 1: Internes schnelles RAM (z.B. ab 0x20000000, Größe 64 KB) */
@@ -67,13 +69,27 @@ void printHeapStats() {
 void shellTask( void *pvParameters )
 {
 	char c = ' ';
+	char *p = (char *) pvParameters;
+	TaskStatus_t tStat;
+	char *dffa = (char *)0xdffa;
+	
+	
+	while(*p) {
+		*debug_char = *p;
+		p++;
+	}
+
+	for (c = 0; c < 6; c++) {
+		*debug_hex = *(dffa+c);
+	}
 	
 	for(;;) {
-		*debug_char = c;
-		c++;
-		if (c > 126) c = ' ';
+
 	}
-		
+
+	//vTaskGetInfo(NULL, &tStat, pdFALSE, eInvalid);
+	
+	//printf("task name: %s\n", tStat.pcTaskName);
 }
 
 int main (int argc, char ** argv) {
@@ -81,11 +97,16 @@ int main (int argc, char ** argv) {
 	BaseType_t rc;
 	HeapRegion_t reg;
 	HeapRegion_t *pxHeapReg;
+	TaskHandle_t * pxCreatedTask;
 	char *p;
 	int i;
 
+	//asm wdm 7;
+	
 	pxHeapReg = (HeapRegion_t *)pvPortMallocStack(sizeof(reg) * 100);
 	printf("pxHeapReg:%p %u\n", pxHeapReg, sizeof(reg) * 100);
+	
+	//asm wdm 6;
 	
 	reg.xSizeInBytes = 0x010000;
 	
@@ -109,8 +130,11 @@ int main (int argc, char ** argv) {
 	vPortFreeStack(pxHeapReg);
 	
 	printHeapStats();
+
 	
-	rc = xTaskCreate( shellTask, "SHELL", 512, NULL, 0, NULL);
+	
+	rc = xTaskCreate( shellTask, "SHELL", 512, (void *)parm, 0, &pxCreatedTask);
+	
 	printf("task create rc: %d\n", rc);
 	
 	

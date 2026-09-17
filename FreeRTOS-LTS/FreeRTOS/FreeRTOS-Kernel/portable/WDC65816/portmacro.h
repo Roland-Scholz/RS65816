@@ -85,22 +85,22 @@ typedef unsigned int            UBaseType_t;
 #endif /* configUSE_PORT_OPTIMISED_TASK_SELECTION */
 
 /* Disable the interrupts */
-#define portDISABLE_INTERRUPTS()    do {} while( 0 )
+#define portDISABLE_INTERRUPTS()    asm sei;
 
 /* Enable the interrupts */
-#define portENABLE_INTERRUPTS()     do {} while( 0 )
+#define portENABLE_INTERRUPTS()     asm cli;
 
 #if ( configNUMBER_OF_CORES == 1 )
 /* preserve current interrupt state and then disable interrupts */
-    #define portENTER_CRITICAL()    do {} while( 0 )
+    #define portENTER_CRITICAL()    asm sei;
 
 /* restore previously preserved interrupt state */
-    #define portEXIT_CRITICAL()     do {} while( 0 )
+    #define portEXIT_CRITICAL()     asm cli;
 #else
 
 /* The port can maintain the critical nesting count in TCB or maintain the critical
  * nesting count in the port. */
-    #define portCRITICAL_NESTING_IN_TCB    1
+    #define portCRITICAL_NESTING_IN_TCB    0
 
 /* vTaskEnterCritical and vTaskExitCritical should be used in the implementation
  * of portENTER/EXIT_CRITICAL if the number of cores is more than 1 in the system. */
