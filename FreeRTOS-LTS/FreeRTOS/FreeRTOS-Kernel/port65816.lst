@@ -1,4 +1,4 @@
-  Wed Sep 16 2026 17:13                                                                                                    Page 1
+  Thu Sep 17 2026 16:45                                                                                                    Page 1
 
 
                                                ***************************************
@@ -59,7 +59,7 @@
     50                        
     51                        
     52                        ;----------------------------------------------------------------------------------
-  Wed Sep 16 2026 17:13                                                                                                    Page 2
+  Thu Sep 17 2026 16:45                                                                                                    Page 2
 
 
     53                        ;       void vPortEndScheduler( void )
@@ -120,7 +120,7 @@
    108                        ;	13	Program-Bank
    109                        ;	12	PC-hi
    110                        ;	11	PC-lo
-  Wed Sep 16 2026 17:13                                                                                                    Page 3
+  Thu Sep 17 2026 16:45                                                                                                    Page 3
 
 
    111                        ;	10	Flags
@@ -181,7 +181,7 @@
    166                        ;	
    167                        ;
    168                        ;	IF PLATFORM=0
-  Wed Sep 16 2026 17:13                                                                                                    Page 4
+  Thu Sep 17 2026 16:45                                                                                                    Page 4
 
 
    169                        ;	lda	>CONST5MS		;8.333333Mhz / 200Hz
@@ -242,7 +242,7 @@
    224                        	;include	"homebrewWDC.inc"
    225                        
    226                        _~pxPortInitialiseStack:
-  Wed Sep 16 2026 17:13                                                                                                    Page 5
+  Thu Sep 17 2026 16:45                                                                                                    Page 5
 
 
    227             0000000B   s_pvParameters	set 11		;12, 13, 14
@@ -303,7 +303,7 @@
    282 00:003C: 85 0D        	sta	<13
    283                        
    284 00:003E: A4 03        	ldy	<s_pxTopOfStack
-  Wed Sep 16 2026 17:13                                                                                                    Page 6
+  Thu Sep 17 2026 16:45                                                                                                    Page 6
 
 
    285                        	
@@ -355,77 +355,77 @@
    331                        
    332                        _~vPortYield:
    333                        
-   334 00:0000: 4B           	phk
-   335 00:0001: 08           	php
-   336 00:0002: 78           	sei
+   334 00:0000: 08           	php
+   335 00:0001: 78           	sei
+   336 00:0002: D8           	cld
    337                        
-   338 00:0003: C2 30        	rep	#M+IX
-   339                        	longa	on
-   340                        	longi	on
+   338                        ;	rep	#M+IX
+   339                        ;	longa	on
+   340                        ;	longi	on
    341                        	
-   342 00:0005: 8D xx xx     	sta	saveAccu
-  Wed Sep 16 2026 17:13                                                                                                    Page 7
+   342 00:0003: 8D xx xx     	sta	saveAccu
+  Thu Sep 17 2026 16:45                                                                                                    Page 7
 
 
-   343 00:0008: 8E xx xx     	stx	saveX
+   343 00:0006: 8E xx xx     	stx	saveX
    344                        
-   345                        ;	sep	#M
-   346                        ;	longa	off
+   345 00:0009: E2 20        	sep	#M
+   346                        	longa	off
    347                        	
-   348 00:000B: 68           	pla			;pop status + program bank
+   348 00:000B: 68           	pla			;pop status
    349 00:000C: FA           	plx			;pop RTS-Addr
    350 00:000D: E8           	inx			;add 1
    351 00:000E: DA           	phx			;push return addr for RTI
    352 00:000F: 48           	pha			;push status
    353                        	
-   354                        ;	rep	#M
-   355                        ;	longa	on
+   354 00:0010: C2 20        	rep	#M
+   355                        	longa	on
    356                        
-   357 00:0010: AD xx xx     	lda	saveAccu
-   358 00:0013: 48           	pha
-   359 00:0014: AE xx xx     	ldx	saveX
-   360 00:0017: DA           	phx
-   361 00:0018: 5A           	phy
-   362 00:0019: 0B           	phd
-   363 00:001A: 8B           	phb	
-   364                        
-   365 00:001B: AD xx xx     	lda	_~pxCurrentTCB+2		;store new stack value in pxCurrentTCB
-   366 00:001E: 48           	pha
-   367 00:001F: AD xx xx     	lda	_~pxCurrentTCB
-   368 00:0022: 48           	pha
-   369 00:0023: 3B           	tsc
-   370 00:0024: 5B           	tcd
-   371 00:0025: 18           	clc
-   372 00:0026: 69 04 00     	adc	#4	
-   373 00:0029: 87 01        	sta	[$1]
+   357 00:0012: AD xx xx     	lda	saveAccu
+   358 00:0015: 48           	pha
+   359 00:0016: AE xx xx     	ldx	saveX
+   360 00:0019: DA           	phx
+   361 00:001A: 5A           	phy
+   362 00:001B: 0B           	phd
+   363 00:001C: 8B           	phb	
+   364                        	
+   365 00:001D: AD xx xx     	lda	_~pxCurrentTCB+2		;store new stack value in pxCurrentTCB
+   366 00:0020: 48           	pha
+   367 00:0021: AD xx xx     	lda	_~pxCurrentTCB
+   368 00:0024: 48           	pha
+   369 00:0025: 3B           	tsc
+   370 00:0026: 5B           	tcd
+   371 00:0027: 18           	clc
+   372 00:0028: 69 04 00     	adc	#4	
+   373 00:002B: 87 01        	sta	[$1]
    374                        	
-   375 00:002B: 20 xx xx     	jsr	_~vTaskSwitchContext
+   375 00:002D: 20 xx xx     	jsr	_~vTaskSwitchContext
    376                        
-   377 00:002E: AD xx xx     	lda	_~pxCurrentTCB+2
-   378 00:0031: 48           	pha
-   379 00:0032: AD xx xx     	lda	_~pxCurrentTCB
-   380 00:0035: 48           	pha	
-   381 00:0036: 3B           	tsc
-   382 00:0037: 5B           	tcd
-   383 00:0038: A7 01        	lda	[$1]
-   384 00:003A: 1B           	tcs
+   377 00:0030: AD xx xx     	lda	_~pxCurrentTCB+2
+   378 00:0033: 48           	pha
+   379 00:0034: AD xx xx     	lda	_~pxCurrentTCB
+   380 00:0037: 48           	pha	
+   381 00:0038: 3B           	tsc
+   382 00:0039: 5B           	tcd
+   383 00:003A: A7 01        	lda	[$1]
+   384 00:003C: 1B           	tcs
    385                        	
-   386 00:003B: AB           	plb
-   387 00:003C: 2B           	pld
-   388 00:003D: 7A           	ply
-   389 00:003E: FA           	plx
-   390 00:003F: 68           	pla	
-   391 00:0040: 40           	rti
+   386 00:003D: AB           	plb
+   387 00:003E: 2B           	pld
+   388 00:003F: 7A           	ply
+   389 00:0040: FA           	plx
+   390 00:0041: 68           	pla	
+   391 00:0042: 40           	rti
    392                        	
    393                        saveAccu:
-   394 00:0041: 00 00        	.word 0
+   394 00:0043: 00 00        	.word 0
    395                        saveX:
-   396 00:0043: 00 00        	.word 0
+   396 00:0045: 00 00        	.word 0
    397                        	
    398                        	ends
    399                        	efunc
    400                        	endmod
-  Wed Sep 16 2026 17:13                                                                                                    Page 8
+  Thu Sep 17 2026 16:45                                                                                                    Page 8
 
 
    401                        ;----------------------------------------------------------------------------------
@@ -460,82 +460,84 @@
    430                        ;	phk			;data bank = program bank ($01)
    431                        ;	plb
    432                        	
-   433 00:0007: E2 20        	sep #M
-   434                        	longa off	
-   435                        	
-   436 00:0009: A9 69        	lda #'i'
-   437 00:000B: 8F F0 FF FF  	sta $fffff0
-   438 00:000F: AD xx xx     	lda	_~pxCurrentTCB+2
-   439 00:0012: 8F F1 FF FF  	sta $fffff1
-   440 00:0016: AD xx xx     	lda	_~pxCurrentTCB+1
-   441 00:0019: 8F F1 FF FF  	sta $fffff1
-   442 00:001D: AD xx xx     	lda	_~pxCurrentTCB
-   443 00:0020: 8F F1 FF FF  	sta $fffff1
-   444                        
-   445 00:0024: C2 20        	rep #M
-   446                        	longa on
+   433                        ;	sep #M
+   434                        ;	longa off	
+   435                        ;	
+   436                        ;	lda #'i'
+   437                        ;	sta $fffff0
+   438                        ;	lda	_~pxCurrentTCB+2
+   439                        ;	sta $fffff1
+   440                        ;	lda	_~pxCurrentTCB+1
+   441                        ;	sta $fffff1
+   442                        ;	lda	_~pxCurrentTCB
+   443                        ;	sta $fffff1
+   444                        ;
+   445                        ;	rep #M
+   446                        ;	longa on
    447                        	
-   448 00:0026: AD xx xx     	lda	_~pxCurrentTCB+2
-   449 00:0029: 48           	pha
-   450 00:002A: AD xx xx     	lda	_~pxCurrentTCB
-   451 00:002D: 48           	pha
-   452 00:002E: 3B           	tsc
-   453 00:002F: 5B           	tcd
-   454 00:0030: 18           	clc
-   455 00:0031: 69 04 00     	adc	#4	
-   456 00:0034: 87 01        	sta	[$1]
+   448 00:0007: AD xx xx     	lda	_~pxCurrentTCB+2
+   449 00:000A: 48           	pha
+   450 00:000B: AD xx xx     	lda	_~pxCurrentTCB
+   451 00:000E: 48           	pha
+   452 00:000F: 3B           	tsc
+   453 00:0010: 5B           	tcd
+   454 00:0011: 18           	clc
+   455 00:0012: 69 04 00     	adc	#4	
+   456 00:0015: 87 01        	sta	[$1]
    457                        
-   458 00:0036: 20 xx xx     	jsr	_~xTaskIncrementTick
-  Wed Sep 16 2026 17:13                                                                                                    Page 9
+   458 00:0017: 20 xx xx     	jsr	_~xTaskIncrementTick
+  Thu Sep 17 2026 16:45                                                                                                    Page 9
 
 
-   459 00:0039: F0 05        	beq noswitch
-   460 00:003B: 48           	pha
-   461 00:003C: 20 xx xx     	jsr	_~vTaskSwitchContext
-   462 00:003F: 68           	pla
+   459 00:001A: F0 03        	beq noswitch
+   460                        ;	pha
+   461 00:001C: 20 xx xx     	jsr	_~vTaskSwitchContext
+   462                        ;	pla
    463                        	
    464                        noswitch:
-   465 00:0040: E2 20        	sep #M
-   466                        	longa off
-   467 00:0042: EB           	xba
-   468 00:0043: 8F F1 FF FF  	sta $fffff1
-   469 00:0047: EB           	xba
-   470 00:0048: 8F F1 FF FF  	sta $fffff1
-   471 00:004C: A9 3A        	lda #':'
-   472 00:004E: 8F F0 FF FF  	sta $fffff0		
-   473 00:0052: AD xx xx     	lda	_~pxCurrentTCB+2
-   474 00:0055: 8F F1 FF FF  	sta $fffff1
-   475 00:0059: AD xx xx     	lda	_~pxCurrentTCB+1
-   476 00:005C: 8F F1 FF FF  	sta $fffff1
-   477 00:0060: AD xx xx     	lda	_~pxCurrentTCB
-   478 00:0063: 8F F1 FF FF  	sta $fffff1
-   479                        
-   480 00:0067: 42 07        	wdm 7
+   465                        ;	sep #M
+   466                        ;	longa off
+   467                        ;	xba
+   468                        ;	sta $fffff1
+   469                        ;	xba
+   470                        ;	sta $fffff1
+   471                        ;	lda #':'
+   472                        ;	sta $fffff0		
+   473                        ;	lda	_~pxCurrentTCB+2
+   474                        ;	sta $fffff1
+   475                        ;	lda	_~pxCurrentTCB+1
+   476                        ;	sta $fffff1
+   477                        ;	lda	_~pxCurrentTCB
+   478                        ;	sta $fffff1
+   479                        ;
+   480                        ;	wdm 7
    481                        	
-   482 00:0069: C2 20        	rep #M
-   483                        	longa on
-   484 00:006B: AD xx xx     	lda	_~pxCurrentTCB+2
-   485 00:006E: 48           	pha
-   486 00:006F: AD xx xx     	lda	_~pxCurrentTCB
-   487 00:0072: 48           	pha	
-   488 00:0073: 3B           	tsc
-   489 00:0074: 5B           	tcd
-   490 00:0075: A7 01        	lda	[$1]
-   491 00:0077: 1B           	tcs
-   492                        
-   493                        	
-   494 00:0078: AB           	plb
-   495 00:0079: 2B           	pld
-   496 00:007A: 7A           	ply
-   497 00:007B: FA           	plx
-   498 00:007C: 68           	pla
-   499                        	
-   500 00:007D: 40           	rti
-   501                        
-   502                        	ends
-   503                        	efunc
-   504                        	endmod
+   482                        ;	rep #M
+   483                        ;	longa on
+   484                        
+   485 00:001F: AD xx xx     	lda	_~pxCurrentTCB+2
+   486 00:0022: 48           	pha
+   487 00:0023: AD xx xx     	lda	_~pxCurrentTCB
+   488 00:0026: 48           	pha	
+   489 00:0027: 3B           	tsc
+   490 00:0028: 5B           	tcd
+   491 00:0029: A7 01        	lda	[$1]
+   492 00:002B: 1B           	tcs
+   493                        
+   494                        	
+   495 00:002C: AB           	plb
+   496 00:002D: 2B           	pld
+   497 00:002E: 7A           	ply
+   498 00:002F: FA           	plx
+   499 00:0030: 68           	pla
+   500                        	
+   501 00:0031: 42 06        	wdm 6
+   502 00:0033: 40           	rti
+   503                        
+   504                        	ends
+   505                        	efunc
+   506                        	endmod
 
 
-      Lines assembled: 504
+      Lines assembled: 506
       Errors: 0

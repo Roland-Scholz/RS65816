@@ -16,25 +16,23 @@ const char *ansi_red = "\033[31m";
 const char *ansi_yellow = "\033[33;1m";
 const char *ansi_clrhome = "\033[2J\033[H";
 
-const char parm[] = "parameter 98429";
+typedef struct taskParm {
+	char * taskName;
+	TickType_t tickDelay;
+} taskParm_t;
 
+
+/*
 const HeapRegion_t xHeapRegions[] = 
 {
-    /* Region 1: Internes schnelles RAM (z.B. ab 0x20000000, Größe 64 KB) */
     { ( uint8_t * ) 0x020000, 0xffff }, 
-    
-    /* Region 2: Zweiter RAM-Block oder CCM-RAM (z.B. ab 0x30000000, Größe 128 KB) */
     { ( uint8_t * ) 0x030000, 0xffff }, 
-    
-    /* Region 3: Externes schnelles SDRAM (z.B. ab 0xD0000000, Größe 1 MB) */
-    { ( uint8_t * ) 0x040000, 0xffff }, 
-    
-    /* Array-Terminierung: MUSS immer als letztes Element stehen! */
+    { ( uint8_t * ) 0x040000, 0xffff },    
     { NULL, 0 } 
 };
+*/
 
 #asm
-	;wdm 7
 	clc
 	xce
 	rep #$30
@@ -68,28 +66,20 @@ void printHeapStats() {
 
 void shellTask( void *pvParameters )
 {
-	char c = ' ';
-	char *p = (char *) pvParameters;
-	TaskStatus_t tStat;
-	char *dffa = (char *)0xdffa;
-	
-	
-	while(*p) {
-		*debug_char = *p;
-		p++;
-	}
-
-	for (c = 0; c < 6; c++) {
-		*debug_hex = *(dffa+c);
-	}
+	char *p;
+	taskParm_t *taskParm = (taskParm_t *) pvParameters;
 	
 	for(;;) {
-
+		/*
+		for(p = taskParm->taskName; *p; p++) {
+			*debug_char = *p;
+		}
+		*/
+		printf("%s ", taskParm->taskName);
+		fflush(stdout);
+		vTaskDelay(taskParm->tickDelay);
 	}
 
-	//vTaskGetInfo(NULL, &tStat, pdFALSE, eInvalid);
-	
-	//printf("task name: %s\n", tStat.pcTaskName);
 }
 
 int main (int argc, char ** argv) {
@@ -98,6 +88,8 @@ int main (int argc, char ** argv) {
 	HeapRegion_t reg;
 	HeapRegion_t *pxHeapReg;
 	TaskHandle_t * pxCreatedTask;
+	taskParm_t taskParm_1, taskParm_2, taskParm_3;
+	
 	char *p;
 	int i;
 
@@ -130,11 +122,21 @@ int main (int argc, char ** argv) {
 	vPortFreeStack(pxHeapReg);
 	
 	printHeapStats();
+	
+	taskParm_1.taskName = "-";
+	taskParm_1.tickDelay = 10;
+	
+	taskParm_2.taskName = "*";
+	taskParm_2.tickDelay = 1;
 
+	taskParm_3.taskName = "+";
+	taskParm_3.tickDelay = 1;
 	
-	
-	rc = xTaskCreate( shellTask, "SHELL", 512, (void *)parm, 0, &pxCreatedTask);
-	
+	rc = xTaskCreate( shellTask, "Task1", 512, (void *) &taskParm_1, 0, NULL);	
+	printf("task create rc: %d\n", rc);
+	rc = xTaskCreate( shellTask, "Task2", 512, (void *) &taskParm_2, 0, NULL);	
+	printf("task create rc: %d\n", rc);
+	rc = xTaskCreate( shellTask, "Task3", 512, (void *) &taskParm_3, 1, NULL);	
 	printf("task create rc: %d\n", rc);
 	
 	
@@ -157,10 +159,6 @@ int main (int argc, char ** argv) {
 
 
 /*	
-
-	
-	
-	
 
 #asm
 ;	WDM 0

@@ -333,10 +333,11 @@ _~vPortYield:
 
 	php
 	sei
+	cld
 
-	rep	#M+IX
-	longa	on
-	longi	on
+;	rep	#M+IX
+;	longa	on
+;	longi	on
 	
 	sta	saveAccu
 	stx	saveX
@@ -360,7 +361,7 @@ _~vPortYield:
 	phy
 	phd
 	phb	
-
+	
 	lda	_~pxCurrentTCB+2		;store new stack value in pxCurrentTCB
 	pha
 	lda	_~pxCurrentTCB
@@ -429,20 +430,20 @@ _~vPortYieldFromTick:
 ;	phk			;data bank = program bank ($01)
 ;	plb
 	
-	sep #M
-	longa off	
-	
-	lda #'i'
-	sta $fffff0
-	lda	_~pxCurrentTCB+2
-	sta $fffff1
-	lda	_~pxCurrentTCB+1
-	sta $fffff1
-	lda	_~pxCurrentTCB
-	sta $fffff1
-
-	rep #M
-	longa on
+;	sep #M
+;	longa off	
+;	
+;	lda #'i'
+;	sta $fffff0
+;	lda	_~pxCurrentTCB+2
+;	sta $fffff1
+;	lda	_~pxCurrentTCB+1
+;	sta $fffff1
+;	lda	_~pxCurrentTCB
+;	sta $fffff1
+;
+;	rep #M
+;	longa on
 	
 	lda	_~pxCurrentTCB+2
 	pha
@@ -456,30 +457,31 @@ _~vPortYieldFromTick:
 
 	jsr	_~xTaskIncrementTick
 	beq noswitch
-	pha
+;	pha
 	jsr	_~vTaskSwitchContext
-	pla
+;	pla
 	
 noswitch:
-	sep #M
-	longa off
-	xba
-	sta $fffff1
-	xba
-	sta $fffff1
-	lda #':'
-	sta $fffff0		
-	lda	_~pxCurrentTCB+2
-	sta $fffff1
-	lda	_~pxCurrentTCB+1
-	sta $fffff1
-	lda	_~pxCurrentTCB
-	sta $fffff1
-
-	wdm 7
+;	sep #M
+;	longa off
+;	xba
+;	sta $fffff1
+;	xba
+;	sta $fffff1
+;	lda #':'
+;	sta $fffff0		
+;	lda	_~pxCurrentTCB+2
+;	sta $fffff1
+;	lda	_~pxCurrentTCB+1
+;	sta $fffff1
+;	lda	_~pxCurrentTCB
+;	sta $fffff1
+;
+;	wdm 7
 	
-	rep #M
-	longa on
+;	rep #M
+;	longa on
+
 	lda	_~pxCurrentTCB+2
 	pha
 	lda	_~pxCurrentTCB
@@ -496,6 +498,7 @@ noswitch:
 	plx
 	pla
 	
+	wdm 6
 	rti
 
 	ends

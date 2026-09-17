@@ -115,7 +115,7 @@ typedef unsigned int            UBaseType_t;
 
 #endif /* if ( configNUMBER_OF_CORES == 1 ) */
 
-extern void vPortYield( void );
+extern far void vPortYield( void );
 #define portYIELD()                                           vPortYield()
 
 /* Task function macros as described on the FreeRTOS.org WEB site. */

@@ -913,9 +913,11 @@ _~do_function:
 	tcd
 c_0	set	3
 ;	char b;
+;	unsigned long ulptr;
 ;	
 ;	if (isalpha(c))
 b_1	set	0
+ulptr_1	set	1
 ;		printf("%c ", c);
 	lda	<L56+c_0
 	and	#$ff
@@ -955,7 +957,7 @@ L10017:
 	dw	108
 	dw	L10019-1
 	dw	109
-	dw	L10019-1
+	dw	L10025-1
 	dw	114
 	dw	L10026-1
 	dw	120
@@ -999,9 +1001,19 @@ L10023:
 ;		break;
 	bra	L10019
 ;	case 'l':
-;		break;
+;		;break;
 ;	case 'm':
+L10025:
+;		ulptr = (unsigned long) ptr;
+	lda	|_~ptr
+	sta	<L57+ulptr_1
+	lda	|_~ptr+2
+	sta	<L57+ulptr_1+2
+;		disass((unsigned int) ulptr);	
+	pei	<L57+ulptr_1
+	jsr	_~disass
 ;		break;
+	bra	L10019
 ;	case 'r':
 L10026:
 ;#asm
@@ -1046,7 +1058,7 @@ L10029:
 ;	default:	
 ;		break;
 ;	}
-L56	equ	5
+L56	equ	9
 L57	equ	5
 	ends
 	efunc
@@ -1087,6 +1099,7 @@ L62	equ	1
 	ends
 	efunc
 ;
+	xref	_~disass
 	xref	_~printf
 	xref	_~fflush
 	xref	_~_ctype

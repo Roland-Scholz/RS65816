@@ -10,6 +10,7 @@
 
 #include <lib65816/config.h>
 
+#define DEBUG
 #ifdef DEBUG
 
 #include <lib65816/cpu.h>

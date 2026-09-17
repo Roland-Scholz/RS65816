@@ -1,4 +1,4 @@
-  Wed Sep 16 2026 13:19                                                                                                    Page 1
+  Thu Sep 17 2026 18:02                                                                                                    Page 1
 
 
                                                ***************************************
@@ -59,7 +59,7 @@
     48 00:001F:              	ends
     49                        ;const char *ansi_yellow = "\033[33;1m";
     50                        	data
-  Wed Sep 16 2026 13:19                                                                                                    Page 2
+  Thu Sep 17 2026 18:02                                                                                                    Page 2
 
 
     51                        	xdef	_~ansi_yellow
@@ -120,7 +120,7 @@
     96                        ;	printf("\n");
     97 00:0000: F4 xx xx     	pea	#^L6
     98 00:0003: F4 xx xx     	pea	#<L6
-  Wed Sep 16 2026 13:19                                                                                                    Page 3
+  Thu Sep 17 2026 18:02                                                                                                    Page 3
 
 
     99 00:0006: F4 06 00     	pea	#6
@@ -181,7 +181,7 @@
    154 00:0085: 20 xx xx     	jsr	_~printf
    155                        ;	printf("r - RTOS 0x01:0000\n");
    156 00:0088: F4 xx xx     	pea	#^L6+174
-  Wed Sep 16 2026 13:19                                                                                                    Page 4
+  Thu Sep 17 2026 18:02                                                                                                    Page 4
 
 
    157 00:008B: F4 xx xx     	pea	#<L6+174
@@ -242,7 +242,7 @@
        00:00D3: 20 20 6D 65 
        00:00D7: 6D 6F 72 79 
        00:00DB: 0A 00 6C 
-  Wed Sep 16 2026 13:19                                                                                                    Page 5
+  Thu Sep 17 2026 18:02                                                                                                    Page 5
 
 
    191 00:00DE: 20 2D 20 64  	db	$20,$2D,$20,$64,$69,$73,$61,$73,$73,$65,$6D,$62,$6C,$65,$20
@@ -303,7 +303,7 @@
    222 00:00CD: A7 01        	lda	[<R0]
    223 00:00CF: C2 20        	rep	#$20
    224                        	longa	on
-  Wed Sep 16 2026 13:19                                                                                                    Page 6
+  Thu Sep 17 2026 18:02                                                                                                    Page 6
 
 
    225 00:00D1: 29 FF 00     	and	#$ff
@@ -364,7 +364,7 @@
    280 00:0103: 69 D0 FF     	adc	#$ffd0
    281 00:0106: E2 20        	sep	#$20
    282                        	longa	off
-  Wed Sep 16 2026 13:19                                                                                                    Page 7
+  Thu Sep 17 2026 18:02                                                                                                    Page 7
 
 
    283 00:0108: 85 0A        	sta	<L15+b_1
@@ -425,7 +425,7 @@
    338 00:0155: 69 A9 FF     	adc	#$ffa9
    339 00:0158: E2 20        	sep	#$20
    340                        	longa	off
-  Wed Sep 16 2026 13:19                                                                                                    Page 8
+  Thu Sep 17 2026 18:02                                                                                                    Page 8
 
 
    341 00:015A: 85 0A        	sta	<L15+b_1
@@ -486,7 +486,7 @@
    396                        ;	return c;
    397 00:0181: A5 05        	lda	<L23+c_1
    398 00:0183: 29 FF 00     	and	#$ff
-  Wed Sep 16 2026 13:19                                                                                                    Page 9
+  Thu Sep 17 2026 18:02                                                                                                    Page 9
 
 
    399 00:0186: A8           	tay
@@ -547,7 +547,7 @@
    454 00:01C8: 2B           	pld
    455 00:01C9: 3B           	tsc
    456 00:01CA: 18           	clc
-  Wed Sep 16 2026 13:19                                                                                                    Page 10
+  Thu Sep 17 2026 18:02                                                                                                    Page 10
 
 
    457 00:01CB: 69 10 00     	adc	#L25+4
@@ -608,7 +608,7 @@
    510                        ;	rep #$20
    511                        ;	tsc
    512                        ;	sta %%stackptr;
-  Wed Sep 16 2026 13:19                                                                                                    Page 11
+  Thu Sep 17 2026 18:02                                                                                                    Page 11
 
 
    513                        ;	tdc
@@ -669,7 +669,7 @@
    568 00:021D: F4 xx xx     	pea	#^L28+30
    569 00:0220: F4 xx xx     	pea	#<L28+30
    570 00:0223: F4 06 00     	pea	#6
-  Wed Sep 16 2026 13:19                                                                                                    Page 12
+  Thu Sep 17 2026 18:02                                                                                                    Page 12
 
 
    571 00:0226: 20 xx xx     	jsr	_~printf
@@ -730,7 +730,7 @@
    620 00:024D: F4 06 00     	pea	#6
    621 00:0250: 20 xx xx     	jsr	_~printf
    622                        ;	printf("	00 01 02 03 04 05 06 07  08 09 0a 0b 0c 0d 0e 0f\n");
-  Wed Sep 16 2026 13:19                                                                                                    Page 13
+  Thu Sep 17 2026 18:02                                                                                                    Page 13
 
 
    623 00:0253: F4 xx xx     	pea	#^L32+2
@@ -791,7 +791,7 @@
    678 00:02B7: 20 xx xx     	jsr	_~printf
    679                        ;		for(j = 0; j < 16; j++) {
    680 00:02BA: 64 07        	stz	<L34+j_1
-  Wed Sep 16 2026 13:19                                                                                                    Page 14
+  Thu Sep 17 2026 18:02                                                                                                    Page 14
 
 
    681                        L10015:
@@ -852,7 +852,7 @@
    736 00:0313: A9 10 00     	lda	#$10
    737 00:0316: 18           	clc
    738 00:0317: 6D xx xx     	adc	|_~ptr
-  Wed Sep 16 2026 13:19                                                                                                    Page 15
+  Thu Sep 17 2026 18:02                                                                                                    Page 15
 
 
    739 00:031A: 8D xx xx     	sta	|_~ptr
@@ -913,7 +913,7 @@
    780 00:033C: 3B           	tsc
    781 00:033D: 38           	sec
    782 00:033E: E9 08 00     	sbc	#L48
-  Wed Sep 16 2026 13:19                                                                                                    Page 16
+  Thu Sep 17 2026 18:02                                                                                                    Page 16
 
 
    783 00:0341: 1B           	tcs
@@ -974,7 +974,7 @@
    837                        	func
    838                        _~set_addr:
    839                        	longa	on
-  Wed Sep 16 2026 13:19                                                                                                    Page 17
+  Thu Sep 17 2026 18:02                                                                                                    Page 17
 
 
    840                        	longi	on
@@ -1035,7 +1035,7 @@
    895                        	efunc
    896                        	data
    897                        L51:
-  Wed Sep 16 2026 13:19                                                                                                    Page 18
+  Thu Sep 17 2026 18:02                                                                                                    Page 18
 
 
    898 00:01D2: 61 64 64 72  	db	$61,$64,$64,$72,$3A,$00
@@ -1051,201 +1051,214 @@
    907                        	longi	on
    908 00:03C5: 3B           	tsc
    909 00:03C6: 38           	sec
-   910 00:03C7: E9 05 00     	sbc	#L56
+   910 00:03C7: E9 09 00     	sbc	#L56
    911 00:03CA: 1B           	tcs
    912 00:03CB: 0B           	phd
    913 00:03CC: 5B           	tcd
    914             00000003   c_0	set	3
    915                        ;	char b;
-   916                        ;	
-   917                        ;	if (isalpha(c))
-   918             00000000   b_1	set	0
-   919                        ;		printf("%c ", c);
-   920 00:03CD: A5 08        	lda	<L56+c_0
-   921 00:03CF: 29 FF 00     	and	#$ff
-   922 00:03D2: AA           	tax
-   923 00:03D3: E2 20        	sep	#$20
-   924                        	longa	off
-   925 00:03D5: BD xx xx     	lda	|_~_ctype+1,X
-   926 00:03D8: 29 03        	and	#<$3
-   927 00:03DA: C2 20        	rep	#$20
-   928                        	longa	on
-   929 00:03DC: F0 12        	beq	L10017
-   930 00:03DE: A5 08        	lda	<L56+c_0
-   931 00:03E0: 29 FF 00     	and	#$ff
-   932 00:03E3: 48           	pha
-   933 00:03E4: F4 xx xx     	pea	#^L55
-   934 00:03E7: F4 xx xx     	pea	#<L55
-   935 00:03EA: F4 08 00     	pea	#8
-   936 00:03ED: 20 xx xx     	jsr	_~printf
-   937                        ;	
-   938                        ;	switch (c) {
-   939                        L10017:
-   940 00:03F0: A5 08        	lda	<L56+c_0
-   941 00:03F2: 29 FF 00     	and	#$ff
-   942                        	xref	_~~swt
-   943 00:03F5: 20 xx xx     	jsr	_~~swt
-   944 00:03F8: 0A 00        	dw	10
-   945 00:03FA: 3F 00        	dw	63
-   946 00:03FC: xx xx        	dw	L10028-1
-   947 00:03FE: 61 00        	dw	97
-   948 00:0400: xx xx        	dw	L10020-1
-   949 00:0402: 62 00        	dw	98
-   950 00:0404: xx xx        	dw	L10021-1
-   951 00:0406: 63 00        	dw	99
-   952 00:0408: xx xx        	dw	L10019-1
-   953 00:040A: 64 00        	dw	100
-   954 00:040C: xx xx        	dw	L10023-1
-  Wed Sep 16 2026 13:19                                                                                                    Page 19
+   916                        ;	unsigned long ulptr;
+   917                        ;	
+   918                        ;	if (isalpha(c))
+   919             00000000   b_1	set	0
+   920             00000001   ulptr_1	set	1
+   921                        ;		printf("%c ", c);
+   922 00:03CD: A5 0C        	lda	<L56+c_0
+   923 00:03CF: 29 FF 00     	and	#$ff
+   924 00:03D2: AA           	tax
+   925 00:03D3: E2 20        	sep	#$20
+   926                        	longa	off
+   927 00:03D5: BD xx xx     	lda	|_~_ctype+1,X
+   928 00:03D8: 29 03        	and	#<$3
+   929 00:03DA: C2 20        	rep	#$20
+   930                        	longa	on
+   931 00:03DC: F0 12        	beq	L10017
+   932 00:03DE: A5 0C        	lda	<L56+c_0
+   933 00:03E0: 29 FF 00     	and	#$ff
+   934 00:03E3: 48           	pha
+   935 00:03E4: F4 xx xx     	pea	#^L55
+   936 00:03E7: F4 xx xx     	pea	#<L55
+   937 00:03EA: F4 08 00     	pea	#8
+   938 00:03ED: 20 xx xx     	jsr	_~printf
+   939                        ;	
+   940                        ;	switch (c) {
+   941                        L10017:
+   942 00:03F0: A5 0C        	lda	<L56+c_0
+   943 00:03F2: 29 FF 00     	and	#$ff
+   944                        	xref	_~~swt
+   945 00:03F5: 20 xx xx     	jsr	_~~swt
+   946 00:03F8: 0A 00        	dw	10
+   947 00:03FA: 3F 00        	dw	63
+   948 00:03FC: xx xx        	dw	L10028-1
+   949 00:03FE: 61 00        	dw	97
+   950 00:0400: xx xx        	dw	L10020-1
+   951 00:0402: 62 00        	dw	98
+   952 00:0404: xx xx        	dw	L10021-1
+   953 00:0406: 63 00        	dw	99
+   954 00:0408: xx xx        	dw	L10019-1
+  Thu Sep 17 2026 18:02                                                                                                    Page 19
 
 
-   955 00:040E: 6C 00        	dw	108
-   956 00:0410: xx xx        	dw	L10019-1
-   957 00:0412: 6D 00        	dw	109
-   958 00:0414: xx xx        	dw	L10019-1
-   959 00:0416: 72 00        	dw	114
-   960 00:0418: xx xx        	dw	L10026-1
-   961 00:041A: 78 00        	dw	120
-   962 00:041C: xx xx        	dw	L10029-1
-   963 00:041E: 7A 00        	dw	122
-   964 00:0420: xx xx        	dw	L10027-1
-   965 00:0422: xx xx        	dw	L10019-1
-   966                        ;	case 'a':
-   967                        L10020:
-   968                        ;		set_addr();
-   969 00:0424: 20 xx xx     	jsr	_~set_addr
-   970                        ;		break;
-   971                        L10019:
-   972                        ;	
-   973                        ;	printf("\n");
-   974 00:0427: F4 xx xx     	pea	#^L55+4
-   975 00:042A: F4 xx xx     	pea	#<L55+4
-   976 00:042D: F4 06 00     	pea	#6
-   977 00:0430: 20 xx xx     	jsr	_~printf
-   978                        ;}
-   979 00:0433: A5 06        	lda	<L56+1
-   980 00:0435: 85 08        	sta	<L56+1+2
-   981 00:0437: 2B           	pld
-   982 00:0438: 3B           	tsc
-   983 00:0439: 18           	clc
-   984 00:043A: 69 07 00     	adc	#L56+2
-   985 00:043D: 1B           	tcs
-   986 00:043E: 60           	rts
-   987                        ;	case 'b':
-   988                        L10021:
-   989                        ;		set_bank();
-   990 00:043F: 20 xx xx     	jsr	_~set_bank
-   991                        ;		break;
-   992 00:0442: 80 E3        	bra	L10019
-   993                        ;	case 'c':
-   994                        ;		break;
-   995                        ;	case 'd':
-   996                        L10023:
-   997                        ;		dump_memory();
-   998 00:0444: 20 xx xx     	jsr	_~dump_memory
-   999                        ;		break;
-  1000 00:0447: 80 DE        	bra	L10019
-  1001                        ;	case 'l':
-  1002                        ;		break;
-  1003                        ;	case 'm':
-  1004                        ;		break;
-  1005                        ;	case 'r':
-  1006                        L10026:
-  1007                        ;#asm
-  1008                        ;		JML $010000
-  1009                        ;#endasm
-  1010                        	asmstart
-  1011 00:0449: 5C 00 00 01  		JML $010000
-  1012                        L20000:
-  Wed Sep 16 2026 13:19                                                                                                    Page 20
+   955 00:040A: 64 00        	dw	100
+   956 00:040C: xx xx        	dw	L10023-1
+   957 00:040E: 6C 00        	dw	108
+   958 00:0410: xx xx        	dw	L10019-1
+   959 00:0412: 6D 00        	dw	109
+   960 00:0414: xx xx        	dw	L10025-1
+   961 00:0416: 72 00        	dw	114
+   962 00:0418: xx xx        	dw	L10026-1
+   963 00:041A: 78 00        	dw	120
+   964 00:041C: xx xx        	dw	L10029-1
+   965 00:041E: 7A 00        	dw	122
+   966 00:0420: xx xx        	dw	L10027-1
+   967 00:0422: xx xx        	dw	L10019-1
+   968                        ;	case 'a':
+   969                        L10020:
+   970                        ;		set_addr();
+   971 00:0424: 20 xx xx     	jsr	_~set_addr
+   972                        ;		break;
+   973                        L10019:
+   974                        ;	
+   975                        ;	printf("\n");
+   976 00:0427: F4 xx xx     	pea	#^L55+4
+   977 00:042A: F4 xx xx     	pea	#<L55+4
+   978 00:042D: F4 06 00     	pea	#6
+   979 00:0430: 20 xx xx     	jsr	_~printf
+   980                        ;}
+   981 00:0433: A5 0A        	lda	<L56+1
+   982 00:0435: 85 0C        	sta	<L56+1+2
+   983 00:0437: 2B           	pld
+   984 00:0438: 3B           	tsc
+   985 00:0439: 18           	clc
+   986 00:043A: 69 0B 00     	adc	#L56+2
+   987 00:043D: 1B           	tcs
+   988 00:043E: 60           	rts
+   989                        ;	case 'b':
+   990                        L10021:
+   991                        ;		set_bank();
+   992 00:043F: 20 xx xx     	jsr	_~set_bank
+   993                        ;		break;
+   994 00:0442: 80 E3        	bra	L10019
+   995                        ;	case 'c':
+   996                        ;		break;
+   997                        ;	case 'd':
+   998                        L10023:
+   999                        ;		dump_memory();
+  1000 00:0444: 20 xx xx     	jsr	_~dump_memory
+  1001                        ;		break;
+  1002 00:0447: 80 DE        	bra	L10019
+  1003                        ;	case 'l':
+  1004                        ;		;break;
+  1005                        ;	case 'm':
+  1006                        L10025:
+  1007                        ;		ulptr = (unsigned long) ptr;
+  1008 00:0449: AD xx xx     	lda	|_~ptr
+  1009 00:044C: 85 06        	sta	<L57+ulptr_1
+  1010 00:044E: AD xx xx     	lda	|_~ptr+2
+  1011 00:0451: 85 08        	sta	<L57+ulptr_1+2
+  1012                        ;		disass((unsigned int) ulptr);	
+  Thu Sep 17 2026 18:02                                                                                                    Page 20
 
 
-  1013                        	asmend
-  1014                        ;		break;
-  1015 00:044D: 80 D8        	bra	L10019
-  1016                        ;	case 'z':
-  1017                        L10027:
-  1018                        ;		b = *debug_reset;
-  1019 00:044F: AD xx xx     	lda	|_~debug_reset
-  1020 00:0452: 85 01        	sta	<R0
-  1021 00:0454: AD xx xx     	lda	|_~debug_reset+2
-  1022 00:0457: 85 03        	sta	<R0+2
-  1023 00:0459: E2 20        	sep	#$20
-  1024                        	longa	off
-  1025 00:045B: A7 01        	lda	[<R0]
-  1026 00:045D: 85 05        	sta	<L57+b_1
-  1027 00:045F: C2 20        	rep	#$20
-  1028                        	longa	on
-  1029                        ;		break;
-  1030 00:0461: 80 C4        	bra	L10019
-  1031                        ;	case '?':
-  1032                        L10028:
-  1033                        ;		print_welcome();
-  1034 00:0463: 20 xx xx     	jsr	_~print_welcome
-  1035                        ;		break;
-  1036 00:0466: 80 BF        	bra	L10019
-  1037                        ;	case 'x':
-  1038                        L10029:
-  1039                        ;#asm
-  1040                        ;		wdm 0
-  1041                        ;#endasm
-  1042                        	asmstart
-  1043 00:0468: 42 00        		wdm 0
-  1044                        ;		break;
-  1045 00:046A: 80 E1        	bra	L20000
-  1046                        ;	default:	
+  1013 00:0453: D4 06        	pei	<L57+ulptr_1
+  1014 00:0455: 20 xx xx     	jsr	_~disass
+  1015                        ;		break;
+  1016 00:0458: 80 CD        	bra	L10019
+  1017                        ;	case 'r':
+  1018                        L10026:
+  1019                        ;#asm
+  1020                        ;		JML $010000
+  1021                        ;#endasm
+  1022                        	asmstart
+  1023 00:045A: 5C 00 00 01  		JML $010000
+  1024                        L20000:
+  1025                        	asmend
+  1026                        ;		break;
+  1027 00:045E: 80 C7        	bra	L10019
+  1028                        ;	case 'z':
+  1029                        L10027:
+  1030                        ;		b = *debug_reset;
+  1031 00:0460: AD xx xx     	lda	|_~debug_reset
+  1032 00:0463: 85 01        	sta	<R0
+  1033 00:0465: AD xx xx     	lda	|_~debug_reset+2
+  1034 00:0468: 85 03        	sta	<R0+2
+  1035 00:046A: E2 20        	sep	#$20
+  1036                        	longa	off
+  1037 00:046C: A7 01        	lda	[<R0]
+  1038 00:046E: 85 05        	sta	<L57+b_1
+  1039 00:0470: C2 20        	rep	#$20
+  1040                        	longa	on
+  1041                        ;		break;
+  1042 00:0472: 80 B3        	bra	L10019
+  1043                        ;	case '?':
+  1044                        L10028:
+  1045                        ;		print_welcome();
+  1046 00:0474: 20 xx xx     	jsr	_~print_welcome
   1047                        ;		break;
-  1048                        ;	}
-  1049             00000005   L56	equ	5
-  1050             00000005   L57	equ	5
-  1051                        	ends
-  1052                        	efunc
-  1053                        	data
-  1054                        L55:
-  1055 00:01D8: 25 63 20 00  	db	$25,$63,$20,$00,$0A,$00
+  1048 00:0477: 80 AE        	bra	L10019
+  1049                        ;	case 'x':
+  1050                        L10029:
+  1051                        ;#asm
+  1052                        ;		wdm 0
+  1053                        ;#endasm
+  1054                        	asmstart
+  1055 00:0479: 42 00        		wdm 0
+  1056                        ;		break;
+  1057 00:047B: 80 E1        	bra	L20000
+  1058                        ;	default:	
+  1059                        ;		break;
+  1060                        ;	}
+  1061             00000009   L56	equ	9
+  1062             00000005   L57	equ	5
+  1063                        	ends
+  1064                        	efunc
+  1065                        	data
+  1066                        L55:
+  1067 00:01D8: 25 63 20 00  	db	$25,$63,$20,$00,$0A,$00
        00:01DC: 0A 00 
-  1056 00:01DE:              	ends
-  1057                        ;
-  1058                        ;void monitor() {
-  1059                        	code
-  1060                        	xdef	_~monitor
-  1061                        	func
-  1062                        _~monitor:
-  1063                        	longa	on
-  1064                        	longi	on
-  1065 00:046C: 3B           	tsc
-  1066 00:046D: 38           	sec
-  1067 00:046E: E9 00 00     	sbc	#L61
-  1068 00:0471: 1B           	tcs
-  1069 00:0472: 0B           	phd
-  Wed Sep 16 2026 13:19                                                                                                    Page 21
+  1068 00:01DE:              	ends
+  1069                        ;
+  Thu Sep 17 2026 18:02                                                                                                    Page 21
 
 
-  1070 00:0473: 5B           	tcd
-  1071                        ;    print_welcome();
-  1072 00:0474: 20 xx xx     	jsr	_~print_welcome
-  1073                        ;	
-  1074                        ;    for(;;) {
-  1075                        L10033:
-  1076                        ;        print_prompt();
-  1077 00:0477: 20 xx xx     	jsr	_~print_prompt
-  1078                        ;        do_function(charin());
-  1079 00:047A: 20 xx xx     	jsr	_~charin
-  1080 00:047D: 48           	pha
-  1081 00:047E: 20 xx xx     	jsr	_~do_function
-  1082                        ;    }
-  1083 00:0481: 80 F4        	bra	L10033
-  1084                        ;}
-  1085             00000000   L61	equ	0
-  1086             00000001   L62	equ	1
-  1087                        	ends
-  1088                        	efunc
-  1089                        ;
-  1090                        	xref	_~printf
-  1091                        	xref	_~fflush
-  1092                        	xref	_~_ctype
-  1093                        	xref	_~_iob
+  1070                        ;void monitor() {
+  1071                        	code
+  1072                        	xdef	_~monitor
+  1073                        	func
+  1074                        _~monitor:
+  1075                        	longa	on
+  1076                        	longi	on
+  1077 00:047D: 3B           	tsc
+  1078 00:047E: 38           	sec
+  1079 00:047F: E9 00 00     	sbc	#L61
+  1080 00:0482: 1B           	tcs
+  1081 00:0483: 0B           	phd
+  1082 00:0484: 5B           	tcd
+  1083                        ;    print_welcome();
+  1084 00:0485: 20 xx xx     	jsr	_~print_welcome
+  1085                        ;	
+  1086                        ;    for(;;) {
+  1087                        L10033:
+  1088                        ;        print_prompt();
+  1089 00:0488: 20 xx xx     	jsr	_~print_prompt
+  1090                        ;        do_function(charin());
+  1091 00:048B: 20 xx xx     	jsr	_~charin
+  1092 00:048E: 48           	pha
+  1093 00:048F: 20 xx xx     	jsr	_~do_function
+  1094                        ;    }
+  1095 00:0492: 80 F4        	bra	L10033
+  1096                        ;}
+  1097             00000000   L61	equ	0
+  1098             00000001   L62	equ	1
+  1099                        	ends
+  1100                        	efunc
+  1101                        ;
+  1102                        	xref	_~disass
+  1103                        	xref	_~printf
+  1104                        	xref	_~fflush
+  1105                        	xref	_~_ctype
+  1106                        	xref	_~_iob
 
 
-      Lines assembled: 1093
+      Lines assembled: 1106
       Errors: 0

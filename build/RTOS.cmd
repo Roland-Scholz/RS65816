@@ -12,12 +12,12 @@ set LST=%REL%\lst
 set OBJ=%REL%\obj
 set ASM=%REL%\asm
 
-set WDC_INC_65816=%WDC%\include;%HOME%\src;%SRC%\include;%SRC%\portable\WDC65816
+set WDC_INC_65816=%WDC%\include;%HOME%\src;%HOME%\src\include;%SRC%\include;%SRC%\portable\WDC65816
 set WDC_LIB=%WDC%\lib
 
-echo WDC_LIB=%WDC_INC_65816%
+echo WDC_INC=%WDC_INC_65816%
 
-set MODULES=65816 event_groups list queue stream_buffer tasks timers heapStack heap_5
+set MODULES=rtos65816 event_groups list queue stream_buffer tasks timers heapStack heap_5
 set CFLAGS=-A -LT -MC -SOP0S -D__WDC__
 set LFLAGS=-T -HB -C010000,0
 set EXE=rtos
@@ -71,4 +71,4 @@ exit /b
 pause
 
 :eof
-pause
+rem pause

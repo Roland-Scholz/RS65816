@@ -172,6 +172,7 @@ void set_addr() {
 
 void do_function(char c) {
 	char b;
+	unsigned long ulptr;
 	
 	if (isalpha(c))
 		printf("%c ", c);
@@ -189,8 +190,10 @@ void do_function(char c) {
 		dump_memory();
 		break;
 	case 'l':
-		break;
+		;break;
 	case 'm':
+		ulptr = (unsigned long) ptr;
+		disass((unsigned int) ulptr);	
 		break;
 	case 'r':
 #asm

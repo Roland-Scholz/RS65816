@@ -1,17 +1,21 @@
 @echo off
 set COMPILER=wdc
 set WDC=C:\github\atari-tools\WDC
-set WDC_INC_65816=%WDC%\include;C:\github\RS65816\src
-set WDC_LIB=%WDC%\lib
 path=%PATH%;%WDC%\bin
 
 set HOME=C:\github\RS65816
+
 set PROJ=monitor
 set SRC=%HOME%\src
 set REL=%HOME%\release\%COMPILER%\%PROJ%
 set LST=%REL%\lst
 set OBJ=%REL%\obj
 set ASM=%REL%\asm
+
+set WDC_INC_65816=%WDC%\include;%HOME%\src;%HOME%\src\include;%SRC%\include;%SRC%\portable\WDC65816
+set WDC_LIB=%WDC%\lib
+
+echo WDC_INC=%WDC_INC_65816%
 
 set MODULES=main monitor
 set CFLAGS=-A -LT -MC -SOP0S -D__WDC__
@@ -33,6 +37,10 @@ for /F "tokens=1*" %%i in ("%LIST%") do (
 	set OBJS=%OBJS% %%i.o
 )
 if defined LIST goto loop
+
+echo wdc816as -O %OBJ%\disass.o -LW %SRC%\disass.asm
+wdc816as -O %OBJ%\disass.o -LW %SRC%\disass.asm
+set OBJS=%OBJS% disass.o
 
 move %ASM%\*.lst %LST% >nul 2>&1
 

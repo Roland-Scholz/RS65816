@@ -6,14 +6,10 @@ void *heap_end = (void *)0x03ffff;
 
 
 #asm
-	jmp startup
-	jml ($dffc)
-	
-startup
 	clc
 	xce
 	rep #$30
-	lda #$efff
+	lda #$fddf
 	tcs
 	jmp _~main
 #endasm

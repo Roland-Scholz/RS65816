@@ -31,14 +31,10 @@ _~heap_end:
 	dl	$3FFFF
 	ends
 	asmstart
-	jmp startup
-	jml ($dffc)
-	
-startup
 	clc
 	xce
 	rep #$30
-	lda #$efff
+	lda #$fddf
 	tcs
 	jmp _~main
 	asmend

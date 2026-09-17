@@ -21,7 +21,7 @@ unsigned __stdcall MeineThreadFunktion(void* pArguments)
     for(;;)
     {
         CPU_addIRQ(1);
-        Sleep(1000);
+        Sleep(100);
     }
 
     /* Thread beenden und einen Rückgabewert (Exit-Code) liefern */
@@ -110,7 +110,7 @@ byte MEM_readMem(word32 address, word32 timestamp, word32 emulFlags)
     case 0xfffff0:
         return get_char_by_event();
     case 0xfffff2:
-        recycle = true;
+       // recycle = true;
         return 0;
     //case 0x00ffee:
         //CPU_setTrace(1);
