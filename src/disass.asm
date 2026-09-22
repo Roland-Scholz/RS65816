@@ -14,6 +14,7 @@
 
 memptr		equ 3
 returnadr	equ 1
+
 debug_char	equ $fffff0
 debug_hex	equ $fffff1
 ;
@@ -28,9 +29,6 @@ _~disass:
 		sep #$30
 		longa off
 		longi off
-		
-		lda #'*'
-		sta >debug_char
 
 		jsr	jnewline
 		lda	#20
@@ -269,9 +267,9 @@ printRel:
 		BMI	printRelNeg
 	
 		CLC
-		ADC	memptr
+		ADC	<memptr
 		PHA
-		LDA	memptr+1
+		LDA	<memptr+1
 		ADC	#0
 printRel1:
 		JSR	jprinthex	
@@ -280,10 +278,10 @@ printRel1:
 
 printRelNeg:
 		CLC
-		ADC	memptr
+		ADC	<memptr
 		PHA
 	
-		LDA	memptr+1
+		LDA	<memptr+1
 		SBC	#0
 		JMP	printRel1
 
@@ -295,9 +293,9 @@ printInd:
 ;
 ;
 ;	
-printadr:	LDA	memptr+1
+printadr:	LDA	<memptr+1
 		JSR	jprinthex
-		LDA	memptr
+		LDA	<memptr
 		JSR	jprinthex
 		LDA	#':'
 		JSR	jchrout
@@ -329,9 +327,9 @@ fetchbyte:	LDY	#0
 		LDA	(memptr),y
 ;		PHA
 incptr:
-		INC	memptr
+		INC	<memptr
 		BNE	incptr1
-		INC	memptr+1
+		INC	<memptr+1
 incptr1:;	PLA
 		RTS
 				

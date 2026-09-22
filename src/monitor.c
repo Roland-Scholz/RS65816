@@ -15,6 +15,10 @@ const char * stars = "**************************************";
 
 static char *ptr = NULL;
 
+#ifdef __WDC__
+#include "wdc_misc.h"
+#endif
+
 void print_welcome() {
 	printf("\n");
     printf("%s\n", stars);
@@ -53,7 +57,7 @@ char getnibble() {
 	}
 	
 	printf("%c", c);
-	fflush(stdout);
+	//fflush(stdout);
 	
 	return b;
 
@@ -75,10 +79,10 @@ void print_adr(char *p) {
 }
 
 void print_prompt() {
-	unsigned int stackptr = 0;
-	unsigned int direct = 0;
-	char db = 0;
-	char flags = 0;
+	unsigned int stackptr;
+	unsigned int direct;
+	char db;
+	char flags;
 	char program_bank;
 
 #ifdef __WDC__
@@ -117,7 +121,7 @@ __asm (
 	printf("S:%04x D:%04x DB:%02X F:%02X ", stackptr, direct, db, flags);
 	print_adr(ptr);	
 	printf(">");
-	fflush(stdout);
+	//fflush(stdout);
 }
 
 void dump_memory() {
@@ -152,7 +156,7 @@ void set_bank() {
 	char *p;
 	
 	printf("bank:");
-	fflush(stdout);
+	//fflush(stdout);
 	
 	p = (char *)&ptr;
 	
@@ -163,7 +167,7 @@ void set_addr() {
 	char *p;
 	
 	printf("addr:");
-	fflush(stdout);
+	//fflush(stdout);
 	
 	p = (char *)&ptr;
 	p[1] = getbyte();
@@ -193,7 +197,7 @@ void do_function(char c) {
 		;break;
 	case 'm':
 		ulptr = (unsigned long) ptr;
-		disass((unsigned int) ulptr);	
+		//disass((unsigned int) ulptr);	
 		break;
 	case 'r':
 #asm
@@ -218,7 +222,7 @@ void do_function(char c) {
 	printf("\n");
 }
 
-void monitor() {
+void main() {
     print_welcome();
 	
     for(;;) {

@@ -258,15 +258,12 @@ istack0:
 	dey	
 	bne	istack0
 
-	
 	ldy	#13
 	lda	<s_pxTaskCode+2
 	sta	[s_pxTopOfStack],y
-
 		
-	ldy	#1			; data bank = program bank
+	ldy	#1										; data bank = program bank
 	sta	[s_pxTopOfStack],y
-	
 	
 	rep	#M
 	longa	on
@@ -278,6 +275,21 @@ istack0:
 	lda	<s_pvParameters+2
 	sta	[s_pxTopOfStack],y
 	
+	lda <s_pvParameters
+	ora <s_pvParameters+2
+	beq noParms
+	
+	sep #M
+	longa off
+	ldy #4
+	lda [<s_pvParameters],y
+	sta $fffff1
+	ldy	#1										; store data bank
+	sta	[s_pxTopOfStack],y
+	rep #M
+	longa on
+
+noParms:	
 	lda	<1
 	sta	<13
 

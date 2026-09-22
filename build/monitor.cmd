@@ -17,9 +17,9 @@ set WDC_LIB=%WDC%\lib
 
 echo WDC_INC=%WDC_INC_65816%
 
-set MODULES=main monitor
+set MODULES=monitor printf-stdarg
 set CFLAGS=-A -LT -MC -SOP0S -D__WDC__
-set LFLAGS=-T -HB -C0200
+set LFLAGS=-T -HB -C0000 -V
 set EXE=monitor
 
 del /s /q *.tmp	>nul 2>&1
@@ -38,9 +38,10 @@ for /F "tokens=1*" %%i in ("%LIST%") do (
 )
 if defined LIST goto loop
 
-echo wdc816as -O %OBJ%\disass.o -LW %SRC%\disass.asm
-wdc816as -O %OBJ%\disass.o -LW %SRC%\disass.asm
-set OBJS=%OBJS% disass.o
+rem echo wdc816as -O %OBJ%\disass.o -LW %SRC%\disass.asm
+rem wdc816as -O %OBJ%\disass.o -LW %SRC%\disass.asm
+rem move %SRC%\*.lst %LST% >nul 2>&1
+rem set OBJS=%OBJS% disass.o
 
 move %ASM%\*.lst %LST% >nul 2>&1
 
@@ -69,3 +70,4 @@ exit /b
 pause
 
 :eof
+pause

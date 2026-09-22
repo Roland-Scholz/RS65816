@@ -21,6 +21,7 @@ unsigned __stdcall MeineThreadFunktion(void* pArguments)
     for(;;)
     {
         CPU_addIRQ(1);
+        //printf(".");
         Sleep(100);
     }
 
@@ -86,7 +87,7 @@ void load_mem_wdc()
         set reset address
     */
     memory[0xfffc] = 0x00;
-    memory[0xfffd] = 0x02;
+    memory[0xfffd] = 0x00;
 
     /*
         set IRQ vector
@@ -109,12 +110,6 @@ byte MEM_readMem(word32 address, word32 timestamp, word32 emulFlags)
     {
     case 0xfffff0:
         return get_char_by_event();
-    case 0xfffff2:
-       // recycle = true;
-        return 0;
-    //case 0x00ffee:
-        //CPU_setTrace(1);
-        //break;
     default:
         return memory[address];
     }
@@ -130,6 +125,9 @@ void MEM_writeMem(word32 address, byte b, word32 timestamp)
         break;
     case 0xfffff1:
         printf("%02X", b);
+        break;
+    case 0xfffff2:
+        recycle = true;
         break;
     default:
         break;
@@ -220,7 +218,7 @@ int main(int argc, char *argv[])
     fflush(stdout);
     */
     /* Thread erstellen und sofort starten */
-
+#ifndef THREAD
     HANDLE hThread = (HANDLE)_beginthreadex(
                          NULL,                   /* Standard-Sicherheitsattribute */
                          0,                      /* Standard-Stackgröße (meist 1 MB) */
@@ -235,7 +233,7 @@ int main(int argc, char *argv[])
         printf("[Main] Fehler beim Erstellen des Threads!\n");
         return 1;
     }
-
+#endif
     while (true)
     {
         recycle = false;

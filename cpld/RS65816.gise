@@ -183,6 +183,10 @@
       <status xil_pn:value="ReadyToRun"/>
       <outfile xil_pn:name="cpumodule.jed"/>
     </transform>
+    <transform xil_pn:end_ts="1789992264" xil_pn:in_ck="4945495368223550767" xil_pn:name="TRAN_configureTargetDevice_CPLD" xil_pn:prop_ck="-4642231692518494639" xil_pn:start_ts="1789992262">
+      <status xil_pn:value="SuccessfullyRun"/>
+      <status xil_pn:value="ReadyToRun"/>
+    </transform>
     <transform xil_pn:end_ts="1788178966" xil_pn:in_ck="4945495368223564053" xil_pn:name="TRAN_timRpt" xil_pn:prop_ck="111903974446" xil_pn:start_ts="1788178964">
       <status xil_pn:value="AbortedRun"/>
       <status xil_pn:value="WarningsGenerated"/>

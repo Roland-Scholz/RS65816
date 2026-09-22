@@ -1,0 +1,8 @@
+INTSTYLE=impact
+INFILE=C:\github\RS65816\cpld\impact.xsl
+OUTFILE=C:\github\RS65816\cpld\impact.xsl
+FAMILY=Single
+PART=Single
+WORKINGDIR=C:\github\RS65816\cpld
+LICENSE=iMPACT
+USER_INFO=iMPACT

@@ -86,6 +86,40 @@ _~ptr:
 	dl	$0
 	ends
 ;
+;#ifdef __WDC__
+;#include "wdc_misc.h"
+	data
+	xdef	_~far_heap_start
+_~far_heap_start:
+	dl	$10000
+	ends
+	data
+	xdef	_~far_heap_end
+_~far_heap_end:
+	dl	$2FFFF
+	ends
+	data
+	xdef	_~heap_start
+_~heap_start:
+	dl	$30000
+	ends
+	data
+	xdef	_~heap_end
+_~heap_end:
+	dl	$3FFFF
+	ends
+	asmstart
+	clc
+	xce
+	rep #$30
+	lda #$fddf
+	tcs
+	lda #$8000
+	tcd
+	jmp _~main
+	asmend
+;#endif
+;
 ;void print_welcome() {
 	code
 	xdef	_~print_welcome
@@ -294,14 +328,7 @@ L10002:
 	pea	#<L10
 	pea	#8
 	jsr	_~printf
-;	fflush(stdout);
-	lda	#<_~_iob+20
-	sta	<R0
-	xref	_BEG_DATA
-	lda	#_BEG_DATA>>16
-	pha
-	pei	<R0
-	jsr	_~fflush
+;	//fflush(stdout);
 ;	
 ;	return b;
 	lda	<L15+b_1
@@ -479,10 +506,10 @@ _~print_prompt:
 	tcs
 	phd
 	tcd
-;	unsigned int stackptr = 0;
-;	unsigned int direct = 0;
-;	char db = 0;
-;	char flags = 0;
+;	unsigned int stackptr;
+;	unsigned int direct;
+;	char db;
+;	char flags;
 ;	char program_bank;
 ;
 ;#ifdef __WDC__
@@ -492,14 +519,6 @@ direct_1	set	2
 db_1	set	4
 flags_1	set	5
 program_bank_1	set	6
-	stz	<L30+stackptr_1
-	stz	<L30+direct_1
-	sep	#$20
-	longa	off
-	stz	<L30+db_1
-	stz	<L30+flags_1
-	rep	#$20
-	longa	on
 ;	php
 ;	sep #$20
 ;	pla
@@ -569,14 +588,7 @@ program_bank_1	set	6
 	pea	#<L28+30
 	pea	#6
 	jsr	_~printf
-;	fflush(stdout);
-	lda	#<_~_iob+20
-	sta	<R0
-	xref	_BEG_DATA
-	lda	#_BEG_DATA>>16
-	pha
-	pei	<R0
-	jsr	_~fflush
+;	//fflush(stdout);
 ;}
 	pld
 	tsc
@@ -584,8 +596,8 @@ program_bank_1	set	6
 	adc	#L29
 	tcs
 	rts
-L29	equ	11
-L30	equ	5
+L29	equ	7
+L30	equ	1
 	ends
 	efunc
 	data
@@ -791,14 +803,7 @@ p_1	set	0
 	pea	#<L47
 	pea	#6
 	jsr	_~printf
-;	fflush(stdout);
-	lda	#<_~_iob+20
-	sta	<R0
-	xref	_BEG_DATA
-	lda	#_BEG_DATA>>16
-	pha
-	pei	<R0
-	jsr	_~fflush
+;	//fflush(stdout);
 ;	
 ;	p = (char *)&ptr;
 	lda	#<_~ptr
@@ -822,8 +827,8 @@ p_1	set	0
 	adc	#L48
 	tcs
 	rts
-L48	equ	8
-L49	equ	5
+L48	equ	4
+L49	equ	1
 	ends
 	efunc
 	data
@@ -852,14 +857,7 @@ p_1	set	0
 	pea	#<L51
 	pea	#6
 	jsr	_~printf
-;	fflush(stdout);
-	lda	#<_~_iob+20
-	sta	<R0
-	xref	_BEG_DATA
-	lda	#_BEG_DATA>>16
-	pha
-	pei	<R0
-	jsr	_~fflush
+;	//fflush(stdout);
 ;	
 ;	p = (char *)&ptr;
 	lda	#<_~ptr
@@ -889,8 +887,8 @@ p_1	set	0
 	adc	#L52
 	tcs
 	rts
-L52	equ	8
-L53	equ	5
+L52	equ	4
+L53	equ	1
 	ends
 	efunc
 	data
@@ -1009,9 +1007,7 @@ L10025:
 	sta	<L57+ulptr_1
 	lda	|_~ptr+2
 	sta	<L57+ulptr_1+2
-;		disass((unsigned int) ulptr);	
-	pei	<L57+ulptr_1
-	jsr	_~disass
+;		//disass((unsigned int) ulptr);	
 ;		break;
 	bra	L10019
 ;	case 'r':
@@ -1067,11 +1063,11 @@ L55:
 	db	$25,$63,$20,$00,$0A,$00
 	ends
 ;
-;void monitor() {
+;void main() {
 	code
-	xdef	_~monitor
+	xdef	_~main
 	func
-_~monitor:
+_~main:
 	longa	on
 	longi	on
 	tsc
@@ -1082,6 +1078,14 @@ _~monitor:
 	tcd
 ;    print_welcome();
 	jsr	_~print_welcome
+;
+;	printf("p:%p \n", (void *)0xcafe);
+	pea	#^$cafe
+	pea	#<$cafe
+	pea	#^L60
+	pea	#<L60
+	pea	#10
+	jsr	_~printf
 ;	
 ;    for(;;) {
 L10033:
@@ -1098,9 +1102,10 @@ L61	equ	0
 L62	equ	1
 	ends
 	efunc
+	data
+L60:
+	db	$70,$3A,$25,$70,$20,$0A,$00
+	ends
 ;
-	xref	_~disass
 	xref	_~printf
-	xref	_~fflush
 	xref	_~_ctype
-	xref	_~_iob

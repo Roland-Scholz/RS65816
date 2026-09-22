@@ -17,9 +17,10 @@ set WDC_LIB=%WDC%\lib
 
 echo WDC_INC=%WDC_INC_65816%
 
-set MODULES=rtos65816 event_groups list queue stream_buffer tasks timers heapStack heap_5
+set MODULES=rtos65816 printf_stdarg event_groups list queue stream_buffer tasks timers heapStack heap_5
+
 set CFLAGS=-A -LT -MC -SOP0S -D__WDC__
-set LFLAGS=-T -HB -C010000,0
+set LFLAGS=-T -HB -C010000,0 -V
 set EXE=rtos
 
 del /s /q *.tmp	>nul 2>&1
@@ -61,6 +62,7 @@ echo compiling %1.c
 echo wdc816cc %CFLAGS% %SRC%\%1.c -o %ASM%\%1.asm
 echo ************************************************************
 wdc816cc %CFLAGS% %SRC%\%1.c -o %ASM%\%1.asm
+echo RC:%ERRORLEVEL%
 set RC=%ERRORLEVEL%
 if !RC! NEQ 0 goto error 
 wdc816as -O %OBJ%\%1.o -LW %ASM%\%1.asm
@@ -71,4 +73,4 @@ exit /b
 pause
 
 :eof
-rem pause
+pause

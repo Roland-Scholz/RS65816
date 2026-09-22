@@ -17,10 +17,20 @@ const char *ansi_yellow = "\033[33;1m";
 const char *ansi_clrhome = "\033[2J\033[H";
 
 typedef struct taskParm {
-	char * taskName;
+	char *taskName;
+	char dataBank;
+	void *taskAddr;
 	TickType_t tickDelay;
 } taskParm_t;
 
+typedef union {
+	void *ptr;
+	struct {
+		unsigned int addr;
+		char bank;
+		char dummy;
+	} parts;
+} ptrParts_t;
 
 /*
 const HeapRegion_t xHeapRegions[] = 
@@ -43,7 +53,7 @@ const HeapRegion_t xHeapRegions[] =
 	jmp _~main
 #endasm
 
-#include "wdc_misc.h"
+//#include "wdc_misc.h"
 
 void vApplicationStackOverflowHook( TaskHandle_t xTask,
                                         char * pcTaskName ) {
@@ -56,9 +66,9 @@ void printHeapStats() {
 	vPortGetHeapStats(&pxHeapStats);
 	printf("\n");
 	printf("xAvailableHeapSpaceInBytes:%p\n", (void *)pxHeapStats.xAvailableHeapSpaceInBytes);
-	printf("xSizeOfLargestFreeBlockInBytes:%04X\n", pxHeapStats.xSizeOfLargestFreeBlockInBytes);
-	printf("xSizeOfSmallestFreeBlockInBytes:%04X\n", pxHeapStats.xSizeOfSmallestFreeBlockInBytes);
-	printf("xNumberOfFreeBlocks:%04X\n", pxHeapStats.xNumberOfFreeBlocks);
+	printf("xSizeOfLargestFreeBlockInBytes:%04x\n", pxHeapStats.xSizeOfLargestFreeBlockInBytes);
+	printf("xSizeOfSmallestFreeBlockInBytes:%04x\n", pxHeapStats.xSizeOfSmallestFreeBlockInBytes);
+	printf("xNumberOfFreeBlocks:%04x\n", pxHeapStats.xNumberOfFreeBlocks);
 	printf("xMinimumEverFreeBytesRemaining:%p\n", (void *)pxHeapStats.xMinimumEverFreeBytesRemaining);
 	printf("xNumberOfSuccessfulAllocations:%p\n", (void *)pxHeapStats.xNumberOfSuccessfulAllocations);
 	printf("xNumberOfSuccessfulFrees:%p\n", (void *)pxHeapStats.xNumberOfSuccessfulFrees);
@@ -66,17 +76,24 @@ void printHeapStats() {
 
 void shellTask( void *pvParameters )
 {
-	char *p;
 	taskParm_t *taskParm = (taskParm_t *) pvParameters;
+	char dataBank;
+	unsigned int stackptr, direct;
+
+	#asm
+	sep #$20
+	phb
+	pla
+	sta %%dataBank
+	rep #$20
+	tsc
+	sta %%stackptr;
+	tdc
+	sta %%direct;
+	#endasm
 	
 	for(;;) {
-		/*
-		for(p = taskParm->taskName; *p; p++) {
-			*debug_char = *p;
-		}
-		*/
-		printf("%s ", taskParm->taskName);
-		fflush(stdout);
+		printf("%s DB:%02X\n", taskParm->taskName, dataBank);
 		vTaskDelay(taskParm->tickDelay);
 	}
 
@@ -89,6 +106,7 @@ int main (int argc, char ** argv) {
 	HeapRegion_t *pxHeapReg;
 	TaskHandle_t * pxCreatedTask;
 	taskParm_t taskParm_1, taskParm_2, taskParm_3;
+	ptrParts_t pp;
 	
 	char *p;
 	int i;
@@ -123,20 +141,28 @@ int main (int argc, char ** argv) {
 	
 	printHeapStats();
 	
-	taskParm_1.taskName = "-";
+	pp.ptr = shellTask;
+	taskParm_1.dataBank = pp.parts.bank;
+	taskParm_2.dataBank = pp.parts.bank;
+	taskParm_3.dataBank = pp.parts.bank;
+	
+	taskParm_1.taskName = "1";
+	taskParm_1.taskAddr = shellTask;
 	taskParm_1.tickDelay = 10;
 	
-	taskParm_2.taskName = "*";
-	taskParm_2.tickDelay = 1;
+	taskParm_2.taskName = "2";
+	taskParm_2.taskAddr = shellTask;
+	taskParm_2.tickDelay = 5;
 
-	taskParm_3.taskName = "+";
+	taskParm_3.taskName = "3";
+	taskParm_3.taskAddr = shellTask;
 	taskParm_3.tickDelay = 1;
 	
-	rc = xTaskCreate( shellTask, "Task1", 512, (void *) &taskParm_1, 0, NULL);	
+	rc = xTaskCreate( taskParm_1.taskAddr, "Task1", 512, (void *) &taskParm_1, 0, NULL);	
 	printf("task create rc: %d\n", rc);
-	rc = xTaskCreate( shellTask, "Task2", 512, (void *) &taskParm_2, 0, NULL);	
+	rc = xTaskCreate( taskParm_2.taskAddr, "Task2", 512, (void *) &taskParm_2, 0, NULL);	
 	printf("task create rc: %d\n", rc);
-	rc = xTaskCreate( shellTask, "Task3", 512, (void *) &taskParm_3, 1, NULL);	
+	rc = xTaskCreate( taskParm_3.taskAddr, "Task3", 512, (void *) &taskParm_3, 0, NULL);	
 	printf("task create rc: %d\n", rc);
 	
 	

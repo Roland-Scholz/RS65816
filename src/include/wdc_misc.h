@@ -11,9 +11,12 @@ void *heap_end = (void *)0x03ffff;
 	rep #$30
 	lda #$fddf
 	tcs
+	lda #$8000
+	tcd
 	jmp _~main
 #endasm
 
+#ifdef EXCLUE
 void debug(const char *format, ...) {
 	va_list args;
 
@@ -95,3 +98,4 @@ long lseek(int fd, long offset, int whence) {
 
 	return 1;
 }
+#endif

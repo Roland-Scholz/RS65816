@@ -10,7 +10,10 @@
 
 #include <lib65816/config.h>
 
+#ifndef DEBUG
 #define DEBUG
+#endif
+
 #ifdef DEBUG
 
 #include <lib65816/cpu.h>
@@ -269,10 +272,10 @@ void CPU_debug(void) {
             break;
 
         case ABSL:
-            operand = M_READ(PC.A+1) | (M_READ(PC.A+2)<<8) | (M_READ(PC.A+3)<<16);
-            ea = operand;
-            sprintf( operands, "$%06X (@%06X %02X %02X %02X ...)",
-                operand, ea, M_READ(ea), M_READ(ea+1), M_READ(ea+2) );
+            //operand = M_READ(PC.A+1) | (M_READ(PC.A+2)<<8) | (M_READ(PC.A+3)<<16);
+            //ea = operand;
+            //sprintf( operands, "$%06X (@%06X %02X %02X %02X ...)",
+            //    operand, ea, M_READ(ea), M_READ(ea+1), M_READ(ea+2) );
             break;
 
         case ABSLX:
