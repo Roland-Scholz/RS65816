@@ -1,4 +1,4 @@
-  Sun Sep 20 2026 12:03                                                                                                    Page 1
+  Wed Sep 23 2026  8:33                                                                                                    Page 1
 
 
                                                ***************************************
@@ -59,7 +59,7 @@
     50                        ;	extern void putchar(int c);
     51                        ;	
     52                        ;	if (str) {
-  Sun Sep 20 2026 12:03                                                                                                    Page 2
+  Wed Sep 23 2026  8:33                                                                                                    Page 2
 
 
     53 00:0008: A5 07        	lda	<L2+str_0
@@ -120,7 +120,7 @@
    108                        ;{
    109                        	code
    110                        	func
-  Sun Sep 20 2026 12:03                                                                                                    Page 3
+  Wed Sep 23 2026  8:33                                                                                                    Page 3
 
 
    111                        _~prints:
@@ -181,7 +181,7 @@
    166 00:0089: 10 04        	bpl	L10008
    167 00:008B: 64 15        	stz	<L6+width_0
    168                        ;		else width -= len;
-  Sun Sep 20 2026 12:03                                                                                                    Page 4
+  Wed Sep 23 2026  8:33                                                                                                    Page 4
 
 
    169 00:008D: 80 07        	bra	L10009
@@ -242,7 +242,7 @@
    224 00:00DA: E6 13        	inc	<L6+string_0+2
    225                        L10019:
    226 00:00DC: A7 11        	lda	[<L6+string_0]
-  Sun Sep 20 2026 12:03                                                                                                    Page 5
+  Wed Sep 23 2026  8:33                                                                                                    Page 5
 
 
    227 00:00DE: 29 FF 00     	and	#$ff
@@ -303,7 +303,7 @@
    282 00:0115: 0B           	phd
    283 00:0116: 5B           	tcd
    284             00000003   out_0	set	3
-  Sun Sep 20 2026 12:03                                                                                                    Page 6
+  Wed Sep 23 2026  8:33                                                                                                    Page 6
 
 
    285             00000007   i_0	set	7
@@ -364,7 +364,7 @@
    340 00:0152: 1B           	tcs
    341 00:0153: 98           	tya
    342 00:0154: 60           	rts
-  Sun Sep 20 2026 12:03                                                                                                    Page 7
+  Wed Sep 23 2026  8:33                                                                                                    Page 7
 
 
    343                        ;	}
@@ -425,7 +425,7 @@
    398                        	xref	_~~lumd
    399 00:01A0: 20 xx xx     	jsr	_~~lumd
    400 00:01A3: 86 03        	stx	<R0+2
-  Sun Sep 20 2026 12:03                                                                                                    Page 8
+  Wed Sep 23 2026  8:33                                                                                                    Page 8
 
 
    401 00:01A5: 85 15        	sta	<L24+t_1
@@ -486,7 +486,7 @@
    456                        ;		if( width && (pad & PAD_ZERO) ) {
    457 00:01F6: A5 2D        	lda	<L23+width_0
    458 00:01F8: F0 17        	beq	L10030
-  Sun Sep 20 2026 12:03                                                                                                    Page 9
+  Wed Sep 23 2026  8:33                                                                                                    Page 9
 
 
    459 00:01FA: A5 2F        	lda	<L23+pad_0
@@ -547,7 +547,7 @@
    514                        	longa	on
    515                        	longi	on
    516 00:0238: 3B           	tsc
-  Sun Sep 20 2026 12:03                                                                                                    Page 10
+  Wed Sep 23 2026  8:33                                                                                                    Page 10
 
 
    517 00:0239: 38           	sec
@@ -608,7 +608,7 @@
    572                        	longa	off
    573 00:0275: A7 1D        	lda	[<L40+format_0]
    574 00:0277: C9 2D        	cmp	#<$2d
-  Sun Sep 20 2026 12:03                                                                                                    Page 11
+  Wed Sep 23 2026  8:33                                                                                                    Page 11
 
 
    575 00:0279: C2 20        	rep	#$20
@@ -669,7 +669,7 @@
    630 00:02BE: E2 20        	sep	#$20
    631                        	longa	off
    632 00:02C0: A7 1D        	lda	[<L40+format_0]
-  Sun Sep 20 2026 12:03                                                                                                    Page 12
+  Wed Sep 23 2026  8:33                                                                                                    Page 12
 
 
    633 00:02C2: C9 30        	cmp	#<$30
@@ -730,7 +730,7 @@
    688                        L58:
    689 00:031C: 85 01        	sta	<R0
    690 00:031E: 86 03        	stx	<R0+2
-  Sun Sep 20 2026 12:03                                                                                                    Page 13
+  Wed Sep 23 2026  8:33                                                                                                    Page 13
 
 
    691 00:0320: D4 03        	pei	<R0+2
@@ -791,7 +791,7 @@
    746 00:037A: C2 20        	rep	#$20
    747                        	longa	on
    748 00:037C: F0 AF        	beq	L20065
-  Sun Sep 20 2026 12:03                                                                                                    Page 14
+  Wed Sep 23 2026  8:33                                                                                                    Page 14
 
 
    749                        ;			}
@@ -852,7 +852,7 @@
    804                        	longa	off
    805 00:03C9: A7 1D        	lda	[<L40+format_0]
    806 00:03CB: C9 75        	cmp	#<$75
-  Sun Sep 20 2026 12:03                                                                                                    Page 15
+  Wed Sep 23 2026  8:33                                                                                                    Page 15
 
 
    807 00:03CD: C2 20        	rep	#$20
@@ -913,7 +913,7 @@
    862 00:0426: E6 23        	inc	<L40+args_0+2
    863                        L70:
    864 00:0428: A9 FE FF     	lda	#$fffe
-  Sun Sep 20 2026 12:03                                                                                                    Page 16
+  Wed Sep 23 2026  8:33                                                                                                    Page 16
 
 
    865 00:042B: 18           	clc
@@ -974,7 +974,7 @@
    920 00:0488: 85 11        	sta	<L41+scr_1
    921                        ;				scr[1] = '\0';
    922 00:048A: 64 12        	stz	<L41+scr_1+1
-  Sun Sep 20 2026 12:03                                                                                                    Page 17
+  Wed Sep 23 2026  8:33                                                                                                    Page 17
 
 
    923 00:048C: C2 20        	rep	#$20
@@ -1035,7 +1035,7 @@
    978                        ;	
    979                        ;	return pc;
    980 00:04D6: A5 0D        	lda	<L41+pc_1
-  Sun Sep 20 2026 12:03                                                                                                    Page 18
+  Wed Sep 23 2026  8:33                                                                                                    Page 18
 
 
    981 00:04D8: A8           	tay
@@ -1096,7 +1096,7 @@
   1035 00:050B: DA           	phx
   1036 00:050C: A6 07        	ldx	<L78+3
   1037 00:050E: A5 05        	lda	<L78+1
-  Sun Sep 20 2026 12:03                                                                                                    Page 19
+  Wed Sep 23 2026  8:33                                                                                                    Page 19
 
 
   1038 00:0510: 95 05        	sta	<L78+1,X
@@ -1157,7 +1157,7 @@
   1093 00:0547: A8           	tay
   1094 00:0548: DA           	phx
   1095 00:0549: A6 07        	ldx	<L81+3
-  Sun Sep 20 2026 12:03                                                                                                    Page 20
+  Wed Sep 23 2026  8:33                                                                                                    Page 20
 
 
   1096 00:054B: A5 05        	lda	<L81+1
@@ -1218,7 +1218,7 @@
   1151 00:057B: 18           	clc
   1152 00:057C: 7B           	tdc
   1153 00:057D: 69 09 00     	adc	#<L84+buf_0
-  Sun Sep 20 2026 12:03                                                                                                    Page 21
+  Wed Sep 23 2026  8:33                                                                                                    Page 21
 
 
   1154 00:0580: 48           	pha
@@ -1279,7 +1279,7 @@
   1209                        ;	sprintf(buf, "-3: %4d right justif.\n", -3); printf("%s", buf);
   1210                        ;
   1211                        ;	return 0;
-  Sun Sep 20 2026 12:03                                                                                                    Page 22
+  Wed Sep 23 2026  8:33                                                                                                    Page 22
 
 
   1212                        ;}

@@ -1,4 +1,4 @@
-  Sun Sep 20 2026 12:03                                                                                                    Page 1
+  Wed Sep 23 2026  8:33                                                                                                    Page 1
 
 
                                                ***************************************
@@ -59,7 +59,7 @@
     50                        
     51                        
     52                        ;----------------------------------------------------------------------------------
-  Sun Sep 20 2026 12:03                                                                                                    Page 2
+  Wed Sep 23 2026  8:33                                                                                                    Page 2
 
 
     53                        ;       void vPortEndScheduler( void )
@@ -120,7 +120,7 @@
    108                        ;	13	Program-Bank
    109                        ;	12	PC-hi
    110                        ;	11	PC-lo
-  Sun Sep 20 2026 12:03                                                                                                    Page 3
+  Wed Sep 23 2026  8:33                                                                                                    Page 3
 
 
    111                        ;	10	Flags
@@ -181,7 +181,7 @@
    166                        ;	
    167                        ;
    168                        ;	IF PLATFORM=0
-  Sun Sep 20 2026 12:03                                                                                                    Page 4
+  Wed Sep 23 2026  8:33                                                                                                    Page 4
 
 
    169                        ;	lda	>CONST5MS		;8.333333Mhz / 200Hz
@@ -242,7 +242,7 @@
    224                        	;include	"homebrewWDC.inc"
    225                        
    226                        _~pxPortInitialiseStack:
-  Sun Sep 20 2026 12:03                                                                                                    Page 5
+  Wed Sep 23 2026  8:33                                                                                                    Page 5
 
 
    227             0000000B   s_pvParameters	set 11		;12, 13, 14
@@ -299,38 +299,38 @@
    277                        	
    278 00:003A: A5 0B        	lda <s_pvParameters
    279 00:003C: 05 0D        	ora <s_pvParameters+2
-   280 00:003E: F0 12        	beq noParms
+   280 00:003E: F0 0E        	beq noParms
    281                        	
    282 00:0040: E2 20        	sep #M
    283                        	longa off
-  Sun Sep 20 2026 12:03                                                                                                    Page 6
+  Wed Sep 23 2026  8:33                                                                                                    Page 6
 
 
    284 00:0042: A0 04 00     	ldy #4
    285 00:0045: B7 0B        	lda [<s_pvParameters],y
-   286 00:0047: 8F F1 FF FF  	sta $fffff1
-   287 00:004B: A0 01 00     	ldy	#1										; store data
+   286                        	;sta $fffff1
+   287 00:0047: A0 01 00     	ldy	#1										; store data
                      bank
-   288 00:004E: 97 03        	sta	[s_pxTopOfStack],y
-   289 00:0050: C2 20        	rep #M
+   288 00:004A: 97 03        	sta	[s_pxTopOfStack],y
+   289 00:004C: C2 20        	rep #M
    290                        	longa on
    291                        
    292                        noParms:	
-   293 00:0052: A5 01        	lda	<1
-   294 00:0054: 85 0D        	sta	<13
+   293 00:004E: A5 01        	lda	<1
+   294 00:0050: 85 0D        	sta	<13
    295                        
-   296 00:0056: A4 03        	ldy	<s_pxTopOfStack
+   296 00:0052: A4 03        	ldy	<s_pxTopOfStack
    297                        	
-   298 00:0058: 2B           	pld
+   298 00:0054: 2B           	pld
    299                        	
-   300 00:0059: 18           	clc
-   301 00:005A: 3B           	tsc
-   302 00:005B: 69 0C 00     	adc	#12
-   303 00:005E: 1B           	tcs
+   300 00:0055: 18           	clc
+   301 00:0056: 3B           	tsc
+   302 00:0057: 69 0C 00     	adc	#12
+   303 00:005A: 1B           	tcs
    304                        	
-   305 00:005F: 98           	tya
+   305 00:005B: 98           	tya
    306                        
-   307 00:0060: 60           	rts
+   307 00:005C: 60           	rts
    308                        
    309                        ;	plb		offset 	1
    310                        ;	pld			2
@@ -364,7 +364,7 @@
    338                        	func
    339                        	
    340                        	;include	"homebrewWDC.inc"
-  Sun Sep 20 2026 12:03                                                                                                    Page 7
+  Wed Sep 23 2026  8:33                                                                                                    Page 7
 
 
    341             00000020   M		 equ $20		; Accu 8/16-bit
@@ -425,7 +425,7 @@
    396 00:003C: 1B           	tcs
    397                        	
    398 00:003D: AB           	plb
-  Sun Sep 20 2026 12:03                                                                                                    Page 8
+  Wed Sep 23 2026  8:33                                                                                                    Page 8
 
 
    399 00:003E: 2B           	pld
@@ -486,7 +486,7 @@
    454                        ;	lda	_~pxCurrentTCB
    455                        ;	sta $fffff1
    456                        ;
-  Sun Sep 20 2026 12:03                                                                                                    Page 9
+  Wed Sep 23 2026  8:33                                                                                                    Page 9
 
 
    457                        ;	rep #M
@@ -547,7 +547,7 @@
    512                        	
    513 00:0031: 42 06        	wdm 6
    514 00:0033: 40           	rti
-  Sun Sep 20 2026 12:03                                                                                                    Page 10
+  Wed Sep 23 2026  8:33                                                                                                    Page 10
 
 
    515                        

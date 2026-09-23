@@ -283,7 +283,7 @@ istack0:
 	longa off
 	ldy #4
 	lda [<s_pvParameters],y
-	sta $fffff1
+	;sta $fffff1
 	ldy	#1										; store data bank
 	sta	[s_pxTopOfStack],y
 	rep #M

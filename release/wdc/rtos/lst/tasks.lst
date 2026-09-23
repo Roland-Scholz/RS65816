@@ -1,4 +1,4 @@
-  Sun Sep 20 2026 12:03                                                                                                    Page 1
+  Wed Sep 23 2026  8:33                                                                                                    Page 1
 
 
                                                ***************************************
@@ -59,7 +59,7 @@
     50                        ;	*debug_hex = (char)((unsigned long)p >> 16);
     51 00:0008: AD xx xx     	lda	|_~debug_hex
     52 00:000B: 85 01        	sta	<R0
-  Sun Sep 20 2026 12:03                                                                                                    Page 2
+  Wed Sep 23 2026  8:33                                                                                                    Page 2
 
 
     53 00:000D: AD xx xx     	lda	|_~debug_hex+2
@@ -120,7 +120,7 @@
    108 00:006F: A5 05        	lda	<R1
    109 00:0071: 87 01        	sta	[<R0]
    110 00:0073: C2 20        	rep	#$20
-  Sun Sep 20 2026 12:03                                                                                                    Page 3
+  Wed Sep 23 2026  8:33                                                                                                    Page 3
 
 
    111                        	longa	on
@@ -181,7 +181,7 @@
    166                        	longa	off
    167 00:00BB: A5 05        	lda	<R1
    168 00:00BD: 87 01        	sta	[<R0]
-  Sun Sep 20 2026 12:03                                                                                                    Page 4
+  Wed Sep 23 2026  8:33                                                                                                    Page 4
 
 
    169 00:00BF: C2 20        	rep	#$20
@@ -242,7 +242,7 @@
    224                        ;
    225                        ;/* The default definitions are only available for non-MPU ports. The
    226                        ; * reason is that the stack alignment requirements vary for different
-  Sun Sep 20 2026 12:03                                                                                                    Page 5
+  Wed Sep 23 2026  8:33                                                                                                    Page 5
 
 
    227                        ; * architectures.*/
@@ -303,7 +303,7 @@
    280                        ;    #else /* if ( configNUMBER_OF_CORES == 1 ) */
    281                        ;
    282                        ;/* Yield the core on which this task is running. */
-  Sun Sep 20 2026 12:03                                                                                                    Page 6
+  Wed Sep 23 2026  8:33                                                                                                    Page 6
 
 
    283                        ;        #define taskYIELD_TASK_CORE_IF_USING_PREEMPTION( pxTCB )    prvYieldCore( ( pxTCB )->xTaskRun
@@ -364,7 +364,7 @@
    335                        ;
    336                        ;/* The name allocated to the Idle task.  This can be overridden by defining
    337                        ; * configIDLE_TASK_NAME in FreeRTOSConfig.h. */
-  Sun Sep 20 2026 12:03                                                                                                    Page 7
+  Wed Sep 23 2026  8:33                                                                                                    Page 7
 
 
    338                        ;#ifndef configIDLE_TASK_NAME
@@ -425,7 +425,7 @@
    392                        ;    } while( 0 ) /* taskSELECT_HIGHEST_PRIORITY_TASK */
    393                        ;    #else /* if ( configNUMBER_OF_CORES == 1 ) */
    394                        ;
-  Sun Sep 20 2026 12:03                                                                                                    Page 8
+  Wed Sep 23 2026  8:33                                                                                                    Page 8
 
 
    395                        ;        #define taskSELECT_HIGHEST_PRIORITY_TASK( xCoreID )    prvSelectHighestPriorityTask( xCoreID 
@@ -486,7 +486,7 @@
    442                        ;
    443                        ;/*-----------------------------------------------------------*/
    444                        ;
-  Sun Sep 20 2026 12:03                                                                                                    Page 9
+  Wed Sep 23 2026  8:33                                                                                                    Page 9
 
 
    445                        ;/* pxDelayedTaskList and pxOverflowDelayedTaskList are switched when the tick
@@ -547,7 +547,7 @@
    494                        ;#elif ( configTICK_TYPE_WIDTH_IN_BITS == TICK_TYPE_WIDTH_32_BITS )
    495                        ;    #define taskEVENT_LIST_ITEM_VALUE_IN_USE    ( ( uint32_t ) 0x80000000U )
    496                        ;#elif ( configTICK_TYPE_WIDTH_IN_BITS == TICK_TYPE_WIDTH_64_BITS )
-  Sun Sep 20 2026 12:03                                                                                                    Page 10
+  Wed Sep 23 2026  8:33                                                                                                    Page 10
 
 
    497                        ;    #define taskEVENT_LIST_ITEM_VALUE_IN_USE    ( ( uint64_t ) 0x8000000000000000U )
@@ -608,7 +608,7 @@
    543                        ;            {                                                                                \
    544                        ;                portYIELD_CORE( xCoreID );                                                   \
    545                        ;                pxCurrentTCBs[ ( xCoreID ) ]->xTaskRunState = taskTASK_SCHEDULED_TO_YIELD;   \
-  Sun Sep 20 2026 12:03                                                                                                    Page 11
+  Wed Sep 23 2026  8:33                                                                                                    Page 11
 
 
    546                        ;            }                                                                                \
@@ -669,7 +669,7 @@
    591                        ;    #if ( configUSE_TRACE_FACILITY == 1 )
    592                        ;        UBaseType_t uxTCBNumber;  /**< Stores a number that increments each time a TCB is created.  I
                     t allows debuggers to determine when a task has been deleted and then recreated. */
-  Sun Sep 20 2026 12:03                                                                                                    Page 12
+  Wed Sep 23 2026  8:33                                                                                                    Page 12
 
 
    593                        ;        UBaseType_t uxTaskNumber; /**< Stores a number specifically for use by third party trace code
@@ -730,7 +730,7 @@
    643                        ;    /* More details at: https://github.com/FreeRTOS/FreeRTOS-Kernel/blob/main/MISRA.md#rule-84 */
    644                        ;    /* coverity[misra_c_2012_rule_8_4_violation] */
    645                        ;    portDONT_DISCARD PRIVILEGED_DATA TCB_t * volatile pxCurrentTCB = NULL;
-  Sun Sep 20 2026 12:03                                                                                                    Page 13
+  Wed Sep 23 2026  8:33                                                                                                    Page 13
 
 
    646                        	data
@@ -791,7 +791,7 @@
    695                        	data
    696                        _~uxCurrentNumberOfTasks:
    697 00:0006: 00 00        	dw	$0
-  Sun Sep 20 2026 12:03                                                                                                    Page 14
+  Wed Sep 23 2026  8:33                                                                                                    Page 14
 
 
    698 00:0008:              	ends
@@ -852,7 +852,7 @@
    751                        ; * interrupts must not manipulate the xStateListItem of a TCB, or any of the
    752                        ; * lists the xStateListItem can be referenced from, if the scheduler is suspended.
    753                        ; * If an interrupt needs to unblock a task while the scheduler is suspended then it
-  Sun Sep 20 2026 12:03                                                                                                    Page 15
+  Wed Sep 23 2026  8:33                                                                                                    Page 15
 
 
    754                        ; * moves the task's event list item into the xPendingReadyList, ready for the
@@ -913,7 +913,7 @@
    807                        ; * Selects the highest priority available task for the given core.
    808                        ; */
    809                        ;    STATIC void prvSelectHighestPriorityTask( BaseType_t xCoreID );
-  Sun Sep 20 2026 12:03                                                                                                    Page 16
+  Wed Sep 23 2026  8:33                                                                                                    Page 16
 
 
    810                        ;#endif /* #if ( configNUMBER_OF_CORES > 1 ) */
@@ -974,7 +974,7 @@
    865                        ;/*
    866                        ; * Used only by the idle task.  This checks to see if anything has been placed
    867                        ; * in the list of tasks waiting to be deleted.  If so the task is cleaned up
-  Sun Sep 20 2026 12:03                                                                                                    Page 17
+  Wed Sep 23 2026  8:33                                                                                                    Page 17
 
 
    868                        ; * and its TCB deleted.
@@ -1035,7 +1035,7 @@
    919                        ; * will exit the Blocked state.
    920                        ; */
    921                        ;STATIC void prvResetNextTaskUnblockTime( void ) PRIVILEGED_FUNCTION;
-  Sun Sep 20 2026 12:03                                                                                                    Page 18
+  Wed Sep 23 2026  8:33                                                                                                    Page 18
 
 
    922                        ;
@@ -1096,7 +1096,7 @@
    976                        ;
    977                        ;/*
    978                        ; * Create a restricted task with static buffer for task stack and allocated buffer
-  Sun Sep 20 2026 12:03                                                                                                    Page 19
+  Wed Sep 23 2026  8:33                                                                                                    Page 19
 
 
    979                        ; * for TCB. Returns a handle to the task if it is created successfully. Otherwise,
@@ -1157,7 +1157,7 @@
   1034                        ; * and less than the supplied buffer length, the string has been
   1035                        ; * completely written.
   1036                        ; */
-  Sun Sep 20 2026 12:03                                                                                                    Page 20
+  Wed Sep 23 2026  8:33                                                                                                    Page 20
 
 
   1037                        ;    STATIC size_t prvSnprintfReturnValueToCharsWritten( int iSnprintfReturnValue,
@@ -1218,7 +1218,7 @@
   1091                        ;             * its run state. */
   1092                        ;
   1093                        ;            portDISABLE_INTERRUPTS();
-  Sun Sep 20 2026 12:03                                                                                                    Page 21
+  Wed Sep 23 2026  8:33                                                                                                    Page 21
 
 
   1094                        ;
@@ -1279,7 +1279,7 @@
   1148                        ;                if( ( pxCurrentTCBs[ xCoreID ]->uxTaskAttributes & taskATTRIBUTE_IS_IDLE ) != 0U )
   1149                        ;                {
   1150                        ;                    xCurrentCoreTaskPriority = ( BaseType_t ) ( xCurrentCoreTaskPriority - 1 );
-  Sun Sep 20 2026 12:03                                                                                                    Page 22
+  Wed Sep 23 2026  8:33                                                                                                    Page 22
 
 
   1151                        ;                }
@@ -1340,7 +1340,7 @@
   1204                        ;                if( ( xYieldCount == 0 ) && ( xLowestPriorityCore >= 0 ) )
   1205                        ;            #else /* #if ( configRUN_MULTIPLE_PRIORITIES == 0 ) */
   1206                        ;                if( xLowestPriorityCore >= 0 )
-  Sun Sep 20 2026 12:03                                                                                                    Page 23
+  Wed Sep 23 2026  8:33                                                                                                    Page 23
 
 
   1207                        ;            #endif /* #if ( configRUN_MULTIPLE_PRIORITIES == 0 ) */
@@ -1401,7 +1401,7 @@
   1260                        ;        }
   1261                        ;
   1262                        ;        while( xTaskScheduled == pdFALSE )
-  Sun Sep 20 2026 12:03                                                                                                    Page 24
+  Wed Sep 23 2026  8:33                                                                                                    Page 24
 
 
   1263                        ;        {
@@ -1462,7 +1462,7 @@
   1315                        ;                            pxCurrentTCBs[ xCoreID ]->xTaskRunState = taskTASK_NOT_RUNNING;
   1316                        ;                            #if ( configUSE_CORE_AFFINITY == 1 )
   1317                        ;                                pxPreviousTCB = pxCurrentTCBs[ xCoreID ];
-  Sun Sep 20 2026 12:03                                                                                                    Page 25
+  Wed Sep 23 2026  8:33                                                                                                    Page 25
 
 
   1318                        ;                            #endif
@@ -1523,7 +1523,7 @@
   1371                        ;            else
   1372                        ;            {
   1373                        ;                /* This function is called when idle task is not created. Break the
-  Sun Sep 20 2026 12:03                                                                                                    Page 26
+  Wed Sep 23 2026  8:33                                                                                                    Page 26
 
 
   1374                        ;                 * loop to prevent uxCurrentPriority overrun. */
@@ -1584,7 +1584,7 @@
   1426                        ;                         * pxCurrentTCBs[ xCoreID ]. When searching a new core for pxPreviousTCB,
   1427                        ;                         * we do not need to look at the cores on which pxCurrentTCBs[ xCoreID ]
   1428                        ;                         * is allowed to run. The reason is - when more than one cores are
-  Sun Sep 20 2026 12:03                                                                                                    Page 27
+  Wed Sep 23 2026  8:33                                                                                                    Page 27
 
 
   1429                        ;                         * eligible for an incoming task, we preempt the core with the minimum
@@ -1645,7 +1645,7 @@
   1482                        ;                    if( xLowestPriorityCore >= 0 )
   1483                        ;                    {
   1484                        ;                        prvYieldCore( xLowestPriorityCore );
-  Sun Sep 20 2026 12:03                                                                                                    Page 28
+  Wed Sep 23 2026  8:33                                                                                                    Page 28
 
 
   1485                        ;                    }
@@ -1706,7 +1706,7 @@
   1539                        ;            }
   1540                        ;            #endif /* tskSTATIC_AND_DYNAMIC_ALLOCATION_POSSIBLE */
   1541                        ;
-  Sun Sep 20 2026 12:03                                                                                                    Page 29
+  Wed Sep 23 2026  8:33                                                                                                    Page 29
 
 
   1542                        ;            prvInitialiseNewTask( pxTaskCode, pcName, uxStackDepth, pvParameters, uxPriority, pxCreat
@@ -1767,7 +1767,7 @@
   1594                        ;                                                   void * const pvParameters,
   1595                        ;                                                   UBaseType_t uxPriority,
   1596                        ;                                                   StackType_t * const puxStackBuffer,
-  Sun Sep 20 2026 12:03                                                                                                    Page 30
+  Wed Sep 23 2026  8:33                                                                                                    Page 30
 
 
   1597                        ;                                                   StaticTask_t * const pxTaskBuffer,
@@ -1828,7 +1828,7 @@
   1649                        ;            {
   1650                        ;                /* Tasks can be created statically or dynamically, so note this
   1651                        ;                 * task was created statically in case the task is later deleted. */
-  Sun Sep 20 2026 12:03                                                                                                    Page 31
+  Wed Sep 23 2026  8:33                                                                                                    Page 31
 
 
   1652                        ;                pxNewTCB->ucStaticallyAllocated = tskSTATICALLY_ALLOCATED_STACK_AND_TCB;
@@ -1889,7 +1889,7 @@
   1707                        ;
   1708                        ;    #if ( ( configNUMBER_OF_CORES > 1 ) && ( configUSE_CORE_AFFINITY == 1 ) )
   1709                        ;        BaseType_t xTaskCreateRestrictedStaticAffinitySet( const TaskParameters_t * const pxTaskDefin
-  Sun Sep 20 2026 12:03                                                                                                    Page 32
+  Wed Sep 23 2026  8:33                                                                                                    Page 32
 
 
                     ition,
@@ -1950,7 +1950,7 @@
   1762                        ;
   1763                        ;                /* Store the stack location in the TCB. */
   1764                        ;                pxNewTCB->pxStack = pxTaskDefinition->puxStackBuffer;
-  Sun Sep 20 2026 12:03                                                                                                    Page 33
+  Wed Sep 23 2026  8:33                                                                                                    Page 33
 
 
   1765                        ;
@@ -2011,7 +2011,7 @@
   1820                        ;
   1821                        ;        traceRETURN_xTaskCreateRestricted( xReturn );
   1822                        ;
-  Sun Sep 20 2026 12:03                                                                                                    Page 34
+  Wed Sep 23 2026  8:33                                                                                                    Page 34
 
 
   1823                        ;        return xReturn;
@@ -2072,7 +2072,7 @@
   1877 00:00F7: 3B           	tsc
   1878 00:00F8: 38           	sec
   1879 00:00F9: E9 0C 00     	sbc	#L8
-  Sun Sep 20 2026 12:03                                                                                                    Page 35
+  Wed Sep 23 2026  8:33                                                                                                    Page 35
 
 
   1880 00:00FC: 1B           	tcs
@@ -2133,7 +2133,7 @@
                     15 */
   1932                        ;            /* coverity[misra_c_2012_rule_11_5_violation] */
   1933                        ;            pxStack = ( StackType_t * ) pvPortMallocStack( ( ( ( size_t ) uxStackDepth ) * sizeof( St
-  Sun Sep 20 2026 12:03                                                                                                    Page 36
+  Wed Sep 23 2026  8:33                                                                                                    Page 36
 
 
                     ackType_t ) ) );
@@ -2194,7 +2194,7 @@
   1987                        ;                }
   1988                        ;            }
   1989                        ;            else
-  Sun Sep 20 2026 12:03                                                                                                    Page 37
+  Wed Sep 23 2026  8:33                                                                                                    Page 37
 
 
   1990 00:013F: 80 04        	bra	L10004
@@ -2255,7 +2255,7 @@
   2044 00:017C: 98           	tya
   2045 00:017D: 60           	rts
   2046                        ;    }
-  Sun Sep 20 2026 12:03                                                                                                    Page 38
+  Wed Sep 23 2026  8:33                                                                                                    Page 38
 
 
   2047             0000000C   L8	equ	12
@@ -2316,7 +2316,7 @@
   2100                        ;        if( pxNewTCB != NULL )
   2101                        ;        {
   2102 00:01A1: 05 03        	ora	<L15+pxNewTCB_1+2
-  Sun Sep 20 2026 12:03                                                                                                    Page 39
+  Wed Sep 23 2026  8:33                                                                                                    Page 39
 
 
   2103 00:01A3: F0 0C        	beq	L10006
@@ -2377,7 +2377,7 @@
   2158                        ;        {
   2159                        ;            TCB_t * pxNewTCB;
   2160                        ;            BaseType_t xReturn;
-  Sun Sep 20 2026 12:03                                                                                                    Page 40
+  Wed Sep 23 2026  8:33                                                                                                    Page 40
 
 
   2161                        ;
@@ -2438,7 +2438,7 @@
   2214             00000017   pxNewTCB_0	set	23
   2215             0000001B   xRegions_0	set	27
   2216                        ;    StackType_t * pxTopOfStack;
-  Sun Sep 20 2026 12:03                                                                                                    Page 41
+  Wed Sep 23 2026  8:33                                                                                                    Page 41
 
 
   2217                        ;    UBaseType_t x;
@@ -2499,7 +2499,7 @@
   2271 00:01F1: D4 05        	pei	<R1
   2272 00:01F3: A9 01 00     	lda	#$1
   2273                        	xref	_~~lasl
-  Sun Sep 20 2026 12:03                                                                                                    Page 42
+  Wed Sep 23 2026  8:33                                                                                                    Page 42
 
 
   2274 00:01F6: 20 xx xx     	jsr	_~~lasl
@@ -2560,7 +2560,7 @@
   2325 00:0220: 82 07 01     	brl	L10017
   2326                        L20002:
   2327                        ;
-  Sun Sep 20 2026 12:03                                                                                                    Page 43
+  Wed Sep 23 2026  8:33                                                                                                    Page 43
 
 
   2328                        ;    if( uxPriority >= ( UBaseType_t ) configMAX_PRIORITIES )
@@ -2621,7 +2621,7 @@
   2383                        ;    listSET_LIST_ITEM_VALUE( &( pxNewTCB->xEventListItem ), ( TickType_t ) configMAX_PRIORITIES - ( T
                     ickType_t ) uxPriority );
   2384 00:0270: A5 23        	lda	<L18+uxPriority_0
-  Sun Sep 20 2026 12:03                                                                                                    Page 44
+  Wed Sep 23 2026  8:33                                                                                                    Page 44
 
 
   2385 00:0272: 85 01        	sta	<R0
@@ -2682,7 +2682,7 @@
   2439                        ;            #if ( portSTACK_GROWTH < 0 )
   2440                        ;            {
   2441                        ;                pxNewTCB->pxTopOfStack = pxPortInitialiseStack( pxTopOfStack, pxNewTCB->pxStack, pxTa
-  Sun Sep 20 2026 12:03                                                                                                    Page 45
+  Wed Sep 23 2026  8:33                                                                                                    Page 45
 
 
                     skCode, pvParameters, xRunPrivileged, &( pxNewTCB->xMPUSettings ) );
@@ -2743,7 +2743,7 @@
   2492                        ;        {			
   2493                        ;            configASSERT( ( ( portPOINTER_SIZE_TYPE ) ( pxTopOfStack - pxNewTCB->pxTopOfStack ) ) < (
                      ( portPOINTER_SIZE_TYPE ) uxStackDepth ) );
-  Sun Sep 20 2026 12:03                                                                                                    Page 46
+  Wed Sep 23 2026  8:33                                                                                                    Page 46
 
 
   2494 00:02B9: A5 1D        	lda	<L18+uxStackDepth_0
@@ -2804,7 +2804,7 @@
   2547 00:02EE: 3B           	tsc
   2548 00:02EF: 18           	clc
   2549 00:02F0: 69 2E 00     	adc	#L18+28
-  Sun Sep 20 2026 12:03                                                                                                    Page 47
+  Wed Sep 23 2026  8:33                                                                                                    Page 47
 
 
   2550 00:02F3: 1B           	tcs
@@ -2865,7 +2865,7 @@
   2605                        ;    }
   2606                        ;    else
   2607                        L10017:
-  Sun Sep 20 2026 12:03                                                                                                    Page 48
+  Wed Sep 23 2026  8:33                                                                                                    Page 48
 
 
   2608                        ;	
@@ -2926,7 +2926,7 @@
   2663                        ;/*-----------------------------------------------------------*/
   2664                        ;
   2665                        ;#if ( configNUMBER_OF_CORES == 1 )
-  Sun Sep 20 2026 12:03                                                                                                    Page 49
+  Wed Sep 23 2026  8:33                                                                                                    Page 49
 
 
   2666                        ;
@@ -2987,7 +2987,7 @@
   2721                        ;            uxTaskNumber++;
   2722 00:037B: EE xx xx     	inc	|_~uxTaskNumber
   2723                        ;
-  Sun Sep 20 2026 12:03                                                                                                    Page 50
+  Wed Sep 23 2026  8:33                                                                                                    Page 50
 
 
   2724                        ;            #if ( configUSE_TRACE_FACILITY == 1 )
@@ -3048,7 +3048,7 @@
   2779 00:03D0: A0 08 00     	ldy	#$8
   2780 00:03D3: B7 0D        	lda	[<L29+pxIndex_2],Y
   2781 00:03D5: 85 01        	sta	<R0
-  Sun Sep 20 2026 12:03                                                                                                    Page 51
+  Wed Sep 23 2026  8:33                                                                                                    Page 51
 
 
   2782 00:03D7: C8           	iny
@@ -3109,7 +3109,7 @@
   2837 00:043F: 20 xx xx     	jsr	_~~mul
   2838 00:0442: 85 01        	sta	<R0
   2839 00:0444: A0 2C 00     	ldy	#$2c
-  Sun Sep 20 2026 12:03                                                                                                    Page 52
+  Wed Sep 23 2026  8:33                                                                                                    Page 52
 
 
   2840 00:0447: B7 13        	lda	[<L28+pxNewTCB_0],Y
@@ -3170,7 +3170,7 @@
   2895 00:0485: F0 03        	beq	*+5
   2896 00:0487: 82 F1 FE     	brl	L10033
   2897                        ;                    if( pxCurrentTCB->uxPriority <= pxNewTCB->uxPriority )
-  Sun Sep 20 2026 12:03                                                                                                    Page 53
+  Wed Sep 23 2026  8:33                                                                                                    Page 53
 
 
   2898                        ;                    {
@@ -3231,7 +3231,7 @@
   2953                        ;
   2954                        ;                /* All the cores start with idle tasks before the SMP scheduler
   2955                        ;                 * is running. Idle tasks are assigned to cores when they are
-  Sun Sep 20 2026 12:03                                                                                                    Page 54
+  Wed Sep 23 2026  8:33                                                                                                    Page 54
 
 
   2956                        ;                 * created in prvCreateIdleTasks(). */
@@ -3292,7 +3292,7 @@
   3011                        ;        }
   3012                        ;        else
   3013                        ;        {
-  Sun Sep 20 2026 12:03                                                                                                    Page 55
+  Wed Sep 23 2026  8:33                                                                                                    Page 55
 
 
   3014                        ;            /* Complete string was written to the buffer. */
@@ -3353,7 +3353,7 @@
   3068                        L42:
   3069 00:04CA: 86 03        	stx	<R0+2
   3070 00:04CC: 85 09        	sta	<L39+pxTCB_1
-  Sun Sep 20 2026 12:03                                                                                                    Page 56
+  Wed Sep 23 2026  8:33                                                                                                    Page 56
 
 
   3071 00:04CE: A5 03        	lda	<R0+2
@@ -3414,7 +3414,7 @@
   3126                        ;            else
   3127                        ;            {
   3128                        ;                mtCOVERAGE_TEST_MARKER();
-  Sun Sep 20 2026 12:03                                                                                                    Page 57
+  Wed Sep 23 2026  8:33                                                                                                    Page 57
 
 
   3129                        ;            }
@@ -3475,7 +3475,7 @@
   3184 00:0548: A9 xx xx     	lda	#_BEG_DATA>>16
   3185 00:054B: 48           	pha
   3186 00:054C: D4 05        	pei	<R1
-  Sun Sep 20 2026 12:03                                                                                                    Page 58
+  Wed Sep 23 2026  8:33                                                                                                    Page 58
 
 
   3187 00:054E: 20 xx xx     	jsr	_~vListInsertEnd
@@ -3536,7 +3536,7 @@
   3242                        ;            {
   3243                        ;                --uxCurrentNumberOfTasks;
   3244 00:055B: CE xx xx     	dec	|_~uxCurrentNumberOfTasks	; volatile
-  Sun Sep 20 2026 12:03                                                                                                    Page 59
+  Wed Sep 23 2026  8:33                                                                                                    Page 59
 
 
   3245                        ;                traceTASK_DELETE( pxTCB );
@@ -3597,7 +3597,7 @@
   3300                        ;                    taskYIELD_WITHIN_API();
   3301 00:058B: 22 xx xx xx  	jsl	_~vPortYield
   3302                        ;                }
-  Sun Sep 20 2026 12:03                                                                                                    Page 60
+  Wed Sep 23 2026  8:33                                                                                                    Page 60
 
 
   3303                        ;                else
@@ -3658,7 +3658,7 @@
   3358 00:05A5: 05 19        	ora	<L58+pxPreviousWakeTime_0+2
   3359 00:05A7: D0 03        	bne	L10073
   3360                        	asmstart
-  Sun Sep 20 2026 12:03                                                                                                    Page 61
+  Wed Sep 23 2026  8:33                                                                                                    Page 61
 
 
   3361 00:05A9: 78           	sei
@@ -3719,7 +3719,7 @@
   3416                        ;            xTicksIncrements = xIncrements * xTimeIncrement;
   3417 00:05E7: D4 1D        	pei	<L58+xTimeIncrement_0+2
   3418 00:05E9: D4 1B        	pei	<L58+xTimeIncrement_0
-  Sun Sep 20 2026 12:03                                                                                                    Page 62
+  Wed Sep 23 2026  8:33                                                                                                    Page 62
 
 
   3419 00:05EB: D4 07        	pei	<L59+xIncrements_1+2
@@ -3780,7 +3780,7 @@
   3474                        ;        }
   3475                        L10086:
   3476                        ;
-  Sun Sep 20 2026 12:03                                                                                                    Page 63
+  Wed Sep 23 2026  8:33                                                                                                    Page 63
 
 
   3477                        ;        traceRETURN_xTaskPeriodicDelay( xIncrements );
@@ -3841,7 +3841,7 @@
   3532                        L10088:
   3533 00:0657: 80 FE        	bra	L10088
   3534                        L10087:
-  Sun Sep 20 2026 12:03                                                                                                    Page 64
+  Wed Sep 23 2026  8:33                                                                                                    Page 64
 
 
   3535                        ;        configASSERT( ( xTimeIncrement > 0U ) );
@@ -3902,7 +3902,7 @@
   3590                        ;                 * actually delay is if the wake time has also  overflowed,
   3591                        ;                 * and the wake time is greater than the tick time.  When this
   3592                        ;                 * is the case it is as if neither time had overflowed. */
-  Sun Sep 20 2026 12:03                                                                                                    Page 65
+  Wed Sep 23 2026  8:33                                                                                                    Page 65
 
 
   3593                        ;                if( ( xTimeToWake < *pxPreviousWakeTime ) && ( xTimeToWake > xConstTickCount ) )
@@ -3963,7 +3963,7 @@
   3648                        ;        }
   3649                        ;        xAlreadyYielded = xTaskResumeAll();
   3650 00:06D3: 20 xx xx     	jsr	_~xTaskResumeAll
-  Sun Sep 20 2026 12:03                                                                                                    Page 66
+  Wed Sep 23 2026  8:33                                                                                                    Page 66
 
 
   3651 00:06D6: 85 09        	sta	<L66+xAlreadyYielded_1
@@ -4024,7 +4024,7 @@
   3706                        ;        {
   3707                        ;            mtCOVERAGE_TEST_MARKER();
   3708                        ;        }
-  Sun Sep 20 2026 12:03                                                                                                    Page 67
+  Wed Sep 23 2026  8:33                                                                                                    Page 67
 
 
   3709                        ;    }
@@ -4085,7 +4085,7 @@
   3764                        ;                /* A task that is removed from the event list while the
   3765                        ;                 * scheduler is suspended will not get placed in the ready
   3766                        ;                 * list or removed from the blocked list until the scheduler
-  Sun Sep 20 2026 12:03                                                                                                    Page 68
+  Wed Sep 23 2026  8:33                                                                                                    Page 68
 
 
   3767                        ;                 * is resumed.
@@ -4146,7 +4146,7 @@
   3821                        ;
   3822                        ;    eTaskState eTaskGetState( TaskHandle_t xTask )
   3823                        ;    {
-  Sun Sep 20 2026 12:03                                                                                                    Page 69
+  Wed Sep 23 2026  8:33                                                                                                    Page 69
 
 
   3824                        	code
@@ -4207,7 +4207,7 @@
   3879 00:076C: 64 05        	stz	<L86+eReturn_1
   3880                        ;            }
   3881                        ;            else
-  Sun Sep 20 2026 12:03                                                                                                    Page 70
+  Wed Sep 23 2026  8:33                                                                                                    Page 70
 
 
   3882 00:076E: 80 4B        	bra	L10122
@@ -4268,7 +4268,7 @@
   3937                        ;                /* The task has been placed on the pending ready list, so its
   3938                        ;                 * state is eReady regardless of what list the task's state list
   3939                        ;                 * item is currently placed on. */
-  Sun Sep 20 2026 12:03                                                                                                    Page 71
+  Wed Sep 23 2026  8:33                                                                                                    Page 71
 
 
   3940                        ;                eReturn = eReady;
@@ -4329,7 +4329,7 @@
   3995 00:07D5: F0 0C        	beq	L92
   3996 00:07D7: A5 07        	lda	<L86+pxStateList_1
   3997 00:07D9: C5 13        	cmp	<L86+pxOverflowedDelayedList_1
-  Sun Sep 20 2026 12:03                                                                                                    Page 72
+  Wed Sep 23 2026  8:33                                                                                                    Page 72
 
 
   3998 00:07DB: D0 04        	bne	L95
@@ -4390,7 +4390,7 @@
                     AY_ENTRIES; x++ )
   4053 00:080E: 64 1B        	stz	<L86+x_2
   4054                        L10131:
-  Sun Sep 20 2026 12:03                                                                                                    Page 73
+  Wed Sep 23 2026  8:33                                                                                                    Page 73
 
 
   4055                        ;                            {
@@ -4451,7 +4451,7 @@
   4110 00:0844: 05 09        	ora	<L86+pxStateList_1+2
   4111 00:0846: F0 03        	beq	*+5
   4112 00:0848: 82 6B FF     	brl	L10135
-  Sun Sep 20 2026 12:03                                                                                                    Page 74
+  Wed Sep 23 2026  8:33                                                                                                    Page 74
 
 
   4113                        L103:
@@ -4512,7 +4512,7 @@
   4168 00:0860: AE xx xx     	ldx	|_~pxCurrentTCB+2	; volatile
   4169 00:0863: AD xx xx     	lda	|_~pxCurrentTCB	; volatile
   4170 00:0866: 80 04        	bra	L112
-  Sun Sep 20 2026 12:03                                                                                                    Page 75
+  Wed Sep 23 2026  8:33                                                                                                    Page 75
 
 
   4171                        L110:
@@ -4573,7 +4573,7 @@
   4226                        ;    {
   4227                        	code
   4228                        	xdef	_~uxTaskPriorityGetFromISR
-  Sun Sep 20 2026 12:03                                                                                                    Page 76
+  Wed Sep 23 2026  8:33                                                                                                    Page 76
 
 
   4229                        	func
@@ -4634,7 +4634,7 @@
   4284 00:08AF: A5 0F        	lda	<L115+xTask_0
   4285                        L119:
   4286 00:08B1: 86 03        	stx	<R0+2
-  Sun Sep 20 2026 12:03                                                                                                    Page 77
+  Wed Sep 23 2026  8:33                                                                                                    Page 77
 
 
   4287 00:08B3: 85 05        	sta	<L116+pxTCB_1
@@ -4695,7 +4695,7 @@
   4342 00:08D9: E9 0A 00     	sbc	#L122
   4343 00:08DC: 1B           	tcs
   4344 00:08DD: 0B           	phd
-  Sun Sep 20 2026 12:03                                                                                                    Page 78
+  Wed Sep 23 2026  8:33                                                                                                    Page 78
 
 
   4345 00:08DE: 5B           	tcd
@@ -4756,7 +4756,7 @@
   4400 00:090B: A5 09        	lda	<L123+uxReturn_1
   4401 00:090D: A8           	tay
   4402 00:090E: A5 0B        	lda	<L122+1
-  Sun Sep 20 2026 12:03                                                                                                    Page 79
+  Wed Sep 23 2026  8:33                                                                                                    Page 79
 
 
   4403 00:0910: 85 0F        	sta	<L122+1+4
@@ -4817,7 +4817,7 @@
   4458                        ;         * separate interrupt safe API to ensure interrupt entry is as fast and as
   4459                        ;         * simple as possible.  More information (albeit Cortex-M specific) is
   4460                        ;         * provided on the following link:
-  Sun Sep 20 2026 12:03                                                                                                    Page 80
+  Wed Sep 23 2026  8:33                                                                                                    Page 80
 
 
   4461                        ;         * https://www.FreeRTOS.org/RTOS-Cortex-M3-M4.html */
@@ -4878,7 +4878,7 @@
   4516 00:095B: 98           	tya
   4517 00:095C: 60           	rts
   4518                        ;    }
-  Sun Sep 20 2026 12:03                                                                                                    Page 81
+  Wed Sep 23 2026  8:33                                                                                                    Page 81
 
 
   4519             0000000C   L129	equ	12
@@ -4939,7 +4939,7 @@
   4574                        ;        {
   4575 00:0971: A5 21        	lda	<L136+uxNewPriority_0
   4576 00:0973: C9 05 00     	cmp	#<$5
-  Sun Sep 20 2026 12:03                                                                                                    Page 82
+  Wed Sep 23 2026  8:33                                                                                                    Page 82
 
 
   4577 00:0976: 90 05        	bcc	L10158
@@ -5000,7 +5000,7 @@
   4632                        ;                uxCurrentBasePriority = pxTCB->uxPriority;
   4633                        ;            }
   4634                        ;            #endif
-  Sun Sep 20 2026 12:03                                                                                                    Page 83
+  Wed Sep 23 2026  8:33                                                                                                    Page 83
 
 
   4635                        ;
@@ -5061,7 +5061,7 @@
   4690                        ;
   4691                        ;                /* Remember the ready list the task might be referenced from
   4692                        ;                 * before its uxPriority member is changed so the
-  Sun Sep 20 2026 12:03                                                                                                    Page 84
+  Wed Sep 23 2026  8:33                                                                                                    Page 84
 
 
   4693                        ;                 * taskRESET_READY_PRIORITY() macro can function correctly. */
@@ -5122,7 +5122,7 @@
   4745 00:0A08: A5 21        	lda	<L136+uxNewPriority_0
   4746 00:0A0A: 85 01        	sta	<R0
   4747 00:0A0C: 64 03        	stz	<R0+2
-  Sun Sep 20 2026 12:03                                                                                                    Page 85
+  Wed Sep 23 2026  8:33                                                                                                    Page 85
 
 
   4748 00:0A0E: 38           	sec
@@ -5183,7 +5183,7 @@
   4802 00:0A59: 80 9C        	bra	L10173
   4803                        ;                            {
   4804                        ;                                mtCOVERAGE_TEST_MARKER();
-  Sun Sep 20 2026 12:03                                                                                                    Page 86
+  Wed Sep 23 2026  8:33                                                                                                    Page 86
 
 
   4805                        ;                            }
@@ -5244,7 +5244,7 @@
   4860 00:0A8D: A9 00 00     	lda	#$0
   4861 00:0A90: 65 0F        	adc	<L137+pxTCB_1+2
   4862 00:0A92: 48           	pha
-  Sun Sep 20 2026 12:03                                                                                                    Page 87
+  Wed Sep 23 2026  8:33                                                                                                    Page 87
 
 
   4863 00:0A93: D4 01        	pei	<R0
@@ -5305,7 +5305,7 @@
   4918 00:0AE6: B7 17        	lda	[<L137+pxIndex_2],Y
   4919 00:0AE8: A0 0E 00     	ldy	#$e
   4920 00:0AEB: 97 0D        	sta	[<L137+pxTCB_1],Y
-  Sun Sep 20 2026 12:03                                                                                                    Page 88
+  Wed Sep 23 2026  8:33                                                                                                    Page 88
 
 
   4921 00:0AED: A0 08 00     	ldy	#$8
@@ -5366,7 +5366,7 @@
   4976 00:0B57: B7 0D        	lda	[<L137+pxTCB_1],Y
   4977 00:0B59: A2 12 00     	ldx	#<$12
   4978                        	xref	_~~mul
-  Sun Sep 20 2026 12:03                                                                                                    Page 89
+  Wed Sep 23 2026  8:33                                                                                                    Page 89
 
 
   4979 00:0B5C: 20 xx xx     	jsr	_~~mul
@@ -5427,7 +5427,7 @@
   5034                        ;                else
   5035 00:0B8B: 80 ED        	bra	L10163
   5036                        ;                {
-  Sun Sep 20 2026 12:03                                                                                                    Page 90
+  Wed Sep 23 2026  8:33                                                                                                    Page 90
 
 
   5037                        ;                    #if ( configNUMBER_OF_CORES > 1 )
@@ -5488,7 +5488,7 @@
   5091                        ;                        prvYieldCore( xCoreID );
   5092                        ;                    }
   5093                        ;                }
-  Sun Sep 20 2026 12:03                                                                                                    Page 91
+  Wed Sep 23 2026  8:33                                                                                                    Page 91
 
 
   5094                        ;                else
@@ -5549,7 +5549,7 @@
   5149                        ;    void vTaskPreemptionDisable( const TaskHandle_t xTask )
   5150                        ;    {
   5151                        ;        TCB_t * pxTCB;
-  Sun Sep 20 2026 12:03                                                                                                    Page 92
+  Wed Sep 23 2026  8:33                                                                                                    Page 92
 
 
   5152                        ;
@@ -5610,7 +5610,7 @@
   5207                        	code
   5208                        	xdef	_~vTaskSuspend
   5209                        	func
-  Sun Sep 20 2026 12:03                                                                                                    Page 93
+  Wed Sep 23 2026  8:33                                                                                                    Page 93
 
 
   5210                        _~vTaskSuspend:
@@ -5671,7 +5671,7 @@
   5265 00:0BBC: 18           	clc
   5266 00:0BBD: 65 09        	adc	<L168+pxTCB_1
   5267 00:0BBF: 85 01        	sta	<R0
-  Sun Sep 20 2026 12:03                                                                                                    Page 94
+  Wed Sep 23 2026  8:33                                                                                                    Page 94
 
 
   5268 00:0BC1: A9 00 00     	lda	#$0
@@ -5732,7 +5732,7 @@
   5323 00:0C06: D4 05        	pei	<R1
   5324 00:0C08: 20 xx xx     	jsr	_~vListInsertEnd
   5325                        ;
-  Sun Sep 20 2026 12:03                                                                                                    Page 95
+  Wed Sep 23 2026  8:33                                                                                                    Page 95
 
 
   5326                        ;            #if ( configUSE_TASK_NOTIFICATIONS == 1 )
@@ -5793,7 +5793,7 @@
   5380                        ;            {
   5381                        ;                if( xSchedulerRunning != pdFALSE )
   5382                        ;                {
-  Sun Sep 20 2026 12:03                                                                                                    Page 96
+  Wed Sep 23 2026  8:33                                                                                                    Page 96
 
 
   5383                        ;                    /* Reset the next expected unblock time in case it referred to the
@@ -5854,7 +5854,7 @@
   5438 00:0C40: 58           	cli
   5439                        	asmend
   5440                        ;            }
-  Sun Sep 20 2026 12:03                                                                                                    Page 97
+  Wed Sep 23 2026  8:33                                                                                                    Page 97
 
 
   5441                        ;            else
@@ -5915,7 +5915,7 @@
   5496                        ;                    /* The scheduler is not running, but the task that was pointed
   5497                        ;                     * to by pxCurrentTCB has just been suspended and pxCurrentTCB
   5498                        ;                     * must be adjusted to point to a different task. */
-  Sun Sep 20 2026 12:03                                                                                                    Page 98
+  Wed Sep 23 2026  8:33                                                                                                    Page 98
 
 
   5499                        ;
@@ -5976,7 +5976,7 @@
   5554                        ;        /* Accesses xPendingReadyList so must be called from a critical
   5555                        ;         * section. */
   5556                        ;
-  Sun Sep 20 2026 12:03                                                                                                    Page 99
+  Wed Sep 23 2026  8:33                                                                                                    Page 99
 
 
   5557                        ;        /* It does not make sense to check if the calling task is suspended. */
@@ -6037,7 +6037,7 @@
   5611 00:0CD3: C5 01        	cmp	<R0
   5612 00:0CD5: D0 06        	bne	L194
   5613 00:0CD7: C8           	iny
-  Sun Sep 20 2026 12:03                                                                                                    Page 100
+  Wed Sep 23 2026  8:33                                                                                                    Page 100
 
 
   5614 00:0CD8: C8           	iny
@@ -6098,7 +6098,7 @@
   5668                        	longa	off
   5669 00:0D10: B7 07        	lda	[<L186+pxTCB_1],Y
   5670 00:0D12: C9 01        	cmp	#<$1
-  Sun Sep 20 2026 12:03                                                                                                    Page 101
+  Wed Sep 23 2026  8:33                                                                                                    Page 101
 
 
   5671 00:0D14: C2 20        	rep	#$20
@@ -6159,7 +6159,7 @@
   5726                        ;
   5727                        ;#endif /* INCLUDE_vTaskSuspend */
   5728                        ;/*-----------------------------------------------------------*/
-  Sun Sep 20 2026 12:03                                                                                                    Page 102
+  Wed Sep 23 2026  8:33                                                                                                    Page 102
 
 
   5729                        ;
@@ -6220,7 +6220,7 @@
   5784 00:0D50: CD xx xx     	cmp	|_~pxCurrentTCB	; volatile
   5785 00:0D53: D0 05        	bne	L209
   5786 00:0D55: A5 0F        	lda	<L207+pxTCB_1+2
-  Sun Sep 20 2026 12:03                                                                                                    Page 103
+  Wed Sep 23 2026  8:33                                                                                                    Page 103
 
 
   5787 00:0D57: CD xx xx     	cmp	|_~pxCurrentTCB+2	; volatile
@@ -6281,7 +6281,7 @@
   5842 00:0DAF: 85 09        	sta	<R2
   5843 00:0DB1: B2 09        	lda	(<R2)
   5844 00:0DB3: 85 11        	sta	<L207+pxIndex_2
-  Sun Sep 20 2026 12:03                                                                                                    Page 104
+  Wed Sep 23 2026  8:33                                                                                                    Page 104
 
 
   5845 00:0DB5: A0 02 00     	ldy	#$2
@@ -6342,7 +6342,7 @@
   5900 00:0E1D: 97 11        	sta	[<L207+pxIndex_2],Y
   5901 00:0E1F: A0 2C 00     	ldy	#$2c
   5902 00:0E22: B7 0D        	lda	[<L207+pxTCB_1],Y
-  Sun Sep 20 2026 12:03                                                                                                    Page 105
+  Wed Sep 23 2026  8:33                                                                                                    Page 105
 
 
   5903 00:0E24: A2 12 00     	ldx	#<$12
@@ -6403,7 +6403,7 @@
   5958 00:0E7C: A5 15        	lda	<L206+1
   5959 00:0E7E: 85 19        	sta	<L206+1+4
   5960 00:0E80: 2B           	pld
-  Sun Sep 20 2026 12:03                                                                                                    Page 106
+  Wed Sep 23 2026  8:33                                                                                                    Page 106
 
 
   5961 00:0E81: 3B           	tsc
@@ -6464,7 +6464,7 @@
   6016                        ;
   6017                        ;        configASSERT( xTaskToResume );
   6018 00:0E9A: A5 1B        	lda	<L216+xTaskToResume_0
-  Sun Sep 20 2026 12:03                                                                                                    Page 107
+  Wed Sep 23 2026  8:33                                                                                                    Page 107
 
 
   6019 00:0E9C: 05 1D        	ora	<L216+xTaskToResume_0+2
@@ -6525,7 +6525,7 @@
   6074 00:0EBA: AD xx xx     	lda	|_~pxCurrentTCB	; volatile
   6075 00:0EBD: 85 01        	sta	<R0
   6076 00:0EBF: AD xx xx     	lda	|_~pxCurrentTCB+2	; volatile
-  Sun Sep 20 2026 12:03                                                                                                    Page 108
+  Wed Sep 23 2026  8:33                                                                                                    Page 108
 
 
   6077 00:0EC2: 85 03        	sta	<R0+2
@@ -6586,7 +6586,7 @@
   6132 00:0F12: 85 15        	sta	<L217+pxIndex_2
   6133 00:0F14: A0 02 00     	ldy	#$2
   6134 00:0F17: B1 09        	lda	(<R2),Y
-  Sun Sep 20 2026 12:03                                                                                                    Page 109
+  Wed Sep 23 2026  8:33                                                                                                    Page 109
 
 
   6135 00:0F19: 85 17        	sta	<L217+pxIndex_2+2
@@ -6647,7 +6647,7 @@
   6190 00:0F81: B7 0F        	lda	[<L217+pxTCB_1],Y
   6191 00:0F83: A2 12 00     	ldx	#<$12
   6192                        	xref	_~~mul
-  Sun Sep 20 2026 12:03                                                                                                    Page 110
+  Wed Sep 23 2026  8:33                                                                                                    Page 110
 
 
   6193 00:0F86: 20 xx xx     	jsr	_~~mul
@@ -6708,7 +6708,7 @@
   6248                        ;                    vListInsertEnd( &( xPendingReadyList ), &( pxTCB->xEventListItem ) );
   6249 00:0FD3: A9 18 00     	lda	#$18
   6250 00:0FD6: 18           	clc
-  Sun Sep 20 2026 12:03                                                                                                    Page 111
+  Wed Sep 23 2026  8:33                                                                                                    Page 111
 
 
   6251 00:0FD7: 65 0F        	adc	<L217+pxTCB_1
@@ -6769,7 +6769,7 @@
   6306                        ;    char cIdleName[ configMAX_TASK_NAME_LEN ] = { 0 };
   6307                        ;    //TaskFunction_t pxIdleTaskFunction = NULL;
   6308                        ;    TaskFunction_t pxIdleTaskFunction = 0;
-  Sun Sep 20 2026 12:03                                                                                                    Page 112
+  Wed Sep 23 2026  8:33                                                                                                    Page 112
 
 
   6309                        ;    UBaseType_t xIdleTaskNameIndex;
@@ -6830,7 +6830,7 @@
   6362                        ;        }
   6363                        ;        else
   6364                        ;        {
-  Sun Sep 20 2026 12:03                                                                                                    Page 113
+  Wed Sep 23 2026  8:33                                                                                                    Page 113
 
 
   6365                        ;            mtCOVERAGE_TEST_MARKER();
@@ -6891,7 +6891,7 @@
   6420                        ;             *
   6421                        ;             * Note: Idle task name index only supports single-character
   6422                        ;             * core IDs (0-9). If the core ID exceeds 9, the idle task
-  Sun Sep 20 2026 12:03                                                                                                    Page 114
+  Wed Sep 23 2026  8:33                                                                                                    Page 114
 
 
   6423                        ;             * name will contain an incorrect ASCII character. This is
@@ -6952,7 +6952,7 @@
   6474                        ;            xReturn = xTaskCreate( pxIdleTaskFunction,
   6475                        ;                                   cIdleName,
   6476                        ;                                   configMINIMAL_STACK_SIZE,
-  Sun Sep 20 2026 12:03                                                                                                    Page 115
+  Wed Sep 23 2026  8:33                                                                                                    Page 115
 
 
   6477                        ;                                   ( void * ) NULL,
@@ -7013,7 +7013,7 @@
   6530                        ;            #endif /* if ( configNUMBER_OF_CORES == 1 ) */
   6531                        ;        }
   6532                        ;    }
-  Sun Sep 20 2026 12:03                                                                                                    Page 116
+  Wed Sep 23 2026  8:33                                                                                                    Page 116
 
 
   6533 00:108E: E6 0F        	inc	<L225+xCoreID_1
@@ -7074,7 +7074,7 @@
   6587                        ;    {
   6588                        ;        /* Sanity check that the UBaseType_t must have greater than or equal to
   6589                        ;         * the number of bits as confNUMBER_OF_CORES. */
-  Sun Sep 20 2026 12:03                                                                                                    Page 117
+  Wed Sep 23 2026  8:33                                                                                                    Page 117
 
 
   6590                        ;        configASSERT( ( sizeof( UBaseType_t ) * taskBITS_PER_BYTE ) >= configNUMBER_OF_CORES );
@@ -7135,7 +7135,7 @@
   6645 00:10BC: 8D xx xx     	sta	|_~xNextTaskUnblockTime+2	; volatile
   6646                        ;        xSchedulerRunning = pdTRUE;
   6647 00:10BF: A9 01 00     	lda	#$1
-  Sun Sep 20 2026 12:03                                                                                                    Page 118
+  Wed Sep 23 2026  8:33                                                                                                    Page 118
 
 
   6648 00:10C2: 8D xx xx     	sta	|_~xSchedulerRunning	; volatile
@@ -7196,7 +7196,7 @@
   6703                        ;
   6704                        ;    /* Prevent compiler warnings if INCLUDE_xTaskGetIdleTaskHandle is set to 0,
   6705                        ;     * meaning xIdleTaskHandles are not used anywhere else. */
-  Sun Sep 20 2026 12:03                                                                                                    Page 119
+  Wed Sep 23 2026  8:33                                                                                                    Page 119
 
 
   6706                        ;    ( void ) xIdleTaskHandles;
@@ -7257,7 +7257,7 @@
   6761 00:10F7: B1 05        	lda	(<R1),Y
   6762 00:10F9: 48           	pha
   6763 00:10FA: B2 05        	lda	(<R1)
-  Sun Sep 20 2026 12:03                                                                                                    Page 120
+  Wed Sep 23 2026  8:33                                                                                                    Page 120
 
 
   6764 00:10FC: 48           	pha
@@ -7318,7 +7318,7 @@
   6819                        ;    traceENTER_vTaskSuspendAll();
   6820                        ;
   6821                        ;    #if ( configNUMBER_OF_CORES == 1 )
-  Sun Sep 20 2026 12:03                                                                                                    Page 121
+  Wed Sep 23 2026  8:33                                                                                                    Page 121
 
 
   6822                        ;    {
@@ -7379,7 +7379,7 @@
   6877                        ;            ulState = portSET_INTERRUPT_MASK();
   6878                        ;
   6879                        ;            xCoreID = ( BaseType_t ) portGET_CORE_ID();
-  Sun Sep 20 2026 12:03                                                                                                    Page 122
+  Wed Sep 23 2026  8:33                                                                                                    Page 122
 
 
   6880                        ;
@@ -7440,7 +7440,7 @@
   6935                        ;    STATIC TickType_t prvGetExpectedIdleTime( void )
   6936                        ;    {
   6937                        ;        TickType_t xReturn;
-  Sun Sep 20 2026 12:03                                                                                                    Page 123
+  Wed Sep 23 2026  8:33                                                                                                    Page 123
 
 
   6938                        ;        BaseType_t xHigherPriorityReadyTasks = pdFALSE;
@@ -7501,7 +7501,7 @@
   6993                        ;
   6994                        ;#endif /* configUSE_TICKLESS_IDLE */
   6995                        ;/*----------------------------------------------------------*/
-  Sun Sep 20 2026 12:03                                                                                                    Page 124
+  Wed Sep 23 2026  8:33                                                                                                    Page 124
 
 
   6996                        ;
@@ -7562,7 +7562,7 @@
   7051                        ;            uxSchedulerSuspended = ( UBaseType_t ) ( uxSchedulerSuspended - 1U );
   7052 00:1138: CE xx xx     	dec	|_~uxSchedulerSuspended	; volatile
   7053                        ;            portRELEASE_TASK_LOCK( xCoreID );
-  Sun Sep 20 2026 12:03                                                                                                    Page 125
+  Wed Sep 23 2026  8:33                                                                                                    Page 125
 
 
   7054                        ;
@@ -7623,7 +7623,7 @@
   7108 00:118A: B7 0D        	lda	[<L248+pxTCB_1],Y
   7109 00:118C: A0 08 00     	ldy	#$8
   7110 00:118F: 97 01        	sta	[<R0],Y
-  Sun Sep 20 2026 12:03                                                                                                    Page 126
+  Wed Sep 23 2026  8:33                                                                                                    Page 126
 
 
   7111 00:1191: A0 22 00     	ldy	#$22
@@ -7684,7 +7684,7 @@
   7166                        ;                        portMEMORY_BARRIER();
   7167                        ;                        listREMOVE_ITEM( &( pxTCB->xStateListItem ) );
   7168             00000008   pxList_4	set	8
-  Sun Sep 20 2026 12:03                                                                                                    Page 127
+  Wed Sep 23 2026  8:33                                                                                                    Page 127
 
 
   7169 00:1204: A0 14 00     	ldy	#$14
@@ -7745,7 +7745,7 @@
   7224 00:126F: D0 14        	bne	L10308
   7225 00:1271: A0 0C 00     	ldy	#$c
   7226 00:1274: B7 0D        	lda	[<L248+pxTCB_1],Y
-  Sun Sep 20 2026 12:03                                                                                                    Page 128
+  Wed Sep 23 2026  8:33                                                                                                    Page 128
 
 
   7227 00:1276: A0 02 00     	ldy	#$2
@@ -7806,7 +7806,7 @@
   7282 00:12E2: 88           	dey
   7283 00:12E3: 88           	dey
   7284 00:12E4: B7 15        	lda	[<L248+pxIndex_5],Y
-  Sun Sep 20 2026 12:03                                                                                                    Page 129
+  Wed Sep 23 2026  8:33                                                                                                    Page 129
 
 
   7285 00:12E6: A0 0E 00     	ldy	#$e
@@ -7867,7 +7867,7 @@
   7340 00:1350: 97 0D        	sta	[<L248+pxTCB_1],Y
   7341 00:1352: A0 2C 00     	ldy	#$2c
   7342 00:1355: B7 0D        	lda	[<L248+pxTCB_1],Y
-  Sun Sep 20 2026 12:03                                                                                                    Page 130
+  Wed Sep 23 2026  8:33                                                                                                    Page 130
 
 
   7343 00:1357: A2 12 00     	ldx	#<$12
@@ -7928,7 +7928,7 @@
   7396 00:1399: D0 03        	bne	*+5
   7397 00:139B: 82 B9 FD     	brl	L20021
   7398                        ;
-  Sun Sep 20 2026 12:03                                                                                                    Page 131
+  Wed Sep 23 2026  8:33                                                                                                    Page 131
 
 
   7399                        ;                    if( pxTCB != NULL )
@@ -7989,7 +7989,7 @@
   7454                        ;                                    mtCOVERAGE_TEST_MARKER();
   7455                        ;                                }
   7456                        L10327:
-  Sun Sep 20 2026 12:03                                                                                                    Page 132
+  Wed Sep 23 2026  8:33                                                                                                    Page 132
 
 
   7457                        ;
@@ -8050,7 +8050,7 @@
   7512 00:13EC: A5 11        	lda	<L248+xAlreadyYielded_1
   7513 00:13EE: A8           	tay
   7514 00:13EF: 2B           	pld
-  Sun Sep 20 2026 12:03                                                                                                    Page 133
+  Wed Sep 23 2026  8:33                                                                                                    Page 133
 
 
   7515 00:13F0: 3B           	tsc
@@ -8111,7 +8111,7 @@
   7570 00:140B: 58           	cli
   7571                        	asmend
   7572                        ;
-  Sun Sep 20 2026 12:03                                                                                                    Page 134
+  Wed Sep 23 2026  8:33                                                                                                    Page 134
 
 
   7573                        ;    traceRETURN_xTaskGetTickCount( xTicks );
@@ -8172,7 +8172,7 @@
   7628                        ;    portASSERT_IF_INTERRUPT_PRIORITY_INVALID();
   7629                        ;
   7630                        ;    uxSavedInterruptStatus = portTICK_TYPE_SET_INTERRUPT_MASK_FROM_ISR();
-  Sun Sep 20 2026 12:03                                                                                                    Page 135
+  Wed Sep 23 2026  8:33                                                                                                    Page 135
 
 
   7631 00:1422: 64 05        	stz	<L273+uxSavedInterruptStatus_1
@@ -8233,7 +8233,7 @@
   7686                        ;{
   7687                        	code
   7688                        	xdef	_~pcTaskGetName
-  Sun Sep 20 2026 12:03                                                                                                    Page 136
+  Wed Sep 23 2026  8:33                                                                                                    Page 136
 
 
   7689                        	func
@@ -8294,7 +8294,7 @@
   7744 00:147C: A5 01        	lda	<R0
   7745 00:147E: A8           	tay
   7746 00:147F: A5 09        	lda	<L278+1
-  Sun Sep 20 2026 12:03                                                                                                    Page 137
+  Wed Sep 23 2026  8:33                                                                                                    Page 137
 
 
   7747 00:1481: 85 0D        	sta	<L278+1+4
@@ -8355,7 +8355,7 @@
   7802 00:149F: 18           	clc
   7803 00:14A0: 65 1C        	adc	<L285+pxList_0
   7804 00:14A2: 85 12        	sta	<L286+pxEndMarker_1
-  Sun Sep 20 2026 12:03                                                                                                    Page 138
+  Wed Sep 23 2026  8:33                                                                                                    Page 138
 
 
   7805 00:14A4: A9 00 00     	lda	#$0
@@ -8416,7 +8416,7 @@
   7858                        ;                 * mismatch. */
   7859                        ;                xBreakLoop = pdFALSE;
   7860 00:14ED: 64 10        	stz	<L286+xBreakLoop_1
-  Sun Sep 20 2026 12:03                                                                                                    Page 139
+  Wed Sep 23 2026  8:33                                                                                                    Page 139
 
 
   7861                        ;
@@ -8477,7 +8477,7 @@
   7916                        ;                        mtCOVERAGE_TEST_MARKER();
   7917                        ;                    }
   7918                        ;                        break;
-  Sun Sep 20 2026 12:03                                                                                                    Page 140
+  Wed Sep 23 2026  8:33                                                                                                    Page 140
 
 
   7919                        ;                    }
@@ -8538,7 +8538,7 @@
   7974 00:154A: 5B           	tcd
   7975             00000003   pcNameToQuery_0	set	3
   7976                        ;        UBaseType_t uxQueue = configMAX_PRIORITIES;
-  Sun Sep 20 2026 12:03                                                                                                    Page 141
+  Wed Sep 23 2026  8:33                                                                                                    Page 141
 
 
   7977                        ;        TCB_t * pxTCB;
@@ -8599,7 +8599,7 @@
   8031                        ;                    break;
   8032                        ;                }
   8033                        ;            } while( uxQueue > ( UBaseType_t ) tskIDLE_PRIORITY );
-  Sun Sep 20 2026 12:03                                                                                                    Page 142
+  Wed Sep 23 2026  8:33                                                                                                    Page 142
 
 
   8034 00:1587: A9 00 00     	lda	#$0
@@ -8660,7 +8660,7 @@
   8087 00:15CA: A9 xx xx     	lda	#<_~xSuspendedTaskList
   8088 00:15CD: 85 01        	sta	<R0
   8089                        	xref	_BEG_DATA
-  Sun Sep 20 2026 12:03                                                                                                    Page 143
+  Wed Sep 23 2026  8:33                                                                                                    Page 143
 
 
   8090 00:15CF: A9 xx xx     	lda	#_BEG_DATA>>16
@@ -8721,7 +8721,7 @@
   8144                        ;    }
   8145             00000012   L296	equ	18
   8146             0000000D   L297	equ	13
-  Sun Sep 20 2026 12:03                                                                                                    Page 144
+  Wed Sep 23 2026  8:33                                                                                                    Page 144
 
 
   8147                        	ends
@@ -8782,7 +8782,7 @@
   8201                        ;
   8202                        ;        return xReturn;
   8203                        ;    }
-  Sun Sep 20 2026 12:03                                                                                                    Page 145
+  Wed Sep 23 2026  8:33                                                                                                    Page 145
 
 
   8204                        ;
@@ -8843,7 +8843,7 @@
   8256                        ;        do
   8257                        ;        {
   8258                        ;            uxQueue--;
-  Sun Sep 20 2026 12:03                                                                                                    Page 146
+  Wed Sep 23 2026  8:33                                                                                                    Page 146
 
 
   8259                        ;            uxTask = ( UBaseType_t ) ( uxTask + prvForEachTaskInList( &( pxReadyTasksLists[ uxQueue ]
@@ -8904,7 +8904,7 @@
   8309                        ;    {
   8310                        ;        UBaseType_t uxTask = 0;
   8311                        ;
-  Sun Sep 20 2026 12:03                                                                                                    Page 147
+  Wed Sep 23 2026  8:33                                                                                                    Page 147
 
 
   8312                        ;        traceENTER_uxTaskGetSystemState( pxTaskStatusArray, uxArraySize, pulTotalRunTime );
@@ -8965,7 +8965,7 @@
   8367                        ;
   8368                        ;        traceRETURN_xTaskGetIdleTaskHandleForCore( xIdleTaskHandles[ xCoreID ] );
   8369                        ;
-  Sun Sep 20 2026 12:03                                                                                                    Page 148
+  Wed Sep 23 2026  8:33                                                                                                    Page 148
 
 
   8370                        ;        return xIdleTaskHandles[ xCoreID ];
@@ -9026,7 +9026,7 @@
   8425                        ;{
   8426                        	code
   8427                        	xdef	_~xTaskCatchUpTicks
-  Sun Sep 20 2026 12:03                                                                                                    Page 149
+  Wed Sep 23 2026  8:33                                                                                                    Page 149
 
 
   8428                        	func
@@ -9087,7 +9087,7 @@
   8483                        ;
   8484                        ;    traceRETURN_xTaskCatchUpTicks( xYieldOccurred );
   8485                        ;
-  Sun Sep 20 2026 12:03                                                                                                    Page 150
+  Wed Sep 23 2026  8:33                                                                                                    Page 150
 
 
   8486                        ;    return xYieldOccurred;
@@ -9148,7 +9148,7 @@
   8541                        ;                        pxTCB->ucDelayAborted = ( uint8_t ) pdTRUE;
   8542                        ;                    }
   8543                        ;                    else
-  Sun Sep 20 2026 12:03                                                                                                    Page 151
+  Wed Sep 23 2026  8:33                                                                                                    Page 151
 
 
   8544                        ;                    {
@@ -9209,7 +9209,7 @@
   8599                        ;
   8600                        ;BaseType_t xTaskIncrementTick( void )
   8601                        ;{
-  Sun Sep 20 2026 12:03                                                                                                    Page 152
+  Wed Sep 23 2026  8:33                                                                                                    Page 152
 
 
   8602                        	code
@@ -9270,7 +9270,7 @@
   8657                        ;
   8658                        ;        if( xConstTickCount == ( TickType_t ) 0U )
   8659                        ;        {
-  Sun Sep 20 2026 12:03                                                                                                    Page 153
+  Wed Sep 23 2026  8:33                                                                                                    Page 153
 
 
   8660 00:1673: A5 17        	lda	<L311+xConstTickCount_2
@@ -9331,7 +9331,7 @@
   8715 00:16C5: 90 22        	bcc	L10380
   8716                        ;            for( ; ; )
   8717                        L10383:
-  Sun Sep 20 2026 12:03                                                                                                    Page 154
+  Wed Sep 23 2026  8:33                                                                                                    Page 154
 
 
   8718                        ;            {
@@ -9392,7 +9392,7 @@
   8772                        ;                     * be removed from the Blocked state. */
   8773                        ;                    /* MISRA Ref 11.5.3 [Void pointer assignment] */
   8774                        ;                    /* More details at: https://github.com/FreeRTOS/FreeRTOS-Kernel/blob/main/MISRA.m
-  Sun Sep 20 2026 12:03                                                                                                    Page 155
+  Wed Sep 23 2026  8:33                                                                                                    Page 155
 
 
                     d#rule-115 */
@@ -9453,7 +9453,7 @@
   8829                        L10388:
   8830             0000000E   pxList_4	set	14
   8831 00:174E: A0 14 00     	ldy	#$14
-  Sun Sep 20 2026 12:03                                                                                                    Page 156
+  Wed Sep 23 2026  8:33                                                                                                    Page 156
 
 
   8832 00:1751: B7 0D        	lda	[<L311+pxTCB_1],Y
@@ -9514,7 +9514,7 @@
   8887 00:17BB: A0 0C 00     	ldy	#$c
   8888 00:17BE: B7 0D        	lda	[<L311+pxTCB_1],Y
   8889 00:17C0: A0 02 00     	ldy	#$2
-  Sun Sep 20 2026 12:03                                                                                                    Page 157
+  Wed Sep 23 2026  8:33                                                                                                    Page 157
 
 
   8890 00:17C3: 97 1B        	sta	[<L311+pxList_4],Y
@@ -9575,7 +9575,7 @@
   8945 00:1820: B7 0D        	lda	[<L311+pxTCB_1],Y
   8946 00:1822: 85 01        	sta	<R0
   8947 00:1824: C8           	iny
-  Sun Sep 20 2026 12:03                                                                                                    Page 158
+  Wed Sep 23 2026  8:33                                                                                                    Page 158
 
 
   8948 00:1825: C8           	iny
@@ -9636,7 +9636,7 @@
   9003                        ;                    prvAddTaskToReadyList( pxTCB );
   9004                        L10401:
   9005 00:1886: AD xx xx     	lda	|_~uxTopReadyPriority	; volatile
-  Sun Sep 20 2026 12:03                                                                                                    Page 159
+  Wed Sep 23 2026  8:33                                                                                                    Page 159
 
 
   9006 00:1889: A0 2C 00     	ldy	#$2c
@@ -9697,7 +9697,7 @@
   9061 00:18F4: A5 05        	lda	<R1
   9062 00:18F6: A0 04 00     	ldy	#$4
   9063 00:18F9: 97 01        	sta	[<R0],Y
-  Sun Sep 20 2026 12:03                                                                                                    Page 160
+  Wed Sep 23 2026  8:33                                                                                                    Page 160
 
 
   9064 00:18FB: A5 07        	lda	<R1+2
@@ -9758,7 +9758,7 @@
   9119                        ;                     * context switch if preemption is turned off. */
   9120                        ;                    #if ( configUSE_PREEMPTION == 1 )
   9121                        ;                    {
-  Sun Sep 20 2026 12:03                                                                                                    Page 161
+  Wed Sep 23 2026  8:33                                                                                                    Page 161
 
 
   9122                        ;                        #if ( configNUMBER_OF_CORES == 1 )
@@ -9819,7 +9819,7 @@
   9177                        ;            #else /* #if ( configNUMBER_OF_CORES == 1 ) */
   9178                        ;            {
   9179                        ;                BaseType_t xCoreID;
-  Sun Sep 20 2026 12:03                                                                                                    Page 162
+  Wed Sep 23 2026  8:33                                                                                                    Page 162
 
 
   9180                        ;
@@ -9880,7 +9880,7 @@
   9234                        ;            #else /* #if ( configNUMBER_OF_CORES == 1 ) */
   9235                        ;            {
   9236                        ;                BaseType_t xCoreID, xCurrentCoreID;
-  Sun Sep 20 2026 12:03                                                                                                    Page 163
+  Wed Sep 23 2026  8:33                                                                                                    Page 163
 
 
   9237                        ;                xCurrentCoreID = ( BaseType_t ) portGET_CORE_ID();
@@ -9941,7 +9941,7 @@
   9292 00:199D: 18           	clc
   9293 00:199E: 69 1E 00     	adc	#L310
   9294 00:19A1: 1B           	tcs
-  Sun Sep 20 2026 12:03                                                                                                    Page 164
+  Wed Sep 23 2026  8:33                                                                                                    Page 164
 
 
   9295 00:19A2: 98           	tya
@@ -10002,7 +10002,7 @@
   9350                        ;
   9351                        ;        /* Access the hook function in the TCB.  A critical section is required as
   9352                        ;         * the value can be accessed from an interrupt. */
-  Sun Sep 20 2026 12:03                                                                                                    Page 165
+  Wed Sep 23 2026  8:33                                                                                                    Page 165
 
 
   9353                        ;        taskENTER_CRITICAL();
@@ -10063,7 +10063,7 @@
   9408                        ;        traceENTER_xTaskCallApplicationTaskHook( xTask, pvParameter );
   9409                        ;
   9410                        ;        /* If xTask is NULL then we are calling our own task hook. */
-  Sun Sep 20 2026 12:03                                                                                                    Page 166
+  Wed Sep 23 2026  8:33                                                                                                    Page 166
 
 
   9411                        ;        if( xTask == NULL )
@@ -10124,7 +10124,7 @@
   9466                        L10413:
   9467                        ;        {
   9468                        ;            xYieldPendings[ 0 ] = pdFALSE;
-  Sun Sep 20 2026 12:03                                                                                                    Page 167
+  Wed Sep 23 2026  8:33                                                                                                    Page 167
 
 
   9469 00:19BA: 9C xx xx     	stz	|_~xYieldPendings	; volatile
@@ -10185,7 +10185,7 @@
   9522 00:19C6: D0 03        	bne	L10420
   9523                        	asmstart
   9524 00:19C8: 78           	sei
-  Sun Sep 20 2026 12:03                                                                                                    Page 168
+  Wed Sep 23 2026  8:33                                                                                                    Page 168
 
 
   9525                        	asmend
@@ -10246,7 +10246,7 @@
   9580 00:1A25: 88           	dey
   9581 00:1A26: B7 0B        	lda	[<L336+pxConstList_3],Y
   9582 00:1A28: C5 01        	cmp	<R0
-  Sun Sep 20 2026 12:03                                                                                                    Page 169
+  Wed Sep 23 2026  8:33                                                                                                    Page 169
 
 
   9583 00:1A2A: D0 06        	bne	L343
@@ -10307,7 +10307,7 @@
   9638                        ;        traceRETURN_vTaskSwitchContext();
   9639                        ;    }
   9640                        L345:
-  Sun Sep 20 2026 12:03                                                                                                    Page 170
+  Wed Sep 23 2026  8:33                                                                                                    Page 170
 
 
   9641 00:1A69: 2B           	pld
@@ -10368,7 +10368,7 @@
   9696                        ;                     * against suspect run time stat counter implementations - which
   9697                        ;                     * are provided by the application, not the kernel. */
   9698                        ;                    if( ulTotalRunTime[ xCoreID ] > ulTaskSwitchedInTime[ xCoreID ] )
-  Sun Sep 20 2026 12:03                                                                                                    Page 171
+  Wed Sep 23 2026  8:33                                                                                                    Page 171
 
 
   9699                        ;                    {
@@ -10429,7 +10429,7 @@
   9753                        ;
   9754                        ;void vTaskPlaceOnEventList( List_t * const pxEventList,
   9755                        ;                            const TickType_t xTicksToWait )
-  Sun Sep 20 2026 12:03                                                                                                    Page 172
+  Wed Sep 23 2026  8:33                                                                                                    Page 172
 
 
   9756                        ;{
@@ -10490,7 +10490,7 @@
   9811                        ;    prvAddCurrentTaskToDelayedList( xTicksToWait, pdTRUE );
   9812 00:1A9B: F4 01 00     	pea	#<$1
   9813 00:1A9E: D4 0D        	pei	<L346+xTicksToWait_0+2
-  Sun Sep 20 2026 12:03                                                                                                    Page 173
+  Wed Sep 23 2026  8:33                                                                                                    Page 173
 
 
   9814 00:1AA0: D4 0B        	pei	<L346+xTicksToWait_0
@@ -10551,7 +10551,7 @@
   9869 00:1AC5: D0 03        	bne	L10436
   9870                        	asmstart
   9871 00:1AC7: 78           	sei
-  Sun Sep 20 2026 12:03                                                                                                    Page 174
+  Wed Sep 23 2026  8:33                                                                                                    Page 174
 
 
   9872                        	asmend
@@ -10612,7 +10612,7 @@
   9926 00:1B18: 85 03        	sta	<R0+2
   9927 00:1B1A: A0 08 00     	ldy	#$8
   9928 00:1B1D: B7 09        	lda	[<L351+pxIndex_2],Y
-  Sun Sep 20 2026 12:03                                                                                                    Page 175
+  Wed Sep 23 2026  8:33                                                                                                    Page 175
 
 
   9929 00:1B1F: A0 20 00     	ldy	#$20
@@ -10673,7 +10673,7 @@
   9984 00:1B90: 87 0F        	sta	[<L350+pxEventList_0]
   9985                        ;
   9986                        ;    prvAddCurrentTaskToDelayedList( xTicksToWait, pdTRUE );
-  Sun Sep 20 2026 12:03                                                                                                    Page 176
+  Wed Sep 23 2026  8:33                                                                                                    Page 176
 
 
   9987 00:1B92: F4 01 00     	pea	#<$1
@@ -10734,7 +10734,7 @@
  10042                        ;    }
  10043                        ;
  10044                        ;#endif /* configUSE_TIMERS */
-  Sun Sep 20 2026 12:03                                                                                                    Page 177
+  Wed Sep 23 2026  8:33                                                                                                    Page 177
 
 
  10045                        ;/*-----------------------------------------------------------*/
@@ -10795,7 +10795,7 @@
  10100 00:1BC7: A5 0D        	lda	<L356+pxUnblockedTCB_1
  10101 00:1BC9: 05 0F        	ora	<L356+pxUnblockedTCB_1+2
  10102 00:1BCB: D0 03        	bne	L10449
-  Sun Sep 20 2026 12:03                                                                                                    Page 178
+  Wed Sep 23 2026  8:33                                                                                                    Page 178
 
 
  10103                        	asmstart
@@ -10856,7 +10856,7 @@
  10158 00:1C32: C5 01        	cmp	<R0
  10159 00:1C34: D0 06        	bne	L358
  10160 00:1C36: C8           	iny
-  Sun Sep 20 2026 12:03                                                                                                    Page 179
+  Wed Sep 23 2026  8:33                                                                                                    Page 179
 
 
  10161 00:1C37: C8           	iny
@@ -10917,7 +10917,7 @@
  10216 00:1C9B: C8           	iny
  10217 00:1C9C: C8           	iny
  10218 00:1C9D: B7 0D        	lda	[<L356+pxUnblockedTCB_1],Y
-  Sun Sep 20 2026 12:03                                                                                                    Page 180
+  Wed Sep 23 2026  8:33                                                                                                    Page 180
 
 
  10219 00:1C9F: 85 01        	sta	<R0
@@ -10978,7 +10978,7 @@
  10274 00:1D0F: 8D xx xx     	sta	|_~uxTopReadyPriority	; volatile
  10275                        L10465:
  10276             00000006   pxIndex_4	set	6
-  Sun Sep 20 2026 12:03                                                                                                    Page 181
+  Wed Sep 23 2026  8:33                                                                                                    Page 181
 
 
  10277 00:1D12: A0 2C 00     	ldy	#$2c
@@ -11039,7 +11039,7 @@
  10332 00:1D7E: A9 04 00     	lda	#$4
  10333 00:1D81: 18           	clc
  10334 00:1D82: 65 0D        	adc	<L356+pxUnblockedTCB_1
-  Sun Sep 20 2026 12:03                                                                                                    Page 182
+  Wed Sep 23 2026  8:33                                                                                                    Page 182
 
 
  10335 00:1D84: 85 01        	sta	<R0
@@ -11100,7 +11100,7 @@
  10390                        ;             * at the earliest possible time - so reset xNextTaskUnblockTime here to
  10391                        ;             * ensure it is updated at the earliest possible time. */
  10392                        ;            prvResetNextTaskUnblockTime();
-  Sun Sep 20 2026 12:03                                                                                                    Page 183
+  Wed Sep 23 2026  8:33                                                                                                    Page 183
 
 
  10393                        ;        }
@@ -11161,7 +11161,7 @@
  10448 00:1E3D: A9 00 00     	lda	#$0
  10449 00:1E40: 65 0F        	adc	<L356+pxUnblockedTCB_1+2
  10450 00:1E42: 85 03        	sta	<R0+2
-  Sun Sep 20 2026 12:03                                                                                                    Page 184
+  Wed Sep 23 2026  8:33                                                                                                    Page 184
 
 
  10451 00:1E44: A5 01        	lda	<R0
@@ -11222,7 +11222,7 @@
  10506                        L10471:
  10507                        ;    }
  10508                        ;    #else /* #if ( configNUMBER_OF_CORES == 1 ) */
-  Sun Sep 20 2026 12:03                                                                                                    Page 185
+  Wed Sep 23 2026  8:33                                                                                                    Page 185
 
 
  10509                        ;    {
@@ -11283,7 +11283,7 @@
  10564                        ;    traceENTER_vTaskRemoveFromUnorderedEventList( pxEventListItem, xItemValue );
  10565             00000000   pxUnblockedTCB_1	set	0
  10566                        ;
-  Sun Sep 20 2026 12:03                                                                                                    Page 186
+  Wed Sep 23 2026  8:33                                                                                                    Page 186
 
 
  10567                        ;    /* THIS FUNCTION MUST BE CALLED WITH THE SCHEDULER SUSPENDED.  It is used by
@@ -11344,7 +11344,7 @@
  10622 00:1EDE: B7 17        	lda	[<L366+pxEventListItem_0],Y
  10623 00:1EE0: 85 13        	sta	<L367+pxList_2+2
  10624 00:1EE2: A0 04 00     	ldy	#$4
-  Sun Sep 20 2026 12:03                                                                                                    Page 187
+  Wed Sep 23 2026  8:33                                                                                                    Page 187
 
 
  10625 00:1EE5: B7 17        	lda	[<L366+pxEventListItem_0],Y
@@ -11405,7 +11405,7 @@
  10680 00:1F48: 18           	clc
  10681 00:1F49: 67 11        	adc	[<L367+pxList_2]
  10682 00:1F4B: 87 11        	sta	[<L367+pxList_2]
-  Sun Sep 20 2026 12:03                                                                                                    Page 188
+  Wed Sep 23 2026  8:33                                                                                                    Page 188
 
 
  10683                        ;
@@ -11466,7 +11466,7 @@
  10738 00:1F8D: 97 01        	sta	[<R0],Y
  10739 00:1F8F: A0 0A 00     	ldy	#$a
  10740 00:1F92: B7 0D        	lda	[<L367+pxUnblockedTCB_1],Y
-  Sun Sep 20 2026 12:03                                                                                                    Page 189
+  Wed Sep 23 2026  8:33                                                                                                    Page 189
 
 
  10741 00:1F94: A0 06 00     	ldy	#$6
@@ -11527,7 +11527,7 @@
  10796 00:2001: 69 xx xx     	adc	#<_~pxReadyTasksLists
  10797 00:2004: 18           	clc
  10798 00:2005: 65 01        	adc	<R0
-  Sun Sep 20 2026 12:03                                                                                                    Page 190
+  Wed Sep 23 2026  8:33                                                                                                    Page 190
 
 
  10799 00:2007: 85 09        	sta	<R2
@@ -11588,7 +11588,7 @@
  10854 00:2071: A5 03        	lda	<R0+2
  10855 00:2073: C8           	iny
  10856 00:2074: C8           	iny
-  Sun Sep 20 2026 12:03                                                                                                    Page 191
+  Wed Sep 23 2026  8:33                                                                                                    Page 191
 
 
  10857 00:2075: 97 11        	sta	[<L367+pxIndex_4],Y
@@ -11649,7 +11649,7 @@
  10912                        ;        }
  10913                        ;    }
  10914                        ;    #else /* #if ( configNUMBER_OF_CORES == 1 ) */
-  Sun Sep 20 2026 12:03                                                                                                    Page 192
+  Wed Sep 23 2026  8:33                                                                                                    Page 192
 
 
  10915                        ;    {
@@ -11710,7 +11710,7 @@
  10970 00:20F0: 80 FE        	bra	L10500
  10971                        L10499:
  10972                        ;    taskENTER_CRITICAL();
-  Sun Sep 20 2026 12:03                                                                                                    Page 193
+  Wed Sep 23 2026  8:33                                                                                                    Page 193
 
 
  10973                        	asmstart
@@ -11771,7 +11771,7 @@
  11028                        ;    pxTimeOut->xOverflowCount = xNumOfOverflows;
  11029 00:211C: AD xx xx     	lda	|_~xNumOfOverflows	; volatile
  11030 00:211F: 87 03        	sta	[<L381+pxTimeOut_0]
-  Sun Sep 20 2026 12:03                                                                                                    Page 194
+  Wed Sep 23 2026  8:33                                                                                                    Page 194
 
 
  11031                        ;    pxTimeOut->xTimeOnEntering = xTickCount;
@@ -11832,7 +11832,7 @@
  11086 00:214B: 80 FE        	bra	L10504
  11087                        L10503:
  11088                        ;    configASSERT( pxTicksToWait );
-  Sun Sep 20 2026 12:03                                                                                                    Page 195
+  Wed Sep 23 2026  8:33                                                                                                    Page 195
 
 
  11089 00:214D: A5 11        	lda	<L384+pxTicksToWait_0
@@ -11893,7 +11893,7 @@
  11144 00:217E: C9 FF FF     	cmp	#^$ffffffff
  11145                        L388:
  11146 00:2181: D0 04        	bne	L10511
-  Sun Sep 20 2026 12:03                                                                                                    Page 196
+  Wed Sep 23 2026  8:33                                                                                                    Page 196
 
 
  11147                        ;                /* If INCLUDE_vTaskSuspend is set to 1 and the block time
@@ -11954,7 +11954,7 @@
  11201 00:21BB: E5 07        	sbc	<L385+xElapsedTime_2
  11202 00:21BD: 87 11        	sta	[<L384+pxTicksToWait_0]
  11203 00:21BF: B7 11        	lda	[<L384+pxTicksToWait_0],Y
-  Sun Sep 20 2026 12:03                                                                                                    Page 197
+  Wed Sep 23 2026  8:33                                                                                                    Page 197
 
 
  11204 00:21C1: E5 09        	sbc	<L385+xElapsedTime_2+2
@@ -12015,7 +12015,7 @@
  11259                        	longa	on
  11260                        	longi	on
  11261                        ;    traceENTER_vTaskMissedYield();
-  Sun Sep 20 2026 12:03                                                                                                    Page 198
+  Wed Sep 23 2026  8:33                                                                                                    Page 198
 
 
  11262                        ;
@@ -12076,7 +12076,7 @@
  11317                        ;        }
  11318                        ;
  11319                        ;        traceRETURN_vTaskSetTaskNumber();
-  Sun Sep 20 2026 12:03                                                                                                    Page 199
+  Wed Sep 23 2026  8:33                                                                                                    Page 199
 
 
  11320                        ;    }
@@ -12137,7 +12137,7 @@
  11374                        ;                    taskYIELD();
  11375                        ;                }
  11376                        ;                else
-  Sun Sep 20 2026 12:03                                                                                                    Page 200
+  Wed Sep 23 2026  8:33                                                                                                    Page 200
 
 
  11377                        ;                {
@@ -12198,7 +12198,7 @@
  11431                        ;     * SCHEDULER IS STARTED. **/
  11432                        ;
  11433                        ;    /* In case a task that has a secure context deletes itself, in which case
-  Sun Sep 20 2026 12:03                                                                                                    Page 201
+  Wed Sep 23 2026  8:33                                                                                                    Page 201
 
 
  11434                        ;     * the idle task is responsible for deleting the task's secure context, if
@@ -12259,7 +12259,7 @@
  11488 00:2207: CD xx xx     	cmp	|_~pxReadyTasksLists
  11489 00:220A: 90 F1        	bcc	L20039
  11490                        ;            {
-  Sun Sep 20 2026 12:03                                                                                                    Page 202
+  Wed Sep 23 2026  8:33                                                                                                    Page 202
 
 
  11491                        ;                mtCOVERAGE_TEST_MARKER();
@@ -12320,7 +12320,7 @@
  11546                        ;            else
  11547                        ;            {
  11548                        ;                mtCOVERAGE_TEST_MARKER();
-  Sun Sep 20 2026 12:03                                                                                                    Page 203
+  Wed Sep 23 2026  8:33                                                                                                    Page 203
 
 
  11549                        ;            }
@@ -12381,7 +12381,7 @@
  11604                        ;            eReturn = eAbortSleep;
  11605                        ;        }
  11606                        ;
-  Sun Sep 20 2026 12:03                                                                                                    Page 204
+  Wed Sep 23 2026  8:33                                                                                                    Page 204
 
 
  11607                        ;        #if ( INCLUDE_vTaskSuspend == 1 )
@@ -12442,7 +12442,7 @@
  11661                        ;
  11662                        ;        traceENTER_pvTaskGetThreadLocalStoragePointer( xTaskToQuery, xIndex );
  11663                        ;
-  Sun Sep 20 2026 12:03                                                                                                    Page 205
+  Wed Sep 23 2026  8:33                                                                                                    Page 205
 
 
  11664                        ;        if( ( xIndex >= 0 ) &&
@@ -12503,7 +12503,7 @@
  11719 00:2215: 5B           	tcd
  11720                        ;    UBaseType_t uxPriority;
  11721                        ;
-  Sun Sep 20 2026 12:03                                                                                                    Page 206
+  Wed Sep 23 2026  8:33                                                                                                    Page 206
 
 
  11722                        ;    for( uxPriority = ( UBaseType_t ) 0U; uxPriority < ( UBaseType_t ) configMAX_PRIORITIES; uxPriori
@@ -12564,7 +12564,7 @@
  11776                        	xref	_BEG_DATA
  11777 00:2267: A9 xx xx     	lda	#_BEG_DATA>>16
  11778 00:226A: 48           	pha
-  Sun Sep 20 2026 12:03                                                                                                    Page 207
+  Wed Sep 23 2026  8:33                                                                                                    Page 207
 
 
  11779 00:226B: D4 01        	pei	<R0
@@ -12625,7 +12625,7 @@
  11834 00:22A3: 1B           	tcs
  11835 00:22A4: 0B           	phd
  11836 00:22A5: 5B           	tcd
-  Sun Sep 20 2026 12:03                                                                                                    Page 208
+  Wed Sep 23 2026  8:33                                                                                                    Page 208
 
 
  11837                        ;    /** THIS FUNCTION IS CALLED FROM THE RTOS IDLE TASK **/
@@ -12686,7 +12686,7 @@
  11891 00:22D9: 58           	cli
  11892                        	asmend
  11893                        ;
-  Sun Sep 20 2026 12:03                                                                                                    Page 209
+  Wed Sep 23 2026  8:33                                                                                                    Page 209
 
 
  11894                        ;                prvDeleteTCB( pxTCB );
@@ -12747,7 +12747,7 @@
  11948 00:22EA: 3B           	tsc
  11949 00:22EB: 18           	clc
  11950 00:22EC: 69 0C 00     	adc	#L404
-  Sun Sep 20 2026 12:03                                                                                                    Page 210
+  Wed Sep 23 2026  8:33                                                                                                    Page 210
 
 
  11951 00:22EF: 1B           	tcs
@@ -12808,7 +12808,7 @@
  12006                        ;            pxTaskStatus->ulRunTimeCounter = ( configRUN_TIME_COUNTER_TYPE ) 0;
  12007                        ;        }
  12008                        ;        #endif
-  Sun Sep 20 2026 12:03                                                                                                    Page 211
+  Wed Sep 23 2026  8:33                                                                                                    Page 211
 
 
  12009                        ;
@@ -12869,7 +12869,7 @@
  12063                        ;
  12064                        ;                /* Tasks can be in pending ready list and other state list at the
  12065                        ;                 * same time. These tasks are in ready state no matter what state
-  Sun Sep 20 2026 12:03                                                                                                    Page 212
+  Wed Sep 23 2026  8:33                                                                                                    Page 212
 
 
  12066                        ;                 * list the task is in. */
@@ -12930,7 +12930,7 @@
  12118                        ;
  12119                        ;        if( listCURRENT_LIST_LENGTH( pxList ) > ( UBaseType_t ) 0 )
  12120                        ;        {
-  Sun Sep 20 2026 12:03                                                                                                    Page 213
+  Wed Sep 23 2026  8:33                                                                                                    Page 213
 
 
  12121                        ;            /* Hand the callback each task handle referenced from pxList. */
@@ -12991,7 +12991,7 @@
  12173                        ;            uxCount++;
  12174 00:2303: E6 01        	inc	<L409+uxCount_1
  12175                        ;        }
-  Sun Sep 20 2026 12:03                                                                                                    Page 214
+  Wed Sep 23 2026  8:33                                                                                                    Page 214
 
 
  12176                        L10527:
@@ -13052,7 +13052,7 @@
  12230                        ;
  12231                        ;        pxTCB = prvGetTCBFromHandle( xTask );
  12232                        ;        configASSERT( pxTCB != NULL );
-  Sun Sep 20 2026 12:03                                                                                                    Page 215
+  Wed Sep 23 2026  8:33                                                                                                    Page 215
 
 
  12233                        ;
@@ -13113,7 +13113,7 @@
  12288 00:2337: A6 13        	ldx	<L413+xTask_0+2
  12289 00:2339: A5 11        	lda	<L413+xTask_0
  12290                        L417:
-  Sun Sep 20 2026 12:03                                                                                                    Page 216
+  Wed Sep 23 2026  8:33                                                                                                    Page 216
 
 
  12291 00:233B: 86 03        	stx	<R0+2
@@ -13174,7 +13174,7 @@
  12346                        	efunc
  12347                        ;
  12348                        ;#endif /* INCLUDE_uxTaskGetStackHighWaterMark */
-  Sun Sep 20 2026 12:03                                                                                                    Page 217
+  Wed Sep 23 2026  8:33                                                                                                    Page 217
 
 
  12349                        ;/*-----------------------------------------------------------*/
@@ -13235,7 +13235,7 @@
  12403                        ;            {
  12404                        ;                /* Both the stack and TCB were allocated dynamically, so both
  12405                        ;                 * must be freed. */
-  Sun Sep 20 2026 12:03                                                                                                    Page 218
+  Wed Sep 23 2026  8:33                                                                                                    Page 218
 
 
  12406                        ;                vPortFreeStack( pxTCB->pxStack );
@@ -13296,7 +13296,7 @@
  12460 00:23AA: A7 01        	lda	[<R0]
  12461 00:23AC: D0 05        	bne	L425
  12462 00:23AE: A9 01 00     	lda	#$1
-  Sun Sep 20 2026 12:03                                                                                                    Page 219
+  Wed Sep 23 2026  8:33                                                                                                    Page 219
 
 
  12463 00:23B1: 80 03        	bra	L427
@@ -13357,7 +13357,7 @@
                     gNUMBER_OF_CORES > 1 )
  12518                        ;
  12519                        ;    #if ( configNUMBER_OF_CORES == 1 )
-  Sun Sep 20 2026 12:03                                                                                                    Page 220
+  Wed Sep 23 2026  8:33                                                                                                    Page 220
 
 
  12520                        ;        TaskHandle_t xTaskGetCurrentTaskHandle( void )
@@ -13418,7 +13418,7 @@
  12575                        ;            {
  12576                        ;                xReturn = pxCurrentTCBs[ portGET_CORE_ID() ];
  12577                        ;            }
-  Sun Sep 20 2026 12:03                                                                                                    Page 221
+  Wed Sep 23 2026  8:33                                                                                                    Page 221
 
 
  12578                        ;            portCLEAR_INTERRUPT_MASK( uxSavedInterruptStatus );
@@ -13479,7 +13479,7 @@
  12633                        ;        }
  12634                        ;
  12635                        ;        traceRETURN_xTaskGetCurrentTaskHandleForCore( xReturn );
-  Sun Sep 20 2026 12:03                                                                                                    Page 222
+  Wed Sep 23 2026  8:33                                                                                                    Page 222
 
 
  12636                        L10535:
@@ -13540,7 +13540,7 @@
  12691                        ;                }
  12692                        ;                else
  12693                        L20045:
-  Sun Sep 20 2026 12:03                                                                                                    Page 223
+  Wed Sep 23 2026  8:33                                                                                                    Page 223
 
 
  12694 00:2460: 85 01        	sta	<L442+xReturn_1
@@ -13601,7 +13601,7 @@
  12749                        	longi	on
  12750 00:2477: 3B           	tsc
  12751 00:2478: 38           	sec
-  Sun Sep 20 2026 12:03                                                                                                    Page 224
+  Wed Sep 23 2026  8:33                                                                                                    Page 224
 
 
  12752 00:2479: E9 16 00     	sbc	#L446
@@ -13662,7 +13662,7 @@
  12805 00:24BC: A0 2C 00     	ldy	#$2c
  12806 00:24BF: B7 01        	lda	[<R0],Y
  12807 00:24C1: 85 01        	sta	<R0
-  Sun Sep 20 2026 12:03                                                                                                    Page 225
+  Wed Sep 23 2026  8:33                                                                                                    Page 225
 
 
  12808 00:24C3: 64 03        	stz	<R0+2
@@ -13723,7 +13723,7 @@
  12862 00:2513: 82 01 01     	brl	L10544
  12863                        ;                    if( uxListRemove( &( pxMutexHolderTCB->xStateListItem ) ) == ( UBaseType_t ) 0 )
  12864                        ;                    {
-  Sun Sep 20 2026 12:03                                                                                                    Page 226
+  Wed Sep 23 2026  8:33                                                                                                    Page 226
 
 
  12865 00:2516: A9 04 00     	lda	#$4
@@ -13784,7 +13784,7 @@
  12920 00:256B: 85 15        	sta	<L447+pxIndex_2+2
  12921 00:256D: A5 13        	lda	<L447+pxIndex_2
  12922 00:256F: A0 08 00     	ldy	#$8
-  Sun Sep 20 2026 12:03                                                                                                    Page 227
+  Wed Sep 23 2026  8:33                                                                                                    Page 227
 
 
  12923 00:2572: 97 0D        	sta	[<L447+pxMutexHolderTCB_1],Y
@@ -13845,7 +13845,7 @@
  12978 00:25D8: 20 xx xx     	jsr	_~~mul
  12979 00:25DB: 18           	clc
  12980 00:25DC: 69 xx xx     	adc	#<_~pxReadyTasksLists
-  Sun Sep 20 2026 12:03                                                                                                    Page 228
+  Wed Sep 23 2026  8:33                                                                                                    Page 228
 
 
  12981 00:25DF: 85 01        	sta	<R0
@@ -13906,7 +13906,7 @@
  13036                        ;
  13037                        ;                /* Inheritance occurred. */
  13038                        ;                xReturn = pdTRUE;
-  Sun Sep 20 2026 12:03                                                                                                    Page 229
+  Wed Sep 23 2026  8:33                                                                                                    Page 229
 
 
  13039 00:2628: A9 01 00     	lda	#$1
@@ -13967,7 +13967,7 @@
  13094             0000000D   L447	equ	13
  13095                        	ends
  13096                        	efunc
-  Sun Sep 20 2026 12:03                                                                                                    Page 230
+  Wed Sep 23 2026  8:33                                                                                                    Page 230
 
 
  13097                        ;
@@ -14028,7 +14028,7 @@
  13152 00:267F: 80 FE        	bra	L10564
  13153                        L10563:
  13154                        ;            configASSERT( pxTCB->uxMutexesHeld );
-  Sun Sep 20 2026 12:03                                                                                                    Page 231
+  Wed Sep 23 2026  8:33                                                                                                    Page 231
 
 
  13155 00:2681: A0 44 00     	ldy	#$44
@@ -14089,7 +14089,7 @@
  13210                        ;                    {
  13211                        ;                        mtCOVERAGE_TEST_MARKER();
  13212                        ;                    }
-  Sun Sep 20 2026 12:03                                                                                                    Page 232
+  Wed Sep 23 2026  8:33                                                                                                    Page 232
 
 
  13213                        L10574:
@@ -14150,7 +14150,7 @@
  13267 00:271A: A0 02 00     	ldy	#$2
  13268 00:271D: B1 09        	lda	(<R2),Y
  13269 00:271F: 85 15        	sta	<L461+pxIndex_2+2
-  Sun Sep 20 2026 12:03                                                                                                    Page 233
+  Wed Sep 23 2026  8:33                                                                                                    Page 233
 
 
  13270 00:2721: A5 13        	lda	<L461+pxIndex_2
@@ -14211,7 +14211,7 @@
  13325 00:2789: A2 12 00     	ldx	#<$12
  13326                        	xref	_~~mul
  13327 00:278C: 20 xx xx     	jsr	_~~mul
-  Sun Sep 20 2026 12:03                                                                                                    Page 234
+  Wed Sep 23 2026  8:33                                                                                                    Page 234
 
 
  13328 00:278F: 18           	clc
@@ -14272,7 +14272,7 @@
  13383                        L10587:
  13384                        ;
  13385                        ;        traceRETURN_xTaskPriorityDisinherit( xReturn );
-  Sun Sep 20 2026 12:03                                                                                                    Page 235
+  Wed Sep 23 2026  8:33                                                                                                    Page 235
 
 
  13386                        ;
@@ -14333,7 +14333,7 @@
  13441                        ;
  13442                        ;        traceENTER_vTaskPriorityDisinheritAfterTimeout( pxMutexHolder, uxHighestPriorityWaitingTask )
                     ;
-  Sun Sep 20 2026 12:03                                                                                                    Page 236
+  Wed Sep 23 2026  8:33                                                                                                    Page 236
 
 
  13443             00000000   pxTCB_1	set	0
@@ -14394,7 +14394,7 @@
  13498                        ;            if( pxTCB->uxPriority != uxPriorityToUse )
  13499                        ;            {
  13500 00:281A: A0 2C 00     	ldy	#$2c
-  Sun Sep 20 2026 12:03                                                                                                    Page 237
+  Wed Sep 23 2026  8:33                                                                                                    Page 237
 
 
  13501 00:281D: B7 0D        	lda	[<L472+pxTCB_1],Y
@@ -14455,7 +14455,7 @@
                     _PRIORITIES - ( TickType_t ) uxPriorityToUse );
  13555 00:2859: A5 13        	lda	<L472+uxPriorityToUse_1
  13556 00:285B: 85 01        	sta	<R0
-  Sun Sep 20 2026 12:03                                                                                                    Page 238
+  Wed Sep 23 2026  8:33                                                                                                    Page 238
 
 
  13557 00:285D: 64 03        	stz	<R0+2
@@ -14516,7 +14516,7 @@
  13611 00:28A3: A9 00 00     	lda	#$0
  13612                        L484:
  13613 00:28A6: AA           	tax
-  Sun Sep 20 2026 12:03                                                                                                    Page 239
+  Wed Sep 23 2026  8:33                                                                                                    Page 239
 
 
  13614 00:28A7: D0 03        	bne	*+5
@@ -14577,7 +14577,7 @@
  13669 00:28FC: A5 19        	lda	<L472+pxIndex_2+2
  13670 00:28FE: C8           	iny
  13671 00:28FF: C8           	iny
-  Sun Sep 20 2026 12:03                                                                                                    Page 240
+  Wed Sep 23 2026  8:33                                                                                                    Page 240
 
 
  13672 00:2900: 97 0D        	sta	[<L472+pxTCB_1],Y
@@ -14638,7 +14638,7 @@
  13727                        	xref	_BEG_DATA
  13728 00:2969: A9 xx xx     	lda	#_BEG_DATA>>16
  13729 00:296C: 85 03        	sta	<R0+2
-  Sun Sep 20 2026 12:03                                                                                                    Page 241
+  Wed Sep 23 2026  8:33                                                                                                    Page 241
 
 
  13730 00:296E: A5 01        	lda	<R0
@@ -14699,7 +14699,7 @@
  13785                        ;                mtCOVERAGE_TEST_MARKER();
  13786                        ;            }
  13787                        ;        }
-  Sun Sep 20 2026 12:03                                                                                                    Page 242
+  Wed Sep 23 2026  8:33                                                                                                    Page 242
 
 
  13788                        ;        else
@@ -14760,7 +14760,7 @@
  13843                        ;
  13844                        ;        if( xSchedulerRunning != pdFALSE )
  13845                        ;        {
-  Sun Sep 20 2026 12:03                                                                                                    Page 243
+  Wed Sep 23 2026  8:33                                                                                                    Page 243
 
 
  13846                        ;            ( pxCurrentTCB->uxCriticalNesting )++;
@@ -14821,7 +14821,7 @@
  13901                        ;                    {
  13902                        ;                        /* The only time there would be a problem is if this is called
  13903                        ;                         * before a context switch and vTaskExitCritical() is called
-  Sun Sep 20 2026 12:03                                                                                                    Page 244
+  Wed Sep 23 2026  8:33                                                                                                    Page 244
 
 
  13904                        ;                         * after pxCurrentTCB changes. Therefore this should not be
@@ -14882,7 +14882,7 @@
  13959                        ;    {
  13960                        ;        traceENTER_vTaskExitCritical();
  13961                        ;
-  Sun Sep 20 2026 12:03                                                                                                    Page 245
+  Wed Sep 23 2026  8:33                                                                                                    Page 245
 
 
  13962                        ;        if( xSchedulerRunning != pdFALSE )
@@ -14943,7 +14943,7 @@
  14017                        ;            portASSERT_IF_IN_ISR();
  14018                        ;
  14019                        ;            if( portGET_CRITICAL_NESTING_COUNT( xCoreID ) > 0U )
-  Sun Sep 20 2026 12:03                                                                                                    Page 246
+  Wed Sep 23 2026  8:33                                                                                                    Page 246
 
 
  14020                        ;            {
@@ -15004,7 +15004,7 @@
  14075                        ;
  14076                        ;            /* If critical nesting count is zero then this function
  14077                        ;             * does not match a previous call to vTaskEnterCritical(). */
-  Sun Sep 20 2026 12:03                                                                                                    Page 247
+  Wed Sep 23 2026  8:33                                                                                                    Page 247
 
 
  14078                        ;            configASSERT( portGET_CRITICAL_NESTING_COUNT( xCoreID ) > 0U );
@@ -15065,7 +15065,7 @@
  14132                        ;    }
  14133                        ;
  14134                        ;#endif /* ( configUSE_STATS_FORMATTING_FUNCTIONS > 0 ) */
-  Sun Sep 20 2026 12:03                                                                                                    Page 248
+  Wed Sep 23 2026  8:33                                                                                                    Page 248
 
 
  14135                        ;/*-----------------------------------------------------------*/
@@ -15126,7 +15126,7 @@
  14190                        ;        /* More details at: https://github.com/FreeRTOS/FreeRTOS-Kernel/blob/main/MISRA.md#rule-115 *
                     /
  14191                        ;        /* coverity[misra_c_2012_rule_11_5_violation] */
-  Sun Sep 20 2026 12:03                                                                                                    Page 249
+  Wed Sep 23 2026  8:33                                                                                                    Page 249
 
 
  14192                        ;        pxTaskStatusArray = pvPortMalloc( uxArraySize * sizeof( TaskStatus_t ) );
@@ -15187,7 +15187,7 @@
  14245                        ;                    {
  14246                        ;                        /* Write the rest of the string. */
  14247                        ;                        #if ( ( configUSE_CORE_AFFINITY == 1 ) && ( configNUMBER_OF_CORES > 1 ) )
-  Sun Sep 20 2026 12:03                                                                                                    Page 250
+  Wed Sep 23 2026  8:33                                                                                                    Page 250
 
 
  14248                        ;                            /* MISRA Ref 21.6.1 [snprintf for utility] */
@@ -15248,7 +15248,7 @@
  14291                        ;
  14292                        ;            /* Free the array again.  NOTE!  If configSUPPORT_DYNAMIC_ALLOCATION
  14293                        ;             * is 0 then vPortFree() will be #defined to nothing. */
-  Sun Sep 20 2026 12:03                                                                                                    Page 251
+  Wed Sep 23 2026  8:33                                                                                                    Page 251
 
 
  14294                        ;            vPortFree( pxTaskStatusArray );
@@ -15309,7 +15309,7 @@
  14348                        ;        /* Make sure the write buffer does not contain a string. */
  14349                        ;        *pcWriteBuffer = ( char ) 0x00;
  14350                        ;
-  Sun Sep 20 2026 12:03                                                                                                    Page 252
+  Wed Sep 23 2026  8:33                                                                                                    Page 252
 
 
  14351                        ;        /* Take a snapshot of the number of tasks in case it changes while this
@@ -15370,7 +15370,7 @@
  14403                        ;                                    /* More details at: https://github.com/FreeRTOS/FreeRTOS-Kernel/b
                     lob/main/MISRA.md#rule-216 */
  14404                        ;                                    /* coverity[misra_c_2012_rule_21_6_violation] */
-  Sun Sep 20 2026 12:03                                                                                                    Page 253
+  Wed Sep 23 2026  8:33                                                                                                    Page 253
 
 
  14405                        ;                                    iSnprintfReturnValue = snprintf( pcWriteBuffer,
@@ -15431,7 +15431,7 @@
  14449                        ;                                                                     "\t%u\t\t<1%%\r\n",
  14450                        ;                                                                     ( unsigned int ) pxTaskStatusArr
                     ay[ x ].ulRunTimeCounter );
-  Sun Sep 20 2026 12:03                                                                                                    Page 254
+  Wed Sep 23 2026  8:33                                                                                                    Page 254
 
 
  14451                        ;                                }
@@ -15492,7 +15492,7 @@
  14504 00:29AA: 38           	sec
  14505 00:29AB: E9 10 00     	sbc	#L489
  14506 00:29AE: 1B           	tcs
-  Sun Sep 20 2026 12:03                                                                                                    Page 255
+  Wed Sep 23 2026  8:33                                                                                                    Page 255
 
 
  14507 00:29AF: 0B           	phd
@@ -15553,7 +15553,7 @@
  14561 00:2A03: A5 0D        	lda	<L490+uxReturn_1
  14562 00:2A05: A8           	tay
  14563 00:2A06: 2B           	pld
-  Sun Sep 20 2026 12:03                                                                                                    Page 256
+  Wed Sep 23 2026  8:33                                                                                                    Page 256
 
 
  14564 00:2A07: 3B           	tsc
@@ -15614,7 +15614,7 @@
  14619                        L10620:
  14620                        ;
  14621                        ;        return pxTCB;
-  Sun Sep 20 2026 12:03                                                                                                    Page 257
+  Wed Sep 23 2026  8:33                                                                                                    Page 257
 
 
  14622 00:2A2F: A6 03        	ldx	<L493+pxTCB_1+2
@@ -15675,7 +15675,7 @@
  14677                        	asmend
  14678                        L10622:
  14679 00:2A4F: 80 FE        	bra	L10622
-  Sun Sep 20 2026 12:03                                                                                                    Page 258
+  Wed Sep 23 2026  8:33                                                                                                    Page 258
 
 
  14680                        L10621:
@@ -15736,7 +15736,7 @@
  14734                        ;                    /* Only block if the notification count is not already non-zero. */
  14735                        ;                    if( pxCurrentTCB->ulNotifiedValue[ uxIndexToWaitOn ] == 0U )
  14736                        ;                    {
-  Sun Sep 20 2026 12:03                                                                                                    Page 259
+  Wed Sep 23 2026  8:33                                                                                                    Page 259
 
 
  14737 00:2A9F: A5 1B        	lda	<L496+uxIndexToWaitOn_0
@@ -15797,7 +15797,7 @@
  14792                        ;                }
  14793                        ;                taskEXIT_CRITICAL();
  14794                        	asmstart
-  Sun Sep 20 2026 12:03                                                                                                    Page 260
+  Wed Sep 23 2026  8:33                                                                                                    Page 260
 
 
  14795 00:2AF8: 58           	cli
@@ -15858,7 +15858,7 @@
  14850 00:2B23: 64 07        	stz	<R1+2
  14851 00:2B25: D4 07        	pei	<R1+2
  14852 00:2B27: D4 05        	pei	<R1
-  Sun Sep 20 2026 12:03                                                                                                    Page 261
+  Wed Sep 23 2026  8:33                                                                                                    Page 261
 
 
  14853 00:2B29: A9 02 00     	lda	#$2
@@ -15919,7 +15919,7 @@
  14908 00:2B8E: 85 0D        	sta	<R3
  14909 00:2B90: A5 0B        	lda	<R2+2
  14910 00:2B92: 65 03        	adc	<R0+2
-  Sun Sep 20 2026 12:03                                                                                                    Page 262
+  Wed Sep 23 2026  8:33                                                                                                    Page 262
 
 
  14911 00:2B94: 85 0F        	sta	<R3+2
@@ -15980,7 +15980,7 @@
  14966                        	xref	_~~lasl
  14967 00:2BD9: 20 xx xx     	jsr	_~~lasl
  14968 00:2BDC: 85 01        	sta	<R0
-  Sun Sep 20 2026 12:03                                                                                                    Page 263
+  Wed Sep 23 2026  8:33                                                                                                    Page 263
 
 
  14969 00:2BDE: 86 03        	stx	<R0+2
@@ -16041,7 +16041,7 @@
  15024 00:2C16: 3B           	tsc
  15025 00:2C17: 38           	sec
  15026 00:2C18: E9 16 00     	sbc	#L508
-  Sun Sep 20 2026 12:03                                                                                                    Page 264
+  Wed Sep 23 2026  8:33                                                                                                    Page 264
 
 
  15027 00:2C1B: 1B           	tcs
@@ -16102,7 +16102,7 @@
  15080                        ;             * non-deterministic operation. */
  15081                        ;            vTaskSuspendAll();
  15082 00:2C54: 20 xx xx     	jsr	_~vTaskSuspendAll
-  Sun Sep 20 2026 12:03                                                                                                    Page 265
+  Wed Sep 23 2026  8:33                                                                                                    Page 265
 
 
  15083                        ;            {
@@ -16163,7 +16163,7 @@
  15138 00:2CA5: A5 1B        	lda	<L508+ulBitsToClearOnEntry_0
  15139 00:2CA7: 49 FF FF     	eor	#<$ffffffff
  15140 00:2CAA: 85 0D        	sta	<R3
-  Sun Sep 20 2026 12:03                                                                                                    Page 266
+  Wed Sep 23 2026  8:33                                                                                                    Page 266
 
 
  15141 00:2CAC: A5 1D        	lda	<L508+ulBitsToClearOnEntry_0+2
@@ -16224,7 +16224,7 @@
  15196 00:2CEB: D4 29        	pei	<L508+xTicksToWait_0+2
  15197 00:2CED: D4 27        	pei	<L508+xTicksToWait_0
  15198 00:2CEF: 20 xx xx     	jsr	_~prvAddCurrentTaskToDelayedList
-  Sun Sep 20 2026 12:03                                                                                                    Page 267
+  Wed Sep 23 2026  8:33                                                                                                    Page 267
 
 
  15199                        ;                }
@@ -16285,7 +16285,7 @@
  15254 00:2D24: 18           	clc
  15255 00:2D25: 6D xx xx     	adc	|_~pxCurrentTCB	; volatile
  15256 00:2D28: 85 09        	sta	<R2
-  Sun Sep 20 2026 12:03                                                                                                    Page 268
+  Wed Sep 23 2026  8:33                                                                                                    Page 268
 
 
  15257 00:2D2A: A9 00 00     	lda	#$0
@@ -16346,7 +16346,7 @@
  15312 00:2D73: A9 02 00     	lda	#$2
  15313                        	xref	_~~lasl
  15314 00:2D76: 20 xx xx     	jsr	_~~lasl
-  Sun Sep 20 2026 12:03                                                                                                    Page 269
+  Wed Sep 23 2026  8:33                                                                                                    Page 269
 
 
  15315 00:2D79: 85 01        	sta	<R0
@@ -16407,7 +16407,7 @@
  15370                        ;
  15371                        ;        traceRETURN_xTaskGenericNotifyWait( xReturn );
  15372                        ;
-  Sun Sep 20 2026 12:03                                                                                                    Page 270
+  Wed Sep 23 2026  8:33                                                                                                    Page 270
 
 
  15373                        ;        return xReturn;
@@ -16468,7 +16468,7 @@
  15427 00:2DEF: A9 01 00     	lda	#$1
  15428 00:2DF2: 85 15        	sta	<L521+xReturn_1
  15429                        ;
-  Sun Sep 20 2026 12:03                                                                                                    Page 271
+  Wed Sep 23 2026  8:33                                                                                                    Page 271
 
 
  15430                        ;        configASSERT( uxIndexToNotify < configTASK_NOTIFICATION_ARRAY_ENTRIES );
@@ -16529,7 +16529,7 @@
  15485 00:2E3B: 18           	clc
  15486 00:2E3C: 65 01        	adc	<R0
  15487 00:2E3E: 85 0D        	sta	<R3
-  Sun Sep 20 2026 12:03                                                                                                    Page 272
+  Wed Sep 23 2026  8:33                                                                                                    Page 272
 
 
  15488 00:2E40: A5 0B        	lda	<R2+2
@@ -16590,7 +16590,7 @@
  15543 00:2E8C: D4 05        	pei	<R1
  15544 00:2E8E: A9 02 00     	lda	#$2
  15545                        	xref	_~~lasl
-  Sun Sep 20 2026 12:03                                                                                                    Page 273
+  Wed Sep 23 2026  8:33                                                                                                    Page 273
 
 
  15546 00:2E91: 20 xx xx     	jsr	_~~lasl
@@ -16651,7 +16651,7 @@
  15601 00:2EE2: 85 01        	sta	<R0
  15602 00:2EE4: C8           	iny
  15603 00:2EE5: C8           	iny
-  Sun Sep 20 2026 12:03                                                                                                    Page 274
+  Wed Sep 23 2026  8:33                                                                                                    Page 274
 
 
  15604 00:2EE6: B7 11        	lda	[<L521+pxTCB_1],Y
@@ -16712,7 +16712,7 @@
  15659 00:2F57: 97 11        	sta	[<L521+pxTCB_1],Y
  15660 00:2F59: C8           	iny
  15661 00:2F5A: C8           	iny
-  Sun Sep 20 2026 12:03                                                                                                    Page 275
+  Wed Sep 23 2026  8:33                                                                                                    Page 275
 
 
  15662 00:2F5B: 97 11        	sta	[<L521+pxTCB_1],Y
@@ -16773,7 +16773,7 @@
  15717 00:2FC4: A9 04 00     	lda	#$4
  15718 00:2FC7: 18           	clc
  15719 00:2FC8: 65 11        	adc	<L521+pxTCB_1
-  Sun Sep 20 2026 12:03                                                                                                    Page 276
+  Wed Sep 23 2026  8:33                                                                                                    Page 276
 
 
  15720 00:2FCA: 85 05        	sta	<R1
@@ -16834,7 +16834,7 @@
  15775 00:3036: AA           	tax
  15776 00:3037: BD xx xx     	lda	|_~pxReadyTasksLists,X
  15777 00:303A: 1A           	ina
-  Sun Sep 20 2026 12:03                                                                                                    Page 277
+  Wed Sep 23 2026  8:33                                                                                                    Page 277
 
 
  15778 00:303B: A6 01        	ldx	<R0
@@ -16895,7 +16895,7 @@
  15833                        ;                    break;
  15834 00:3096: 82 2A FE     	brl	L10660
  15835                        ;
-  Sun Sep 20 2026 12:03                                                                                                    Page 278
+  Wed Sep 23 2026  8:33                                                                                                    Page 278
 
 
  15836                        ;                case eSetValueWithOverwrite:
@@ -16956,7 +16956,7 @@
  15891 00:30DD: 82 E3 FD     	brl	L10660
  15892                        ;
  15893                        ;                case eNoAction:
-  Sun Sep 20 2026 12:03                                                                                                    Page 279
+  Wed Sep 23 2026  8:33                                                                                                    Page 279
 
 
  15894                        ;
@@ -17017,7 +17017,7 @@
  15949 00:3105: 58           	cli
  15950                        	asmend
  15951                        ;
-  Sun Sep 20 2026 12:03                                                                                                    Page 280
+  Wed Sep 23 2026  8:33                                                                                                    Page 280
 
 
  15952                        ;        traceRETURN_xTaskGenericNotify( xReturn );
@@ -17078,7 +17078,7 @@
  16007                        ;        TCB_t * pxTCB;
  16008                        ;        uint8_t ucOriginalNotifyState;
  16009                        ;        BaseType_t xReturn = pdPASS;
-  Sun Sep 20 2026 12:03                                                                                                    Page 281
+  Wed Sep 23 2026  8:33                                                                                                    Page 281
 
 
  16010                        ;        UBaseType_t uxSavedInterruptStatus;
@@ -17139,7 +17139,7 @@
  16064                        ;
  16065                        ;        /* MISRA Ref 4.7.1 [Return value shall be checked] */
  16066                        ;        /* More details at: https://github.com/FreeRTOS/FreeRTOS-Kernel/blob/main/MISRA.md#dir-47 */
-  Sun Sep 20 2026 12:03                                                                                                    Page 282
+  Wed Sep 23 2026  8:33                                                                                                    Page 282
 
 
  16067                        ;        /* coverity[misra_c_2012_directive_4_7_violation] */
@@ -17200,7 +17200,7 @@
  16122 00:3193: 18           	clc
  16123 00:3194: 65 24        	adc	<L534+uxIndexToNotify_0
  16124 00:3196: A8           	tay
-  Sun Sep 20 2026 12:03                                                                                                    Page 283
+  Wed Sep 23 2026  8:33                                                                                                    Page 283
 
 
  16125 00:3197: E2 20        	sep	#$20
@@ -17261,7 +17261,7 @@
  16180                        ;                    break;
  16181                        L10708:
  16182                        ;
-  Sun Sep 20 2026 12:03                                                                                                    Page 284
+  Wed Sep 23 2026  8:33                                                                                                    Page 284
 
 
  16183                        ;            traceTASK_NOTIFY_FROM_ISR( uxIndexToNotify );
@@ -17322,7 +17322,7 @@
  16238 00:323D: 65 03        	adc	<R0+2
  16239 00:323F: 85 0F        	sta	<R3+2
  16240 00:3241: A9 01 00     	lda	#$1
-  Sun Sep 20 2026 12:03                                                                                                    Page 285
+  Wed Sep 23 2026  8:33                                                                                                    Page 285
 
 
  16241 00:3244: 18           	clc
@@ -17383,7 +17383,7 @@
  16296                        	longa	on
  16297 00:3298: D0 BE        	bne	L10711
  16298                        ;                        pxTCB->ulNotifiedValue[ uxIndexToNotify ] = ulValue;
-  Sun Sep 20 2026 12:03                                                                                                    Page 286
+  Wed Sep 23 2026  8:33                                                                                                    Page 286
 
 
  16299                        ;                    }
@@ -17444,7 +17444,7 @@
  16354 00:32CD: 85 03        	sta	<R0+2
  16355 00:32CF: C8           	iny
  16356 00:32D0: C8           	iny
-  Sun Sep 20 2026 12:03                                                                                                    Page 287
+  Wed Sep 23 2026  8:33                                                                                                    Page 287
 
 
  16357 00:32D1: B7 11        	lda	[<L535+pxTCB_1],Y
@@ -17505,7 +17505,7 @@
  16412 00:3342: A9 FF FF     	lda	#$ffff
  16413 00:3345: 18           	clc
  16414 00:3346: 67 1A        	adc	[<L535+pxList_2]
-  Sun Sep 20 2026 12:03                                                                                                    Page 288
+  Wed Sep 23 2026  8:33                                                                                                    Page 288
 
 
  16415 00:3348: 87 1A        	sta	[<L535+pxList_2]
@@ -17566,7 +17566,7 @@
  16470 00:33B1: A9 00 00     	lda	#$0
  16471 00:33B4: 65 13        	adc	<L535+pxTCB_1+2
  16472 00:33B6: 85 07        	sta	<R1+2
-  Sun Sep 20 2026 12:03                                                                                                    Page 289
+  Wed Sep 23 2026  8:33                                                                                                    Page 289
 
 
  16473 00:33B8: A5 05        	lda	<R1
@@ -17627,7 +17627,7 @@
  16528 00:3422: 9D xx xx     	sta	|_~pxReadyTasksLists,X
  16529                        ;
  16530                        ;                    #if ( configUSE_TICKLESS_IDLE != 0 )
-  Sun Sep 20 2026 12:03                                                                                                    Page 290
+  Wed Sep 23 2026  8:33                                                                                                    Page 290
 
 
  16531                        ;                    {
@@ -17688,7 +17688,7 @@
  16586 00:346D: 85 07        	sta	<R1+2
  16587 00:346F: A5 05        	lda	<R1
  16588 00:3471: A0 04 00     	ldy	#$4
-  Sun Sep 20 2026 12:03                                                                                                    Page 291
+  Wed Sep 23 2026  8:33                                                                                                    Page 291
 
 
  16589 00:3474: 97 01        	sta	[<R0],Y
@@ -17749,7 +17749,7 @@
  16644                        ;                            *pxHigherPriorityTaskWoken = pdTRUE;
  16645 00:34CA: A9 01 00     	lda	#$1
  16646 00:34CD: 87 30        	sta	[<L534+pxHigherPriorityTaskWoken_0]
-  Sun Sep 20 2026 12:03                                                                                                    Page 292
+  Wed Sep 23 2026  8:33                                                                                                    Page 292
 
 
  16647                        ;                        }
@@ -17810,7 +17810,7 @@
  16702                        	efunc
  16703                        ;
  16704                        ;#endif /* configUSE_TASK_NOTIFICATIONS */
-  Sun Sep 20 2026 12:03                                                                                                    Page 293
+  Wed Sep 23 2026  8:33                                                                                                    Page 293
 
 
  16705                        ;/*-----------------------------------------------------------*/
@@ -17871,7 +17871,7 @@
  16759                        ;         * maximum  system call (or maximum API call) interrupt priority.
  16760                        ;         * Interrupts that are  above the maximum system call priority are keep
  16761                        ;         * permanently enabled, even when the RTOS kernel is in a critical section,
-  Sun Sep 20 2026 12:03                                                                                                    Page 294
+  Wed Sep 23 2026  8:33                                                                                                    Page 294
 
 
  16762                        ;         * but cannot make any calls to FreeRTOS API functions.  If configASSERT()
@@ -17932,7 +17932,7 @@
  16817 00:352E: D4 07        	pei	<R1+2
  16818 00:3530: D4 05        	pei	<R1
  16819 00:3532: A9 02 00     	lda	#$2
-  Sun Sep 20 2026 12:03                                                                                                    Page 295
+  Wed Sep 23 2026  8:33                                                                                                    Page 295
 
 
  16820                        	xref	_~~lasl
@@ -17993,7 +17993,7 @@
  16875                        ;
  16876                        ;                if( uxSchedulerSuspended == ( UBaseType_t ) 0U )
  16877                        ;                {
-  Sun Sep 20 2026 12:03                                                                                                    Page 296
+  Wed Sep 23 2026  8:33                                                                                                    Page 296
 
 
  16878 00:3585: AD xx xx     	lda	|_~uxSchedulerSuspended	; volatile
@@ -18054,7 +18054,7 @@
  16933 00:35F2: C8           	iny
  16934 00:35F3: C8           	iny
  16935 00:35F4: B7 18        	lda	[<L551+pxList_2],Y
-  Sun Sep 20 2026 12:03                                                                                                    Page 297
+  Wed Sep 23 2026  8:33                                                                                                    Page 297
 
 
  16936 00:35F6: C5 03        	cmp	<R0+2
@@ -18115,7 +18115,7 @@
  16991 00:3662: 88           	dey
  16992 00:3663: 88           	dey
  16993 00:3664: B7 18        	lda	[<L551+pxIndex_3],Y
-  Sun Sep 20 2026 12:03                                                                                                    Page 298
+  Wed Sep 23 2026  8:33                                                                                                    Page 298
 
 
  16994 00:3666: A0 0C 00     	ldy	#$c
@@ -18176,7 +18176,7 @@
  17049 00:36D0: A0 14 00     	ldy	#$14
  17050 00:36D3: 97 11        	sta	[<L551+pxTCB_1],Y
  17051 00:36D5: A5 03        	lda	<R0+2
-  Sun Sep 20 2026 12:03                                                                                                    Page 299
+  Wed Sep 23 2026  8:33                                                                                                    Page 299
 
 
  17052 00:36D7: C8           	iny
@@ -18237,7 +18237,7 @@
  17107 00:3717: A0 08 00     	ldy	#$8
  17108 00:371A: B7 18        	lda	[<L551+pxIndex_4],Y
  17109 00:371C: A0 20 00     	ldy	#$20
-  Sun Sep 20 2026 12:03                                                                                                    Page 300
+  Wed Sep 23 2026  8:33                                                                                                    Page 300
 
 
  17110 00:371F: 97 11        	sta	[<L551+pxTCB_1],Y
@@ -18298,7 +18298,7 @@
  17165                        L10776:
  17166                        ;
  17167                        ;                #if ( configNUMBER_OF_CORES == 1 )
-  Sun Sep 20 2026 12:03                                                                                                    Page 301
+  Wed Sep 23 2026  8:33                                                                                                    Page 301
 
 
  17168                        ;                {
@@ -18359,7 +18359,7 @@
  17223                        ;        taskEXIT_CRITICAL_FROM_ISR( uxSavedInterruptStatus );
  17224                        ;
  17225                        ;        traceRETURN_vTaskGenericNotifyGiveFromISR();
-  Sun Sep 20 2026 12:03                                                                                                    Page 302
+  Wed Sep 23 2026  8:33                                                                                                    Page 302
 
 
  17226                        ;    }
@@ -18420,7 +18420,7 @@
  17281                        ;        /* If null is passed in here then it is the calling task that is having
  17282                        ;         * its notification state cleared. */
  17283                        ;        pxTCB = prvGetTCBFromHandle( xTask );
-  Sun Sep 20 2026 12:03                                                                                                    Page 303
+  Wed Sep 23 2026  8:33                                                                                                    Page 303
 
 
  17284 00:37CB: A5 0D        	lda	<L563+xTask_0
@@ -18481,7 +18481,7 @@
  17339 00:380F: A9 01 00     	lda	#$1
  17340 00:3812: 85 09        	sta	<L564+xReturn_1
  17341                        ;            }
-  Sun Sep 20 2026 12:03                                                                                                    Page 304
+  Wed Sep 23 2026  8:33                                                                                                    Page 304
 
 
  17342                        ;            else
@@ -18542,7 +18542,7 @@
  17397             00000003   xTask_0	set	3
  17398             00000007   uxIndexToClear_0	set	7
  17399             00000009   ulBitsToClear_0	set	9
-  Sun Sep 20 2026 12:03                                                                                                    Page 305
+  Wed Sep 23 2026  8:33                                                                                                    Page 305
 
 
  17400                        ;        TCB_t * pxTCB;
@@ -18603,7 +18603,7 @@
  17455 00:3861: 85 05        	sta	<R1
  17456 00:3863: 64 07        	stz	<R1+2
  17457 00:3865: D4 07        	pei	<R1+2
-  Sun Sep 20 2026 12:03                                                                                                    Page 306
+  Wed Sep 23 2026  8:33                                                                                                    Page 306
 
 
  17458 00:3867: D4 05        	pei	<R1
@@ -18664,7 +18664,7 @@
  17513 00:38D4: 85 0F        	sta	<R3+2
  17514 00:38D6: A5 0D        	lda	<R3
  17515 00:38D8: 27 01        	and	[<R0]
-  Sun Sep 20 2026 12:03                                                                                                    Page 307
+  Wed Sep 23 2026  8:33                                                                                                    Page 307
 
 
  17516 00:38DA: 87 01        	sta	[<R0]
@@ -18725,7 +18725,7 @@
  17570                        ;                    ulTotalTime = portGET_RUN_TIME_COUNTER_VALUE();
  17571                        ;                #endif
  17572                        ;
-  Sun Sep 20 2026 12:03                                                                                                    Page 308
+  Wed Sep 23 2026  8:33                                                                                                    Page 308
 
 
  17573                        ;                #if ( configNUMBER_OF_CORES == 1 )
@@ -18786,7 +18786,7 @@
  17627                        ;        return ulReturn;
  17628                        ;    }
  17629                        ;
-  Sun Sep 20 2026 12:03                                                                                                    Page 309
+  Wed Sep 23 2026  8:33                                                                                                    Page 309
 
 
  17630                        ;#endif /* if ( configGENERATE_RUN_TIME_STATS == 1 ) */
@@ -18847,7 +18847,7 @@
  17682                        ;        configRUN_TIME_COUNTER_TYPE ulTotalTime, ulReturn;
  17683                        ;        configRUN_TIME_COUNTER_TYPE ulRunTimeCounter = 0;
  17684                        ;
-  Sun Sep 20 2026 12:03                                                                                                    Page 310
+  Wed Sep 23 2026  8:33                                                                                                    Page 310
 
 
  17685                        ;        traceENTER_ulTaskGetIdleRunTimePercent();
@@ -18908,7 +18908,7 @@
  17740                        ;        /* About to enter a delayed list, so ensure the ucDelayAborted flag is
  17741                        ;         * reset to pdFALSE so it can be detected as having been set to pdTRUE
  17742                        ;         * when the task leaves the Blocked state. */
-  Sun Sep 20 2026 12:03                                                                                                    Page 311
+  Wed Sep 23 2026  8:33                                                                                                    Page 311
 
 
  17743                        ;        pxCurrentTCB->ucDelayAborted = ( uint8_t ) pdFALSE;
@@ -18969,7 +18969,7 @@
  17798 00:3942: F0 03        	beq	*+5
  17799 00:3944: 82 BC 00     	brl	L10803
  17800 00:3947: A5 23        	lda	<L580+xCanBlockIndefinitely_0
-  Sun Sep 20 2026 12:03                                                                                                    Page 312
+  Wed Sep 23 2026  8:33                                                                                                    Page 312
 
 
  17801 00:3949: D0 03        	bne	*+5
@@ -19030,7 +19030,7 @@
  17856 00:39B3: C8           	iny
  17857 00:39B4: 97 01        	sta	[<R0],Y
  17858 00:39B6: A9 04 00     	lda	#$4
-  Sun Sep 20 2026 12:03                                                                                                    Page 313
+  Wed Sep 23 2026  8:33                                                                                                    Page 313
 
 
  17859 00:39B9: 18           	clc
@@ -19091,7 +19091,7 @@
  17914                        ;
  17915                        ;            /* The list item will be inserted in wake time order. */
  17916                        ;            listSET_LIST_ITEM_VALUE( &( pxCurrentTCB->xStateListItem ), xTimeToWake );
-  Sun Sep 20 2026 12:03                                                                                                    Page 314
+  Wed Sep 23 2026  8:33                                                                                                    Page 314
 
 
  17917 00:3A10: AD xx xx     	lda	|_~pxCurrentTCB	; volatile
@@ -19152,7 +19152,7 @@
  17972                        ;                /* If the task entering the blocked state was placed at the
  17973                        ;                 * head of the list of blocked tasks then xNextTaskUnblockTime
  17974                        ;                 * needs to be updated too. */
-  Sun Sep 20 2026 12:03                                                                                                    Page 315
+  Wed Sep 23 2026  8:33                                                                                                    Page 315
 
 
  17975                        ;                if( xTimeToWake < xNextTaskUnblockTime )
@@ -19213,7 +19213,7 @@
  18030                        ;
  18031                        ;        /* Avoid compiler warning when INCLUDE_vTaskSuspend is not 1. */
  18032                        ;        ( void ) xCanBlockIndefinitely;
-  Sun Sep 20 2026 12:03                                                                                                    Page 316
+  Wed Sep 23 2026  8:33                                                                                                    Page 316
 
 
  18033                        ;    }
@@ -19274,7 +19274,7 @@
  18087                        ; * This is the kernel provided implementation of vApplicationGetIdleTaskMemory()
  18088                        ; * to provide the memory that is used by the Idle task. It is used when
  18089                        ; * configKERNEL_PROVIDED_STATIC_MEMORY is set to 1. The application can provide
-  Sun Sep 20 2026 12:03                                                                                                    Page 317
+  Wed Sep 23 2026  8:33                                                                                                    Page 317
 
 
  18090                        ; * its own implementation of vApplicationGetIdleTaskMemory by setting
@@ -19335,7 +19335,7 @@
  18142                        ;        *ppxTimerTaskStackBuffer = &( uxTimerTaskStack[ 0 ] );
  18143                        ;        *puxTimerTaskStackSize = configTIMER_TASK_STACK_DEPTH;
  18144                        ;    }
-  Sun Sep 20 2026 12:03                                                                                                    Page 318
+  Wed Sep 23 2026  8:33                                                                                                    Page 318
 
 
  18145                        ;
@@ -19396,7 +19396,7 @@
  18199                        ;    uxTopReadyPriority = tskIDLE_PRIORITY;
  18200 00:3A98: 9C xx xx     	stz	|_~uxTopReadyPriority	; volatile
  18201                        ;    xSchedulerRunning = pdFALSE;
-  Sun Sep 20 2026 12:03                                                                                                    Page 319
+  Wed Sep 23 2026  8:33                                                                                                    Page 319
 
 
  18202 00:3A9B: 9C xx xx     	stz	|_~xSchedulerRunning	; volatile
@@ -19457,7 +19457,7 @@
  18257                        	xref	_~uxListRemove
  18258                        	xref	_~vListInsertEnd
  18259                        	xref	_~vListInsert
-  Sun Sep 20 2026 12:03                                                                                                    Page 320
+  Wed Sep 23 2026  8:33                                                                                                    Page 320
 
 
  18260                        	xref	_~vListInitialiseItem

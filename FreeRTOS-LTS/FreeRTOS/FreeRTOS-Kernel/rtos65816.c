@@ -5,6 +5,8 @@
 #include "FreeRTOS.h"
 #include "task.h"
 
+#include "ff.h"
+
 char *ucHeapStack = (char *)0x0200;
 
 volatile char* debug_char = (volatile char *) 0xfffff0;
@@ -32,15 +34,8 @@ typedef union {
 	} parts;
 } ptrParts_t;
 
-/*
-const HeapRegion_t xHeapRegions[] = 
-{
-    { ( uint8_t * ) 0x020000, 0xffff }, 
-    { ( uint8_t * ) 0x030000, 0xffff }, 
-    { ( uint8_t * ) 0x040000, 0xffff },    
-    { NULL, 0 } 
-};
-*/
+FATFS FatFs;		/* FatFs work area needed for each volume */
+FIL Fil;			/* File object needed for each open file */
 
 #asm
 	clc
@@ -79,6 +74,8 @@ void shellTask( void *pvParameters )
 	taskParm_t *taskParm = (taskParm_t *) pvParameters;
 	char dataBank;
 	unsigned int stackptr, direct;
+	UINT bw;
+	FRESULT fr;
 
 	#asm
 	sep #$20
@@ -92,10 +89,27 @@ void shellTask( void *pvParameters )
 	sta %%direct;
 	#endasm
 	
-	for(;;) {
-		printf("%s DB:%02X\n", taskParm->taskName, dataBank);
-		vTaskDelay(taskParm->tickDelay);
+	printf("%s DB:%02X\n", taskParm->taskName, dataBank);
+
+//	vTaskDelay(taskParm->tickDelay);
+
+
+
+	f_mount(&FatFs, "", 0);		/* Give a work area to the default drive */
+
+	fr = f_open(&Fil, "newfile.txt", FA_WRITE | FA_CREATE_ALWAYS);	/* Create a file */
+	if (fr == FR_OK) {
+		f_write(&Fil, "It works!\r\n", 11, &bw);	/* Write data to the file */
+		fr = f_close(&Fil);							/* Close the file */
+		if (fr == FR_OK && bw == 11) {		/* Lights green LED if data written well */
+			//DDRB |= 0x10; PORTB |= 0x10;	/* Set PB4 high */
+			printf("OK!\n");
+		}
 	}
+
+	printf("task ended\n");
+	for(;;)
+		;
 
 }
 
@@ -146,7 +160,7 @@ int main (int argc, char ** argv) {
 	taskParm_2.dataBank = pp.parts.bank;
 	taskParm_3.dataBank = pp.parts.bank;
 	
-	taskParm_1.taskName = "1";
+	taskParm_1.taskName = "task1";
 	taskParm_1.taskAddr = shellTask;
 	taskParm_1.tickDelay = 10;
 	
@@ -160,11 +174,12 @@ int main (int argc, char ** argv) {
 	
 	rc = xTaskCreate( taskParm_1.taskAddr, "Task1", 512, (void *) &taskParm_1, 0, NULL);	
 	printf("task create rc: %d\n", rc);
+	/*
 	rc = xTaskCreate( taskParm_2.taskAddr, "Task2", 512, (void *) &taskParm_2, 0, NULL);	
 	printf("task create rc: %d\n", rc);
 	rc = xTaskCreate( taskParm_3.taskAddr, "Task3", 512, (void *) &taskParm_3, 0, NULL);	
 	printf("task create rc: %d\n", rc);
-	
+	*/
 	
 	if (rc != pdPASS) {
 		printf("shell could not be created rc: %d\n", rc);

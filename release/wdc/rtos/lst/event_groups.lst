@@ -1,4 +1,4 @@
-  Sun Sep 20 2026 12:03                                                                                                    Page 1
+  Wed Sep 23 2026  8:33                                                                                                    Page 1
 
 
                                                ***************************************
@@ -59,7 +59,7 @@
     50                        ; * correct privileged Vs unprivileged linkage and placement. */
     51                        ;#undef MPU_WRAPPERS_INCLUDED_FROM_API_FILE
     52                        ;
-  Sun Sep 20 2026 12:03                                                                                                    Page 2
+  Wed Sep 23 2026  8:33                                                                                                    Page 2
 
 
     53                        ;/* This entire source file will be skipped if the application is not configured
@@ -120,7 +120,7 @@
    107                        ;            }
    108                        ;            #endif /* configASSERT_DEFINED */
    109                        ;
-  Sun Sep 20 2026 12:03                                                                                                    Page 3
+  Wed Sep 23 2026  8:33                                                                                                    Page 3
 
 
    110                        ;            /* The user has provided a statically allocated event group - use it. */
@@ -181,7 +181,7 @@
    164                        ;            EventGroup_t * pxEventBits;
    165                        ;
    166                        ;            traceENTER_xEventGroupCreate();
-  Sun Sep 20 2026 12:03                                                                                                    Page 4
+  Wed Sep 23 2026  8:33                                                                                                    Page 4
 
 
    167             00000000   pxEventBits_1	set	0
@@ -242,7 +242,7 @@
    221 00:0038: 2B           	pld
    222 00:0039: 3B           	tsc
    223 00:003A: 18           	clc
-  Sun Sep 20 2026 12:03                                                                                                    Page 5
+  Wed Sep 23 2026  8:33                                                                                                    Page 5
 
 
    224 00:003B: 69 08 00     	adc	#L2
@@ -303,7 +303,7 @@
    279                        	asmstart
    280 00:005A: 78           	sei
    281                        	asmend
-  Sun Sep 20 2026 12:03                                                                                                    Page 6
+  Wed Sep 23 2026  8:33                                                                                                    Page 6
 
 
    282                        L10004:
@@ -364,7 +364,7 @@
    336 00:0096: 05 0B        	ora	<L7+uxOriginalBitValue_1+2
    337 00:0098: 85 03        	sta	<R0+2
    338 00:009A: A5 23        	lda	<L6+uxBitsToWaitFor_0
-  Sun Sep 20 2026 12:03                                                                                                    Page 7
+  Wed Sep 23 2026  8:33                                                                                                    Page 7
 
 
    339 00:009C: 25 01        	and	<R0
@@ -425,7 +425,7 @@
    394                        ;                     * found.  Then enter the blocked state. */
    395                        ;                    vTaskPlaceOnUnorderedEventList( &( pxEventBits->xTasksWaitingForBits ), ( uxBitsT
                     oWaitFor | eventCLEAR_EVENTS_ON_EXIT_BIT | eventWAIT_FOR_ALL_BITS ), xTicksToWait );
-  Sun Sep 20 2026 12:03                                                                                                    Page 8
+  Wed Sep 23 2026  8:33                                                                                                    Page 8
 
 
    396 00:00E7: D4 29        	pei	<L6+xTicksToWait_0+2
@@ -486,7 +486,7 @@
    451                        ;            {
    452 00:012B: A5 15        	lda	<L7+xAlreadyYielded_1
    453 00:012D: D0 04        	bne	L10021
-  Sun Sep 20 2026 12:03                                                                                                    Page 9
+  Wed Sep 23 2026  8:33                                                                                                    Page 9
 
 
    454                        ;                taskYIELD_WITHIN_API();
@@ -547,7 +547,7 @@
    509                        ;                        pxEventBits->uxEventBits &= ~uxBitsToWaitFor;
    510 00:0165: A5 23        	lda	<L6+uxBitsToWaitFor_0
    511 00:0167: 49 FF FF     	eor	#<$ffffffff
-  Sun Sep 20 2026 12:03                                                                                                    Page 10
+  Wed Sep 23 2026  8:33                                                                                                    Page 10
 
 
    512 00:016A: 85 01        	sta	<R0
@@ -608,7 +608,7 @@
    567 00:0198: 2B           	pld
    568 00:0199: 3B           	tsc
    569 00:019A: 18           	clc
-  Sun Sep 20 2026 12:03                                                                                                    Page 11
+  Wed Sep 23 2026  8:33                                                                                                    Page 11
 
 
    570 00:019B: 69 28 00     	adc	#L6+16
@@ -669,7 +669,7 @@
    624                        ;        /* Check the user is not attempting to wait on the bits used by the kernel
    625                        ;         * itself, and that at least one bit is being requested. */
    626                        ;        configASSERT( xEventGroup );
-  Sun Sep 20 2026 12:03                                                                                                    Page 12
+  Wed Sep 23 2026  8:33                                                                                                    Page 12
 
 
    627 00:01B7: A5 21        	lda	<L21+xEventGroup_0
@@ -730,7 +730,7 @@
                     lBits );
    681             00000012   uxCurrentEventBits_2	set	18
    682 00:01E5: A7 09        	lda	[<L22+pxEventBits_1]
-  Sun Sep 20 2026 12:03                                                                                                    Page 13
+  Wed Sep 23 2026  8:33                                                                                                    Page 13
 
 
    683 00:01E7: 85 1B        	sta	<L22+uxCurrentEventBits_2
@@ -791,7 +791,7 @@
    738                        ;            {
    739 00:0232: A5 2D        	lda	<L21+xTicksToWait_0
    740 00:0234: 05 2F        	ora	<L21+xTicksToWait_0+2
-  Sun Sep 20 2026 12:03                                                                                                    Page 14
+  Wed Sep 23 2026  8:33                                                                                                    Page 14
 
 
    741 00:0236: D0 0F        	bne	L10046
@@ -852,7 +852,7 @@
    795 00:025D: D4 2F        	pei	<L21+xTicksToWait_0+2
    796 00:025F: D4 2D        	pei	<L21+xTicksToWait_0
    797 00:0261: A5 11        	lda	<L22+uxControlBits_1
-  Sun Sep 20 2026 12:03                                                                                                    Page 15
+  Wed Sep 23 2026  8:33                                                                                                    Page 15
 
 
    798 00:0263: 05 25        	ora	<L21+uxBitsToWaitFor_0
@@ -913,7 +913,7 @@
    853 00:029B: 85 0D        	sta	<L22+uxReturn_1
    854 00:029D: 86 0F        	stx	<L22+uxReturn_1+2
    855                        ;
-  Sun Sep 20 2026 12:03                                                                                                    Page 16
+  Wed Sep 23 2026  8:33                                                                                                    Page 16
 
 
    856                        ;            if( ( uxReturn & eventUNBLOCKED_DUE_TO_BIT_SET ) == ( EventBits_t ) 0 )
@@ -974,7 +974,7 @@
    910 00:02E6: 85 19        	sta	<L22+xTimeoutOccurred_1
    911                        ;                }
    912                        ;                taskEXIT_CRITICAL();
-  Sun Sep 20 2026 12:03                                                                                                    Page 17
+  Wed Sep 23 2026  8:33                                                                                                    Page 17
 
 
    913                        	asmstart
@@ -1035,7 +1035,7 @@
    968                        ;    {
    969                        	code
    970                        	xdef	_~xEventGroupClearBits
-  Sun Sep 20 2026 12:03                                                                                                    Page 18
+  Wed Sep 23 2026  8:33                                                                                                    Page 18
 
 
    971                        	func
@@ -1096,7 +1096,7 @@
   1026                        ;            uxReturn = pxEventBits->uxEventBits;
   1027 00:0326: A7 05        	lda	[<L40+pxEventBits_1]
   1028 00:0328: 85 09        	sta	<L40+uxReturn_1
-  Sun Sep 20 2026 12:03                                                                                                    Page 19
+  Wed Sep 23 2026  8:33                                                                                                    Page 19
 
 
   1029 00:032A: A0 02 00     	ldy	#$2
@@ -1157,7 +1157,7 @@
   1084                        ;            traceEVENT_GROUP_CLEAR_BITS_FROM_ISR( xEventGroup, uxBitsToClear );
   1085                        ;            xReturn = xTimerPendFunctionCallFromISR( &vEventGroupClearBitsCallback, ( void * ) xEvent
                     Group, ( uint32_t ) uxBitsToClear, NULL );
-  Sun Sep 20 2026 12:03                                                                                                    Page 20
+  Wed Sep 23 2026  8:33                                                                                                    Page 20
 
 
   1086                        ;
@@ -1218,7 +1218,7 @@
   1141 00:037B: A6 09        	ldx	<L45+uxReturn_1+2
   1142 00:037D: A5 07        	lda	<L45+uxReturn_1
   1143 00:037F: A8           	tay
-  Sun Sep 20 2026 12:03                                                                                                    Page 21
+  Wed Sep 23 2026  8:33                                                                                                    Page 21
 
 
   1144 00:0380: A5 0B        	lda	<L44+1
@@ -1279,7 +1279,7 @@
   1199 00:039B: 85 25        	sta	<L48+pxEventBits_1
   1200 00:039D: A5 2F        	lda	<L47+xEventGroup_0+2
   1201 00:039F: 85 27        	sta	<L48+pxEventBits_1+2
-  Sun Sep 20 2026 12:03                                                                                                    Page 22
+  Wed Sep 23 2026  8:33                                                                                                    Page 22
 
 
   1202 00:03A1: 64 29        	stz	<L48+xMatchFound_1
@@ -1340,7 +1340,7 @@
   1257                        ;            /* Set the bits. */
   1258                        ;            pxEventBits->uxEventBits |= uxBitsToSet;
   1259 00:03E4: A5 31        	lda	<L47+uxBitsToSet_0
-  Sun Sep 20 2026 12:03                                                                                                    Page 23
+  Wed Sep 23 2026  8:33                                                                                                    Page 23
 
 
   1260 00:03E6: 07 25        	ora	[<L48+pxEventBits_1]
@@ -1401,7 +1401,7 @@
   1315 00:0436: A5 01        	lda	<R0
   1316 00:0438: 05 03        	ora	<R0+2
   1317 00:043A: F0 05        	beq	L10082
-  Sun Sep 20 2026 12:03                                                                                                    Page 24
+  Wed Sep 23 2026  8:33                                                                                                    Page 24
 
 
   1318                        ;                        xMatchFound = pdTRUE;
@@ -1462,7 +1462,7 @@
   1372                        ;                 * used here as the list item may have been removed from the event list
   1373                        ;                 * and inserted into the ready/pending reading list. */
   1374                        ;                pxListItem = pxNext;
-  Sun Sep 20 2026 12:03                                                                                                    Page 25
+  Wed Sep 23 2026  8:33                                                                                                    Page 25
 
 
   1375                        L10085:
@@ -1523,7 +1523,7 @@
   1430 00:04BC: 1B           	tcs
   1431 00:04BD: 98           	tya
   1432 00:04BE: 60           	rts
-  Sun Sep 20 2026 12:03                                                                                                    Page 26
+  Wed Sep 23 2026  8:33                                                                                                    Page 26
 
 
   1433                        ;                    {
@@ -1584,7 +1584,7 @@
   1488 00:04E8: A5 0F        	lda	<L60+xEventGroup_0
   1489 00:04EA: 85 05        	sta	<L61+pxEventBits_1
   1490 00:04EC: A5 11        	lda	<L60+xEventGroup_0+2
-  Sun Sep 20 2026 12:03                                                                                                    Page 27
+  Wed Sep 23 2026  8:33                                                                                                    Page 27
 
 
   1491 00:04EE: 85 07        	sta	<L61+pxEventBits_1+2
@@ -1645,7 +1645,7 @@
   1545                        L10095:
   1546 00:052E: 80 FE        	bra	L10095
   1547                        L10094:
-  Sun Sep 20 2026 12:03                                                                                                    Page 28
+  Wed Sep 23 2026  8:33                                                                                                    Page 28
 
 
   1548                        ;                vTaskRemoveFromUnorderedEventList( pxTasksWaitingForBits->xListEnd.pxNext, eventUNBLO
@@ -1706,7 +1706,7 @@
   1601 00:0560: 60           	rts
   1602             0000000C   L60	equ	12
   1603             00000005   L61	equ	5
-  Sun Sep 20 2026 12:03                                                                                                    Page 29
+  Wed Sep 23 2026  8:33                                                                                                    Page 29
 
 
   1604                        	ends
@@ -1767,7 +1767,7 @@
   1657                        ;                                     uint32_t ulBitsToSet )
   1658                        ;    {
   1659                        	code
-  Sun Sep 20 2026 12:03                                                                                                    Page 30
+  Wed Sep 23 2026  8:33                                                                                                    Page 30
 
 
   1660                        	xdef	_~vEventGroupSetBitsCallback
@@ -1828,7 +1828,7 @@
   1714 00:0582: E9 04 00     	sbc	#L70
   1715 00:0585: 1B           	tcs
   1716 00:0586: 0B           	phd
-  Sun Sep 20 2026 12:03                                                                                                    Page 31
+  Wed Sep 23 2026  8:33                                                                                                    Page 31
 
 
   1717 00:0587: 5B           	tcd
@@ -1889,7 +1889,7 @@
   1771                        ;        {
   1772 00:05A9: A5 11        	lda	<L73+xWaitForAllBits_0
   1773 00:05AB: D0 27        	bne	L10098
-  Sun Sep 20 2026 12:03                                                                                                    Page 32
+  Wed Sep 23 2026  8:33                                                                                                    Page 32
 
 
   1774                        ;            /* Task only has to wait for one bit within uxBitsToWaitFor to be
@@ -1950,7 +1950,7 @@
   1829                        L77:
   1830 00:05EA: D0 D8        	bne	L10101
   1831                        ;                xWaitConditionMet = pdTRUE;
-  Sun Sep 20 2026 12:03                                                                                                    Page 33
+  Wed Sep 23 2026  8:33                                                                                                    Page 33
 
 
   1832 00:05EC: 80 D1        	bra	L20009
@@ -2011,7 +2011,7 @@
   1884                        ;            else
   1885                        ;            {
   1886                        ;                xReturn = pxEventBits->uxEventGroupNumber;
-  Sun Sep 20 2026 12:03                                                                                                    Page 34
+  Wed Sep 23 2026  8:33                                                                                                    Page 34
 
 
   1887                        ;            }

@@ -12,8 +12,8 @@ set LST=%REL%\lst
 set OBJ=%REL%\obj
 set ASM=%REL%\asm
 
-set WDC_INC_65816=%WDC%\include;%HOME%\src;%HOME%\src\include;%SRC%\include;%SRC%\portable\WDC65816
-set WDC_LIB=%WDC%\lib
+set WDC_INC_65816=%WDC%\include;%HOME%\src;%HOME%\src\include;%SRC%\include;%SRC%\portable\WDC65816;%HOME%\src\fatfs\source
+set WDC_LIB=%WDC%\lib;%OBJ%\..\..\fatfs\obj
 
 echo WDC_INC=%WDC_INC_65816%
 
@@ -41,7 +41,7 @@ if defined LIST goto loop
 
 echo wdc816as -O %OBJ%\port65816.o -LW %SRC%\port65816.asm
 wdc816as -O %OBJ%\port65816.o -LW %SRC%\port65816.asm
-set OBJS=%OBJS% port65816.o
+set OBJS=%OBJS% port65816.o diskio.o ff.o ffsystem.o
 
 move %ASM%\*.lst %LST% >nul 2>&1
 
