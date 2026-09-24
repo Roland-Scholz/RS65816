@@ -39,6 +39,12 @@ for /F "tokens=1*" %%i in ("%LIST%") do (
 )
 if defined LIST goto loop
 
+goto eof
+
+rem ***
+rem *** no linking for fatfs
+rem ***
+
 move %ASM%\*.lst %LST% >nul 2>&1
 
 pushd
