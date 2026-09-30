@@ -48,7 +48,7 @@
     <file xil_pn:fileType="FILE_FITTER_REPORT" xil_pn:name="cpumodule.xml"/>
     <file xil_pn:branch="Implementation" xil_pn:fileType="FILE_XST" xil_pn:name="cpumodule.xst"/>
     <file xil_pn:branch="Implementation" xil_pn:fileType="FILE_XST_PROJECT" xil_pn:name="cpumoduleTest_beh.prj"/>
-    <file xil_pn:branch="Implementation" xil_pn:fileType="FILE_XST_PROJECT" xil_pn:name="cpumoduleTest_fit.prj"/>
+    <file xil_pn:fileType="FILE_XST_PROJECT" xil_pn:name="cpumoduleTest_fit.prj"/>
     <file xil_pn:branch="BehavioralSim" xil_pn:fileType="FILE_ISIM_EXE" xil_pn:name="cpumoduleTest_isim_beh.exe"/>
     <file xil_pn:fileType="FILE_ISIM_MISC" xil_pn:name="cpumoduleTest_isim_beh.wdb"/>
     <file xil_pn:branch="PostRouteSimulation" xil_pn:fileType="FILE_ISIM_EXE" xil_pn:name="cpumoduleTest_isim_fit.exe"/>
@@ -71,7 +71,6 @@
       <branch xil_pn:name="BehavioralSim"/>
       <branch xil_pn:name="PostRouteSimulation"/>
     </file>
-    <file xil_pn:branch="PostRouteSimulation" xil_pn:fileType="FILE_LOG" xil_pn:name="isim.log"/>
     <file xil_pn:fileType="FILE_DIRECTORY" xil_pn:name="netgen"/>
     <file xil_pn:branch="PostRouteSimulation" xil_pn:fileType="FILE_NETGEN_REPORT" xil_pn:name="netgen/fit/cpumodule_timesim.nlf"/>
     <file xil_pn:branch="PostRouteSimulation" xil_pn:fileType="FILE_SDF" xil_pn:name="netgen/fit/cpumodule_timesim.sdf"/>
@@ -140,19 +139,18 @@
       <outfile xil_pn:name="cpumoduleTest_isim_beh.wdb"/>
       <outfile xil_pn:name="isim.cmd"/>
     </transform>
-    <transform xil_pn:end_ts="1790771359" xil_pn:name="TRAN_copyInitialToXSTAbstractSynthesis" xil_pn:start_ts="1790771359">
+    <transform xil_pn:end_ts="1790779771" xil_pn:name="TRAN_copyInitialToXSTAbstractSynthesis" xil_pn:start_ts="1790779771">
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="ReadyToRun"/>
     </transform>
-    <transform xil_pn:end_ts="1790771359" xil_pn:name="TRAN_schematicsToHdl" xil_pn:prop_ck="-7597744870595975527" xil_pn:start_ts="1790771359">
+    <transform xil_pn:end_ts="1790779771" xil_pn:name="TRAN_schematicsToHdl" xil_pn:prop_ck="-7597744870595975527" xil_pn:start_ts="1790779771">
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="ReadyToRun"/>
     </transform>
-    <transform xil_pn:end_ts="1790771363" xil_pn:in_ck="4945495368223563934" xil_pn:name="TRANEXT_xstsynthesize_CPLD" xil_pn:prop_ck="5984331647880154573" xil_pn:start_ts="1790771359">
+    <transform xil_pn:end_ts="1790780287" xil_pn:in_ck="4945495368223563934" xil_pn:name="TRANEXT_xstsynthesize_CPLD" xil_pn:prop_ck="5984331647880154573" xil_pn:start_ts="1790780283">
       <status xil_pn:value="SuccessfullyRun"/>
+      <status xil_pn:value="WarningsGenerated"/>
       <status xil_pn:value="ReadyToRun"/>
-      <status xil_pn:value="OutOfDateForOutputs"/>
-      <status xil_pn:value="OutputChanged"/>
       <outfile xil_pn:name="_xmsgs/xst.xmsgs"/>
       <outfile xil_pn:name="cpumodule.lso"/>
       <outfile xil_pn:name="cpumodule.ngc"/>
@@ -162,7 +160,6 @@
       <outfile xil_pn:name="cpumodule.syr"/>
       <outfile xil_pn:name="cpumodule.xst"/>
       <outfile xil_pn:name="cpumoduleTest_beh.prj"/>
-      <outfile xil_pn:name="cpumoduleTest_fit.prj"/>
       <outfile xil_pn:name="cpumoduleTest_stx_beh.prj"/>
       <outfile xil_pn:name="cpumodule_beh.prj"/>
       <outfile xil_pn:name="cpumodule_stx_beh.prj"/>
@@ -171,11 +168,11 @@
       <outfile xil_pn:name="webtalk_pn.xml"/>
       <outfile xil_pn:name="xst"/>
     </transform>
-    <transform xil_pn:end_ts="1790771363" xil_pn:in_ck="4945626583030688403" xil_pn:name="TRAN_compileBCD2" xil_pn:prop_ck="5365924699902337958" xil_pn:start_ts="1790771363">
+    <transform xil_pn:end_ts="1790779776" xil_pn:in_ck="4945626583030688403" xil_pn:name="TRAN_compileBCD2" xil_pn:prop_ck="5365924699902337958" xil_pn:start_ts="1790779776">
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="ReadyToRun"/>
     </transform>
-    <transform xil_pn:end_ts="1790771366" xil_pn:in_ck="-2892172855918017145" xil_pn:name="TRAN_ngdbuild" xil_pn:prop_ck="912646182597258046" xil_pn:start_ts="1790771363">
+    <transform xil_pn:end_ts="1790780291" xil_pn:in_ck="-2892172855918017145" xil_pn:name="TRAN_ngdbuild" xil_pn:prop_ck="912646182597258046" xil_pn:start_ts="1790780287">
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="ReadyToRun"/>
       <outfile xil_pn:name="_ngo"/>
@@ -184,7 +181,7 @@
       <outfile xil_pn:name="cpumodule.ngd"/>
       <outfile xil_pn:name="cpumodule_ngdbuild.xrpt"/>
     </transform>
-    <transform xil_pn:end_ts="1790771378" xil_pn:in_ck="4945495368223555189" xil_pn:name="TRANEXT_vm6File_xc9500" xil_pn:prop_ck="628893462521914565" xil_pn:start_ts="1790771366">
+    <transform xil_pn:end_ts="1790780305" xil_pn:in_ck="4945495368223555189" xil_pn:name="TRANEXT_vm6File_xc9500" xil_pn:prop_ck="628893462521914565" xil_pn:start_ts="1790780291">
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="WarningsGenerated"/>
       <status xil_pn:value="ReadyToRun"/>
@@ -202,7 +199,7 @@
       <outfile xil_pn:name="cpumodule_html"/>
       <outfile xil_pn:name="cpumodule_pad.csv"/>
     </transform>
-    <transform xil_pn:end_ts="1790768623" xil_pn:in_ck="4945495368223564053" xil_pn:name="TRANEXT_crtProg_xc9500" xil_pn:prop_ck="-9204593535224376705" xil_pn:start_ts="1790768622">
+    <transform xil_pn:end_ts="1790779532" xil_pn:in_ck="4945495368223564053" xil_pn:name="TRANEXT_crtProg_xc9500" xil_pn:prop_ck="-9204593535224376705" xil_pn:start_ts="1790779531">
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="ReadyToRun"/>
       <status xil_pn:value="OutOfDateForInputs"/>
@@ -223,7 +220,7 @@
       <status xil_pn:value="InputChanged"/>
       <outfile xil_pn:name="cpumodule.ibs"/>
     </transform>
-    <transform xil_pn:end_ts="1790765530" xil_pn:in_ck="4945495368223564053" xil_pn:name="TRAN_timRpt" xil_pn:prop_ck="111903974446" xil_pn:start_ts="1790765529">
+    <transform xil_pn:end_ts="1790779748" xil_pn:in_ck="4945495368223564053" xil_pn:name="TRAN_timRpt" xil_pn:prop_ck="111903974446" xil_pn:start_ts="1790779746">
       <status xil_pn:value="AbortedRun"/>
       <status xil_pn:value="ReadyToRun"/>
       <status xil_pn:value="OutOfDateForInputs"/>
@@ -235,7 +232,7 @@
       <status xil_pn:value="OutOfDateForInputs"/>
       <status xil_pn:value="InputChanged"/>
     </transform>
-    <transform xil_pn:end_ts="1790771381" xil_pn:in_ck="4945495368223555186" xil_pn:name="TRAN_postFitSimModel" xil_pn:prop_ck="2211424840783668535" xil_pn:start_ts="1790771378">
+    <transform xil_pn:end_ts="1790780308" xil_pn:in_ck="4945495368223555186" xil_pn:name="TRAN_postFitSimModel" xil_pn:prop_ck="2211424840783668535" xil_pn:start_ts="1790780305">
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="ReadyToRun"/>
       <outfile xil_pn:name="netgen"/>
@@ -243,29 +240,27 @@
       <outfile xil_pn:name="netgen/fit/cpumodule_timesim.sdf"/>
       <outfile xil_pn:name="netgen/fit/cpumodule_timesim.vhd"/>
     </transform>
-    <transform xil_pn:end_ts="1790771381" xil_pn:in_ck="553610829778413895" xil_pn:name="TRAN_copyPost-FitAbstractToPreSimulation" xil_pn:start_ts="1790771381">
+    <transform xil_pn:end_ts="1790780353" xil_pn:in_ck="553610829778413895" xil_pn:name="TRAN_copyPost-FitAbstractToPreSimulation" xil_pn:start_ts="1790780353">
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="ReadyToRun"/>
       <outfile xil_pn:name="cpumoduleTest.vhd"/>
       <outfile xil_pn:name="netgen/fit/cpumodule_timesim.sdf"/>
       <outfile xil_pn:name="netgen/fit/cpumodule_timesim.vhd"/>
     </transform>
-    <transform xil_pn:end_ts="1790771385" xil_pn:in_ck="-918317414587956875" xil_pn:name="TRAN_ISimulatePostFitModelRunFuse" xil_pn:prop_ck="7715636101562338701" xil_pn:start_ts="1790771381">
+    <transform xil_pn:end_ts="1790780358" xil_pn:in_ck="-918317414587956875" xil_pn:name="TRAN_ISimulatePostFitModelRunFuse" xil_pn:prop_ck="7715636101562338701" xil_pn:start_ts="1790780353">
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="ReadyToRun"/>
       <outfile xil_pn:name="cpumoduleTest_fit.prj"/>
       <outfile xil_pn:name="cpumoduleTest_isim_fit.exe"/>
       <outfile xil_pn:name="fuse.log"/>
       <outfile xil_pn:name="isim"/>
-      <outfile xil_pn:name="isim.log"/>
       <outfile xil_pn:name="xilinxsim.ini"/>
     </transform>
-    <transform xil_pn:end_ts="1790771386" xil_pn:in_ck="3642240503559610001" xil_pn:name="TRAN_ISimulatePostFitModel" xil_pn:prop_ck="-1400828161086979302" xil_pn:start_ts="1790771385">
+    <transform xil_pn:end_ts="1790780358" xil_pn:in_ck="3642240503559610001" xil_pn:name="TRAN_ISimulatePostFitModel" xil_pn:prop_ck="-1400828161086979302" xil_pn:start_ts="1790780358">
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="ReadyToRun"/>
       <outfile xil_pn:name="cpumoduleTest_isim_fit.wdb"/>
       <outfile xil_pn:name="isim.cmd"/>
-      <outfile xil_pn:name="isim.log"/>
     </transform>
     <transform xil_pn:end_ts="1790582814" xil_pn:in_ck="-3192051083598168280" xil_pn:name="TRAN_createTimingConstraints" xil_pn:start_ts="1790582814">
       <status xil_pn:value="SuccessfullyRun"/>

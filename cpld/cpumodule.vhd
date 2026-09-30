@@ -107,28 +107,38 @@ begin
 					cas0 <= '1';
 				end if;
 				
+			--/* and (vda = '1' or vpa = '1') */
+			--/* and vda = '1' and vpa = '0' */
+			
 			when "001" =>			
-
-				
-			when "010" =>
-				if bank = "00000000" and a15_13 = "111" and rw = '1' and (vda = '1' or vpa = '1') then
+				if bank = "00000000" and a15_13 = "111" and rw = '1'  then
 					rom <= '0';
-				elsif bank = "11111111" and a15_13 = "111" and iocnt = 0 and vda = '1' and vpa = '0' then
-					iocnt <= "001";
-				end if;
-				
-				if (not ((bank = "00000000" and a15_13 = "111" and rw = '1') or (bank = "11111111" and a15_13 = "111" ))) or refcnt = 0 then	
-					if refcnt = 0 or vda = '1' or vpa = '1' then
+				elsif bank = "11111111" and a15_13 = "111" then
+					if iocnt = 0 then
+						iocnt <= "001";
+					end if;
+				else
+					if refcnt /= 0 then
 						ras <= '0';
 					end if;
 				end if;
+				
+				--if (not ((bank = "00000000" and a15_13 = "111" and rw = '1') or (bank = "11111111" and a15_13 = "111" ))) or refcnt = 0 then	
+					--if refcnt = 0 or vda = '1' or vpa = '1' then
+						--ras <= '0';
+					--end if;
+				--end if;
+				
+			when "010" =>
 				
 				phi0 <= '1';
 				phi1 <= '0';			
 				cas0 <= '1';
 				
+			--and (vda = '1' or vpa = '1')
+			
 			when "100" =>
-				if refcnt /= 0 and rom = '1' and iocnt = 0 and (vda = '1' or vpa = '1') then
+				if refcnt /= 0 and rom = '1' and iocnt = 0 then
 					case a12_11 is 
 					when "00" => cas0 <= '0';
 					when "01" => cas1 <= '0';

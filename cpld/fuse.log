@@ -21,25 +21,24 @@ Compiling architecture x_ff_v of entity X_FF [\X_FF(true,true,true,"UNPLACED",..
 Compiling architecture x_zero_v of entity X_ZERO [\X_ZERO("UNPLACED")(1,8)\]
 Compiling architecture x_one_v of entity X_ONE [\X_ONE("UNPLACED")(1,8)\]
 Compiling architecture x_and4_v of entity X_AND4 [\X_AND4(true,true,"UNPLACED",(0,...]
-Compiling architecture x_and32_v of entity X_AND32 [\X_AND32(true,true,"UNPLACED",(0...]
-Compiling architecture x_or3_v of entity X_OR3 [\X_OR3(true,true,"UNPLACED",(0,0...]
+Compiling architecture x_and16_v of entity X_AND16 [\X_AND16(true,true,"UNPLACED",(0...]
+Compiling architecture x_or2_v of entity X_OR2 [\X_OR2(true,true,"UNPLACED",(0,0...]
 Compiling architecture x_and2_v of entity X_AND2 [\X_AND2(true,true,"UNPLACED",(0,...]
 Compiling architecture x_and3_v of entity X_AND3 [\X_AND3(true,true,"UNPLACED",(0,...]
 Compiling architecture x_or6_v of entity X_OR6 [\X_OR6(true,true,"UNPLACED",(0,0...]
 Compiling architecture x_or7_v of entity X_OR7 [\X_OR7(true,true,"UNPLACED",(0,0...]
-Compiling architecture x_or4_v of entity X_OR4 [\X_OR4(true,true,"UNPLACED",(0,0...]
-Compiling architecture x_and8_v of entity X_AND8 [\X_AND8(true,true,"UNPLACED",(0,...]
-Compiling architecture x_or2_v of entity X_OR2 [\X_OR2(true,true,"UNPLACED",(0,0...]
 Compiling architecture x_and7_v of entity X_AND7 [\X_AND7(true,true,"UNPLACED",(0,...]
-Compiling architecture x_and16_v of entity X_AND16 [\X_AND16(true,true,"UNPLACED",(0...]
+Compiling architecture x_and32_v of entity X_AND32 [\X_AND32(true,true,"UNPLACED",(0...]
+Compiling architecture x_or4_v of entity X_OR4 [\X_OR4(true,true,"UNPLACED",(0,0...]
 Compiling architecture x_and5_v of entity X_AND5 [\X_AND5(true,true,"UNPLACED",(0,...]
-Compiling architecture x_and6_v of entity X_AND6 [\X_AND6(true,true,"UNPLACED",(0,...]
 Compiling architecture x_or5_v of entity X_OR5 [\X_OR5(true,true,"UNPLACED",(0,0...]
+Compiling architecture x_and6_v of entity X_AND6 [\X_AND6(true,true,"UNPLACED",(0,...]
+Compiling architecture x_and8_v of entity X_AND8 [\X_AND8(true,true,"UNPLACED",(0,...]
 Compiling architecture x_roc_v of entity X_ROC [\X_ROC("UNPLACED",100000,"*")(1,...]
 Compiling architecture structure of entity cpumodule [cpumodule_default]
 Compiling architecture behavior of entity cpumoduletest
 Time Resolution for simulation is 1ps.
-Compiled 56 VHDL Units
+Compiled 54 VHDL Units
 Built simulation executable C:/github/RS65816/cpld/cpumoduleTest_isim_fit.exe
-Fuse Memory Usage: 94700 KB
-Fuse CPU Usage: 1561 ms
+Fuse Memory Usage: 97088 KB
+Fuse CPU Usage: 1421 ms

@@ -127,7 +127,7 @@ LAB6:    *((char **)t1) = &&LAB7;
 
 LAB1:    return;
 LAB4:    xsi_set_current_line(166, ng0);
-    t2 = (t0 + 9708);
+    t2 = (t0 + 9700);
     t6 = (t0 + 6688);
     t7 = (t6 + 56U);
     t8 = *((char **)t7);
@@ -153,7 +153,7 @@ LAB5:    goto LAB4;
 LAB7:    goto LAB5;
 
 LAB8:    xsi_set_current_line(169, ng0);
-    t2 = (t0 + 9716);
+    t2 = (t0 + 9708);
     t6 = (t0 + 6688);
     t7 = (t6 + 56U);
     t8 = *((char **)t7);
@@ -177,7 +177,7 @@ LAB9:    goto LAB8;
 LAB11:    goto LAB9;
 
 LAB12:    xsi_set_current_line(172, ng0);
-    t2 = (t0 + 9724);
+    t2 = (t0 + 9716);
     t6 = (t0 + 6688);
     t7 = (t6 + 56U);
     t8 = *((char **)t7);

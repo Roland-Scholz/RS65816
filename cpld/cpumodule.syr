@@ -3,14 +3,14 @@ Copyright (c) 1995-2013 Xilinx, Inc.  All rights reserved.
 --> Parameter TMPDIR set to xst/projnav.tmp
 
 
-Total REAL time to Xst completion: 1.00 secs
-Total CPU time to Xst completion: 0.16 secs
+Total REAL time to Xst completion: 0.00 secs
+Total CPU time to Xst completion: 0.11 secs
  
 --> Parameter xsthdpdir set to xst
 
 
-Total REAL time to Xst completion: 1.00 secs
-Total CPU time to Xst completion: 0.16 secs
+Total REAL time to Xst completion: 0.00 secs
+Total CPU time to Xst completion: 0.11 secs
  
 --> Reading design: cpumodule.prj
 
@@ -98,6 +98,8 @@ Performing bidirectional port resolution...
 
 Synthesizing Unit <cpumodule>.
     Related source file is "C:/github/RS65816/cpld/cpumodule.vhd".
+WARNING:Xst:647 - Input <vda> is never used. This port will be preserved and left unconnected if it belongs to a top-level block or it belongs to a sub-block and the hierarchy of this sub-block is preserved.
+WARNING:Xst:647 - Input <vpa> is never used. This port will be preserved and left unconnected if it belongs to a top-level block or it belongs to a sub-block and the hierarchy of this sub-block is preserved.
     Found 1-bit register for signal <ras>.
     Found 1-bit register for signal <cas0>.
     Found 1-bit register for signal <cas1>.
@@ -116,7 +118,7 @@ Synthesizing Unit <cpumodule>.
     Found 1-bit register for signal <phi1>.
     Found 3-bit up counter for signal <counter>.
     Found 3-bit register for signal <iocnt>.
-    Found 3-bit adder for signal <iocnt$addsub0000> created at line 170.
+    Found 3-bit adder for signal <iocnt$addsub0000> created at line 180.
     Found 8-bit down counter for signal <refcnt>.
     Summary:
 	inferred   2 Counter(s).
@@ -224,32 +226,33 @@ Design Statistics
 # IOs                              : 34
 
 Cell Usage :
-# BELS                             : 335
-#      AND2                        : 93
-#      AND3                        : 19
-#      AND4                        : 2
-#      AND8                        : 3
-#      INV                         : 138
-#      OR2                         : 53
-#      OR3                         : 11
-#      OR4                         : 4
+# BELS                             : 391
+#      AND2                        : 108
+#      AND3                        : 11
+#      AND4                        : 7
+#      AND5                        : 1
+#      AND8                        : 7
+#      INV                         : 175
+#      OR2                         : 55
+#      OR3                         : 3
+#      OR4                         : 12
 #      XOR2                        : 12
 # FlipFlops/Latches                : 30
 #      FD                          : 30
-# IO Buffers                       : 34
-#      IBUF                        : 18
+# IO Buffers                       : 32
+#      IBUF                        : 16
 #      OBUF                        : 16
 =========================================================================
 
 
-Total REAL time to Xst completion: 3.00 secs
-Total CPU time to Xst completion: 2.24 secs
+Total REAL time to Xst completion: 2.00 secs
+Total CPU time to Xst completion: 2.42 secs
  
 --> 
 
-Total memory usage is 4482068 kilobytes
+Total memory usage is 4482056 kilobytes
 
 Number of errors   :    0 (   0 filtered)
-Number of warnings :    0 (   0 filtered)
+Number of warnings :    2 (   0 filtered)
 Number of infos    :    0 (   0 filtered)
 

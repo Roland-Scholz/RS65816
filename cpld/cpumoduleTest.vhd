@@ -45,8 +45,8 @@ ARCHITECTURE behavior OF cpumoduleTest IS
 				a15_13	: in  STD_LOGIC_VECTOR (2 downto 0);
 				a12_11	: in  STD_LOGIC_VECTOR (1 downto 0);
 				a10		: in  std_logic;
-				vda		: in std_logic;
-				vpa		: in std_logic;
+--				vda		: in std_logic;
+--				vpa		: in std_logic;
 				rw			: in std_logic;
 				ras		: inout std_logic;
 				cas0		: inout std_logic;
@@ -122,8 +122,8 @@ BEGIN
 			 a15_13 => a15_13,
 			 a12_11 => a12_11,
 			 a10 => a10,
-			 vpa => vpa,
-			 vda => vda,
+--			 vpa => vpa,
+--			 vda => vda,
 			 rw => rw,
 			 io0 => io0,
 			 io1 => io1,

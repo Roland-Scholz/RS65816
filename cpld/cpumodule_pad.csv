@@ -1,7 +1,7 @@
 Release 8.1i - Fit P.20131013
 Copyright(c) 1995-2003 Xilinx Inc. All rights reserved
 
- 9-30-2026  2:29PM
+ 9-30-2026  4:58PM
 
 NOTE: This file is designed to be imported into a spreadsheet program
 such as Microsoft Excel for viewing, printing and sorting. The comma ','
@@ -29,7 +29,7 @@ P8,a10,I,I/O,INPUT,,,,,,,,,
 P9,cas2,I/O,I/O,BIDIR,,,,,,,,,
 P10,GND,,GND,,,,,,,,,,
 P11,a12_11<1>,I,I/O,INPUT,,,,,,,,,
-P12,vda,I,I/O,INPUT,,,,,,,,,
+P12,TIE,,I/O,,,,,,,,,,
 P13,cas3,I/O,I/O,BIDIR,,,,,,,,,
 P14,phi0,I/O,I/O,BIDIR,,,,,,,,,
 P15,TDI,,TDI,,,,,,,,,,
@@ -51,7 +51,7 @@ P30,TDO,,TDO,,,,,,,,,,
 P31,GND,,GND,,,,,,,,,,
 P32,VCC,,VCCIO,,,,,,,,,,
 P33,io4,I/O,I/O,BIDIR,,,,,,,,,
-P34,vpa,I,I/O,INPUT,,,,,,,,,
+P34,TIE,,I/O,,,,,,,,,,
 P35,io3,I/O,I/O,BIDIR,,,,,,,,,
 P36,a12_11<0>,I,I/O,INPUT,,,,,,,,,
 P37,io2,I/O,I/O,BIDIR,,,,,,,,,
