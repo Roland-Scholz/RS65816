@@ -3,7 +3,7 @@
  
 cpldfit:  version P.20131013                        Xilinx Inc.
                                   Fitter Report
-Design Name: cpumodule                           Date:  9-10-2026,  4:53PM
+Design Name: cpumodule                           Date:  9-30-2026,  2:29PM
 Device Used: XC9536-15-PC44
 Fitting Status: Successful
 
@@ -11,16 +11,16 @@ Fitting Status: Successful
 
 Macrocells     Product Terms    Function Block   Registers      Pins           
 Used/Tot       Used/Tot         Inps Used/Tot    Used/Tot       Used/Tot       
-31 /36  ( 86%) 124 /180  ( 69%) 62 /72  ( 86%)   30 /36  ( 83%) 34 /34  (100%)
+31 /36  ( 86%) 125 /180  ( 69%) 62 /72  ( 86%)   30 /36  ( 83%) 34 /34  (100%)
 
 ** Function Block Resources **
 
 Function    Mcells      FB Inps     Signals     Pterms      IO          
 Block       Used/Tot    Used/Tot    Used        Used/Tot    Used/Tot    
-FB1          14/18       27/36       27          89/90       7/17
-FB2          17/18       35/36       35          35/90       9/17
+FB1          14/18       27/36       27          90/90*      7/17
+FB2          17/18       35/36       43          35/90       9/17
              -----       -----                   -----       -----     
-             31/36       62/72                  124/180     16/34 
+             31/36       62/72                  125/180     16/34 
 
 * - Resource is exhausted
 
@@ -64,8 +64,8 @@ cas2                11    20    FB1_8   9    I/O     I/O     STD  FAST SET
 cas3                11    20    FB1_11  13   I/O     I/O     STD  FAST SET
 phi0                7     16    FB1_12  14   I/O     I/O     STD  FAST SET
 phi1                7     16    FB1_14  19   I/O     I/O     STD  FAST RESET
-ras                 6     13    FB1_16  22   I/O     I/O     STD  FAST SET
-io7                 2     10    FB2_1   1    I/O     I/O     STD  FAST SET
+ras                 8     13    FB1_16  22   I/O     I/O     STD  FAST SET
+io7                 2     10    FB2_1   1~   I/O     I/O     STD  FAST SET
 io0                 2     10    FB2_4   43   I/O     I/O     STD  FAST SET
 io1                 2     10    FB2_7   38   I/O     I/O     STD  FAST SET
 io2                 2     10    FB2_8   37   I/O     I/O     STD  FAST SET
@@ -79,20 +79,20 @@ rom                 3     18    FB2_17  25   I/O     I/O     STD  FAST SET
 
 Signal              Total Total Loc     Pwr  Reg Init
 Name                Pts   Inps          Mode State
-refcnt<6>           2     11    FB1_2   STD  RESET
-refcnt<3>           1     6     FB1_3   STD  RESET
-refcnt<5>           3     11    FB1_5   STD  RESET
-refcnt<4>           4     11    FB1_9   STD  RESET
-refcnt<1>           5     11    FB1_13  STD  RESET
-iocnt<1>            2     6     FB1_15  STD  RESET
-refcnt<7>           1     10    FB1_17  STD  RESET
-refcnt<2>           1     5     FB2_3   STD  SET
+refcnt<4>           4     11    FB1_3   STD  RESET
+iocnt<1>            2     6     FB1_6   STD  RESET
+refcnt<2>           1     5     FB1_7   STD  SET
+refcnt<5>           3     11    FB1_9   STD  RESET
+refcnt<3>           1     6     FB1_10  STD  RESET
+refcnt<7>           1     10    FB1_13  STD  SET
+refcnt<1>           5     11    FB1_15  STD  RESET
+refcnt<6>           1     13    FB2_3   STD  RESET
 refcnt<0>           1     3     FB2_5   STD  RESET
 counter<0>          1     3     FB2_6   STD  RESET
 iocnt<2>            2     6     FB2_9   STD  RESET
 counter<2>          2     3     FB2_11  STD  RESET
 counter<1>          2     3     FB2_13  STD  RESET
-$OpTx$FX_DC$50      3     15    FB2_15  STD  
+$OpTx$FX_DC$49      3     15    FB2_15  STD  
 iocnt<0>            4     19    FB2_18  STD  RESET
 
 ** 18 Inputs **
@@ -141,26 +141,26 @@ Number of signals used by logic mapping into function block:  27
 Signal              Total   Imp   Exp Unused  Loc     Pin   Pin     Pin
 Name                Pt      Pt    Pt  Pt               #    Type    Use
 cas0                 18      13<-   0   0     FB1_1   2     I/O     I/O
-refcnt<6>             2       0   /\3   0     FB1_2   3     I/O     I
-refcnt<3>             1       0   \/4   0     FB1_3   5     GCK/I/O GCK
-cas1                 11       6<-   0   0     FB1_4   4     I/O     I/O
-refcnt<5>             3       0   /\2   0     FB1_5   6     GCK/I/O I
-(unused)              0       0   \/5   0     FB1_6   8     I/O     I
-(unused)              0       0   \/5   0     FB1_7   7     GCK/I/O I
-cas2                 11      10<- \/4   0     FB1_8   9     I/O     I/O
-refcnt<4>             4       4<- \/5   0     FB1_9   11    I/O     I
-(unused)              0       0   \/5   0     FB1_10  12    I/O     I
-cas3                 11      10<- \/4   0     FB1_11  13    I/O     I/O
-phi0                  7       4<- \/2   0     FB1_12  14    I/O     I/O
-refcnt<1>             5       2<- \/2   0     FB1_13  18    I/O     I
+(unused)              0       0   /\5   0     FB1_2   3     I/O     I
+refcnt<4>             4       2<- /\3   0     FB1_3   5     GCK/I/O GCK
+cas1                 11       8<- /\2   0     FB1_4   4     I/O     I/O
+(unused)              0       0   /\5   0     FB1_5   6     GCK/I/O I
+iocnt<1>              2       0   /\3   0     FB1_6   8     I/O     I
+refcnt<2>             1       0   \/4   0     FB1_7   7     GCK/I/O I
+cas2                 11       6<-   0   0     FB1_8   9     I/O     I/O
+refcnt<5>             3       0   /\2   0     FB1_9   11    I/O     I
+refcnt<3>             1       0   \/4   0     FB1_10  12    I/O     I
+cas3                 11       6<-   0   0     FB1_11  13    I/O     I/O
+phi0                  7       4<- /\2   0     FB1_12  14    I/O     I/O
+refcnt<7>             1       0   /\4   0     FB1_13  18    I/O     I
 phi1                  7       2<-   0   0     FB1_14  19    I/O     I/O
-iocnt<1>              2       0   \/2   1     FB1_15  20    I/O     I
-ras                   6       2<- \/1   0     FB1_16  22    I/O     I/O
-refcnt<7>             1       1<- \/5   0     FB1_17  24    I/O     I
+refcnt<1>             5       2<- /\2   0     FB1_15  20    I/O     I
+ras                   8       5<- /\2   0     FB1_16  22    I/O     I/O
+(unused)              0       0   /\5   0     FB1_17  24    I/O     I
 (unused)              0       0   \/5   0     FB1_18        (b)     (b)
 
 Signals Used by Logic in Function Block
-  1: $OpTx$FX_DC$50    10: counter<2>        19: refcnt<2> 
+  1: $OpTx$FX_DC$49    10: counter<2>        19: refcnt<2> 
   2: a12_11<0>         11: iocnt<0>          20: refcnt<3> 
   3: a12_11<1>         12: iocnt<1>          21: refcnt<4> 
   4: cas0.PIN          13: iocnt<2>          22: refcnt<5> 
@@ -173,29 +173,29 @@ Signals Used by Logic in Function Block
 Signal                        1         2         3         4 Signals FB
 Name                0----+----0----+----0----+----0----+----0 Used    Inputs
 cas0                 .XXX...XXXXXX...XXXXXXXXXXX............. 20      20
-refcnt<6>            .......XXX......XXXXXXXX................ 11      11
-refcnt<3>            .......XXX......XXX..................... 6       6
-cas1                 .XX.X..XXXXXX...XXXXXXXXXXX............. 20      20
-refcnt<5>            .......XXX......XXXXXXXX................ 11      11
-cas2                 .XX..X.XXXXXX...XXXXXXXXXXX............. 20      20
 refcnt<4>            .......XXX......XXXXXXXX................ 11      11
+cas1                 .XX.X..XXXXXX...XXXXXXXXXXX............. 20      20
+iocnt<1>             .......XXXXXX........................... 6       6
+refcnt<2>            .......XXX......XX...................... 5       5
+cas2                 .XX..X.XXXXXX...XXXXXXXXXXX............. 20      20
+refcnt<5>            .......XXX......XXXXXXXX................ 11      11
+refcnt<3>            .......XXX......XXX..................... 6       6
 cas3                 .XX...XXXXXXX...XXXXXXXXXXX............. 20      20
 phi0                 .......XXXXXXX..XXXXXXXXX............... 16      16
-refcnt<1>            .......XXX......XXXXXXXX................ 11      11
-phi1                 .......XXXXXX.X.XXXXXXXXX............... 16      16
-iocnt<1>             .......XXXXXX........................... 6       6
-ras                  X......XXX.....XXXXXXXXX................ 13      13
 refcnt<7>            .......XXX......XXXXXXX................. 10      10
+phi1                 .......XXXXXX.X.XXXXXXXXX............... 16      16
+refcnt<1>            .......XXX......XXXXXXXX................ 11      11
+ras                  X......XXX.....XXXXXXXXX................ 13      13
                     0----+----1----+----2----+----3----+----4
                               0         0         0         0
 *********************************** FB2  ***********************************
 Number of function block inputs used/remaining:               35/1
-Number of signals used by logic mapping into function block:  35
+Number of signals used by logic mapping into function block:  43
 Signal              Total   Imp   Exp Unused  Loc     Pin   Pin     Pin
 Name                Pt      Pt    Pt  Pt               #    Type    Use
-io7                   2       0     0   3     FB2_1   1     I/O     I/O
+io7                   2       0     0   3     FB2_1   1~    I/O     I/O
 (unused)              0       0     0   5     FB2_2   44    I/O     I
-refcnt<2>             1       0     0   4     FB2_3   42    GTS/I/O I
+refcnt<6>             1       0     0   4     FB2_3   42    GTS/I/O I
 io0                   2       0     0   3     FB2_4   43    I/O     I/O
 refcnt<0>             1       0     0   4     FB2_5   40    GTS/I/O I
 counter<0>            1       0     0   4     FB2_6   39    GSR/I/O I
@@ -207,52 +207,55 @@ counter<2>            2       0     0   3     FB2_11  34    I/O     I
 io4                   2       0     0   3     FB2_12  33    I/O     I/O
 counter<1>            2       0     0   3     FB2_13  29    I/O     I
 io5                   2       0     0   3     FB2_14  28    I/O     I/O
-$OpTx$FX_DC$50        3       0     0   2     FB2_15  27    I/O     I
+$OpTx$FX_DC$49        3       0     0   2     FB2_15  27    I/O     I
 io6                   2       0     0   3     FB2_16  26    I/O     I/O
 rom                   3       0     0   2     FB2_17  25    I/O     I/O
 iocnt<0>              4       0     0   1     FB2_18        (b)     (b)
 
 Signals Used by Logic in Function Block
-  1: a10               13: bank<6>           25: io7.PIN 
-  2: a12_11<0>         14: bank<7>           26: iocnt<0> 
-  3: a12_11<1>         15: counter<0>        27: iocnt<1> 
-  4: a15_13<0>         16: counter<1>        28: iocnt<2> 
-  5: a15_13<1>         17: counter<2>        29: ras.PIN 
-  6: a15_13<2>         18: io0.PIN           30: refcnt<0> 
-  7: bank<0>           19: io1.PIN           31: refcnt<1> 
-  8: bank<1>           20: io2.PIN           32: rom.PIN 
-  9: bank<2>           21: io3.PIN           33: rw 
- 10: bank<3>           22: io4.PIN           34: vda 
- 11: bank<4>           23: io5.PIN           35: vpa 
- 12: bank<5>           24: io6.PIN          
+  1: FC_0_.OUT         16: bank<7>           30: iocnt<2> 
+  2: FC_1_.OUT         17: counter<0>        31: ras.PIN 
+  3: a10               18: counter<1>        32: refcnt<0> 
+  4: a12_11<0>         19: counter<2>        33: refcnt<1> 
+  5: a12_11<1>         20: io0.PIN           34: refcnt<2> 
+  6: a15_13<0>         21: io1.PIN           35: refcnt<3> 
+  7: a15_13<1>         22: io2.PIN           36: refcnt<4> 
+  8: a15_13<2>         23: io3.PIN           37: refcnt<5> 
+  9: bank<0>           24: io4.PIN           38: refcnt<6> 
+ 10: bank<1>           25: io5.PIN           39: refcnt<7> 
+ 11: bank<2>           26: io6.PIN           40: rom.PIN 
+ 12: bank<3>           27: io7.PIN           41: rw 
+ 13: bank<4>           28: iocnt<0>          42: vda 
+ 14: bank<5>           29: iocnt<1>          43: vpa 
+ 15: bank<6>          
 
-Signal                        1         2         3         4 Signals FB
-Name                0----+----0----+----0----+----0----+----0 Used    Inputs
-io7                  XXX...........XXX.......XXXX............ 10      10
-refcnt<2>            ..............XXX............XX......... 5       5
-io0                  XXX...........XXXX.......XXX............ 10      10
-refcnt<0>            ..............XXX....................... 3       3
-counter<0>           ..............XXX....................... 3       3
-io1                  XXX...........XXX.X......XXX............ 10      10
-io2                  XXX...........XXX..X.....XXX............ 10      10
-iocnt<2>             ..............XXX........XXX............ 6       6
-io3                  XXX...........XXX...X....XXX............ 10      10
-counter<2>           ..............XXX....................... 3       3
-io4                  XXX...........XXX....X...XXX............ 10      10
-counter<1>           ..............XXX....................... 3       3
-io5                  XXX...........XXX.....X..XXX............ 10      10
-$OpTx$FX_DC$50       ...XXXXXXXXXXX..............X...XXX..... 15      15
-io6                  XXX...........XXX......X.XXX............ 10      10
-rom                  ...XXXXXXXXXXXXXX..............XXXX..... 18      18
-iocnt<0>             ...XXXXXXXXXXXXXX........XXX.....XX..... 19      19
-                    0----+----1----+----2----+----3----+----4
-                              0         0         0         0
+Signal                        1         2         3         4         5 Signals FB
+Name                0----+----0----+----0----+----0----+----0----+----0 Used    Inputs
+io7                  ..XXX...........XXX.......XXXX.................... 10      10
+refcnt<6>            XX..............XXX............@@@@@@@@........... 13      5
+io0                  ..XXX...........XXXX.......XXX.................... 10      10
+refcnt<0>            ................XXX............................... 3       3
+counter<0>           ................XXX............................... 3       3
+io1                  ..XXX...........XXX.X......XXX.................... 10      10
+io2                  ..XXX...........XXX..X.....XXX.................... 10      10
+iocnt<2>             ................XXX........XXX.................... 6       6
+io3                  ..XXX...........XXX...X....XXX.................... 10      10
+counter<2>           ................XXX............................... 3       3
+io4                  ..XXX...........XXX....X...XXX.................... 10      10
+counter<1>           ................XXX............................... 3       3
+io5                  ..XXX...........XXX.....X..XXX.................... 10      10
+$OpTx$FX_DC$49       .....XXXXXXXXXXX..............X.........XXX....... 15      15
+io6                  ..XXX...........XXX......X.XXX.................... 10      10
+rom                  .....XXXXXXXXXXXXXX....................XXXX....... 18      18
+iocnt<0>             .....XXXXXXXXXXXXXX........XXX...........XX....... 19      19
+                    0----+----1----+----2----+----3----+----4----+----5
+                              0         0         0         0         0
 *******************************  Equations  ********************************
 
 ********** Mapped Logic **********
 
 
-$OpTx$FX_DC$50 <= ((NOT vda AND NOT vpa AND ras.PIN)
+$OpTx$FX_DC$49 <= ((NOT vda AND NOT vpa AND ras.PIN)
 	OR (bank(7) AND bank(6) AND bank(5) AND bank(4) AND 
 	bank(3) AND bank(2) AND bank(1) AND bank(0) AND a15_13(2) AND 
 	a15_13(1) AND a15_13(0) AND ras.PIN)
@@ -269,146 +272,155 @@ $OpTx$FX_DC$50 <= ((NOT vda AND NOT vpa AND ras.PIN)
 
 
 FDCPE_cas0: FDCPE port map (cas0,cas0_D,NOT clk,'0','0');
-cas0_D <= ((a12_11(1) AND counter(2) AND cas0.PIN)
+cas0_D <= ((refcnt(4).EXP)
+	OR (a12_11(1) AND counter(2) AND cas0.PIN)
 	OR (a12_11(0) AND counter(2) AND cas0.PIN)
 	OR (counter(2) AND iocnt(2) AND cas0.PIN)
-	OR (refcnt(7).EXP)
-	OR (NOT counter(0) AND NOT counter(2) AND refcnt(3))
-	OR (NOT counter(0) AND NOT counter(2) AND refcnt(4))
-	OR (NOT counter(0) AND NOT counter(2) AND refcnt(5))
-	OR (NOT counter(0) AND NOT counter(2) AND refcnt(6))
-	OR (NOT counter(0) AND NOT counter(2) AND refcnt(7))
+	OR (counter(2) AND iocnt(0) AND cas0.PIN)
+	OR (counter(2) AND iocnt(1) AND cas0.PIN)
+	OR (NOT counter(2) AND NOT counter(0) AND refcnt(3))
+	OR (NOT counter(2) AND NOT counter(0) AND refcnt(4))
+	OR (NOT counter(2) AND NOT counter(0) AND refcnt(5))
+	OR (NOT counter(2) AND NOT counter(0) AND refcnt(6))
+	OR (NOT counter(2) AND NOT counter(0) AND refcnt(7))
 	OR (counter(0) AND cas0.PIN)
 	OR (NOT counter(0) AND counter(1))
-	OR (NOT counter(0) AND NOT counter(2) AND refcnt(0))
-	OR (NOT counter(0) AND NOT counter(2) AND refcnt(1))
-	OR (NOT counter(0) AND NOT counter(2) AND refcnt(2)));
+	OR (NOT counter(2) AND NOT counter(0) AND refcnt(0))
+	OR (NOT counter(2) AND NOT counter(0) AND refcnt(1))
+	OR (NOT counter(2) AND NOT counter(0) AND refcnt(2)));
 
 FDCPE_cas1: FDCPE port map (cas1,cas1_D,NOT clk,'0','0');
-cas1_D <= ((NOT a12_11(0) AND cas1.PIN)
-	OR (counter(0) AND cas1.PIN)
-	OR (NOT counter(2) AND cas1.PIN)
-	OR (NOT counter(0) AND counter(1) AND counter(2))
-	OR (NOT vda AND NOT vpa AND cas1.PIN)
-	OR (NOT refcnt(0) AND NOT refcnt(1) AND NOT refcnt(2) AND NOT refcnt(3) AND 
-	NOT refcnt(4) AND NOT refcnt(5) AND NOT refcnt(6) AND NOT refcnt(7) AND cas1.PIN)
+cas1_D <= ((iocnt(1).EXP)
 	OR (a12_11(1) AND cas1.PIN)
+	OR (NOT a12_11(0) AND cas1.PIN)
+	OR (NOT counter(2) AND cas1.PIN)
+	OR (counter(0) AND cas1.PIN)
+	OR (NOT rom.PIN AND cas1.PIN)
 	OR (iocnt(2) AND cas1.PIN)
 	OR (iocnt(0) AND cas1.PIN)
-	OR (iocnt(1) AND cas1.PIN)
-	OR (NOT rom.PIN AND cas1.PIN));
+	OR (iocnt(1) AND cas1.PIN));
 
 FDCPE_cas2: FDCPE port map (cas2,cas2_D,NOT clk,'0','0');
-cas2_D <= ((EXP0_.EXP)
+cas2_D <= ((a12_11(0) AND cas2.PIN)
+	OR (NOT counter(2) AND cas2.PIN)
+	OR (counter(0) AND cas2.PIN)
+	OR (counter(2) AND NOT counter(0) AND counter(1))
+	OR (NOT vda AND NOT vpa AND cas2.PIN)
+	OR (NOT refcnt(0) AND NOT refcnt(1) AND NOT refcnt(2) AND NOT refcnt(3) AND 
+	NOT refcnt(4) AND NOT refcnt(5) AND NOT refcnt(6) AND NOT refcnt(7) AND cas2.PIN)
 	OR (NOT a12_11(1) AND cas2.PIN)
-	OR (a12_11(0) AND cas2.PIN)
+	OR (iocnt(2) AND cas2.PIN)
 	OR (iocnt(0) AND cas2.PIN)
 	OR (iocnt(1) AND cas2.PIN)
-	OR (NOT rom.PIN AND cas2.PIN)
-	OR (iocnt(2) AND cas2.PIN));
+	OR (NOT rom.PIN AND cas2.PIN));
 
 FDCPE_cas3: FDCPE port map (cas3,cas3_D,NOT clk,'0','0');
-cas3_D <= ((refcnt(4).EXP)
+cas3_D <= ((NOT a12_11(0) AND cas3.PIN)
+	OR (NOT counter(2) AND cas3.PIN)
+	OR (counter(0) AND cas3.PIN)
+	OR (counter(2) AND NOT counter(0) AND counter(1))
+	OR (NOT vda AND NOT vpa AND cas3.PIN)
+	OR (NOT refcnt(0) AND NOT refcnt(1) AND NOT refcnt(2) AND NOT refcnt(3) AND 
+	NOT refcnt(4) AND NOT refcnt(5) AND NOT refcnt(6) AND NOT refcnt(7) AND cas3.PIN)
 	OR (NOT a12_11(1) AND cas3.PIN)
-	OR (NOT a12_11(0) AND cas3.PIN)
+	OR (iocnt(2) AND cas3.PIN)
 	OR (iocnt(0) AND cas3.PIN)
 	OR (iocnt(1) AND cas3.PIN)
-	OR (NOT rom.PIN AND cas3.PIN)
-	OR (iocnt(2) AND cas3.PIN));
+	OR (NOT rom.PIN AND cas3.PIN));
 
 FTCPE_counter0: FTCPE port map (counter(0),counter_T(0),NOT clk,'0','0');
-counter_T(0) <= (NOT counter(0) AND counter(1) AND counter(2));
+counter_T(0) <= (counter(2) AND NOT counter(0) AND counter(1));
 
 FDCPE_counter1: FDCPE port map (counter(1),counter_D(1),NOT clk,'0','0');
 counter_D(1) <= ((counter(0) AND NOT counter(1))
-	OR (NOT counter(0) AND counter(1) AND NOT counter(2)));
+	OR (NOT counter(2) AND NOT counter(0) AND counter(1)));
 
 FDCPE_counter2: FDCPE port map (counter(2),counter_D(2),NOT clk,'0','0');
-counter_D(2) <= ((NOT counter(1) AND counter(2))
-	OR (counter(0) AND counter(1) AND NOT counter(2)));
+counter_D(2) <= ((counter(2) AND NOT counter(1))
+	OR (NOT counter(2) AND counter(0) AND counter(1)));
 
 FTCPE_io0: FTCPE port map (io0,io0_T,NOT clk,'0','0');
-io0_T <= ((NOT counter(0) AND counter(1) AND counter(2) AND iocnt(2) AND 
+io0_T <= ((counter(2) AND iocnt(2) AND NOT counter(0) AND counter(1) AND 
 	iocnt(0) AND NOT iocnt(1) AND NOT io0.PIN)
-	OR (NOT a12_11(1) AND NOT a12_11(0) AND NOT a10 AND NOT counter(0) AND 
-	counter(1) AND counter(2) AND NOT iocnt(2) AND iocnt(0) AND NOT iocnt(1) AND 
+	OR (NOT a12_11(1) AND NOT a12_11(0) AND NOT a10 AND counter(2) AND 
+	NOT iocnt(2) AND NOT counter(0) AND counter(1) AND iocnt(0) AND NOT iocnt(1) AND 
 	io0.PIN));
 
 FTCPE_io1: FTCPE port map (io1,io1_T,NOT clk,'0','0');
-io1_T <= ((NOT counter(0) AND counter(1) AND counter(2) AND iocnt(2) AND 
+io1_T <= ((counter(2) AND iocnt(2) AND NOT counter(0) AND counter(1) AND 
 	iocnt(0) AND NOT iocnt(1) AND NOT io1.PIN)
-	OR (NOT a12_11(1) AND NOT a12_11(0) AND a10 AND NOT counter(0) AND 
-	counter(1) AND counter(2) AND NOT iocnt(2) AND iocnt(0) AND NOT iocnt(1) AND 
+	OR (NOT a12_11(1) AND NOT a12_11(0) AND a10 AND counter(2) AND 
+	NOT iocnt(2) AND NOT counter(0) AND counter(1) AND iocnt(0) AND NOT iocnt(1) AND 
 	io1.PIN));
 
 FTCPE_io2: FTCPE port map (io2,io2_T,NOT clk,'0','0');
-io2_T <= ((NOT counter(0) AND counter(1) AND counter(2) AND iocnt(2) AND 
+io2_T <= ((counter(2) AND iocnt(2) AND NOT counter(0) AND counter(1) AND 
 	iocnt(0) AND NOT iocnt(1) AND NOT io2.PIN)
-	OR (NOT a12_11(1) AND a12_11(0) AND NOT a10 AND NOT counter(0) AND 
-	counter(1) AND counter(2) AND NOT iocnt(2) AND iocnt(0) AND NOT iocnt(1) AND 
+	OR (NOT a12_11(1) AND a12_11(0) AND NOT a10 AND counter(2) AND 
+	NOT iocnt(2) AND NOT counter(0) AND counter(1) AND iocnt(0) AND NOT iocnt(1) AND 
 	io2.PIN));
 
 FTCPE_io3: FTCPE port map (io3,io3_T,NOT clk,'0','0');
-io3_T <= ((NOT counter(0) AND counter(1) AND counter(2) AND iocnt(2) AND 
+io3_T <= ((counter(2) AND iocnt(2) AND NOT counter(0) AND counter(1) AND 
 	iocnt(0) AND NOT iocnt(1) AND NOT io3.PIN)
-	OR (NOT a12_11(1) AND a12_11(0) AND a10 AND NOT counter(0) AND 
-	counter(1) AND counter(2) AND NOT iocnt(2) AND iocnt(0) AND NOT iocnt(1) AND 
+	OR (NOT a12_11(1) AND a12_11(0) AND a10 AND counter(2) AND 
+	NOT iocnt(2) AND NOT counter(0) AND counter(1) AND iocnt(0) AND NOT iocnt(1) AND 
 	io3.PIN));
 
 FTCPE_io4: FTCPE port map (io4,io4_T,NOT clk,'0','0');
-io4_T <= ((NOT counter(0) AND counter(1) AND counter(2) AND iocnt(2) AND 
+io4_T <= ((counter(2) AND iocnt(2) AND NOT counter(0) AND counter(1) AND 
 	iocnt(0) AND NOT iocnt(1) AND NOT io4.PIN)
-	OR (a12_11(1) AND NOT a12_11(0) AND NOT a10 AND NOT counter(0) AND 
-	counter(1) AND counter(2) AND NOT iocnt(2) AND iocnt(0) AND NOT iocnt(1) AND 
+	OR (a12_11(1) AND NOT a12_11(0) AND NOT a10 AND counter(2) AND 
+	NOT iocnt(2) AND NOT counter(0) AND counter(1) AND iocnt(0) AND NOT iocnt(1) AND 
 	io4.PIN));
 
 FTCPE_io5: FTCPE port map (io5,io5_T,NOT clk,'0','0');
-io5_T <= ((NOT counter(0) AND counter(1) AND counter(2) AND iocnt(2) AND 
+io5_T <= ((counter(2) AND iocnt(2) AND NOT counter(0) AND counter(1) AND 
 	iocnt(0) AND NOT iocnt(1) AND NOT io5.PIN)
-	OR (a12_11(1) AND NOT a12_11(0) AND a10 AND NOT counter(0) AND 
-	counter(1) AND counter(2) AND NOT iocnt(2) AND iocnt(0) AND NOT iocnt(1) AND 
+	OR (a12_11(1) AND NOT a12_11(0) AND a10 AND counter(2) AND 
+	NOT iocnt(2) AND NOT counter(0) AND counter(1) AND iocnt(0) AND NOT iocnt(1) AND 
 	io5.PIN));
 
 FTCPE_io6: FTCPE port map (io6,io6_T,NOT clk,'0','0');
-io6_T <= ((NOT counter(0) AND counter(1) AND counter(2) AND iocnt(2) AND 
+io6_T <= ((counter(2) AND iocnt(2) AND NOT counter(0) AND counter(1) AND 
 	iocnt(0) AND NOT iocnt(1) AND NOT io6.PIN)
-	OR (a12_11(1) AND a12_11(0) AND NOT a10 AND NOT counter(0) AND 
-	counter(1) AND counter(2) AND NOT iocnt(2) AND iocnt(0) AND NOT iocnt(1) AND 
+	OR (a12_11(1) AND a12_11(0) AND NOT a10 AND counter(2) AND 
+	NOT iocnt(2) AND NOT counter(0) AND counter(1) AND iocnt(0) AND NOT iocnt(1) AND 
 	io6.PIN));
 
 FTCPE_io7: FTCPE port map (io7,io7_T,NOT clk,'0','0');
-io7_T <= ((NOT counter(0) AND counter(1) AND counter(2) AND iocnt(2) AND 
+io7_T <= ((counter(2) AND iocnt(2) AND NOT counter(0) AND counter(1) AND 
 	iocnt(0) AND NOT iocnt(1) AND NOT io7.PIN)
-	OR (a12_11(1) AND a12_11(0) AND a10 AND NOT counter(0) AND 
-	counter(1) AND counter(2) AND NOT iocnt(2) AND iocnt(0) AND NOT iocnt(1) AND 
+	OR (a12_11(1) AND a12_11(0) AND a10 AND counter(2) AND 
+	NOT iocnt(2) AND NOT counter(0) AND counter(1) AND iocnt(0) AND NOT iocnt(1) AND 
 	io7.PIN));
 
 FTCPE_iocnt0: FTCPE port map (iocnt(0),iocnt_T(0),NOT clk,'0','0');
-iocnt_T(0) <= ((NOT counter(0) AND counter(1) AND counter(2) AND iocnt(2))
-	OR (NOT counter(0) AND counter(1) AND counter(2) AND iocnt(0))
-	OR (NOT counter(0) AND counter(1) AND counter(2) AND iocnt(1))
+iocnt_T(0) <= ((counter(2) AND iocnt(2) AND NOT counter(0) AND counter(1))
+	OR (counter(2) AND NOT counter(0) AND counter(1) AND iocnt(0))
+	OR (counter(2) AND NOT counter(0) AND counter(1) AND iocnt(1))
 	OR (bank(7) AND bank(6) AND bank(5) AND bank(4) AND 
 	bank(3) AND bank(2) AND bank(1) AND bank(0) AND vda AND a15_13(2) AND 
-	a15_13(1) AND a15_13(0) AND counter(0) AND NOT counter(1) AND 
-	NOT counter(2) AND NOT iocnt(2) AND NOT iocnt(0) AND NOT iocnt(1) AND NOT vpa));
+	a15_13(1) AND a15_13(0) AND NOT counter(2) AND NOT iocnt(2) AND NOT counter(0) AND 
+	counter(1) AND NOT iocnt(0) AND NOT iocnt(1) AND NOT vpa));
 
 FTCPE_iocnt1: FTCPE port map (iocnt(1),iocnt_T(1),NOT clk,'0','0');
-iocnt_T(1) <= ((NOT counter(0) AND counter(1) AND counter(2) AND NOT iocnt(2) AND 
+iocnt_T(1) <= ((counter(2) AND NOT iocnt(2) AND NOT counter(0) AND counter(1) AND 
 	iocnt(0))
-	OR (NOT counter(0) AND counter(1) AND counter(2) AND iocnt(0) AND 
+	OR (counter(2) AND NOT counter(0) AND counter(1) AND iocnt(0) AND 
 	iocnt(1)));
 
 FTCPE_iocnt2: FTCPE port map (iocnt(2),iocnt_T(2),NOT clk,'0','0');
-iocnt_T(2) <= ((NOT counter(0) AND counter(1) AND counter(2) AND iocnt(2) AND 
+iocnt_T(2) <= ((counter(2) AND iocnt(2) AND NOT counter(0) AND counter(1) AND 
 	iocnt(0))
-	OR (NOT counter(0) AND counter(1) AND counter(2) AND iocnt(0) AND 
+	OR (counter(2) AND NOT counter(0) AND counter(1) AND iocnt(0) AND 
 	iocnt(1)));
 
 FDCPE_phi0: FDCPE port map (phi0,phi0_D,NOT clk,'0','0');
-phi0_D <= ((NOT counter(0) AND counter(1) AND NOT counter(2))
+phi0_D <= ((NOT counter(2) AND NOT counter(0) AND counter(1))
 	OR (iocnt(2) AND NOT iocnt(0) AND phi0.PIN)
 	OR (NOT iocnt(2) AND iocnt(0) AND phi0.PIN)
-	OR (NOT counter(0) AND counter(1) AND NOT iocnt(2) AND NOT iocnt(0) AND 
+	OR (NOT iocnt(2) AND NOT counter(0) AND counter(1) AND NOT iocnt(0) AND 
 	NOT iocnt(1) AND NOT refcnt(0) AND NOT refcnt(1) AND NOT refcnt(2) AND NOT refcnt(3) AND 
 	NOT refcnt(4) AND NOT refcnt(5) AND NOT refcnt(6) AND NOT refcnt(7) AND rom.PIN)
 	OR (counter(0) AND phi0.PIN)
@@ -417,93 +429,93 @@ phi0_D <= ((NOT counter(0) AND counter(1) AND NOT counter(2))
 
 FDCPE_phi1: FDCPE port map (phi1,phi1_D,NOT clk,'0','0');
 phi1_D <= ((iocnt(2) AND NOT iocnt(0) AND NOT phi1.PIN)
-	OR (NOT counter(0) AND counter(1) AND NOT iocnt(2) AND NOT iocnt(0) AND 
+	OR (NOT iocnt(2) AND NOT counter(0) AND counter(1) AND NOT iocnt(0) AND 
 	NOT iocnt(1) AND NOT refcnt(0) AND NOT refcnt(1) AND NOT refcnt(2) AND NOT refcnt(3) AND 
 	NOT refcnt(4) AND NOT refcnt(5) AND NOT refcnt(6) AND NOT refcnt(7) AND rom.PIN)
 	OR (counter(0) AND NOT phi1.PIN)
 	OR (NOT counter(1) AND NOT phi1.PIN)
 	OR (iocnt(1) AND NOT phi1.PIN)
-	OR (NOT counter(0) AND counter(1) AND NOT counter(2))
+	OR (NOT counter(2) AND NOT counter(0) AND counter(1))
 	OR (NOT iocnt(2) AND iocnt(0) AND NOT phi1.PIN));
 
 FDCPE_ras: FDCPE port map (ras,ras_D,NOT clk,'0','0');
-ras_D <= ((counter(1) AND NOT refcnt(0) AND NOT refcnt(1) AND NOT refcnt(2) AND 
+ras_D <= ((NOT counter(2) AND NOT counter(0) AND counter(1) AND 
+	NOT $OpTx$FX_DC$49)
+	OR (NOT counter(2) AND NOT refcnt(0) AND NOT refcnt(1) AND NOT refcnt(2) AND 
 	NOT refcnt(3) AND NOT refcnt(4) AND NOT refcnt(5) AND NOT refcnt(6) AND NOT refcnt(7) AND 
 	NOT ras.PIN)
-	OR (counter(0) AND NOT counter(1) AND NOT counter(2) AND 
-	NOT refcnt(0) AND NOT refcnt(1) AND NOT refcnt(2) AND NOT refcnt(3) AND NOT refcnt(4) AND 
-	NOT refcnt(5) AND NOT refcnt(6) AND NOT refcnt(7))
-	OR (NOT counter(0) AND NOT $OpTx$FX_DC$50 AND NOT ras.PIN)
-	OR (counter(1) AND NOT $OpTx$FX_DC$50 AND NOT ras.PIN)
-	OR (counter(0) AND NOT counter(1) AND NOT counter(2) AND 
-	NOT $OpTx$FX_DC$50)
 	OR (NOT counter(0) AND NOT refcnt(0) AND NOT refcnt(1) AND NOT refcnt(2) AND 
 	NOT refcnt(3) AND NOT refcnt(4) AND NOT refcnt(5) AND NOT refcnt(6) AND NOT refcnt(7) AND 
-	NOT ras.PIN));
+	NOT ras.PIN)
+	OR (counter(1) AND NOT refcnt(0) AND NOT refcnt(1) AND NOT refcnt(2) AND 
+	NOT refcnt(3) AND NOT refcnt(4) AND NOT refcnt(5) AND NOT refcnt(6) AND NOT refcnt(7) AND 
+	NOT ras.PIN)
+	OR (NOT counter(2) AND NOT counter(0) AND counter(1) AND 
+	NOT refcnt(0) AND NOT refcnt(1) AND NOT refcnt(2) AND NOT refcnt(3) AND NOT refcnt(4) AND 
+	NOT refcnt(5) AND NOT refcnt(6) AND NOT refcnt(7))
+	OR (NOT counter(2) AND NOT $OpTx$FX_DC$49 AND NOT ras.PIN)
+	OR (NOT counter(0) AND NOT $OpTx$FX_DC$49 AND NOT ras.PIN)
+	OR (counter(1) AND NOT $OpTx$FX_DC$49 AND NOT ras.PIN));
 
 FTCPE_refcnt0: FTCPE port map (refcnt(0),refcnt_T(0),NOT clk,'0','0');
-refcnt_T(0) <= (NOT counter(0) AND counter(1) AND counter(2));
+refcnt_T(0) <= (counter(2) AND NOT counter(0) AND counter(1));
 
 FTCPE_refcnt1: FTCPE port map (refcnt(1),refcnt_T(1),NOT clk,'0','0');
-refcnt_T(1) <= ((NOT counter(1))
-	OR (NOT counter(2))
+refcnt_T(1) <= ((NOT counter(2))
+	OR (NOT counter(1))
 	OR (refcnt(0))
 	OR (counter(0))
 	OR (NOT refcnt(1) AND NOT refcnt(2) AND NOT refcnt(3) AND NOT refcnt(4) AND 
 	NOT refcnt(5) AND NOT refcnt(6) AND NOT refcnt(7)));
 
 FTCPE_refcnt2: FTCPE port map (refcnt(2),refcnt_T(2),NOT clk,'0','0');
-refcnt_T(2) <= (NOT counter(0) AND counter(1) AND counter(2) AND 
+refcnt_T(2) <= (counter(2) AND NOT counter(0) AND counter(1) AND 
 	NOT refcnt(0) AND NOT refcnt(1));
 
 FTCPE_refcnt3: FTCPE port map (refcnt(3),refcnt_T(3),NOT clk,'0','0');
-refcnt_T(3) <= (NOT counter(0) AND counter(1) AND counter(2) AND 
+refcnt_T(3) <= (counter(2) AND NOT counter(0) AND counter(1) AND 
 	NOT refcnt(0) AND NOT refcnt(1) AND NOT refcnt(2));
 
 FTCPE_refcnt4: FTCPE port map (refcnt(4),refcnt_T(4),NOT clk,'0','0');
-refcnt_T(4) <= ((NOT counter(0) AND counter(1) AND counter(2) AND 
-	NOT refcnt(0) AND NOT refcnt(1) AND NOT refcnt(2) AND NOT refcnt(3) AND refcnt(4))
-	OR (NOT counter(0) AND counter(1) AND counter(2) AND 
-	NOT refcnt(0) AND NOT refcnt(1) AND NOT refcnt(2) AND NOT refcnt(3) AND refcnt(5))
-	OR (NOT counter(0) AND counter(1) AND counter(2) AND 
+refcnt_T(4) <= ((counter(2) AND NOT counter(0) AND counter(1) AND 
 	NOT refcnt(0) AND NOT refcnt(1) AND NOT refcnt(2) AND NOT refcnt(3) AND refcnt(6))
-	OR (NOT counter(0) AND counter(1) AND counter(2) AND 
-	NOT refcnt(0) AND NOT refcnt(1) AND NOT refcnt(2) AND NOT refcnt(3) AND refcnt(7)));
+	OR (counter(2) AND NOT counter(0) AND counter(1) AND 
+	NOT refcnt(0) AND NOT refcnt(1) AND NOT refcnt(2) AND NOT refcnt(3) AND refcnt(7))
+	OR (counter(2) AND NOT counter(0) AND counter(1) AND 
+	NOT refcnt(0) AND NOT refcnt(1) AND NOT refcnt(2) AND NOT refcnt(3) AND refcnt(4))
+	OR (counter(2) AND NOT counter(0) AND counter(1) AND 
+	NOT refcnt(0) AND NOT refcnt(1) AND NOT refcnt(2) AND NOT refcnt(3) AND refcnt(5)));
 
 FTCPE_refcnt5: FTCPE port map (refcnt(5),refcnt_T(5),NOT clk,'0','0');
-refcnt_T(5) <= ((NOT counter(0) AND counter(1) AND counter(2) AND 
+refcnt_T(5) <= ((counter(2) AND NOT counter(0) AND counter(1) AND 
 	NOT refcnt(0) AND NOT refcnt(1) AND NOT refcnt(2) AND NOT refcnt(3) AND NOT refcnt(4) AND 
 	refcnt(5))
-	OR (NOT counter(0) AND counter(1) AND counter(2) AND 
+	OR (counter(2) AND NOT counter(0) AND counter(1) AND 
 	NOT refcnt(0) AND NOT refcnt(1) AND NOT refcnt(2) AND NOT refcnt(3) AND NOT refcnt(4) AND 
 	refcnt(6))
-	OR (NOT counter(0) AND counter(1) AND counter(2) AND 
+	OR (counter(2) AND NOT counter(0) AND counter(1) AND 
 	NOT refcnt(0) AND NOT refcnt(1) AND NOT refcnt(2) AND NOT refcnt(3) AND NOT refcnt(4) AND 
 	refcnt(7)));
 
 FTCPE_refcnt6: FTCPE port map (refcnt(6),refcnt_T(6),NOT clk,'0','0');
-refcnt_T(6) <= ((NOT counter(0) AND counter(1) AND counter(2) AND 
-	NOT refcnt(0) AND NOT refcnt(1) AND NOT refcnt(2) AND NOT refcnt(3) AND NOT refcnt(4) AND 
-	NOT refcnt(5) AND refcnt(6))
-	OR (NOT counter(0) AND counter(1) AND counter(2) AND 
-	NOT refcnt(0) AND NOT refcnt(1) AND NOT refcnt(2) AND NOT refcnt(3) AND NOT refcnt(4) AND 
-	NOT refcnt(5) AND refcnt(7)));
+refcnt_T(6) <= (counter(2) AND NOT counter(0) AND counter(1) AND 
+	FC_0_.OUT AND NOT FC_1_.OUT);
 
 FTCPE_refcnt7: FTCPE port map (refcnt(7),refcnt_T(7),NOT clk,'0','0');
-refcnt_T(7) <= (NOT counter(0) AND counter(1) AND counter(2) AND 
+refcnt_T(7) <= (counter(2) AND NOT counter(0) AND counter(1) AND 
 	NOT refcnt(0) AND NOT refcnt(1) AND NOT refcnt(2) AND NOT refcnt(3) AND NOT refcnt(4) AND 
 	NOT refcnt(5) AND NOT refcnt(6));
 
 FTCPE_rom: FTCPE port map (rom,rom_T,NOT clk,'0','0');
-rom_T <= ((NOT counter(0) AND counter(1) AND counter(2) AND NOT rom.PIN)
+rom_T <= ((counter(2) AND NOT counter(0) AND counter(1) AND NOT rom.PIN)
 	OR (NOT bank(7) AND NOT bank(6) AND NOT bank(5) AND NOT bank(4) AND 
 	NOT bank(3) AND NOT bank(2) AND NOT bank(1) AND NOT bank(0) AND vda AND a15_13(2) AND 
-	a15_13(1) AND a15_13(0) AND counter(0) AND NOT counter(1) AND 
-	NOT counter(2) AND rw AND rom.PIN)
+	a15_13(1) AND a15_13(0) AND NOT counter(2) AND NOT counter(0) AND 
+	counter(1) AND rw AND rom.PIN)
 	OR (NOT bank(7) AND NOT bank(6) AND NOT bank(5) AND NOT bank(4) AND 
 	NOT bank(3) AND NOT bank(2) AND NOT bank(1) AND NOT bank(0) AND a15_13(2) AND 
-	a15_13(1) AND a15_13(0) AND counter(0) AND NOT counter(1) AND 
-	NOT counter(2) AND vpa AND rw AND rom.PIN));
+	a15_13(1) AND a15_13(0) AND NOT counter(2) AND NOT counter(0) AND 
+	counter(1) AND vpa AND rw AND rom.PIN));
 
 Register Legend:
  FDCPE (Q,D,C,CLR,PRE); 

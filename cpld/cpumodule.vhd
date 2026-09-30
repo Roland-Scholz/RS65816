@@ -74,9 +74,9 @@ architecture Behavioral of cpumodule is
 	constant REFTICKS : STD_LOGIC_VECTOR (7 downto 0) := "10001101";		--141 (9,142 Mhz / 0,064Mhz = 142,85)
 
 	signal counter	: STD_LOGIC_VECTOR (2 downto 0) := "000";
-	signal refcnt : STD_LOGIC_VECTOR (7 downto 0) := "00000100";
+	signal refcnt : STD_LOGIC_VECTOR (7 downto 0) := "10000100";
 	signal iocnt : STD_LOGIC_VECTOR (2 downto 0) := "000";
-	signal phi : std_logic;
+	--signal phi : std_logic;
 	--signal cas : std_logic;
 	
 	--signal vpa : std_logic := '1';
@@ -85,6 +85,13 @@ architecture Behavioral of cpumodule is
 	-- (vpa = '1' or vda = '1') and
 	-- vda = '1' and vpa = '0' and 
 	-- 
+	
+--
+--
+-- rom : bank(0-7) & A(15-13) & rw & vda & vpa (8 + 3 + 1 + 1 + 1 = 14)
+-- 		clk, Phi0
+--
+
 begin
 	process (clk)
 	begin
@@ -101,6 +108,9 @@ begin
 				end if;
 				
 			when "001" =>			
+
+				
+			when "010" =>
 				if bank = "00000000" and a15_13 = "111" and rw = '1' and (vda = '1' or vpa = '1') then
 					rom <= '0';
 				elsif bank = "11111111" and a15_13 = "111" and iocnt = 0 and vda = '1' and vpa = '0' then
@@ -113,10 +123,8 @@ begin
 					end if;
 				end if;
 				
-			when "010" =>
 				phi0 <= '1';
-				phi1 <= '0';
-				
+				phi1 <= '0';			
 				cas0 <= '1';
 				
 			when "100" =>

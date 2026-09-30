@@ -30,7 +30,7 @@ io3 S:PIN35
 io4 S:PIN33
 io5 S:PIN28
 io6 S:PIN26
-io7 S:PIN1
+io7 PIN1
 phi0 S:PIN14
 phi1 S:PIN19
 ras S:PIN22
@@ -40,15 +40,15 @@ rom S:PIN25
 ;The remaining section of the .gyd file is for documentation purposes only.
 ;It shows where your internal equations were placed in the last successful fit.
 
-PARTITION FB1_1 cas0_OBUF refcnt<6> refcnt<3> cas1_OBUF
-		 refcnt<5> EXP0_ EXP1_ cas2_OBUF
-		 refcnt<4> EXP2_ cas3_OBUF phi0_OBUF
-		 refcnt<1> phi1_OBUF iocnt<1> ras_OBUF
-		 refcnt<7> EXP3_
+PARTITION FB1_1 cas0_OBUF EXP0_ refcnt<4> cas1_OBUF
+		 EXP1_ iocnt<1> refcnt<2> cas2_OBUF
+		 refcnt<5> refcnt<3> cas3_OBUF phi0_OBUF
+		 refcnt<7> phi1_OBUF refcnt<1> ras_OBUF
+		 EXP2_ EXP3_
 PARTITION FB2_1 io7_OBUF
-PARTITION FB2_3 refcnt<2> io0_OBUF refcnt<0> counter<0>
+PARTITION FB2_3 refcnt<6> io0_OBUF refcnt<0> counter<0>
 		 io1_OBUF io2_OBUF iocnt<2> io3_OBUF
 		 counter<2> io4_OBUF counter<1> io5_OBUF
-		 $OpTx$FX_DC$50 io6_OBUF rom_OBUF iocnt<0>
+		 $OpTx$FX_DC$49 io6_OBUF rom_OBUF iocnt<0>
 		
 

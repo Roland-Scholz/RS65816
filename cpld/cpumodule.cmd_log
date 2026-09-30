@@ -692,3 +692,134 @@ cpldfit -intstyle ise -p xc9536-15-PC44 -ofmt vhdl -optimize speed -htmlrpt -loc
 XSLTProcess cpumodule_build.xml 
 tsim -intstyle ise cpumodule cpumodule.nga 
 hprep6 -s IEEE1149 -n cpumodule -i cpumodule 
+xst -intstyle ise -ifn "C:/github/RS65816/cpld/cpumodule.xst" -ofn "C:/github/RS65816/cpld/cpumodule.syr" 
+ngdbuild -intstyle ise -dd _ngo -uc cpupinout.ucf -p xc9536-PC44-15 cpumodule.ngc cpumodule.ngd  
+cpldfit -intstyle ise -p xc9536-15-PC44 -ofmt vhdl -optimize speed -htmlrpt -loc on -slew fast -init low -inputs 36 -pterms 25 -power std -localfbk -pinfbk cpumodule.ngd 
+XSLTProcess cpumodule_build.xml 
+tsim -intstyle ise cpumodule cpumodule.nga 
+hprep6 -s IEEE1149 -n cpumodule -i cpumodule 
+xst -intstyle ise -ifn "C:/github/RS65816/cpld/cpumodule.xst" -ofn "C:/github/RS65816/cpld/cpumodule.syr" 
+ngdbuild -intstyle ise -dd _ngo -uc cpupinout.ucf -p xc9536-PC44-15 cpumodule.ngc cpumodule.ngd  
+cpldfit -intstyle ise -p xc9536-15-PC44 -ofmt vhdl -optimize speed -htmlrpt -loc on -slew fast -init low -inputs 36 -pterms 25 -power std -localfbk -pinfbk cpumodule.ngd 
+XSLTProcess cpumodule_build.xml 
+tsim -intstyle ise cpumodule cpumodule.nga 
+hprep6 -s IEEE1149 -n cpumodule -i cpumodule 
+xst -intstyle ise -ifn "C:/github/RS65816/cpld/cpumodule.xst" -ofn "C:/github/RS65816/cpld/cpumodule.syr" 
+ngdbuild -intstyle ise -dd _ngo -uc cpupinout.ucf -p xc9536-PC44-15 cpumodule.ngc cpumodule.ngd  
+cpldfit -intstyle ise -p xc9536-15-PC44 -ofmt vhdl -optimize speed -htmlrpt -loc on -slew fast -init low -inputs 36 -pterms 25 -power std -localfbk -pinfbk cpumodule.ngd 
+XSLTProcess cpumodule_build.xml 
+tsim -intstyle ise cpumodule cpumodule.nga 
+hprep6 -s IEEE1149 -n cpumodule -i cpumodule 
+ngdbuild -intstyle ise -dd _ngo -uc cpupinout.ucf -p xc9536-PC44-15 cpumodule.ngc cpumodule.ngd  
+cpldfit -intstyle ise -p xc9536-15-PC44 -ofmt vhdl -optimize speed -htmlrpt -loc on -slew fast -init low -inputs 36 -pterms 25 -power std -localfbk -pinfbk cpumodule.ngd 
+XSLTProcess cpumodule_build.xml 
+tsim -intstyle ise cpumodule cpumodule.nga 
+hprep6 -s IEEE1149 -n cpumodule -i cpumodule 
+taengine -intstyle ise -f cpumodule -w --format html1 -l cpumodule_html/tim/timing_report.htm 
+netgen -intstyle ise -rpw 100 -ar Structure -tm cpumodule -w -dir netgen/fit -ofmt vhdl -sim cpumodule.nga cpumodule_timesim.vhd 
+ibiswriter -intstyle ise -g VCCIO:LVTTL cpumodule.pnx cpumodule.ibs 
+pin2ucf cpumodule.gyd -o C:/github/RS65816/cpld/cpupinout.ucf -r cpumodule.lck 
+-cwd "C:/github/RS65816/cpld" timingan_cpld -intstyle ise "C:/github/RS65816/cpld/cpumodule.vm6" 
+xst -intstyle ise -ifn "C:/github/RS65816/cpld/cpumodule.xst" -ofn "C:/github/RS65816/cpld/cpumodule.syr" 
+ngdbuild -intstyle ise -dd _ngo -uc cpupinout.ucf -p xc9536-PC44-15 cpumodule.ngc cpumodule.ngd  
+cpldfit -intstyle ise -p xc9536-15-PC44 -ofmt vhdl -optimize speed -htmlrpt -loc on -slew fast -init low -inputs 36 -pterms 25 -power std -localfbk -pinfbk cpumodule.ngd 
+XSLTProcess cpumodule_build.xml 
+tsim -intstyle ise cpumodule cpumodule.nga 
+taengine -intstyle ise -f cpumodule -w --format html1 -l cpumodule_html/tim/timing_report.htm 
+-cwd "C:/github/RS65816/cpld" timingan_cpld -intstyle ise "C:/github/RS65816/cpld/cpumodule.vm6" 
+hprep6 -s IEEE1149 -n cpumodule -i cpumodule 
+-cwd "C:/github/RS65816/cpld" timingan_cpld -intstyle ise "C:/github/RS65816/cpld/cpumodule.vm6" 
+xst -intstyle ise -ifn "C:/github/RS65816/cpld/cpumodule.xst" -ofn "C:/github/RS65816/cpld/cpumodule.syr" 
+ngdbuild -intstyle ise -dd _ngo -uc cpupinout.ucf -p xc9536-PC44-15 cpumodule.ngc cpumodule.ngd  
+cpldfit -intstyle ise -p xc9536-15-PC44 -ofmt vhdl -optimize speed -htmlrpt -loc on -slew fast -init low -inputs 36 -pterms 25 -power std -localfbk -pinfbk cpumodule.ngd 
+XSLTProcess cpumodule_build.xml 
+ngdbuild -intstyle ise -dd _ngo -uc cpupinout.ucf -p xc9536-PC44-15 cpumodule.ngc cpumodule.ngd  
+cpldfit -intstyle ise -p xc9536-15-PC44 -ofmt vhdl -optimize speed -htmlrpt -loc on -slew fast -init low -inputs 36 -pterms 25 -power std -localfbk -pinfbk cpumodule.ngd 
+XSLTProcess cpumodule_build.xml 
+tsim -intstyle ise cpumodule cpumodule.nga 
+hprep6 -s IEEE1149 -n cpumodule -i cpumodule 
+taengine -intstyle ise -f cpumodule -w --format html1 -l cpumodule_html/tim/timing_report.htm 
+netgen -intstyle ise -rpw 100 -ar Structure -tm cpumodule -w -dir netgen/fit -ofmt vhdl -sim cpumodule.nga cpumodule_timesim.vhd 
+-cwd "C:/github/RS65816/cpld" timingan_cpld -intstyle ise "C:/github/RS65816/cpld/cpumodule.vm6" 
+-cwd "C:/github/RS65816/cpld" timingan_cpld -intstyle ise "C:/github/RS65816/cpld/cpumodule.vm6" 
+-cwd "C:/github/RS65816/cpld" timingan_cpld -intstyle ise "C:/github/RS65816/cpld/cpumodule.vm6" 
+-cwd "C:/github/RS65816/cpld" timingan_cpld -intstyle ise "C:/github/RS65816/cpld/cpumodule.vm6" 
+xst -intstyle ise -ifn "C:/github/RS65816/cpld/cpumodule.xst" -ofn "C:/github/RS65816/cpld/cpumodule.syr" 
+ngdbuild -intstyle ise -dd _ngo -uc cpupinout.ucf -p xc9536-PC44-15 cpumodule.ngc cpumodule.ngd  
+cpldfit -intstyle ise -p xc9536-15-PC44 -ofmt vhdl -optimize speed -htmlrpt -loc on -slew fast -init low -inputs 36 -pterms 25 -power std -localfbk -pinfbk cpumodule.ngd 
+XSLTProcess cpumodule_build.xml 
+tsim -intstyle ise cpumodule cpumodule.nga 
+netgen -intstyle ise -rpw 100 -ar Structure -tm cpumodule -w -dir netgen/fit -ofmt vhdl -sim cpumodule.nga cpumodule_timesim.vhd 
+ngdbuild -intstyle ise -dd _ngo -uc cpupinout.ucf -p xc9536-PC44-15 cpumodule.ngc cpumodule.ngd  
+cpldfit -intstyle ise -p xc9536-15-PC44 -ofmt vhdl -optimize speed -htmlrpt -loc on -slew fast -init low -inputs 36 -pterms 25 -power std -localfbk -pinfbk cpumodule.ngd 
+XSLTProcess cpumodule_build.xml 
+tsim -intstyle ise cpumodule cpumodule.nga 
+hprep6 -s IEEE1149 -n cpumodule -i cpumodule 
+xst -intstyle ise -ifn "C:/github/RS65816/cpld/cpumodule.xst" -ofn "C:/github/RS65816/cpld/cpumodule.syr" 
+ngdbuild -intstyle ise -dd _ngo -uc cpupinout.ucf -p xc9536-PC44-15 cpumodule.ngc cpumodule.ngd  
+cpldfit -intstyle ise -p xc9536-15-PC44 -ofmt vhdl -optimize speed -htmlrpt -loc on -slew fast -init low -inputs 36 -pterms 25 -power std -localfbk -pinfbk cpumodule.ngd 
+XSLTProcess cpumodule_build.xml 
+tsim -intstyle ise cpumodule cpumodule.nga 
+netgen -intstyle ise -rpw 100 -ar Structure -tm cpumodule -w -dir netgen/fit -ofmt vhdl -sim cpumodule.nga cpumodule_timesim.vhd 
+xst -intstyle ise -ifn "C:/github/RS65816/cpld/cpumodule.xst" -ofn "C:/github/RS65816/cpld/cpumodule.syr" 
+ngdbuild -intstyle ise -dd _ngo -uc cpupinout.ucf -p xc9536-PC44-15 cpumodule.ngc cpumodule.ngd  
+cpldfit -intstyle ise -p xc9536-15-PC44 -ofmt vhdl -optimize speed -htmlrpt -loc on -slew fast -init low -inputs 36 -pterms 25 -power std -localfbk -pinfbk cpumodule.ngd 
+XSLTProcess cpumodule_build.xml 
+tsim -intstyle ise cpumodule cpumodule.nga 
+netgen -intstyle ise -rpw 100 -ar Structure -tm cpumodule -w -dir netgen/fit -ofmt vhdl -sim cpumodule.nga cpumodule_timesim.vhd 
+hprep6 -s IEEE1149 -n cpumodule -i cpumodule 
+xst -intstyle ise -ifn "C:/github/RS65816/cpld/cpumodule.xst" -ofn "C:/github/RS65816/cpld/cpumodule.syr" 
+ngdbuild -intstyle ise -dd _ngo -uc cpupinout.ucf -p xc9536-PC44-15 cpumodule.ngc cpumodule.ngd  
+cpldfit -intstyle ise -p xc9536-15-PC44 -ofmt vhdl -optimize speed -htmlrpt -loc on -slew fast -init low -inputs 36 -pterms 25 -power std -localfbk -pinfbk cpumodule.ngd 
+XSLTProcess cpumodule_build.xml 
+tsim -intstyle ise cpumodule cpumodule.nga 
+netgen -intstyle ise -rpw 100 -ar Structure -tm cpumodule -w -dir netgen/fit -ofmt vhdl -sim cpumodule.nga cpumodule_timesim.vhd 
+xst -intstyle ise -ifn "C:/github/RS65816/cpld/cpumodule.xst" -ofn "C:/github/RS65816/cpld/cpumodule.syr" 
+ngdbuild -intstyle ise -dd _ngo -uc cpupinout.ucf -p xc9536-PC44-15 cpumodule.ngc cpumodule.ngd  
+cpldfit -intstyle ise -p xc9536-15-PC44 -ofmt vhdl -optimize speed -htmlrpt -loc on -slew fast -init low -inputs 36 -pterms 25 -power std -localfbk -pinfbk cpumodule.ngd 
+XSLTProcess cpumodule_build.xml 
+tsim -intstyle ise cpumodule cpumodule.nga 
+hprep6 -s IEEE1149 -n cpumodule -i cpumodule 
+netgen -intstyle ise -rpw 100 -ar Structure -tm cpumodule -w -dir netgen/fit -ofmt vhdl -sim cpumodule.nga cpumodule_timesim.vhd 
+xst -intstyle ise -ifn "C:/github/RS65816/cpld/cpumodule.xst" -ofn "C:/github/RS65816/cpld/cpumodule.syr" 
+ngdbuild -intstyle ise -dd _ngo -uc cpupinout.ucf -p xc9536-PC44-15 cpumodule.ngc cpumodule.ngd  
+cpldfit -intstyle ise -p xc9536-15-PC44 -ofmt vhdl -optimize speed -htmlrpt -loc on -slew fast -init low -inputs 36 -pterms 25 -power std -localfbk -pinfbk cpumodule.ngd 
+XSLTProcess cpumodule_build.xml 
+tsim -intstyle ise cpumodule cpumodule.nga 
+netgen -intstyle ise -rpw 100 -ar Structure -tm cpumodule -w -dir netgen/fit -ofmt vhdl -sim cpumodule.nga cpumodule_timesim.vhd 
+xst -intstyle ise -ifn "C:/github/RS65816/cpld/cpumodule.xst" -ofn "C:/github/RS65816/cpld/cpumodule.syr" 
+ngdbuild -intstyle ise -dd _ngo -uc cpupinout.ucf -p xc9536-PC44-15 cpumodule.ngc cpumodule.ngd  
+cpldfit -intstyle ise -p xc9536-15-PC44 -ofmt vhdl -optimize speed -htmlrpt -loc on -slew fast -init low -inputs 36 -pterms 25 -power std -localfbk -pinfbk cpumodule.ngd 
+XSLTProcess cpumodule_build.xml 
+tsim -intstyle ise cpumodule cpumodule.nga 
+netgen -intstyle ise -rpw 100 -ar Structure -tm cpumodule -w -dir netgen/fit -ofmt vhdl -sim cpumodule.nga cpumodule_timesim.vhd 
+xst -intstyle ise -ifn "C:/github/RS65816/cpld/cpumodule.xst" -ofn "C:/github/RS65816/cpld/cpumodule.syr" 
+ngdbuild -intstyle ise -dd _ngo -uc cpupinout.ucf -p xc9536-PC44-15 cpumodule.ngc cpumodule.ngd  
+cpldfit -intstyle ise -p xc9536-15-PC44 -ofmt vhdl -optimize speed -htmlrpt -loc on -slew fast -init low -inputs 36 -pterms 25 -power std -localfbk -pinfbk cpumodule.ngd 
+XSLTProcess cpumodule_build.xml 
+tsim -intstyle ise cpumodule cpumodule.nga 
+netgen -intstyle ise -rpw 100 -ar Structure -tm cpumodule -w -dir netgen/fit -ofmt vhdl -sim cpumodule.nga cpumodule_timesim.vhd 
+xst -intstyle ise -ifn "C:/github/RS65816/cpld/cpumodule.xst" -ofn "C:/github/RS65816/cpld/cpumodule.syr" 
+ngdbuild -intstyle ise -dd _ngo -uc cpupinout.ucf -p xc9536-PC44-15 cpumodule.ngc cpumodule.ngd  
+cpldfit -intstyle ise -p xc9536-15-PC44 -ofmt vhdl -optimize speed -htmlrpt -loc on -slew fast -init low -inputs 36 -pterms 25 -power std -localfbk -pinfbk cpumodule.ngd 
+XSLTProcess cpumodule_build.xml 
+tsim -intstyle ise cpumodule cpumodule.nga 
+netgen -intstyle ise -rpw 100 -ar Structure -tm cpumodule -w -dir netgen/fit -ofmt vhdl -sim cpumodule.nga cpumodule_timesim.vhd 
+xst -intstyle ise -ifn "C:/github/RS65816/cpld/cpumodule.xst" -ofn "C:/github/RS65816/cpld/cpumodule.syr" 
+ngdbuild -intstyle ise -dd _ngo -uc cpupinout.ucf -p xc9536-PC44-15 cpumodule.ngc cpumodule.ngd  
+cpldfit -intstyle ise -p xc9536-15-PC44 -ofmt vhdl -optimize speed -htmlrpt -loc on -slew fast -init low -inputs 36 -pterms 25 -power std -localfbk -pinfbk cpumodule.ngd 
+XSLTProcess cpumodule_build.xml 
+tsim -intstyle ise cpumodule cpumodule.nga 
+netgen -intstyle ise -rpw 100 -ar Structure -tm cpumodule -w -dir netgen/fit -ofmt vhdl -sim cpumodule.nga cpumodule_timesim.vhd 
+xst -intstyle ise -ifn "C:/github/RS65816/cpld/cpumodule.xst" -ofn "C:/github/RS65816/cpld/cpumodule.syr" 
+ngdbuild -intstyle ise -dd _ngo -uc cpupinout.ucf -p xc9536-PC44-15 cpumodule.ngc cpumodule.ngd  
+cpldfit -intstyle ise -p xc9536-15-PC44 -ofmt vhdl -optimize speed -htmlrpt -loc on -slew fast -init low -inputs 36 -pterms 25 -power std -localfbk -pinfbk cpumodule.ngd 
+XSLTProcess cpumodule_build.xml 
+tsim -intstyle ise cpumodule cpumodule.nga 
+netgen -intstyle ise -rpw 100 -ar Structure -tm cpumodule -w -dir netgen/fit -ofmt vhdl -sim cpumodule.nga cpumodule_timesim.vhd 
+xst -intstyle ise -ifn "C:/github/RS65816/cpld/cpumodule.xst" -ofn "C:/github/RS65816/cpld/cpumodule.syr" 
+ngdbuild -intstyle ise -dd _ngo -uc cpupinout.ucf -p xc9536-PC44-15 cpumodule.ngc cpumodule.ngd  
+cpldfit -intstyle ise -p xc9536-15-PC44 -ofmt vhdl -optimize speed -htmlrpt -loc on -slew fast -init low -inputs 36 -pterms 25 -power std -localfbk -pinfbk cpumodule.ngd 
+XSLTProcess cpumodule_build.xml 
+tsim -intstyle ise cpumodule cpumodule.nga 
+netgen -intstyle ise -rpw 100 -ar Structure -tm cpumodule -w -dir netgen/fit -ofmt vhdl -sim cpumodule.nga cpumodule_timesim.vhd 

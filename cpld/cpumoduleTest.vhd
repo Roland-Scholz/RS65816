@@ -48,25 +48,25 @@ ARCHITECTURE behavior OF cpumoduleTest IS
 				vda		: in std_logic;
 				vpa		: in std_logic;
 				rw			: in std_logic;
-				ras		: out std_logic;
-				cas0		: out std_logic;
-				cas1		: out std_logic;
-				cas2		: out std_logic;
-				cas3		: out std_logic;
+				ras		: inout std_logic;
+				cas0		: inout std_logic;
+				cas1		: inout std_logic;
+				cas2		: inout std_logic;
+				cas3		: inout std_logic;
 --				icnt0		: out std_logic;
 --				icnt1		: out std_logic;
 --				icnt2		: out std_logic;
-				io0		: out std_logic;
-				io1		: out std_logic;
-				io2		: out std_logic;
-				io3		: out std_logic;
-				io4		: out std_logic;
-				io5		: out std_logic;
-				io6		: out std_logic;
-				io7		: out std_logic;
+				io0		: inout std_logic;
+				io1		: inout std_logic;
+				io2		: inout std_logic;
+				io3		: inout std_logic;
+				io4		: inout std_logic;
+				io5		: inout std_logic;
+				io6		: inout std_logic;
+				io7		: inout std_logic;
 				rom		: inout std_logic;
-				phi0		: out std_logic;
-				phi1		: out std_logic
+				phi0		: inout std_logic;
+				phi1		: inout std_logic
 			);
     END COMPONENT;
     
@@ -77,8 +77,8 @@ ARCHITECTURE behavior OF cpumoduleTest IS
 	signal a15_13 : STD_LOGIC_VECTOR (2 downto 0) := "111";
 	signal a12_11 : STD_LOGIC_VECTOR (1 downto 0) := "00";
 	signal a10 : std_logic := '1';
-	signal vda : std_logic := '1';
-	signal vpa : std_logic := '0';
+	signal vda : std_logic := '0';
+	signal vpa : std_logic := '1';
 	signal rw : std_logic := '1';
 
  	--Outputs
@@ -103,7 +103,7 @@ ARCHITECTURE behavior OF cpumoduleTest IS
 --	signal icnt2 : std_logic;
 			
    -- Clock period definitions
-   constant clk_period : time := 15.625 ns;
+   constant clk_period : time := 25 ns;
  
 BEGIN
  
@@ -161,16 +161,17 @@ BEGIN
 		--a12_11 <= "01";
 				
 		--bank <= "11111111";
-		--wait for clk_period*4*7;
+		wait for clk_period*10;
 
 		bank <= "00000000";
-		wait for clk_period*6*7;
+		wait for clk_period*7 + 38ns;
 		
       bank <= "00000001";
-		wait for clk_period*4*7;
+		wait for clk_period*7;
+
+      bank <= "00000000";
+		wait for clk_period*7;
 		
-		bank <= "11111111";
-      wait for clk_period*4*7;
       wait;
    end process;
 
