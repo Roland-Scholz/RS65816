@@ -1,0 +1,70 @@
+
+		pin2ucf Report File
+Copyright (c) 1995-2013 Xilinx, Inc.  All rights reserved.
+	   Created : Mon Sep 28 10:11:06 2026
+
+
+
+Constraint Conflicts Information
+================================
+
+   This section provides information on the constraint conflicts 
+   if pin2ucf were to write a ucf file using the provided design and
+   the existing ucf file. There are 2 types of conflicts that can
+   occur.
+
+   1. Multiple pins could be constrained on the same net
+   2. Same pin could have multiple nets 
+
+   pin2ucf provides a list each for both.
+
+   Note:- "New NET" and "New PIN" indicates the Net and Pin
+   locations found suitable by pin2ucf for pin locking, while
+   "Old Net" and "Old PIN" indicates the Net and Pin locations
+   already set by the user in the ucf file, which were left 
+   untouched by pin2ucf.
+
+
+Net name conflicts on the pins
+-------------------------------
+
+
+----------------------------------------------------------------------
+PIN Location                           New NET              Old NET
+
+----------------------------------------------------------------------
+
+"No net name conflicts were found on pins"
+
+
+Pin name conflicts on the nets
+-------------------------------
+
+
+----------------------------------------------------------------------
+NET Name                  New PIN              Old PIN             
+
+----------------------------------------------------------------------
+a10                       PIN8                    PIN08                  
+bank<6>                   PIN6                    PIN06                  
+bank<7>                   PIN7                    PIN07                  
+cas0                      PIN2                    PIN02                  
+cas1                      PIN4                    PIN04                  
+cas2                      PIN9                    PIN09                  
+clk                       PIN5                    PIN05                  
+io7                       PIN1                    PIN01                  
+
+List of Errors and Warnings
+===========================
+
+
+ERROR:6
+
+   pin2ucf found that the UCF file for this design already have
+   some pin locking constraints. Since pin2ucf will not overwrite
+   user constraints, please check the UCF file and remove those
+   constraints before trying pin2ucf again. You could also delete
+   the UCF file before trying again. To get a listing of all
+   possible conflicts among constraints for this design please
+   check the pin2ucf report file: cpumodule.lck
+

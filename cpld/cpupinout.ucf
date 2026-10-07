@@ -1,4 +1,4 @@
-NET io7      	LOC = P01;
+NET io7      	LOC = FB2;
 NET cas0     	LOC = P02;			
 NET a15_13<2>	LOC = P03;
 NET cas1     	LOC = P04;

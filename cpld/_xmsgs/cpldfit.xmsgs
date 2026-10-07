@@ -8,5 +8,11 @@
 <msg type="warning" file="Cpld" num="0" delta="new" >Unable to retrieve the path to the iSE Project Repository. Will use the default filename of &apos;<arg fmt="%s" index="1">cpumodule.ise</arg>&apos;.
 </msg>
 
+<msg type="warning" file="Cpld" num="1007" delta="old" >Removing unused input(s) &apos;<arg fmt="%s" index="1">vda</arg>&apos;.  The input(s) are unused after optimization. Please verify functionality via simulation.
+</msg>
+
+<msg type="warning" file="Cpld" num="1007" delta="old" >Removing unused input(s) &apos;<arg fmt="%s" index="1">vpa</arg>&apos;.  The input(s) are unused after optimization. Please verify functionality via simulation.
+</msg>
+
 </messages>
 

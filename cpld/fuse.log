@@ -1,20 +1,44 @@
-Running: C:\Xilinx\14.7\ISE_DS\ISE\bin\nt64\unwrapped\fuse.exe -intstyle ise -o C:/github/RS65816/RS65816/cpumoduleTest_isim_beh.exe -prj C:/github/RS65816/RS65816/cpumoduleTest_beh.prj work.cpumoduleTest 
+Running: C:\Xilinx\14.7\ISE_DS\ISE\bin\nt64\unwrapped\fuse.exe -intstyle ise -o C:/github/RS65816/cpld/cpumoduleTest_isim_fit.exe -prj C:/github/RS65816/cpld/cpumoduleTest_fit.prj work.cpumoduleTest 
 ISim P.20131013 (signature 0x7708f090)
 Number of CPUs detected in this system: 12
 Turning on mult-threading, number of parallel sub-compilation jobs: 24 
 Determining compilation order of HDL files
-Parsing VHDL file "C:/github/RS65816/RS65816/cpumodule.vhd" into library work
-Parsing VHDL file "C:/github/RS65816/RS65816/cpumoduleTest.vhd" into library work
+Parsing VHDL file "C:/github/RS65816/cpld/netgen/fit/cpumodule_timesim.vhd" into library work
+Parsing VHDL file "C:/github/RS65816/cpld/cpumoduleTest.vhd" into library work
 Starting static elaboration
 Completed static elaboration
 Compiling package standard
 Compiling package std_logic_1164
-Compiling package std_logic_arith
-Compiling package std_logic_unsigned
-Compiling architecture behavioral of entity cpumodule [cpumodule_default]
+Compiling package textio
+Compiling package vital_timing
+Compiling package vcomponents
+Compiling package vital_primitives
+Compiling package vpackage
+Compiling architecture x_buf_v of entity X_BUF [\X_BUF(true,true,"UNPLACED",(0,0...]
+Compiling architecture x_inv_v of entity X_INV [\X_INV(true,true,"UNPLACED",(0,0...]
+Compiling architecture x_xor2_v of entity X_XOR2 [\X_XOR2(true,true,"UNPLACED",(0,...]
+Compiling architecture x_ff_v of entity X_FF [\X_FF(true,true,true,"UNPLACED",...]
+Compiling architecture x_zero_v of entity X_ZERO [\X_ZERO("UNPLACED")(1,8)\]
+Compiling architecture x_one_v of entity X_ONE [\X_ONE("UNPLACED")(1,8)\]
+Compiling architecture x_and4_v of entity X_AND4 [\X_AND4(true,true,"UNPLACED",(0,...]
+Compiling architecture x_and16_v of entity X_AND16 [\X_AND16(true,true,"UNPLACED",(0...]
+Compiling architecture x_or2_v of entity X_OR2 [\X_OR2(true,true,"UNPLACED",(0,0...]
+Compiling architecture x_and2_v of entity X_AND2 [\X_AND2(true,true,"UNPLACED",(0,...]
+Compiling architecture x_and3_v of entity X_AND3 [\X_AND3(true,true,"UNPLACED",(0,...]
+Compiling architecture x_or6_v of entity X_OR6 [\X_OR6(true,true,"UNPLACED",(0,0...]
+Compiling architecture x_or7_v of entity X_OR7 [\X_OR7(true,true,"UNPLACED",(0,0...]
+Compiling architecture x_and7_v of entity X_AND7 [\X_AND7(true,true,"UNPLACED",(0,...]
+Compiling architecture x_and32_v of entity X_AND32 [\X_AND32(true,true,"UNPLACED",(0...]
+Compiling architecture x_or4_v of entity X_OR4 [\X_OR4(true,true,"UNPLACED",(0,0...]
+Compiling architecture x_and5_v of entity X_AND5 [\X_AND5(true,true,"UNPLACED",(0,...]
+Compiling architecture x_or5_v of entity X_OR5 [\X_OR5(true,true,"UNPLACED",(0,0...]
+Compiling architecture x_and6_v of entity X_AND6 [\X_AND6(true,true,"UNPLACED",(0,...]
+Compiling architecture x_and8_v of entity X_AND8 [\X_AND8(true,true,"UNPLACED",(0,...]
+Compiling architecture x_roc_v of entity X_ROC [\X_ROC("UNPLACED",100000,"*")(1,...]
+Compiling architecture structure of entity cpumodule [cpumodule_default]
 Compiling architecture behavior of entity cpumoduletest
 Time Resolution for simulation is 1ps.
-Compiled 7 VHDL Units
-Built simulation executable C:/github/RS65816/RS65816/cpumoduleTest_isim_beh.exe
-Fuse Memory Usage: 41104 KB
-Fuse CPU Usage: 421 ms
+Compiled 54 VHDL Units
+Built simulation executable C:/github/RS65816/cpld/cpumoduleTest_isim_fit.exe
+Fuse Memory Usage: 97088 KB
+Fuse CPU Usage: 1421 ms

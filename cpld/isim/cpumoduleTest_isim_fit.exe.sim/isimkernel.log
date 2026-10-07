@@ -1,0 +1,12 @@
+Command line:
+   cpumoduleTest_isim_fit.exe
+     -simmode  gui
+     -sdfmax  /uut/=netgen/fit/cpumodule_timesim.sdf
+     -sdfroot  /uut
+     -simrunnum  0
+     -socket  59372
+
+Wed Sep 30 16:59:19 2026
+
+
+ Elaboration Time: 0.140625 sec

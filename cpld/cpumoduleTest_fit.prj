@@ -1,0 +1,2 @@
+vhdl work "netgen/fit/cpumodule_timesim.vhd"
+vhdl work "cpumoduleTest.vhd"

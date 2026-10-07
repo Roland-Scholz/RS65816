@@ -74,9 +74,8 @@ wysiwyg                            : NO
 =========================================================================
 *                          HDL Compilation                              *
 =========================================================================
-Compiling vhdl file "C:/github/RS65816/RS65816/cpumodule.vhd" in Library work.
-Entity <cpumodule> compiled.
-Entity <cpumodule> (Architecture <behavioral>) compiled.
+Compiling vhdl file "C:/github/RS65816/cpld/cpumodule.vhd" in Library work.
+Architecture behavioral of Entity cpumodule is up to date.
 
 =========================================================================
 *                     Design Hierarchy Analysis                         *
@@ -98,8 +97,9 @@ Entity <cpumodule> analyzed. Unit <cpumodule> generated.
 Performing bidirectional port resolution...
 
 Synthesizing Unit <cpumodule>.
-    Related source file is "C:/github/RS65816/RS65816/cpumodule.vhd".
-WARNING:Xst:1780 - Signal <phi> is never used or assigned. This unconnected signal will be trimmed during the optimization process.
+    Related source file is "C:/github/RS65816/cpld/cpumodule.vhd".
+WARNING:Xst:647 - Input <vda> is never used. This port will be preserved and left unconnected if it belongs to a top-level block or it belongs to a sub-block and the hierarchy of this sub-block is preserved.
+WARNING:Xst:647 - Input <vpa> is never used. This port will be preserved and left unconnected if it belongs to a top-level block or it belongs to a sub-block and the hierarchy of this sub-block is preserved.
     Found 1-bit register for signal <ras>.
     Found 1-bit register for signal <cas0>.
     Found 1-bit register for signal <cas1>.
@@ -118,7 +118,7 @@ WARNING:Xst:1780 - Signal <phi> is never used or assigned. This unconnected sign
     Found 1-bit register for signal <phi1>.
     Found 3-bit up counter for signal <counter>.
     Found 3-bit register for signal <iocnt>.
-    Found 3-bit adder for signal <iocnt$addsub0000> created at line 162.
+    Found 3-bit adder for signal <iocnt$addsub0000> created at line 180.
     Found 8-bit down counter for signal <refcnt>.
     Summary:
 	inferred   2 Counter(s).
@@ -167,7 +167,7 @@ Macro Statistics
 
 Optimizing unit <cpumodule> ...
   implementation constraint: INIT=r	 : refcnt_4
-  implementation constraint: INIT=r	 : refcnt_7
+  implementation constraint: INIT=s	 : refcnt_7
   implementation constraint: INIT=r	 : refcnt_0
   implementation constraint: INIT=r	 : refcnt_3
   implementation constraint: INIT=s	 : io5
@@ -226,32 +226,33 @@ Design Statistics
 # IOs                              : 34
 
 Cell Usage :
-# BELS                             : 348
-#      AND2                        : 98
-#      AND3                        : 20
-#      AND4                        : 3
-#      AND8                        : 3
-#      INV                         : 145
-#      OR2                         : 51
-#      OR3                         : 12
-#      OR4                         : 4
+# BELS                             : 391
+#      AND2                        : 108
+#      AND3                        : 11
+#      AND4                        : 7
+#      AND5                        : 1
+#      AND8                        : 7
+#      INV                         : 175
+#      OR2                         : 55
+#      OR3                         : 3
+#      OR4                         : 12
 #      XOR2                        : 12
 # FlipFlops/Latches                : 30
 #      FD                          : 30
-# IO Buffers                       : 34
-#      IBUF                        : 18
+# IO Buffers                       : 32
+#      IBUF                        : 16
 #      OBUF                        : 16
 =========================================================================
 
 
 Total REAL time to Xst completion: 2.00 secs
-Total CPU time to Xst completion: 2.18 secs
+Total CPU time to Xst completion: 2.42 secs
  
 --> 
 
-Total memory usage is 4481828 kilobytes
+Total memory usage is 4482056 kilobytes
 
 Number of errors   :    0 (   0 filtered)
-Number of warnings :    1 (   0 filtered)
+Number of warnings :    2 (   0 filtered)
 Number of infos    :    0 (   0 filtered)
 
