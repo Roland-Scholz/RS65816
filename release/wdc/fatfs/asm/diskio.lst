@@ -1,0 +1,608 @@
+  Thu Sep 24 2026 22:23                                                                                                    Page 1
+
+
+                                               ***************************************
+                                               **      WDC 65C816 Macro Assembler   **
+                                               **                                   **
+                                               **     Version 3.49.1- Feb  6 2006    **
+                                               ***************************************
+
+     1                        ;:ts=8
+     2             00000001   R0	equ	1
+     3             00000005   R1	equ	5
+     4             00000009   R2	equ	9
+     5             0000000D   R3	equ	13
+     6                        ;/*-----------------------------------------------------------------------*/
+     7                        ;/* Low level disk I/O module SKELETON for FatFs     (C)ChaN, 2025        */
+     8                        ;/*-----------------------------------------------------------------------*/
+     9                        ;/* If a working storage control module is available, it should be        */
+    10                        ;/* attached to the FatFs via a glue function rather than modifying it.   */
+    11                        ;/* This is an example of glue functions to attach various exsisting      */
+    12                        ;/* storage control modules to the FatFs module with a defined API.       */
+    13                        ;/*-----------------------------------------------------------------------*/
+    14                        ;
+    15                        ;#include <stdio.h>
+    16                        ;#include "ff.h"			/* Basic definitions of FatFs */
+    17                        ;#include "diskio.h"		/* Declarations FatFs MAI */
+    18                        ;#include "misc.h"
+    19                        ;
+    20                        ;/* Example: Declarations of the platform and disk functions in the project */
+    21                        ;//#include "platform.h"
+    22                        ;//#include "storage.h"
+    23                        ;
+    24                        ;/* Example: Mapping of physical drive number for each drive */
+    25                        ;#define DEV_FLASH	0	/* Map FTL to physical drive 0 */
+    26                        ;#define DEV_MMC		1	/* Map MMC/SD card to physical drive 1 */
+    27                        ;#define DEV_USB		2	/* Map USB MSD to physical drive 2 */
+    28                        ;
+    29                        ;#define DEV_RAM		3
+    30                        ;
+    31                        ;/*-----------------------------------------------------------------------*/
+    32                        ;/* Get Drive Status                                                      */
+    33                        ;/*-----------------------------------------------------------------------*/
+    34                        ;
+    35                        ;DSTATUS disk_status (
+    36                        ;	BYTE pdrv		/* Physical drive nmuber to identify the drive */
+    37                        ;)
+    38                        ;{
+    39                        	code
+    40                        	xdef	_~disk_status
+    41                        	func
+    42                        _~disk_status:
+    43                        	longa	on
+    44                        	longi	on
+    45 00:0000: 3B           	tsc
+    46 00:0001: 38           	sec
+    47 00:0002: E9 03 00     	sbc	#L2
+    48 00:0005: 1B           	tcs
+    49 00:0006: 0B           	phd
+    50 00:0007: 5B           	tcd
+    51             00000003   pdrv_0	set	3
+    52                        ;	DSTATUS stat;
+  Thu Sep 24 2026 22:23                                                                                                    Page 2
+
+
+    53                        ;	int result;
+    54                        ;
+    55                        ;	printf("disk_status 0x%02x\n", pdrv);
+    56             00000000   stat_1	set	0
+    57             00000001   result_1	set	1
+    58 00:0008: A5 06        	lda	<L2+pdrv_0
+    59 00:000A: 29 FF 00     	and	#$ff
+    60 00:000D: 48           	pha
+    61 00:000E: F4 xx xx     	pea	#^L1
+    62 00:0011: F4 xx xx     	pea	#<L1
+    63 00:0014: F4 08 00     	pea	#8
+    64 00:0017: 20 xx xx     	jsr	_~printf
+    65                        ;	
+    66                        ;	return RES_OK;
+    67 00:001A: A9 00 00     	lda	#$0
+    68 00:001D: A8           	tay
+    69 00:001E: A5 04        	lda	<L2+1
+    70 00:0020: 85 06        	sta	<L2+1+2
+    71 00:0022: 2B           	pld
+    72 00:0023: 3B           	tsc
+    73 00:0024: 18           	clc
+    74 00:0025: 69 05 00     	adc	#L2+2
+    75 00:0028: 1B           	tcs
+    76 00:0029: 98           	tya
+    77 00:002A: 60           	rts
+    78                        ;
+    79                        ;/*
+    80                        ;	switch (pdrv) {
+    81                        ;	case DEV_RAM :
+    82                        ;		result = RAM_disk_status();
+    83                        ;
+    84                        ;		// translate the reslut code here
+    85                        ;
+    86                        ;		return stat;
+    87                        ;
+    88                        ;	case DEV_MMC :
+    89                        ;		result = MMC_disk_status();
+    90                        ;
+    91                        ;		// translate the reslut code here
+    92                        ;
+    93                        ;		return stat;
+    94                        ;
+    95                        ;	case DEV_USB :
+    96                        ;		result = USB_disk_status();
+    97                        ;
+    98                        ;		// translate the reslut code here
+    99                        ;
+   100                        ;		return stat;
+   101                        ;	}
+   102                        ;	return STA_NOINIT;
+   103                        ;	*/
+   104                        ;}
+   105             00000003   L2	equ	3
+   106             00000001   L3	equ	1
+   107                        	ends
+   108                        	efunc
+   109                        	data
+   110                        L1:
+  Thu Sep 24 2026 22:23                                                                                                    Page 3
+
+
+   111 00:0000: 64 69 73 6B  	db	$64,$69,$73,$6B,$5F,$73,$74,$61,$74,$75,$73,$20,$30,$78,$25
+       00:0004: 5F 73 74 61 
+       00:0008: 74 75 73 20 
+       00:000C: 30 78 25 
+   112 00:000F: 30 32 78 0A  	db	$30,$32,$78,$0A,$00
+       00:0013: 00 
+   113 00:0014:              	ends
+   114                        ;
+   115                        ;
+   116                        ;
+   117                        ;/*-----------------------------------------------------------------------*/
+   118                        ;/* Inidialize a Drive                                                    */
+   119                        ;/*-----------------------------------------------------------------------*/
+   120                        ;
+   121                        ;DSTATUS disk_initialize (
+   122                        ;	BYTE pdrv				/* Physical drive nmuber to identify the drive */
+   123                        ;)
+   124                        ;{
+   125                        	code
+   126                        	xdef	_~disk_initialize
+   127                        	func
+   128                        _~disk_initialize:
+   129                        	longa	on
+   130                        	longi	on
+   131 00:002B: 3B           	tsc
+   132 00:002C: 38           	sec
+   133 00:002D: E9 0B 00     	sbc	#L6
+   134 00:0030: 1B           	tcs
+   135 00:0031: 0B           	phd
+   136 00:0032: 5B           	tcd
+   137             00000003   pdrv_0	set	3
+   138                        ;	DSTATUS stat;
+   139                        ;	int result;
+   140                        ;	FILE *fin;
+   141                        ;	char *image;
+   142                        ;	
+   143                        ;	//fin = fopen("..\\res\sd32.img", "rwb");
+   144                        ;	if (fin) {
+   145             00000000   stat_1	set	0
+   146             00000001   result_1	set	1
+   147             00000003   fin_1	set	3
+   148             00000007   image_1	set	7
+   149 00:0033: A5 04        	lda	<L7+fin_1
+   150 00:0035: 05 06        	ora	<L7+fin_1+2
+   151 00:0037: F0 0D        	beq	L10001
+   152                        ;		image = (char *)farmalloc(32*1024*1024);
+   153 00:0039: F4 00 00     	pea	#^$0
+   154 00:003C: F4 00 00     	pea	#<$0
+   155 00:003F: 20 xx xx     	jsr	_~farmalloc
+   156 00:0042: 85 08        	sta	<L7+image_1
+   157 00:0044: 86 0A        	stx	<L7+image_1+2
+   158                        ;	}
+   159                        ;	
+   160                        ;	printf("disk_initialize 0x%02x\n", pdrv);
+   161                        L10001:
+   162 00:0046: A5 0E        	lda	<L6+pdrv_0
+   163 00:0048: 29 FF 00     	and	#$ff
+   164 00:004B: 48           	pha
+  Thu Sep 24 2026 22:23                                                                                                    Page 4
+
+
+   165 00:004C: F4 xx xx     	pea	#^L5
+   166 00:004F: F4 xx xx     	pea	#<L5
+   167 00:0052: F4 08 00     	pea	#8
+   168 00:0055: 20 xx xx     	jsr	_~printf
+   169                        ;	
+   170                        ;	
+   171                        ;	return RES_OK;
+   172 00:0058: A9 00 00     	lda	#$0
+   173 00:005B: A8           	tay
+   174 00:005C: A5 0C        	lda	<L6+1
+   175 00:005E: 85 0E        	sta	<L6+1+2
+   176 00:0060: 2B           	pld
+   177 00:0061: 3B           	tsc
+   178 00:0062: 18           	clc
+   179 00:0063: 69 0D 00     	adc	#L6+2
+   180 00:0066: 1B           	tcs
+   181 00:0067: 98           	tya
+   182 00:0068: 60           	rts
+   183                        ;/*
+   184                        ;	switch (pdrv) {
+   185                        ;	case DEV_RAM :
+   186                        ;		result = RAM_disk_initialize();
+   187                        ;
+   188                        ;		// translate the reslut code here
+   189                        ;
+   190                        ;		return stat;
+   191                        ;
+   192                        ;	case DEV_MMC :
+   193                        ;		result = MMC_disk_initialize();
+   194                        ;
+   195                        ;		// translate the reslut code here
+   196                        ;
+   197                        ;		return stat;
+   198                        ;
+   199                        ;	case DEV_USB :
+   200                        ;		result = USB_disk_initialize();
+   201                        ;
+   202                        ;		// translate the reslut code here
+   203                        ;
+   204                        ;		return stat;
+   205                        ;	}
+   206                        ;	return STA_NOINIT;
+   207                        ;*/
+   208                        ;}
+   209             0000000B   L6	equ	11
+   210             00000001   L7	equ	1
+   211                        	ends
+   212                        	efunc
+   213                        	data
+   214                        L5:
+   215 00:0014: 64 69 73 6B  	db	$64,$69,$73,$6B,$5F,$69,$6E,$69,$74,$69,$61,$6C,$69,$7A,$65
+       00:0018: 5F 69 6E 69 
+       00:001C: 74 69 61 6C 
+       00:0020: 69 7A 65 
+   216 00:0023: 20 30 78 25  	db	$20,$30,$78,$25,$30,$32,$78,$0A,$00
+       00:0027: 30 32 78 0A 
+       00:002B: 00 
+   217 00:002C:              	ends
+  Thu Sep 24 2026 22:23                                                                                                    Page 5
+
+
+   218                        ;
+   219                        ;
+   220                        ;
+   221                        ;/*-----------------------------------------------------------------------*/
+   222                        ;/* Read Sector(s)                                                        */
+   223                        ;/*-----------------------------------------------------------------------*/
+   224                        ;
+   225                        ;DRESULT disk_read (
+   226                        ;	BYTE pdrv,		/* Physical drive nmuber to identify the drive */
+   227                        ;	BYTE *buff,		/* Data buffer to store read data */
+   228                        ;	LBA_t sector,	/* Start sector in LBA */
+   229                        ;	UINT count		/* Number of sectors to read */
+   230                        ;)
+   231                        ;{
+   232                        	code
+   233                        	xdef	_~disk_read
+   234                        	func
+   235                        _~disk_read:
+   236                        	longa	on
+   237                        	longi	on
+   238 00:0069: 3B           	tsc
+   239 00:006A: 38           	sec
+   240 00:006B: E9 04 00     	sbc	#L11
+   241 00:006E: 1B           	tcs
+   242 00:006F: 0B           	phd
+   243 00:0070: 5B           	tcd
+   244             00000003   pdrv_0	set	3
+   245             00000005   buff_0	set	5
+   246             00000009   sector_0	set	9
+   247             0000000D   count_0	set	13
+   248                        ;	DRESULT res;
+   249                        ;	int result;
+   250                        ;
+   251                        ;	printf("disk_read 0x%02x, buffer:%p, sector:%p, count:0x%04x\n", pdrv, buff, sector, count);
+   252             00000000   res_1	set	0
+   253             00000002   result_1	set	2
+   254 00:0071: D4 11        	pei	<L11+count_0
+   255 00:0073: D4 0F        	pei	<L11+sector_0+2
+   256 00:0075: D4 0D        	pei	<L11+sector_0
+   257 00:0077: D4 0B        	pei	<L11+buff_0+2
+   258 00:0079: D4 09        	pei	<L11+buff_0
+   259 00:007B: A5 07        	lda	<L11+pdrv_0
+   260 00:007D: 29 FF 00     	and	#$ff
+   261 00:0080: 48           	pha
+   262 00:0081: F4 xx xx     	pea	#^L10
+   263 00:0084: F4 xx xx     	pea	#<L10
+   264 00:0087: F4 12 00     	pea	#18
+   265 00:008A: 20 xx xx     	jsr	_~printf
+   266                        ;	
+   267                        ;	return RES_OK;
+   268 00:008D: A9 00 00     	lda	#$0
+   269 00:0090: A8           	tay
+   270 00:0091: A5 05        	lda	<L11+1
+   271 00:0093: 85 11        	sta	<L11+1+12
+   272 00:0095: 2B           	pld
+   273 00:0096: 3B           	tsc
+   274 00:0097: 18           	clc
+   275 00:0098: 69 10 00     	adc	#L11+12
+  Thu Sep 24 2026 22:23                                                                                                    Page 6
+
+
+   276 00:009B: 1B           	tcs
+   277 00:009C: 98           	tya
+   278 00:009D: 60           	rts
+   279                        ;	/*
+   280                        ;	switch (pdrv) {
+   281                        ;	case DEV_RAM :
+   282                        ;		// translate the arguments here
+   283                        ;
+   284                        ;		result = RAM_disk_read(buff, sector, count);
+   285                        ;
+   286                        ;		// translate the reslut code here
+   287                        ;
+   288                        ;		return res;
+   289                        ;
+   290                        ;	case DEV_MMC :
+   291                        ;		// translate the arguments here
+   292                        ;
+   293                        ;		result = MMC_disk_read(buff, sector, count);
+   294                        ;
+   295                        ;		// translate the reslut code here
+   296                        ;
+   297                        ;		return res;
+   298                        ;
+   299                        ;	case DEV_USB :
+   300                        ;		// translate the arguments here
+   301                        ;
+   302                        ;		result = USB_disk_read(buff, sector, count);
+   303                        ;
+   304                        ;		// translate the reslut code here
+   305                        ;
+   306                        ;		return res;
+   307                        ;	}
+   308                        ;
+   309                        ;	return RES_PARERR;
+   310                        ;	*/
+   311                        ;}
+   312             00000004   L11	equ	4
+   313             00000001   L12	equ	1
+   314                        	ends
+   315                        	efunc
+   316                        	data
+   317                        L10:
+   318 00:002C: 64 69 73 6B  	db	$64,$69,$73,$6B,$5F,$72,$65,$61,$64,$20,$30,$78,$25,$30,$32
+       00:0030: 5F 72 65 61 
+       00:0034: 64 20 30 78 
+       00:0038: 25 30 32 
+   319 00:003B: 78 2C 20 62  	db	$78,$2C,$20,$62,$75,$66,$66,$65,$72,$3A,$25,$70,$2C,$20,$73
+       00:003F: 75 66 66 65 
+       00:0043: 72 3A 25 70 
+       00:0047: 2C 20 73 
+   320 00:004A: 65 63 74 6F  	db	$65,$63,$74,$6F,$72,$3A,$25,$70,$2C,$20,$63,$6F,$75,$6E,$74
+       00:004E: 72 3A 25 70 
+       00:0052: 2C 20 63 6F 
+       00:0056: 75 6E 74 
+   321 00:0059: 3A 30 78 25  	db	$3A,$30,$78,$25,$30,$34,$78,$0A,$00
+       00:005D: 30 34 78 0A 
+       00:0061: 00 
+   322 00:0062:              	ends
+  Thu Sep 24 2026 22:23                                                                                                    Page 7
+
+
+   323                        ;
+   324                        ;
+   325                        ;
+   326                        ;/*-----------------------------------------------------------------------*/
+   327                        ;/* Write Sector(s)                                                       */
+   328                        ;/*-----------------------------------------------------------------------*/
+   329                        ;
+   330                        ;#if FF_FS_READONLY == 0
+   331                        ;
+   332                        ;DRESULT disk_write (
+   333                        ;	BYTE pdrv,			/* Physical drive nmuber to identify the drive */
+   334                        ;	const BYTE *buff,	/* Data to be written */
+   335                        ;	LBA_t sector,		/* Start sector in LBA */
+   336                        ;	UINT count			/* Number of sectors to write */
+   337                        ;)
+   338                        ;{
+   339                        	code
+   340                        	xdef	_~disk_write
+   341                        	func
+   342                        _~disk_write:
+   343                        	longa	on
+   344                        	longi	on
+   345 00:009E: 3B           	tsc
+   346 00:009F: 38           	sec
+   347 00:00A0: E9 04 00     	sbc	#L15
+   348 00:00A3: 1B           	tcs
+   349 00:00A4: 0B           	phd
+   350 00:00A5: 5B           	tcd
+   351             00000003   pdrv_0	set	3
+   352             00000005   buff_0	set	5
+   353             00000009   sector_0	set	9
+   354             0000000D   count_0	set	13
+   355                        ;	DRESULT res;
+   356                        ;	int result;
+   357                        ;	
+   358                        ;	printf("disk_write 0x%02x, buffer:%p, sector:%p, count:0x%04x\n", pdrv, buff, sector, count);
+   359             00000000   res_1	set	0
+   360             00000002   result_1	set	2
+   361 00:00A6: D4 11        	pei	<L15+count_0
+   362 00:00A8: D4 0F        	pei	<L15+sector_0+2
+   363 00:00AA: D4 0D        	pei	<L15+sector_0
+   364 00:00AC: D4 0B        	pei	<L15+buff_0+2
+   365 00:00AE: D4 09        	pei	<L15+buff_0
+   366 00:00B0: A5 07        	lda	<L15+pdrv_0
+   367 00:00B2: 29 FF 00     	and	#$ff
+   368 00:00B5: 48           	pha
+   369 00:00B6: F4 xx xx     	pea	#^L14
+   370 00:00B9: F4 xx xx     	pea	#<L14
+   371 00:00BC: F4 12 00     	pea	#18
+   372 00:00BF: 20 xx xx     	jsr	_~printf
+   373                        ;	
+   374                        ;	return RES_OK;
+   375 00:00C2: A9 00 00     	lda	#$0
+   376 00:00C5: A8           	tay
+   377 00:00C6: A5 05        	lda	<L15+1
+   378 00:00C8: 85 11        	sta	<L15+1+12
+   379 00:00CA: 2B           	pld
+   380 00:00CB: 3B           	tsc
+  Thu Sep 24 2026 22:23                                                                                                    Page 8
+
+
+   381 00:00CC: 18           	clc
+   382 00:00CD: 69 10 00     	adc	#L15+12
+   383 00:00D0: 1B           	tcs
+   384 00:00D1: 98           	tya
+   385 00:00D2: 60           	rts
+   386                        ;
+   387                        ;/*
+   388                        ;	switch (pdrv) {
+   389                        ;	case DEV_RAM :
+   390                        ;		// translate the arguments here
+   391                        ;
+   392                        ;		result = RAM_disk_write(buff, sector, count);
+   393                        ;
+   394                        ;		// translate the reslut code here
+   395                        ;
+   396                        ;		return res;
+   397                        ;
+   398                        ;	case DEV_MMC :
+   399                        ;		// translate the arguments here
+   400                        ;
+   401                        ;		result = MMC_disk_write(buff, sector, count);
+   402                        ;
+   403                        ;		// translate the reslut code here
+   404                        ;
+   405                        ;		return res;
+   406                        ;
+   407                        ;	case DEV_USB :
+   408                        ;		// translate the arguments here
+   409                        ;
+   410                        ;		result = USB_disk_write(buff, sector, count);
+   411                        ;
+   412                        ;		// translate the reslut code here
+   413                        ;
+   414                        ;		return res;
+   415                        ;	}
+   416                        ;
+   417                        ;	return RES_PARERR;
+   418                        ;*/
+   419                        ;}
+   420             00000004   L15	equ	4
+   421             00000001   L16	equ	1
+   422                        	ends
+   423                        	efunc
+   424                        	data
+   425                        L14:
+   426 00:0062: 64 69 73 6B  	db	$64,$69,$73,$6B,$5F,$77,$72,$69,$74,$65,$20,$30,$78,$25,$30
+       00:0066: 5F 77 72 69 
+       00:006A: 74 65 20 30 
+       00:006E: 78 25 30 
+   427 00:0071: 32 78 2C 20  	db	$32,$78,$2C,$20,$62,$75,$66,$66,$65,$72,$3A,$25,$70,$2C,$20
+       00:0075: 62 75 66 66 
+       00:0079: 65 72 3A 25 
+       00:007D: 70 2C 20 
+   428 00:0080: 73 65 63 74  	db	$73,$65,$63,$74,$6F,$72,$3A,$25,$70,$2C,$20,$63,$6F,$75,$6E
+       00:0084: 6F 72 3A 25 
+       00:0088: 70 2C 20 63 
+       00:008C: 6F 75 6E 
+   429 00:008F: 74 3A 30 78  	db	$74,$3A,$30,$78,$25,$30,$34,$78,$0A,$00
+  Thu Sep 24 2026 22:23                                                                                                    Page 9
+
+
+       00:0093: 25 30 34 78 
+       00:0097: 0A 00 
+   430 00:0099:              	ends
+   431                        ;
+   432                        ;#endif
+   433                        ;
+   434                        ;
+   435                        ;/*-----------------------------------------------------------------------*/
+   436                        ;/* Miscellaneous Functions                                               */
+   437                        ;/*-----------------------------------------------------------------------*/
+   438                        ;
+   439                        ;DRESULT disk_ioctl (
+   440                        ;	BYTE pdrv,		/* Physical drive nmuber (0..) */
+   441                        ;	BYTE cmd,		/* Control code */
+   442                        ;	void *buff		/* Buffer to send/receive control data */
+   443                        ;)
+   444                        ;{
+   445                        	code
+   446                        	xdef	_~disk_ioctl
+   447                        	func
+   448                        _~disk_ioctl:
+   449                        	longa	on
+   450                        	longi	on
+   451 00:00D3: 3B           	tsc
+   452 00:00D4: 38           	sec
+   453 00:00D5: E9 04 00     	sbc	#L19
+   454 00:00D8: 1B           	tcs
+   455 00:00D9: 0B           	phd
+   456 00:00DA: 5B           	tcd
+   457             00000003   pdrv_0	set	3
+   458             00000005   cmd_0	set	5
+   459             00000007   buff_0	set	7
+   460                        ;	DRESULT res;
+   461                        ;	int result;
+   462                        ;
+   463                        ;	printf("disk_ioctl 0x%02x, cmd:0x%02x, buffer:%p \n", pdrv, cmd, buff);
+   464             00000000   res_1	set	0
+   465             00000002   result_1	set	2
+   466 00:00DB: D4 0D        	pei	<L19+buff_0+2
+   467 00:00DD: D4 0B        	pei	<L19+buff_0
+   468 00:00DF: A5 09        	lda	<L19+cmd_0
+   469 00:00E1: 29 FF 00     	and	#$ff
+   470 00:00E4: 48           	pha
+   471 00:00E5: A5 07        	lda	<L19+pdrv_0
+   472 00:00E7: 29 FF 00     	and	#$ff
+   473 00:00EA: 48           	pha
+   474 00:00EB: F4 xx xx     	pea	#^L18
+   475 00:00EE: F4 xx xx     	pea	#<L18
+   476 00:00F1: F4 0E 00     	pea	#14
+   477 00:00F4: 20 xx xx     	jsr	_~printf
+   478                        ;	
+   479                        ;	return RES_OK;
+   480 00:00F7: A9 00 00     	lda	#$0
+   481 00:00FA: A8           	tay
+   482 00:00FB: A5 05        	lda	<L19+1
+   483 00:00FD: 85 0D        	sta	<L19+1+8
+   484 00:00FF: 2B           	pld
+   485 00:0100: 3B           	tsc
+  Thu Sep 24 2026 22:23                                                                                                    Page 10
+
+
+   486 00:0101: 18           	clc
+   487 00:0102: 69 0C 00     	adc	#L19+8
+   488 00:0105: 1B           	tcs
+   489 00:0106: 98           	tya
+   490 00:0107: 60           	rts
+   491                        ;/*
+   492                        ;	switch (pdrv) {
+   493                        ;	case DEV_RAM :
+   494                        ;
+   495                        ;		// Process of the command for the RAM drive
+   496                        ;
+   497                        ;		return res;
+   498                        ;
+   499                        ;	case DEV_MMC :
+   500                        ;
+   501                        ;		// Process of the command for the MMC/SD card
+   502                        ;
+   503                        ;		return res;
+   504                        ;
+   505                        ;	case DEV_USB :
+   506                        ;
+   507                        ;		// Process of the command the USB drive
+   508                        ;
+   509                        ;		return res;
+   510                        ;	}
+   511                        ;
+   512                        ;	return RES_PARERR;
+   513                        ;*/
+   514                        ;}
+   515             00000004   L19	equ	4
+   516             00000001   L20	equ	1
+   517                        	ends
+   518                        	efunc
+   519                        	data
+   520                        L18:
+   521 00:0099: 64 69 73 6B  	db	$64,$69,$73,$6B,$5F,$69,$6F,$63,$74,$6C,$20,$30,$78,$25,$30
+       00:009D: 5F 69 6F 63 
+       00:00A1: 74 6C 20 30 
+       00:00A5: 78 25 30 
+   522 00:00A8: 32 78 2C 20  	db	$32,$78,$2C,$20,$63,$6D,$64,$3A,$30,$78,$25,$30,$32,$78,$2C
+       00:00AC: 63 6D 64 3A 
+       00:00B0: 30 78 25 30 
+       00:00B4: 32 78 2C 
+   523 00:00B7: 20 62 75 66  	db	$20,$62,$75,$66,$66,$65,$72,$3A,$25,$70,$20,$0A,$00
+       00:00BB: 66 65 72 3A 
+       00:00BF: 25 70 20 0A 
+       00:00C3: 00 
+   524 00:00C4:              	ends
+   525                        ;
+   526                        ;
+   527                        	xref	_~farmalloc
+   528                        	xref	_~printf
+
+
+      Lines assembled: 528
+      Errors: 0

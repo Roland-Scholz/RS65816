@@ -1,0 +1,60 @@
+  Tue Oct  6 2026 15:25                                                                                                    Page 1
+
+
+                                               ***************************************
+                                               **      WDC 65C816 Macro Assembler   **
+                                               **                                   **
+                                               **     Version 3.49.1- Feb  6 2006    **
+                                               ***************************************
+
+     1                        ;		.include "homebrew.inc"
+     2                        
+     3                        ;00FFE4 00FFF4 COP
+     4                        ;00FFE6 00FFFE BRK
+     5                        ;00FFE8 00FFF8 ABORT
+     6                        ;00FFEA 00FFFA NMI
+     7                        ;       00FFFC RESET
+     8                        ;00FFEE 00FFFE IRQ
+     9                        
+    10                        		EXTERNS ON
+    11                        		
+    12                        		
+    13                        STARTUP 	SECTION OFFSET $FFE4		
+    14                        
+    15                        ;		.word jcopn	;00FFE4		COP
+    16                        ;		.word jbrk      ;00FFE6		BRK
+    17                        ;		.word jabortn	;00FFE8		ABORT
+    18                        ;		.word jnmin     ;00FFEA		NMI
+    19                        ;		.word 0		;		RESET
+    20                        ;		.word jirqn     ;00FFEE		IRQ
+    21                        ;		
+    22                        ;		.word 0
+    23                        ;		.word 0
+    24                        ;		
+    25                        ;		.word jcope	;00FFF4 	COP
+    26                        ;		.word 0         ;
+    27                        ;		.word jaborte   ;00FFF8 	ABORT 
+    28                        ;		.word jnmie     ;00FFFA 	NMI 
+    29                        ;		.word jkernel   ;00FFFC 	RESET 
+    30                        ;		.word jirqe     ;00FFFE 	IRQ 
+    31                        		
+    32                        
+    33 00:FFE4: 00 00        		dw 0
+    34 00:FFE6: 00 00        		dw 0
+    35 00:FFE8: 00 00        		dw 0
+    36 00:FFEA: 00 00        		dw 0
+    37 00:FFEC: 00 00        		dw 0
+    38 00:FFEE: 00 00        		dw 0
+    39 00:FFF0: 00 00        		dw 0
+    40 00:FFF2: 00 00        		dw 0
+    41 00:FFF4: 00 00        		dw 0
+    42 00:FFF6: 00 00        		dw 0
+    43 00:FFF8: 00 00        		dw 0
+    44 00:FFFA: 00 00        		dw 0
+    45 00:FFFC: xx xx        		dw kernel
+    46 00:FFFE: 00 00        		dw 0
+    47                        		
+
+
+      Lines assembled: 47
+      Errors: 0

@@ -1,0 +1,1976 @@
+  Tue Oct  6 2026 15:25                                                                                                    Page 1
+
+
+                                               ***************************************
+                                               **      WDC 65C816 Macro Assembler   **
+                                               **                                   **
+                                               **     Version 3.49.1- Feb  6 2006    **
+                                               ***************************************
+
+     1                        		INCLUDE ..\src\equations.asm
+     2                        
+     3                        		XREF	newline
+     4                        		XREF	space
+     5                        		XREF	printhex
+     6                        		XREF	chrout
+     7                        		XREF	chrin
+     8                        		
+     9                        		XDEF	disass8
+    10                        		XDEF	disass16
+    11                        
+    12                        ; ***********************************************
+    13                        ; *                                             *
+    14                        ; *                 DEBUG16                     *
+    15                        ; *             A 65816 DEBUGGER                *
+    16                        ; *                                             *
+    17                        ; *                                             *
+    18                        ; ***********************************************
+    19                        		CODE
+    20                        		
+    21                        ; .ORG $A00
+    22             00000000   DIRPAGE		equ $0000          ; LOCATION OF THIS APPLICATION’S
+    23                         
+    24                        ; DIRECT PAGE STORAGE
+    25                        ; TRACE REGISTERS
+    26                        
+    27                        ; PCREG  = $80           ; PROGRAM COUNTER
+    28                        ; PCREGH = PCREG+1
+    29                        ; PCREGB = PCREGH+1      ; INCLUDING BANK
+    30                        
+    31                        ; NCODE = $8000 ;PCREGB+1       ; NEXT CODE TO BE TRACED
+    32                        ;
+    33                        ; OPCREG = NCODE+1       ; OLD PROGRAM COUNTER VALUE
+    34                        ; OPCREGH = OPCREG+1
+    35                        ; OPCREGB = OPCREGH+1
+    36                        ;
+    37                        ; CODE = OPCREGB+1       ; CURRENT CODE TO BE TRACED
+    38                        ;
+    39                        ; OPRNDL = CODE+1        ; OPERANDS OF CURRENT
+    40                        ; OPRNDH = OPRNDL+1      ; INSTRUCTION
+    41                        ; OPRNDB = OPRNDH+1
+    42                        
+    43                        ; XREG = OPRNDB+1        ; X REGISTER
+    44                        ; XREGH = XREG+1
+    45                        
+    46                        ; YREG = XREGH+1         ; Y REGISTER
+    47                        ; YREGH = YREG+1
+    48                        
+    49                        ; AREG = YREGH+1         ; ACCUMULATOR
+    50                        ; AREGH = AREG+1
+    51                        
+    52                        ; STACK = AREGH+1        ; STACK POINTER
+  Tue Oct  6 2026 15:25                                                                                                    Page 2
+
+
+    53                        ; STACKH = STACK+1
+    54                        
+    55                        ; DIRREG = STACKH+1      ; DIRECT PAGE REGISTER
+    56                        ; DIRREGH = DIRREG+1
+    57                        
+    58                        ; DBREG = DIRREGH+1      ; DATA BANK REGISTER
+    59                        
+    60                        ; PREG = DBREG+1         ; P STATUS REGISTER
+    61                        
+    62                        ; EBIT = PREG+1          ; E BIT
+    63                        
+    64                        ; TEMP = EBIT+2          ; TEMPORARY
+    65                        ; TEMPH = TEMP+1
+    66                        ; TEMPB = TEMPH+1
+    67                        
+    68                        ; ADDRMODE = TEMPB+1     ; ADDRESS MODE OF CURRENT OPCODE
+    69                        
+    70                        ; MNX = ADDRMODE+1       ; MNEMONIC INDEX
+    71                                                ; FROM ATTRIBUTE TABLE
+    72                        
+    73                        ; OPLEN = MNX+2          ; LENGTH OF OPERATION,
+    74                                                ; INCLUDING INSTRUCTION
+    75                        
+    76             0000000D   CR		equ	$0d              ; CARRIAGE RETURN
+    77                        
+    78                        ; M = $20                ; SYBOLIC NAMES FOR
+    79                        ; IX = $10               ; STATUS REGISTER BITS
+    80             00000001   C		equ	$01
+    81                                                ; DIRECT PAGE
+    82                        
+    83                        disass24:
+    84 00:0000: 08           		php
+    85 00:0001: 8B           		phb
+    86 00:0002: 0B           		phd
+    87                        		
+    88 00:0003: 4B           		phk
+    89 00:0004: AB           		plb
+    90                        		
+    91 00:0005: F4 00 00     		pea DIRPAGE
+    92 00:0008: 2B           		pld
+    93                        		
+    94 00:0009: E2 30        		sep #M+IX
+    95                        		longa off
+    96                        		longi off
+    97                        		
+    98 00:000B: 20 xx xx     		jsr disass16
+    99                        		
+   100 00:000E: 2B           		pld
+   101 00:000F: AB           		plb
+   102 00:0010: 28           		plp
+   103 00:0011: 6B           		rtl
+   104                        
+   105                        disass16:
+   106 00:0012: 64 08        		stz PREG
+   107 00:0014: 80 04        		bra disass
+   108                         
+   109                        disass8:
+   110                        
+  Tue Oct  6 2026 15:25                                                                                                    Page 3
+
+
+   111 00:0016: A9 30        		lda #$30
+   112 00:0018: 85 08        		sta PREG
+   113                        
+   114                        disass:
+   115                        
+   116                        ; Default entry point.
+   117                        ; Set address to dissemble as this program, the call LIST to disassemble.
+   118                        
+   119                        ; LDA #0
+   120                        ; STA EBIT
+   121                        ; LDA #CR                ; Print a newline so we start on a new line
+   122 00:001A: 20 xx xx      jsr newline
+   123                        ; LDA #<MAIN             ; Start disassembly at this program
+   124                        ; STA PCREG
+   125                        ; LDA #>MAIN
+   126                        ; STA PCREGH
+   127                        ; STZ PCREGB             ; Set bank to zero
+   128                        ; JSR LIST              ; Call LIST to disassemble
+   129                        ; JSR TRACE              ; Call TRACE to trace
+   130                        ; RTS                    ; Return to caller
+   131                        
+   132                        ; ---------------------------------------L
+   133                        ;
+   134                        ; LIST
+   135                        ; MAIN LOOP OF DISASSEMBLER FUNCTION
+   136                        ;
+   137                        ; ---------------------------------------L
+   138                        
+   139                        LIST:
+   140                        DISSone:
+   141 00:001D: 08           		PHP                    ; SAVE ORIGINAL FLAGS
+   142                        TOP1:
+   143 00:001E: A9 16        		lda #22
+   144 00:0020: 85 04        		sta ADRCNT
+   145                        		
+   146                        		; CLC
+   147                        		; XCE                    ; SET NATIVE MODE
+   148                        		; PHP                    ; SAVE PREVIOUS MODE
+   149                        		
+   150                        		; PHD                    ; SAVE CURRENT DP
+   151                        		; PEA DPAGE
+   152                        		; PLD                    ; SET TO NEW DP
+   153                        
+   154                        TOP:            ; ANOP
+   155                        
+   156                        		A16
++  156 00:0022: C2 20        		rep	#ACC
++  156                        		longa	on
+   157                        		I8
++  157 00:0024: E2 10        		sep	#IX
++  157                        		longi	off
+   158                        		
+   159 00:0026: 64 17        		STZ MNX                ; CLEAR MNEMONIC INDEX
+   160 00:0028: A5 03        		LDA PCREG              ; MOVE PROGRAM COUNTER
+   161 00:002A: 85 0C        		STA OPCREG             ; TO ‘OLD PROGRAM COUNTER’
+   162 00:002C: A6 05        		LDX PCREGB             ; INCLUDING BANK
+   163 00:002E: 86 0E        		STX OPCREGB
+   164 00:0030: A7 03        		LDA [PCREG]            ; GET NEXT INSTRUCTION
+  Tue Oct  6 2026 15:25                                                                                                    Page 4
+
+
+   165 00:0032: AA           		TAX
+   166 00:0033: 86 0F        		STX CODE               ; SAVE AS ‘CODE’
+   167                        		
+   168 00:0035: 20 xx xx     		JSR UPDATE             ; UPDATE ATTRIBUTE VARIABLES
+   169 00:0038: 20 xx xx     		JSR FLIST              ; FORM OBJECT CODE, MNEMONIC
+   170 00:003B: 20 xx xx     		JSR FRMOPRND           ; FORM OPERAND FIELD
+   171                        		
+   172 00:003E: 20 xx xx     		jsr newline
+   173                        		; JSR PAUSE              ; CHECK FOR USER PAUSE
+   174                        		; BCC @QUIT
+   175                        		; BVC @PRINT
+   176 00:0041: C6 04        		dec ADRCNT
+   177 00:0043: D0 DD        		bne TOP
+   178                         
+   179                        ;@LOOP:
+   180                        ; JSR PAUSE
+   181                        		longa off
+   182 00:0045: 20 xx xx     		jsr chrin
+   183                        ; lda IRQPS2S		;key pressed?
+   184                        ; bne @LOOP		;no loop
+   185                         
+   186                        ; inc IRQPS2S		;reset key status
+   187                        ; lda IRQPS2D
+   188 00:0048: C9 9B        		cmp #ESC
+   189 00:004A: F0 06        		beq QUIT
+   190 00:004C: C9 78        		cmp #'x'
+   191 00:004E: F0 02        		beq QUIT
+   192                         
+   193                        ; BCC @QUIT
+   194                        ; BVC @LOOP
+   195                         
+   196                        ;PRINT:
+   197                        ; JSR PRINTLN            ; PRINT IT
+   198                        
+   199 00:0050: 80 CC        		BRA TOP1                ; LOOP TIL END
+   200                        
+   201                        QUIT:
+   202 00:0052: 28           		PLP
+   203 00:0053: 60           		RTS
+   204                         
+   205                        ; -------------------------------------------
+   206                        ;
+   207                        ; FLIST – FORM IMAGE OF PROGRAM COUNTER,
+   208                        ; OBJECT CODE, AND MNEMONIC IN ‘LINE’
+   209                        ;
+   210                        ; REQUIRES ATTRIBUTE VARIABLES TO BE PREVIOUSLY INITIALIZED
+   211                        ; -------------------------------------------
+   212                        ;
+   213                        
+   214                        FLIST:
+   215                        
+   216                        ;		JSR CLRLN              ; BLANK ‘LINE’ VARIABLE
+   217                        
+   218 00:0054: E2 30        		SEP #M+IX              ; SHORT REGISTERS
+   219                        		longa off
+   220                        		longi off
+   221                        
+   222                        ;		LDY #0
+  Tue Oct  6 2026 15:25                                                                                                    Page 5
+
+
+   223 00:0056: A5 0E        		LDA OPCREGB            ; GET BANK BYTE, FORM AS HEX
+   224 00:0058: 20 xx xx     		JSR printhex          ; STRING
+   225 00:005B: A9 3A        		LDA #':'               ; BANK DELIMITER
+   226                        ;		STA LINE,Y
+   227                        ;		INY
+   228 00:005D: 20 xx xx     		jsr chrout
+   229 00:0060: A5 0D        		LDA OPCREGH            ; GET BYTES OF PROGRAM COUNTER
+   230 00:0062: 20 xx xx     		JSR printhex             ; FORM AS HEX STRING IN
+   231 00:0065: A5 0C        		LDA OPCREG             ; LINE
+   232 00:0067: 20 xx xx     		JSR printhex
+   233 00:006A: 20 xx xx     		jsr space
+   234                        
+   235                        ;		LDY #10
+   236                        ;		LDA CODE               ; STORE OPCODE AS HEX STRING
+   237                        ;		JSR printhex
+   238 00:006D: A2 00        		LDX #0
+   239                        
+   240 00:006F: E4 19        MORE: 		CPX OPLEN         	; LIST OPERANDS, IF ANY
+   241 00:0071: 90 08        		bcc PRINTOP
+   242 00:0073: 20 xx xx     		jsr space
+   243 00:0076: 20 xx xx     		jsr space
+   244 00:0079: 80 05        		bra PRINTSPACE
+   245                        PRINTOP:
+   246 00:007B: B5 0F        		LDA OPRNDL-1,X
+   247 00:007D: 20 xx xx     		JSR printhex
+   248                        PRINTSPACE:
+   249 00:0080: 20 xx xx     		jsr space
+   250 00:0083: E8           		INX
+   251 00:0084: E0 04        		cpx #4
+   252 00:0086: D0 E7        		BNE MORE
+   253                        
+   254                        DONE:
+   255 00:0088: 20 xx xx     		jsr space
+   256 00:008B: C2 30        		REP #M+IX
+   257                        		longa on
+   258                        		longi on
+   259                        		
+   260 00:008D: A5 17        		LDA MNX                ; GET MNEMONIC INDEX,
+   261 00:008F: 0A           		ASL A                  ; MULTIPLY BY THREE
+   262 00:0090: 18           		CLC                    ; (TIMES TWO PLUS SELF)
+   263 00:0091: 65 17        		ADC MNX
+   264 00:0093: 18           		CLC
+   265 00:0094: 69 xx xx     		ADC #MN
+   266 00:0097: 85 13        		sta TEMP                   ; INDEX INTO MNEMONIC TABLE
+   267                        		
+   268 00:0099: E2 30        		sep #M+IX
+   269                        		longa off
+   270                        		longi off
+   271                         
+   272 00:009B: A0 00        		ldy #0
+   273                        MOVE:
+   274 00:009D: B1 13        		lda (TEMP),y
+   275 00:009F: 20 xx xx     		jsr chrout
+   276 00:00A2: C8           		iny
+   277 00:00A3: C0 03        		cpy #3
+   278 00:00A5: D0 F6        		bne MOVE
+   279                         
+   280                        		; LDY #LINE+20           ; COPY INTO ‘LINE’
+  Tue Oct  6 2026 15:25                                                                                                    Page 6
+
+
+   281                        		; LDA #2
+   282                        		;MOVE:
+   283                        		; MVN 0,0
+   284 00:00A7: 4C xx xx     		jmp space
+   285                        		
+   286                        		; RTS
+   287                        
+   288                        ; ---------------------------------------------
+   289                        ;
+   290                        ; FRMOPRND – –
+   291                        ; FORMS OPERAND FIELD OF DISASSEMBLED INSTRUCTION
+   292                        ;
+   293                        ; OPLEN, ADDRMODE, AND OPRND MUST HAVE BEEN
+   294                        ; INITIALIZED BY ‘UPDATE’
+   295                        ; ---------------------------------------------
+   296                        ;
+   297                        
+   298                        FRMOPRND:
+   299 00:00AA: E2 30        		SEP #M+IX
+   300                        		longa off
+   301                        		longi off
+   302                        		
+   303 00:00AC: A0 1C        		LDY #28			; OFF SET INTO ‘LINE’ FOR OPERAND
+   304                        					; TO BEGIN
+   305 00:00AE: A5 16        		LDA ADDRMODE 		; GET ADDRESS MODE, MULTIPLY BY
+   306 00:00B0: 0A           		ASL A        		; TWO, JUMP THROUGH ADDRESS
+   307 00:00B1: AA           		TAX          		; MODE JUMP TABLE TO PROPER
+   308 00:00B2: 7C xx xx     		JMP (MODES,X)		; HANDLER
+   309                        
+   310                        FIMM:					; IMMEDIATE MODE – –
+   311 00:00B5: A9 23        		LDA #'#'		; OUTPUT POUND SIGN,
+   312                        ;		STA LINE,Y		; ONE OR TWO
+   313                        ;		INY			; OPERAND BYTES, DEPENDING
+   314 00:00B7: 20 xx xx     		jsr chrout
+   315 00:00BA: A5 19        		LDA OPLEN		; ON OPLEN
+   316 00:00BC: C9 02        		CMP #2
+   317 00:00BE: F0 03        		BEQ GOSHORT
+   318 00:00C0: 4C xx xx     		JMP PODB
+   319 00:00C3: 4C xx xx     GOSHORT:	JMP POB
+   320                        
+   321                        FABS:                  			; ABSOLUTE MODE – –
+   322 00:00C6: 4C xx xx     		JMP PODB              	; JUST OUTPUT A DOUBLE BYTE
+   323                        
+   324                        FABSL:                  		; ABSOLUTE LONG – –
+   325 00:00C9: 4C xx xx     		JMP POTB		; OUTPUT A TRIPLE BYTE
+   326                        
+   327                        FDIR:                   		; DIRECT MODE – –
+   328 00:00CC: 4C xx xx     		JMP POB			; OUTPUT A SINGLE BYTE
+   329                        
+   330                        FACC:					; ACCUMULATOR – –
+   331 00:00CF: A9 41        		LDA #'A'		; JUST AN A
+   332                        ; STA LINE,Y
+   333 00:00D1: 4C xx xx     		jmp chrout
+   334                        ; RTS
+   335                        
+   336                        FIMP:                   		; IMPLIED – –
+   337 00:00D4: 60           		RTS                    	; NO OPERAND
+   338                        
+  Tue Oct  6 2026 15:25                                                                                                    Page 7
+
+
+   339                        FINDINX:                ; INDIRECT INDEXED – –
+   340 00:00D5: 20 xx xx      JSR FIND               ; CALL ‘INDIRECT’, THEN FALL
+   341                                                ; THROUGH TO INDEXED BY Y
+   342                        
+   343                        FINY:                   ; INDEXED BY Y MODES – –
+   344 00:00D8: A9 2C         LDA #','               ; TACK ON A ‘COMMA,Y'
+   345 00:00DA: 20 xx xx      jsr chrout
+   346                        ; STA LINE,Y
+   347                        ; INY
+   348 00:00DD: A9 59         LDA #'Y'
+   349                        ; STA LINE,Y
+   350 00:00DF: 4C xx xx      jmp chrout
+   351                        ; RTS
+   352                        
+   353                        FINDINXL:               ; INDIRECT INDEXED LONG – –
+   354 00:00E2: 20 xx xx      JSR FINDL              ; CALL ‘INDIRECT LONG', THEN
+   355 00:00E5: 4C xx xx      JMP FINY               ; EXIT THROUGH INDEXED BY Y
+   356                        
+   357                        FINXIND:                ; INDEX INDIRECT – –
+   358 00:00E8: A9 28         LDA #'('               ; PARENTHESIS
+   359                        ; STA LINE,Y
+   360                        ; INY
+   361 00:00EA: 20 xx xx      jsr chrout
+   362 00:00ED: 20 xx xx      JSR POB                ; A SINGLE BYTE – –
+   363 00:00F0: 20 xx xx      JSR FINX               ; COMMA, X
+   364 00:00F3: A9 29         LDA #')'               ; CLOSE.
+   365                        ; STA LINE,Y
+   366                        ; RTS
+   367 00:00F5: 4C xx xx      jmp chrout
+   368                         
+   369                        FDIRINXX:               ; DIRECT INDEXED BY X – –
+   370 00:00F8: 20 xx xx      JSR POB                ; OUTPUT A BYTE,
+   371 00:00FB: 4C xx xx      JMP FINX               ; TACK ON COMMA, X
+   372                        
+   373                        FDIRINXY:               ; DIRECT INDEXED BY Y – –
+   374 00:00FE: 20 xx xx      JSR POB                ; OUTPUT A BYTE,
+   375 00:0101: 4C xx xx      JMP FINY               ; TACK ON COMMA, Y
+   376                        
+   377                        FINX:                   ; INDEXED BY X – –
+   378 00:0104: A9 2C         LDA #','               ; TACK ON A
+   379 00:0106: 20 xx xx      jsr chrout
+   380                        ; STA LINE,Y             ; COMMA, X
+   381                        ; INY                    ; (USED BY SEVERAL
+   382 00:0109: A9 58         LDA #'X'               ; MODES)
+   383 00:010B: 4C xx xx      jmp chrout
+   384                        ; STA LINE,Y
+   385                        ; INY
+   386                        ; RTS
+   387                        
+   388                        FABSX:                  ; ABSOLUTE INDEXED BY X – –
+   389 00:010E: 20 xx xx      JSR PODB               ; OUTPUT A DOUBLE BYTE,
+   390 00:0111: 4C xx xx      JMP FINX               ; TACK ON A COMMA, X
+   391                        
+   392                        FABSLX:                 ; ABSOLUTE LONG BY X – –
+   393 00:0114: 20 xx xx      JSR POTB               ; OUTPUT A TRIPLE BYTE,
+   394 00:0117: 4C xx xx      JMP FINX               ; TACK ON COMMA, X
+   395                        
+   396                        FABSY:                  ; ABSOLUTE Y – –
+  Tue Oct  6 2026 15:25                                                                                                    Page 8
+
+
+   397 00:011A: 20 xx xx      JSR PODB               ; OUTPUT A DOUBLE BYTE,
+   398 00:011D: 4C xx xx      JMP FINY               ; TACK ON COMMA,Y
+   399                        
+   400                        FPCRL:
+   401                        FPCR:                   ; PROGRAM COUNTER RELATIVE – –
+   402 00:0120: A9 FF         LDA #$FF               ; SIGN EXTEND OPERAND
+   403 00:0122: EB            XBA
+   404 00:0123: A5 10         LDA OPRNDL
+   405 00:0125: C2 21         REP #M+C
+   406                         longa on
+   407 00:0127: 30 03         BMI OK
+   408 00:0129: 29 7F 00      AND #$7F
+   409 00:012C: 65 0C        OK: ADC OPCREG          ; ADD TO PROGRAM COUNTER
+   410 00:012E: 1A            INC A                  ; ADD TWO, WITHOUT CARRY
+   411 00:012F: 1A            INC A
+   412 00:0130: 85 10         STA OPRNDL             ; STORE AS NEW ‘OPERAND'
+   413                        
+   414 00:0132: E2 20         SEP #M
+   415                         longa off
+   416                        
+   417 00:0134: 4C xx xx      JMP PODB ; NOW JUST DISPLAY A DOUBLE BYTE
+   418                        
+   419                        FCPRL:                  ; PROGRAM COUNTER RELATIVE LONG
+   420                        
+   421 00:0137: C2 21         REP #M+C
+   422                         longa on
+   423                        
+   424 00:0139: A5 10         LDA OPRNDL             ; JUST ADD THE OPERAND
+   425 00:013B: 65 0C         ADC OPCREG
+   426 00:013D: 18            CLC                    ; BUMP BY THREE, PAST INSTRCTION
+   427 00:013E: 69 03 00      ADC #3
+   428 00:0141: 85 10         STA OPRNDL             ; STORE AS NEW ‘OPERAND'
+   429                        
+   430 00:0143: E2 20         SEP #M
+   431                         longa off
+   432                        
+   433 00:0145: 4C xx xx      JMP PODB               ; PRINT A DOUBLE BYTE
+   434                        
+   435                        FABSIND:                ; ABSOLUTE INDIRECT
+   436 00:0148: A9 28         LDA #'('               ; SURROUND A DOUBLE BYTE
+   437 00:014A: 20 xx xx      jsr chrout
+   438                        ; STA LINE,Y             ; WITH PARENTHESES
+   439                        ; INY
+   440 00:014D: 20 xx xx      JSR PODB
+   441 00:0150: A9 29         LDA #')'
+   442                        ; STA LINE,Y
+   443 00:0152: 4C xx xx      jmp chrout
+   444                        ; RTS
+   445                        
+   446                        FIND:                   ; INDIRECT – –
+   447 00:0155: A9 28         LDA #'('               ; SURROUND A SINGLE BYTE
+   448 00:0157: 20 xx xx      jsr chrout
+   449                         ;STA LINE,Y             ; WITH PARENTESES
+   450                         ;INY
+   451 00:015A: 20 xx xx      JSR POB
+   452 00:015D: A9 29         LDA #')'
+   453 00:015F: 4C xx xx      jmp chrout
+   454                        ; STA LINE,Y
+  Tue Oct  6 2026 15:25                                                                                                    Page 9
+
+
+   455                        ; INY
+   456                        ; RTS
+   457                        
+   458                        FINDL:                  ; INDIRECT LONG – –
+   459 00:0162: A9 5B         LDA #'['               ; SURROUND A SINGLE BYTE'
+   460 00:0164: 20 xx xx      jsr chrout
+   461                        
+   462                        ; STA LINE,Y             ; WITH SQUARE BRACKTS
+   463                        ; INY
+   464 00:0167: 20 xx xx      JSR POB
+   465 00:016A: A9 5D         LDA #']'
+   466                        ; STA LINE,Y
+   467                        ; INY
+   468 00:016C: 4C xx xx      jmp chrout
+   469                        ; RTS
+   470                        
+   471                        FABSINXIND:             ; ABSOLUTE INDIRECT INDEXED
+   472 00:016F: A9 28         LDA #'('
+   473                        ; STA LINE,Y             ; SURROUND A CALL TO ‘ABSOLUTE
+   474                        ; INY                    ; INDEXED' WITH PARENTHESES
+   475 00:0171: 20 xx xx      jsr chrout
+   476 00:0174: 20 xx xx      JSR FABSX
+   477 00:0177: A9 29         LDA #')'
+   478                        ; STA LINE,Y
+   479                        ; RTS
+   480 00:0179: 4C xx xx      jmp chrout
+   481                        
+   482                        FSTACK:                 ; STACK – – IMPLIED
+   483 00:017C: 60            RTS
+   484                        
+   485                        FSTACKREL:              ; STACK RELATIVE
+   486 00:017D: 20 xx xx      JSR FDIR               ; JUST LIKE
+   487 00:0180: A9 2C         LDA #','                ; DIRECT INDEXED, BUT WITH
+   488 00:0182: 20 xx xx      jsr chrout
+   489                        ; STA LINE,Y             ; AN ‘S'
+   490                        ; INY
+   491 00:0185: A9 53         LDA #'S'
+   492                        ; STA LINE,Y
+   493                        ; INY
+   494                        ; RTS
+   495 00:0187: 4C xx xx      jmp chrout
+   496                        
+   497                        FSRINDINX:              ; STACK RELATIVE INDIRECT INDEX
+   498 00:018A: A9 28         LDA #'('
+   499                        ; STA LINE,Y             ; SURROUND STACK RELATIVE WITH
+   500                        ; INY                    ; PARENTHESES, THEN
+   501 00:018C: 20 xx xx      jsr chrout
+   502 00:018F: 20 xx xx      JSR FSTACKREL
+   503 00:0192: A9 29         LDA #')'
+   504 00:0194: 20 xx xx      jsr chrout
+   505                        
+   506                        ; STA LINE,Y
+   507                        ; INY
+   508 00:0197: 4C xx xx      JMP FINY               ; TACK ON A COMMA,Y
+   509                        
+   510                        FBLOCK:                 ; BLOCK MOVE
+   511                        
+   512                        ; REP #M
+  Tue Oct  6 2026 15:25                                                                                                    Page 10
+
+
+   513                        ; LDA OPRNDL             ; MAKE HUMAN-READABLE:
+   514                        ; XBA                    ; SWAP SOURCE, DEST
+   515                        ; STA OPRNDL
+   516                         
+   517 00:019A: E2 20         SEP #M
+   518                        ; jmp PODB
+   519 00:019C: A5 10         LDA OPRNDL
+   520 00:019E: 20 xx xx      JSR POB                ; OUTPUT THE SOURCE
+   521 00:01A1: A9 2C         LDA #','               ; THEN COMMA
+   522 00:01A3: 20 xx xx      jsr chrout
+   523                        
+   524                        ; STA LINE,Y
+   525                        ; INY
+   526                         
+   527 00:01A6: C2 20         REP #M
+   528 00:01A8: A5 10         LDA OPRNDL
+   529 00:01AA: EB            XBA                    ; SWAP DEST INTO OPRNDL
+   530 00:01AB: 85 10         STA OPRNDL             ; THEN PRINT ONE BYTE
+   531 00:01AD: E2 20         SEP #M
+   532 00:01AF: 4C xx xx      JMP POB
+   533                        
+   534                        ;-----------------------------------------------
+   535                        ;
+   536                        ; POB, PODB, POTB
+   537                        ; PUT OPERAND (DOUBLE, TRIPLE) BYTE
+   538                        ;
+   539                        ; PUTS OPRNDL (OPRNDH, OPRNDB) IN LINE AS HEX VALUE
+   540                        ; WITH ‘$' PREFIX
+   541                        ;
+   542                        ; ASSUMES SHORT ACCUMULATOR AND INSEX REGISTERS
+   543                        ; (CALLED BY FOPRND)
+   544                        ;-----------------------------------------------
+   545                        ;
+   546                        
+   547                        POB:
+   548                         longa off
+   549                         longi off
+   550                        
+   551                        ; PRINT:
+   552 00:01B2: A2 00         LDX #0                 ; ONE OPERAND BYTE
+   553 00:01B4: 80 06         BRA IN                 ; SKIP
+   554                        PODB:
+   555 00:01B6: A2 01         LDX #1                 ; TWO OPERAND BYTES
+   556 00:01B8: 80 02         BRA IN                 ; SKIP
+   557                        POTB:
+   558 00:01BA: A2 02         LDX #2                 ; THREE OPERAND BYTES
+   559                                                ; FALL THROUGH
+   560 00:01BC: A9 24        IN: LDA #'$'            ; PRINT LEAD-IN
+   561                        ; STA LINE,Y
+   562                        ; INY
+   563 00:01BE: 20 xx xx      jsr chrout
+   564                        
+   565 00:01C1: B5 10        MORE1:		LDA OPRNDL,X     		; LOOP THROUGH OPERAND
+   566 00:01C3: 20 xx xx     		JSR printhex			; HIGH TO LOW
+   567 00:01C6: CA           		DEX
+   568 00:01C7: 10 F8        		BPL MORE1
+   569 00:01C9: 60           		RTS
+   570                        
+  Tue Oct  6 2026 15:25                                                                                                    Page 11
+
+
+   571                        ; ------------------------------------------
+   572                        ;
+   573                        ; STEP CHECKS FOR USER PAUSE SIGNAL
+   574                        ; (KEYSTROKE)
+   575                        ;
+   576                        ; CONTAINS MACHINE-DEPENDENT CODE
+   577                        ; FOR APPLE II
+   578                        ; ------------------------------------------
+   579                        ;
+   580                        
+   581                        STEP:
+   582                        ; KEYBD = $C000         ; Apple II keyboard
+   583                        ; KEYSTB = $C010        ; Apple II keyboard
+   584                        
+   585                        ; KEYBD = $D011          ; Apple 1/Replica 1 keyboard
+   586                        ; KEYSTB = $D010         ; Apple 1/Replica 1 keyboard
+   587                        
+   588             0000009B   ESC		equ	$9B              		; ESCAPE KEY (HIGH BIT SET)
+   589             00000040   OVL		equ	$40				; MASK FOR OVERFLOW FLAG
+   590                        
+   591                        
+   592 00:01CA: 08            PHP                    ; SAVE MODES
+   593 00:01CB: E2 30         SEP #M+IX
+   594                         longa off
+   595                         longi off
+   596 00:01CD: 80 00         BRA WAIT
+   597                        
+   598                        ;PAUSE:                  ; FOR ‘PAUSE' CALL
+   599                        ; PHP
+   600                        ; SEP #M+IX		;all 8-bit
+   601                         
+   602                        ; ldy IRQPS2S
+   603                        ; bne RETNCR
+   604                         
+   605                        ; inc IRQPS2S
+   606                        
+   607                        ; LDA KEYBD              ; CHECK FOR KEYPRESS
+   608                        ; BPL RETNCR             ; NONE; DON'T PAUSE
+   609                        
+   610                        ; LDA KEYSTB             ; CLEAR STROBE
+   611                        			 ; IF KEYSTROKE
+   612                        WAIT: ;LDA KEYBD         ; LOOP FOR NEXT KEY
+   613                        ; BPL WAIT
+   614                        ; LDA KEYSTB             ; CLEAR STROBE
+   615                        ; lda IRQPS2D 
+   616                        ; CMP #ESC               ; IF ESC RETURN WITH
+   617                        ; beq RETEQ
+   618                        ; cmp #'x'
+   619                        ; BNE RETNESC
+   620                        
+   621                        ;RETEQ: PLP              ; CARRY CLEAR (QUIT)
+   622                        ; NOP
+   623                        ; CLC
+   624                        ; RTS
+   625                        
+   626                        ;RETNESC: CMP #CR
+   627                        ; BNE RETNCR
+   628                        ; PLP
+  Tue Oct  6 2026 15:25                                                                                                    Page 12
+
+
+   629                        ; SEP #C+OVL
+   630                        ; RTS
+   631                        
+   632                        ;RETNCR: ;LDA KEYSTB
+   633                        ; PLP                    ; ELSE SET
+   634                        ; SEC
+   635                        ; CLV
+   636                        ; RTS                    ; (CONTINUE)
+   637                        
+   638                        ; ------------------------------------------
+   639                        ; PUTHEX
+   640                        ;
+   641                        ; CONVERTS NUMBER IN ACCUMULATOR TO HEX STRING
+   642                        ; STORED AT LINE,Y
+   643                        ;
+   644                        ; SAVE AND RESTORED MODE FLAGS
+   645                        ; ------------------------------------------
+   646                        
+   647                        ;PUTHEX:
+   648                        ; PHP                    ; SAVE MODE FLAGS
+   649                        ; JSR MAKEHEX            ; GET ASCII CODES A, B
+   650                        ; REP #M
+   651                        ; longa on
+   652                        ; STA LINE,Y             ; PUT TWO BYTES AT LINE
+   653                        ; INY                    ; INCREMENT Y PAST THEM
+   654                        ; INY
+   655                        ; PLP                    ; RESTORE MODE
+   656                        ; RTS                    ; RETURN
+   657                        
+   658                        ;MAKEHEX: SEP #M+IX      ; ALL EIGHT BIT
+   659                        ; longa off
+   660                        ; longi off
+   661                        ;
+   662                        ; PHA                    ; SAVE VALUE TO BE CONVERTED
+   663                        ; AND #$0F               ; MASK OFF LOW NIBBLE
+   664                        ; JSR FORMNIB            ; CONVERT TO HEX
+   665                        ; XBA                    ; STORE IN B
+   666                        ; PLA                    ; RESTORE VALUE
+   667                        ; LSR A                  ; SHIFT HIGH NIBBLE
+   668                        ; LSR A                  ; TO LOW NIBBLE
+   669                        ; LSR A
+   670                        ; LSR A
+   671                        ;                        ; FALL THROUGH TO CONVERT
+   672                        ;
+   673                        ;FORMNIB: CMP #$A        ; IF GREATER THAN OR EQUAL TO
+   674                        ; BCS HEXDIG             ; 10, USE DIGITS A..F
+   675                        ;; CLC                    ; ELSE SIMPLY ADD ‘0' TO
+   676                        ; ADC #'0'               ; CONVERT TO ASCII
+   677                        ; RTS
+   678                        ;
+   679                        ;HEXDIG: ADC #'A'-11     ; SUBTRACT 11, ADD ‘A'
+   680                        ; RTS                    ; (SORT OF)
+   681                        
+   682                        ; ---------------------------------------
+   683                        ;
+   684                        ; CLRLN
+   685                        ;
+   686                        ; CLEARS ‘LINE' WITH BLANKS
+  Tue Oct  6 2026 15:25                                                                                                    Page 13
+
+
+   687                        ;
+   688                        ; SAVES AND RESTORES MODE FLAGS
+   689                        ;
+   690                        ; ---------------------------------------
+   691                        ;
+   692                        
+   693                        ;CLRLN:
+   694                        ; PHP
+   695                        ; REP #M+IX
+   696                        ; longa on
+   697                        ; longi on
+   698                        ;
+   699                        ; LDA #$2020             ; two spaces
+   700                        ; LDX #74
+   701                        ;
+   702                        ;LOOP: STA LINE,X
+   703                        ; DEX
+   704                        ; DEX
+   705                        ; BPL LOOP
+   706                        ; PLP
+   707                        ; RTS
+   708                        
+   709                        
+   710                        
+   711                        ; -----------------------------------------
+   712                        ;
+   713                        ; UPDATE
+   714                        ;
+   715                        ; UPDATES ATTRIBUTE VARIABLES BASED ON OPCODE
+   716                        ; PASSED IN ACCUMULATOR BY LOOKING IN ATTRIBUTE
+   717                        ; TABLES
+   718                        ;
+   719                        ; SAVES AND RESTORES MODE FLAGS
+   720                        ; -----------------------------------------
+   721                        
+   722                        UPDATE:
+   723                        
+   724             000000A0   LDYI		equ	$A0           ; OPCODE VALUE TIMES TWO
+   725             000000A2   LDXI		equ	$A2
+   726             000000C0   CPYI		equ	$C0
+   727             000000E0   CPXI		equ	$E0
+   728             000000C2   REPI		equ	$C2
+   729             000000E2   SEPI		equ	$E2
+   730                        		
+   731 00:01CF: 08           		PHP                    ; SAVE STATE
+   732                        		
+   733 00:01D0: E2 30        		SEP #M+IX
+   734                        		longa off
+   735                        		longi off
+   736                        		
+   737 00:01D2: AA           		tax
+   738 00:01D3: A0 01        		ldy #1 
+   739 00:01D5: C9 C2        		cmp #REPI		; REP opcode?
+   740 00:01D7: D0 06        		bne UPDATE1
+   741 00:01D9: B7 03        		lda [PCREG],y
+   742 00:01DB: 14 08        		trb PREG
+   743 00:01DD: 80 08        		bra UPDATE2
+   744                         
+  Tue Oct  6 2026 15:25                                                                                                    Page 14
+
+
+   745                        UPDATE1:
+   746 00:01DF: C9 E2        		cmp #SEPI		; SEP
+   747 00:01E1: D0 04        		bne UPDATE2
+   748 00:01E3: B7 03        		lda [PCREG],y
+   749 00:01E5: 04 08        		tsb PREG
+   750                         
+   751                        UPDATE2:
+   752 00:01E7: 8A           		txa
+   753                        		
+   754 00:01E8: C2 30        		REP #M+IX
+   755                        		longa on
+   756                        		longi on
+   757                        		
+   758 00:01EA: 29 FF 00     		AND #$FF               ; MASK HIGH BYTE
+   759 00:01ED: 0A           		ASL A                  ; TIMES TWO
+   760                        		
+   761 00:01EE: A8           		TAY
+   762 00:01EF: B9 xx xx     		LDA ATRIBL,Y           ; INDEX INTO ATTRIBUTE TABLE
+   763 00:01F2: EB           		XBA                    ; SWAP ORDER OF ENTRIES
+   764 00:01F3: 85 16        		STA ADDRMODE           ; SAVE ADDRMODE, MNEMONIC INDEX
+   765                        		
+   766 00:01F5: 9B           		TXY
+   767 00:01F6: AA           		TAX                    ; ADDRMODE TO X (LOW)
+   768 00:01F7: 98           		TYA                    ; OPCODE TO ACCUM
+   769                        		
+   770 00:01F8: E2 30        		SEP #M+IX
+   771                        		longa off
+   772                        		longi off
+   773                        		
+   774 00:01FA: BC xx xx     		LDY LENS-1,X           ; GET LENGTH OF OPERATION
+   775 00:01FD: 84 19        		STY OPLEN
+   776                        		
+   777                        ;		pha
+   778                        ;		tya
+   779                        ;		jsr	printhex		
+   780                        ;		pla
+   781                        		
+   782                        		
+   783                        		
+   784                        		; LDX EBIT               ; EMULATION MODE?
+   785                        		; CPX #1                 ; TEST BIT ZERO
+   786                        		; BEQ SHORT              ; YES ALL IMMEDIATE ARE
+   787                        					; SHORT
+   788                        		; BIT #$10               ; IS BIT 4 EVEN?
+   789                        		; BNE SHORT              ; NO, CAN'T BE IMMEDIATE
+   790                        		
+   791 00:01FF: C9 A2        		CMP #LDXI              ; IS IT LDX #?
+   792 00:0201: F0 14        		BEQ CHKX
+   793 00:0203: C9 A0        		CMP #LDYI              ; IS IT LDY #?
+   794 00:0205: F0 10        		BEQ CHKX
+   795 00:0207: C9 E0        		CMP #CPXI              ; IS IT CPX #?
+   796 00:0209: F0 0C        		BEQ CHKX
+   797 00:020B: C9 C0        		CMP #CPYI              ; IS IT CPY #?
+   798 00:020D: F0 08        		BEQ CHKX
+   799                        		
+   800 00:020F: 29 1F        		AND #$1F               ; IS LSD+2 ZERO?
+   801 00:0211: C9 09        		CMP #$09
+   802 00:0213: F0 0A        		BEQ CHKA               ; CHECK ACCUMULATOR OPCODES
+  Tue Oct  6 2026 15:25                                                                                                    Page 15
+
+
+   803 00:0215: D0 10        		BNE SHORT
+   804                         
+   805                        CHKX:
+   806 00:0217: A5 08        		LDA PREG               ; IF IT IS, WHAT IS FLAG SETTING?
+   807 00:0219: 29 10        		AND #IX
+   808 00:021B: F0 08        		BEQ LONG               ; CLEAR – 16 BIT MODE
+   809 00:021D: D0 08        		BNE SHORT              ; SET – 8 BIT MODE
+   810                        
+   811                        CHKA:
+   812 00:021F: A5 08        		LDA PREG		; WHAT IS FLAG SETTING?
+   813 00:0221: 29 20        		AND #M
+   814 00:0223: D0 02        		BNE SHORT		; NO, 8 BIT MODE
+   815                        
+   816                        LONG:
+   817 00:0225: E6 19        		INC OPLEN		; LONG IMMEDIATE LENGTH IS
+   818                        					; ONE MORE THEN FOUND IN TABLE
+   819                        
+   820                        SHORT: 
+   821 00:0227: C2 20        		REP #M
+   822                        		longa on
+   823                        		
+   824 00:0229: A0 00        		LDY #0
+   825 00:022B: 80 09        		BRA LOOPIN
+   826                        
+   827                        LOOP1:
+   828 00:022D: E2 20        		SEP #M
+   829 00:022F: A7 03        		LDA [PCREG]      	; LOAD 8 BITS
+   830 00:0231: 99 0F 00     		STA OPRNDL-1,Y         ; SAVE
+   831 00:0234: C2 20        		REP #M
+   832                         
+   833                        LOOPIN: 
+   834 00:0236: E6 03        		INC PCREG       	; MOVE PC PAST NEXT INSTRUCTION
+   835 00:0238: C8           		INY                    ; BYTE
+   836 00:0239: C4 19        		CPY OPLEN              ; MOVED ALL OPERAND BYTES?
+   837 00:023B: D0 F0        		BNE LOOP1              ; NO, CONTINUE
+   838                        
+   839                        ;DONE:
+   840 00:023D: 28           		PLP
+   841 00:023E: 60           		RTS
+   842                        
+   843                        ; -----------------------------------------
+   844                        ;
+   845                        ; PRINTLN
+   846                        ;
+   847                        ; MACHINE-DEPENDENT CODE TO OUTPUT
+   848                        ; THE STRING STORED AT ‘LINE'
+   849                        ;
+   850                        ; SAVES AND RESTORED MODE FLAGS
+   851                        ; -----------------------------------------
+   852                        ;
+   853                        
+   854                        ;PRINTLN:
+   855                        ;; COUT = $FDED          ; APPLE II CHARACTER OUTPUT ROUTINE
+   856                        ;;COUT = $FFEF            ; APPLE 1/Replica 1 ROM CHARACTER OUTPUT ROUTINE
+   857                        ;COUT = chrout
+   858                        ; PHP                    ; SAVE STATUS
+   859                        ;; PHD                    ; SAVE DIRECT PAGE
+   860                        ;; PEA 0                  ; SWITCH TO PAGE ZERO
+  Tue Oct  6 2026 15:25                                                                                                    Page 16
+
+
+   861                        ;; PLD                    ; FOR EMULATION
+   862                        ;
+   863                        ; SEP	#M+IX
+   864                        ; longa off
+   865                        ; longi off
+   866                        ;; SEC                    ; SWITCH TO EMULATION
+   867                        ;; XCE
+   868                        ;
+   869                        ; LDY #0
+   870                        ;
+   871                        ;@LOOP: LDA LINE,Y       ; LOOP UNTIL STRING TERMINATOR
+   872                        ; BEQ @DONE              ; REACHED
+   873                        ; JSR COUT
+   874                        ; INY
+   875                        ; BRA @LOOP
+   876                        ;
+   877                        ;@DONE:
+   878                        ;; CLC              ; RESTORE NATIVE MODE
+   879                        ;; XCE
+   880                        ;; PLD                    ; RESTORE DIRECT PAGE
+   881                        ; PLP                    ; RESTORE MODE FLAGS
+   882                        ; RTS
+   883                        
+   884                        	IF TARGET=99
+   885                        NBRKIN:					; ENTRY FROM NATIVE MODE FOR TRACER
+   886                        		REP	#M+IX
+   887                        		longa on
+   888                        		longi on
+   889                        		
+   890                        		PHA
+   891                        		PHX
+   892                        		PHY
+   893                        		PHB			; 1-byte, SAVE DATA BANK	
+   894                        		PHD			; 2-byte, DIRECT PAGE
+   895                        		
+   896                        		PEA	DPAGE		; SWITCH TO APPLICATION
+   897                        		PLD			; DIRECT PAGE
+   898                        		
+   899                        					;STACK: DIRECT L 	1	$1f0
+   900                        					;	DIRECT H	2	$1f1
+   901                        					;	DATA BANK	3
+   902                        					;	Y L		4
+   903                        					;	Y H		5
+   904                        					;	X L		6
+   905                        					;	X H		7
+   906                        					;	A L		8
+   907                        					;	A H		9
+   908                        					;	PREGS		10	pushed by BRK intruction
+   909                        					;	PC L		11	pushed by BRK intruction
+   910                        					;	PC H		12	pushed by BRK intruction
+   911                        					;	PROGRAM BANK	13	pushed by BRK intruction
+   912                        					;	RETURN-1 L 	14	e.g. pushed by JSR
+   913                        					;	RETURN-H H 	15
+   914                        
+   915                        		phk			; data bank = program bank
+   916                        		plb
+   917                        
+   918                        		lda	11,S
+  Tue Oct  6 2026 15:25                                                                                                    Page 17
+
+
+   919                        		dea	
+   920                        		dea	
+   921                        		sta	11,S
+   922                        		sta	PCREG
+   923                        		sta	OPCREG
+   924                        
+   925                        	
+   926                        		sep	#M+IX
+   927                        		longa off
+   928                        		longi off
+   929                        				
+   930                        		lda	13,S
+   931                        		sta	PCREGB
+   932                        		sta	OPCREGB
+   933                        
+   934                        		lda	NCODE
+   935                        		bne	NOBRK
+   936                        		
+   937                        		rep	#M
+   938                        		lda	11,S
+   939                        		ina
+   940                        		sta	11,S
+   941                        		sep	#M
+   942                        
+   943                        NOBRK:		lda	NCODE
+   944                        		sta	[PCREG]
+   945                        		sta	CODE1
+   946                        			
+   947                        		jsr	space
+   948                        		jsr	newline
+   949                        		jsr	UPDATE		; UPDATE ATTRIBUTE VARIABLES
+   950                        		jsr	FLIST		; FORM OBJECT CODE, MNEMONIC
+   951                        		jsr	FRMOPRND	
+   952                        		
+   953                        		ldx	#<BRKSTR
+   954                        		ldy	#>BRKSTR
+   955                        		jsr	print
+   956                        		
+   957                        		
+   958                        		rep	#M
+   959                        		longa on
+   960                        
+   961                        ;		ldy	#40		;print at pos 41
+   962                        		lda	8,S		;load accu from stack
+   963                        		jsr	putword
+   964                        
+   965                        		lda	6,S		;load X from stack
+   966                        		jsr	putword
+   967                        
+   968                        		lda	4,S		;load Y from stack
+   969                        		jsr	putword
+   970                        
+   971                        		tsc			;load stack pointer
+   972                        		clc	
+   973                        		adc	#13		;add stuff from BRK routine
+   974                        		jsr	putword
+   975                        			
+   976                        		lda	1,S		;load direct page
+  Tue Oct  6 2026 15:25                                                                                                    Page 18
+
+
+   977                        		jsr	putword
+   978                        			
+   979                        		sep	#M+IX
+   980                        		longa off	
+   981                        		longi off	
+   982                        			
+   983                        		lda	3,S		;load data bank
+   984                        		jsr	printhex
+   985                        		jsr	space
+   986                         
+   987                        		ldx 	#7
+   988                        		lda 	10,S
+   989                        		sta 	PREG
+   990                        IRQBIN:		asl	
+   991                        		pha	
+   992                        		lda 	#'0'
+   993                        		adc 	#0
+   994                        ;		iny
+   995                        ;		sta	LINE,y
+   996                        		jsr	chrout
+   997                        		pla	
+   998                        		dex
+   999                        		bpl 	IRQBIN
+  1000                        
+  1001                        		jsr	newline
+  1002                        		jsr 	PRTDASH
+  1003                        		
+  1004                        		ldx 	#0
+  1005                        IRQDUMP2:	lda 	MONACT,x
+  1006                        		beq 	IRQDUMP1
+  1007                        		txa	
+  1008                        		asl
+  1009                        		asl
+  1010                        		tay	
+  1011                        		lda 	MONTAB,y
+  1012                        		sta 	memptr
+  1013                        		lda 	MONTAB+1,y
+  1014                        		sta 	memptr+1
+  1015                        		
+  1016                        		lda	memptr+2
+  1017                        		pha
+  1018                        		
+  1019                        		lda	MONTAB+2,y
+  1020                        		sta	memptr+2
+  1021                        		jsr 	jmemdump16
+  1022                        		pla
+  1023                        		sta	memptr+2
+  1024                        IRQDUMP1:	inx	
+  1025                        		cpx 	#4
+  1026                        		bne 	IRQDUMP2
+  1027                        		
+  1028                        		jsr 	PRTDASH
+  1029                        
+  1030                        enterkey:	jsr	newline
+  1031                        		lda 	#'>'
+  1032                        		jsr 	chrout
+  1033                        		jsr 	chrin
+  1034                        		jsr 	chrout
+  Tue Oct  6 2026 15:25                                                                                                    Page 19
+
+
+  1035                        		
+  1036                        		cmp	#'1'
+  1037                                        bcc	enterm
+  1038                                        cmp	#'4'+1
+  1039                                        bcs	enterm
+  1040                        		jsr	setmonitor
+  1041                        		bra	enterkey
+  1042                        		
+  1043                        enterm:		cmp	#'m'
+  1044                        		bne	enterr
+  1045                        		jsr	jsetaddress
+  1046                        		jsr	jmemdump
+  1047                        		bra	enterkey
+  1048                        
+  1049                        enterr:		
+  1050                        		.IF PLATFORM=0
+  1051                        		cmp	#'r'
+  1052                        		bne	enterx
+  1053                        		jmp	reset
+  1054                        		.ENDIF
+  1055                        		
+  1056                        enterx:		ldx	OPCREG
+  1057                        		stx	PCREG
+  1058                        		ldx	OPCREG+1
+  1059                        		stx	PCREG+1
+  1060                        		cmp	#'x'
+  1061                        		beq	NBRKEND
+  1062                        		
+  1063                        enterend:	sta	gethex_A
+  1064                        
+  1065                        		lda	CODE1
+  1066                        		jsr	UPDATE
+  1067                        		jsr	CHKSPCL		; CHECK TO SEE IF THIS CAUSES A
+  1068                        					; TRANSFER
+  1069                        					
+  1070                        		sep	#M+IX
+  1071                        		longa off
+  1072                        		longi off
+  1073                        
+  1074                        		lda	CODE1
+  1075                        		beq	NBRKEND
+  1076                        
+  1077                        		lda	[PCREG]		; GET NEXT OPCODE TO BE EXECUTED
+  1078                        					; (ON NEXT LOOP THROUGH)
+  1079                        		sta	NCODE		; SAVE IT
+  1080                        		lda	#0		; PUT A BREAK ($00) THERE TO
+  1081                        					; REGAIN CONTROL
+  1082                        		sta	[PCREG]
+  1083                        
+  1084                        		
+  1085                        NBRKEND:	rep	#M+IX
+  1086                        		longa on
+  1087                        		longi on
+  1088                        		
+  1089                        		pld
+  1090                        		plb
+  1091                        		ply
+  1092                        		plx
+  Tue Oct  6 2026 15:25                                                                                                    Page 20
+
+
+  1093                        		pla
+  1094                        		rti
+  1095                        
+  1096                        
+  1097                        setmonitor:	longa off
+  1098                        		longi off
+  1099                        		sec
+  1100                        		sbc	#'1'
+  1101                        		tax
+  1102                        		ldy	MONACT,x
+  1103                        		beq	setmonitor1
+  1104                        		stz	MONACT,x
+  1105                        		rts
+  1106                        		
+  1107                        setmonitor1:	pha
+  1108                        		asl
+  1109                        		asl
+  1110                        		tax
+  1111                        		jsr	inputnibble
+  1112                        		asl
+  1113                        		asl
+  1114                        		asl
+  1115                        		asl
+  1116                        		sta	MONTAB+2,x
+  1117                        		jsr	inputnibble
+  1118                        		ora	MONTAB+2,x
+  1119                        		sta	MONTAB+2,x
+  1120                        		jsr	setaddress
+  1121                        		cmp	#'x'
+  1122                        		beq	setmonitor9
+  1123                        
+  1124                        		plx
+  1125                        		ina
+  1126                        		sta	MONACT,x
+  1127                        		txa
+  1128                        		asl
+  1129                        		asl
+  1130                        		tax	
+  1131                        		lda	memptr
+  1132                        		sta	MONTAB,x
+  1133                        		lda	memptr+1
+  1134                        		sta	MONTAB+1,x
+  1135                        setmonitor9:	rts
+  1136                        
+  1137                        
+  1138                        PRTDASH:	ldx	#74
+  1139                        		lda	#'-'
+  1140                        prtdash1:	jsr	chrout
+  1141                        		dex
+  1142                        		bpl	prtdash1
+  1143                        		jmp	newline
+  1144                        
+  1145                        
+  1146                        putword:	php
+  1147                        		sep	#M+IX
+  1148                        		xba
+  1149                        		jsr	printhex
+  1150                        		xba
+  Tue Oct  6 2026 15:25                                                                                                    Page 21
+
+
+  1151                        		jsr	puthexc
+  1152                        		plp
+  1153                        		rts
+  1154                        
+  1155                        puthexc:	jsr 	printhex
+  1156                        		jmp	space
+  1157                        		
+  1158                        BRKSTR:		.byte	EOL, EOL
+  1159                        
+  1160                        ;                                 1         2         3         4         5         6         7
+  1161                        ;                        1234567890123456789012345678901234567890123456789012345678901234567890123456
+  1162                        		.byte	"A    X    Y    SP   DIR  DB NVMXDIZC" 
+  1163                        		.byte	EOL,0
+  1164                        
+  1165                        ;LINE:
+  1166                        ;                                 1         2         3         4         5         6         7       
+                      8
+  1167                        ;       	         12345678901234567890123456789012345678901234567890123456789012345678901234567890
+  1168                        ;		.byte	"                                                                            "
+  1169                        ;		.byte	EOL, $00
+  1170                         
+  1171                        ; --------------------------------------------L
+  1172                        ; CHKSPCL
+  1173                        ;
+  1174                        ; CHECK CURRENT OPCODE (IN CODE) FOR SPECIAL CASES
+  1175                        ; INSTRUCTIONS WHICH TRANSFER CONTROL (JMP, BRA, ETC.)
+  1176                        ;
+  1177                        ; ASSUMES SHORTA, LONGI CALLED BY EBRKIN
+  1178                        ; --------------------------------------------L
+  1179                        ;
+  1180                        
+  1181                        CHKSPCL:;	sep	#M
+  1182                        		longa off
+  1183                        		rep	#IX
+  1184                        		longi on
+  1185                        
+  1186                        		ldx	#SCX-SCODES
+  1187                        		txa			; clear B (SCX-SCODES < 256)
+  1188                        		lda	CODE1
+  1189                        
+  1190                        LOOP:		cmp	SCODES,X	; CHECK TO SEE IF CURRENT OPCODE
+  1191                        		beq	HIT		; IS IN EXCEPTION TABLE
+  1192                        		dex
+  1193                        		bpl	LOOP
+  1194                        		rts			; EXIT IF NOT
+  1195                        
+  1196                        HIT:		txa			; IF INDEX WAS LESS THAN 9, IT'S
+  1197                        		cmp	#9		; A BRANCH
+  1198                        		bcs	NOTBR
+  1199                        			
+  1200                        		lsr	A		; SEE IF ‘ODD OR EVEN'
+  1201                        		tax	
+  1202                        		lda	PMASK,X		; GET MASK TO SELECT CORRECT
+  1203                        					; PREG BIT
+  1204                        		and	PREG		; IS IT SET?
+  1205                        			
+  1206                        		bcs	BBS		; IF INDEX WAS ODD, BRANCH IF
+  1207                        					; PREG BIT IS SET
+  Tue Oct  6 2026 15:25                                                                                                    Page 22
+
+
+  1208                        		beq	DOBRANCH	; ELSE IF EVEN, BRANCH IF CLEAR
+  1209                        		rts
+  1210                        
+  1211                        BBS:		bne	DOBRANCH	; "BRANCH IF BIT SET"
+  1212                        		rts
+  1213                        
+  1214                        NOTBR:		asl	A		; NOT A BRANCH INSTRUCTION;
+  1215                        					; MULTIPLY BY TWO
+  1216                        		tax			; AND INDEX INTO HANDLER JUMP
+  1217                        					; TABLE
+  1218                        ;		rep	#IX
+  1219                        		jmp	(SPJMP-18,X)	; BIAS JUMP TABLE BY 9
+  1220                        
+  1221                        DOBRANCH:
+  1222                        		lda	#$FF		; SET ACCUMULATOR BYTE HIGH
+  1223                        					; (ANTICIPATE NEGATIVE)
+  1224                        		xba			; AND SIGN EXTEND INTO X
+  1225                        
+  1226                        		lda	OPRNDL
+  1227                        ;		jsr	printhex
+  1228                        		
+  1229                        		rep	#M+IX+C		; MAKE REGS LONG; CLEAR CARRY
+  1230                        		longa on			; (ANTICIPATE ADC)
+  1231                        		longi on
+  1232                        
+  1233                        		bmi	OK1		; NUMBER WAS NEGATIVE; ALL IS OK
+  1234                        		
+  1235                        		and	#$7F		; CLEAR HIGH BYTE OF ACCUM
+  1236                        					; (POSITIVE NUMBER)
+  1237                        OK1:		
+  1238                        		adc	PCREG
+  1239                        		sta	PCREG
+  1240                        		
+  1241                        		SEP	#M+IX
+  1242                        		longa off
+  1243                        		longi off
+  1244                        		
+  1245                        ;		jsr	printhex
+  1246                        ;		xba
+  1247                        ;		jsr	printhex
+  1248                        		
+  1249                        		SEP	#M		; RETURN WITH ACCUM SHORT
+  1250                        		rts
+  1251                        
+  1252                        		ENDIF
+  1253                        		
+  1254                        		longa off
+  1255                        		longi on
+  1256                        SBRK:					; THESE ARE NOT IMPLEMENTED!
+  1257                        SRTI:					; (AN EXERCISE FOR READER)
+  1258                        SCOP:
+  1259 00:023F: 60           		rts
+  1260                        
+  1261                        SJSRABS:;	php
+  1262                        	;	pla
+  1263                        	;	jsr	printhex
+  1264                        	;	lda	OPRNDL+1
+  1265                        	;	jsr	printhex
+  Tue Oct  6 2026 15:25                                                                                                    Page 23
+
+
+  1266                        	;	lda	OPRNDL
+  1267                        	;	jsr	printhex
+  1268                        		
+  1269 00:0240: A5 06        		lda	gethex_A	; ABSOLUTES
+  1270 00:0242: C9 73        		cmp	#'s'
+  1271 00:0244: F0 04        		beq	SJMPABSEX
+  1272                        SJMPABS:
+  1273 00:0246: A6 10        		ldx	OPRNDL		; MOVE OPERAND TO PC
+  1274 00:0248: 86 03        		stx	PCREG
+  1275                        
+  1276                        ;		rep	#M
+  1277                        ;		txa
+  1278                        ;		sep	#M
+  1279                        ;		xba
+  1280                        ;		jsr	printhex
+  1281                        ;		xba
+  1282                        ;		jsr	printhex		
+  1283                        ;		lda	PCREG+1
+  1284                        ;		jsr	printhex
+  1285                        ;		lda	PCREG
+  1286                        ;		jsr	printhex
+  1287 00:024A: 60           SJMPABSEX:	rts
+  1288                        
+  1289                        SBRL:                   		; LONG BRANCH
+  1290 00:024B: C2 21        		REP	#M+C		; LONG ACCUM AND CLEAR CARRY
+  1291                        		longa on
+  1292 00:024D: A5 10        		LDA	OPRNDL		; ADD DISPLACMENT TO
+  1293 00:024F: 65 03        		ADC	PCREG		; PROGRAM COUNTER
+  1294 00:0251: 85 03        		STA	PCREG
+  1295                        ;		SEP	#M
+  1296                        		longa off
+  1297 00:0253: 60           		RTS
+  1298                        
+  1299 00:0254: A5 06        SJSRABSL: 	lda	gethex_A	; ABSOLUTES
+  1300 00:0256: C9 73        		cmp	#'s'
+  1301 00:0258: F0 08        		beq	SJMPABSLEX	; ABSOLUTE LONGS
+  1302                        SJMPABSL:
+  1303 00:025A: A6 10        		LDX	OPRNDL		; MOVE OPERAND, INCLUDING BANK,
+  1304 00:025C: 86 03        		STX	PCREG		; TO PROGRAM COUNTER
+  1305 00:025E: A5 12        		LDA	OPRNDB
+  1306 00:0260: 85 05        		STA	PCREGB
+  1307 00:0262: 60           SJMPABSLEX:	RTS
+  1308                        
+  1309 00:0263: C2 30        SRTS:		REP	#M+IX		; RETURN
+  1310                        		longa on
+  1311                        		longi on
+  1312                        
+  1313 00:0265: A3 10        		LDA	16,S		; PEEK ON STACK	
+  1314 00:0267: 1A           		INA			; ADD ONE TO GET TRUE RETURN
+  1315 00:0268: 85 03        		STA	PCREG		; VALUE
+  1316                        		
+  1317                        ;		SEP	#M+IX
+  1318                        ;		longa off
+  1319                        ;		longi off
+  1320                        ;		xba
+  1321                        ;		jsr	printhex
+  1322                        ;		xba
+  1323                        ;		jsr	printhex
+  Tue Oct  6 2026 15:25                                                                                                    Page 24
+
+
+  1324                        		
+  1325 00:026A: 60           		RTS
+  1326                        
+  1327 00:026B: C2 30        SRTL:		REP	#M+IX		;
+  1328                        		longa on
+  1329                        		longi on
+  1330 00:026D: A3 10        		LDA	16,S		; PEEK ON STACK	
+  1331 00:026F: 1A           		INA			; ADD ONE TO GET TRUE RETURN
+  1332 00:0270: 85 03        		STA	PCREG		; VALUE
+  1333                        		
+  1334 00:0272: E2 20        		SEP	#M
+  1335 00:0274: A3 12        		LDA	18,S
+  1336 00:0276: 85 05        		STA	PCREGB
+  1337 00:0278: 60           		RTS
+  1338                        
+  1339                        SJMPIND:				; INDIRECT
+  1340 00:0279: A6 10        		LDX	OPRNDL		; GET OPERAND
+  1341                        		
+  1342 00:027B: C2 20        		REP	#M
+  1343                        		longa on
+  1344 00:027D: BD 00 00     		LDA	0,X		; JMP IND ALWAYS IN BANK ZERO
+  1345 00:0280: 85 03        		STA	PCREG
+  1346                        ;		SEP	#M
+  1347                        ;		longa off
+  1348 00:0282: 60           		RTS
+  1349                        
+  1350                        SJMPINDL:
+  1351 00:0283: 20 xx xx     		JSR	SJMPIND		; SAME AS JMP INDIRECT,
+  1352 00:0286: E8           		INX			; PLUS BANK BYTE
+  1353 00:0287: E8           		INX
+  1354 00:0288: BD 00 00     		LDA	0,X		; ACCUM IS SHORT NOW
+  1355 00:028B: 85 05        		STA	PCREGB
+  1356 00:028D: 60           		RTS
+  1357                        
+  1358                        SJMPINDX:				; INDEX JUMPS
+  1359 00:028E: C2 20        SJSRINDX:	REP	#M
+  1360                        		longa on
+  1361                        		
+  1362 00:0290: 18           		CLC
+  1363 00:0291: A3 08        		LDA	8,S		; GET X-reg (index = 6+2), LET CPU DO ADDITION
+  1364 00:0293: 65 10        		ADC	OPRNDL		; GET INSIRECT POINTER
+  1365 00:0295: 85 13        		STA	TEMP
+  1366                        		
+  1367 00:0297: E2 20        		SEP	#M
+  1368 00:0299: A5 05        		LDA	PCREGB		; INDEXED JUMPS ARE IN PROGRAM
+  1369 00:029B: 85 15        		STA	TEMP+2		; BANK
+  1370                        		
+  1371                        ;		lda	TEMP+1
+  1372                        ;		jsr	printhex
+  1373                        ;		lda	TEMP
+  1374                        ;		jsr	printhex
+  1375                        		
+  1376 00:029D: C2 20        		REP	#M
+  1377 00:029F: A7 13        		LDA	[TEMP]
+  1378 00:02A1: 85 03        		STA	PCREG
+  1379                        ;		SEP	#M
+  1380                        		
+  1381 00:02A3: 60           		RTS
+  Tue Oct  6 2026 15:25                                                                                                    Page 25
+
+
+  1382                         
+  1383                        ; 
+  1384                        ;
+  1385                        ; SP JMP
+  1386                        ; JUMP TABLE FOR ‘SPECIAL' OPCODE HANDLERS
+  1387                        ; -----------------------------------------------
+  1388                        ;
+  1389                        
+  1390                        SPJMP:					; JUMP TABLE FOR
+  1391 00:02A4: xx xx        		.word SBRK		; NON-BRANCH HANDLERS
+  1392 00:02A6: xx xx        		.word SJSRABS
+  1393 00:02A8: xx xx        		.word SRTI
+  1394 00:02AA: xx xx        		.word SRTS
+  1395 00:02AC: xx xx        		.word SCOP
+  1396 00:02AE: xx xx        		.word SJSRABSL
+  1397 00:02B0: xx xx        		.word SBRL
+  1398 00:02B2: xx xx        		.word SRTL
+  1399 00:02B4: xx xx        		.word SJMPABS
+  1400 00:02B6: xx xx        		.word SJMPABSL
+  1401 00:02B8: xx xx        		.word SJMPIND
+  1402 00:02BA: xx xx        		.word SJMPINDX
+  1403 00:02BC: xx xx        		.word SJMPINDL
+  1404 00:02BE: xx xx        		.word SJSRINDX
+  1405                        
+  1406                        ; -----------------------------------------------
+  1407                        ;
+  1408                        ; PMASK
+  1409                        ; STATUS REGISTER MASKS FOR BRANCH HANDLING CODE
+  1410                        ; -----------------------------------------------
+  1411                        ;
+  1412                        
+  1413                        PMASK:                  ; MASKS FOR STATUS REGISTER
+  1414 00:02C0: 80            .byte $80     ; N FLAG
+  1415 00:02C1: 40            .byte $40     ; V FLAG
+  1416 00:02C2: 01            .byte $01     ; C FLAG
+  1417 00:02C3: 02            .byte $02     ; Z FLAG
+  1418 00:02C4: 00            .byte $00     ; BRA
+  1419                        
+  1420                        SCODES: ; SPECIAL OPCODES
+  1421                        
+  1422 00:02C5: 10            .byte $10     ; BPL
+  1423 00:02C6: 30            .byte $30     ; BMI
+  1424 00:02C7: 50            .byte $50     ; BVC
+  1425 00:02C8: 70            .byte $70     ; BVS
+  1426 00:02C9: 90            .byte $90     ; BCC
+  1427 00:02CA: B0            .byte $B0     ; BCS
+  1428 00:02CB: D0            .byte $D0     ; BNE
+  1429 00:02CC: F0            .byte $F0     ; BEQ
+  1430 00:02CD: 80            .byte $80     ; BRA
+  1431 00:02CE: 00            .byte $00     ; BRK
+  1432 00:02CF: 20            .byte $20     ; JSR
+  1433 00:02D0: 40            .byte $40     ; RTI
+  1434 00:02D1: 60            .byte $60     ; RTS
+  1435 00:02D2: 02            .byte $02     ; COP
+  1436 00:02D3: 22            .byte $22     ; JSR ABSL
+  1437 00:02D4: 82            .byte $82     ; BRL
+  1438 00:02D5: 6B            .byte $6B     ; RTL
+  1439 00:02D6: 4C            .byte $4C     ; JMP ABS
+  Tue Oct  6 2026 15:25                                                                                                    Page 26
+
+
+  1440 00:02D7: 5C            .byte $5C     ; JMP ABSL
+  1441 00:02D8: 6C            .byte $6C     ; JMP ()
+  1442 00:02D9: 7C            .byte $7C     ; JMP (,X)
+  1443 00:02DA: DC            .byte $DC     ; JMP [ ]
+  1444                        SCX:
+  1445 00:02DB: FC            .byte $FC     ; JSR (,X)
+  1446                        
+  1447                        
+  1448                        ;	.ENDIF
+  1449                        	
+  1450                        	
+  1451                        MN:
+  1452 00:02DC: 00 00 00      .byte $00,$00,$00
+  1453 00:02DF: 41 44 43      .byte "ADC" ; 1
+  1454 00:02E2: 41 4E 44      .byte "AND" ; 2
+  1455 00:02E5: 41 53 4C      .byte "ASL" ; 3
+  1456 00:02E8: 42 43 43      .byte "BCC" ; 4
+  1457 00:02EB: 42 43 53      .byte "BCS" ; 5
+  1458 00:02EE: 42 45 51      .byte "BEQ" ; 6
+  1459 00:02F1: 42 49 54      .byte "BIT" ; 7
+  1460 00:02F4: 42 4D 49      .byte "BMI" ; 8
+  1461 00:02F7: 42 4E 45      .byte "BNE" ; 9
+  1462 00:02FA: 42 50 4C      .byte "BPL" ; 10
+  1463 00:02FD: 42 52 4B      .byte "BRK" ; 11
+  1464 00:0300: 42 56 43      .byte "BVC" ; 12
+  1465 00:0303: 42 56 53      .byte "BVS" ; 13
+  1466 00:0306: 43 4C 43      .byte "CLC" ; 14
+  1467 00:0309: 43 4C 44      .byte "CLD" ; 15
+  1468 00:030C: 43 4C 49      .byte "CLI" ; 16
+  1469 00:030F: 43 4C 56      .byte "CLV" ; 17
+  1470 00:0312: 43 4D 50      .byte "CMP" ; 18
+  1471 00:0315: 43 50 58      .byte "CPX" ; 19
+  1472 00:0318: 43 50 59      .byte "CPY" ; 20
+  1473 00:031B: 44 45 43      .byte "DEC" ; 21
+  1474 00:031E: 44 45 58      .byte "DEX" ; 22
+  1475 00:0321: 44 45 59      .byte "DEY" ; 23
+  1476 00:0324: 45 4F 52      .byte "EOR" ; 24
+  1477 00:0327: 49 4E 43      .byte "INC" ; 25
+  1478 00:032A: 49 4E 58      .byte "INX" ; 26
+  1479 00:032D: 49 4E 59      .byte "INY" ; 27
+  1480 00:0330: 4A 4D 50      .byte "JMP" ; 28
+  1481 00:0333: 4A 53 52      .byte "JSR" ; 29
+  1482 00:0336: 4C 44 41      .byte "LDA" ; 30
+  1483 00:0339: 4C 44 58      .byte "LDX" ; 31
+  1484 00:033C: 4C 44 59      .byte "LDY" ; 32
+  1485 00:033F: 4C 53 52      .byte "LSR" ; 33
+  1486 00:0342: 4E 4F 50      .byte "NOP" ; 34
+  1487 00:0345: 4F 52 41      .byte "ORA" ; 35
+  1488 00:0348: 50 48 41      .byte "PHA" ; 36
+  1489 00:034B: 50 48 50      .byte "PHP" ; 37
+  1490 00:034E: 50 4C 41      .byte "PLA" ; 38
+  1491 00:0351: 50 4C 50      .byte "PLP" ; 39
+  1492 00:0354: 52 4F 4C      .byte "ROL" ; 40
+  1493 00:0357: 52 4F 52      .byte "ROR" ; 41
+  1494 00:035A: 52 54 49      .byte "RTI" ; 42
+  1495 00:035D: 52 54 53      .byte "RTS" ; 43
+  1496 00:0360: 53 42 43      .byte "SBC" ; 44
+  1497 00:0363: 53 45 43      .byte "SEC" ; 45
+  Tue Oct  6 2026 15:25                                                                                                    Page 27
+
+
+  1498 00:0366: 53 45 44      .byte "SED" ; 46
+  1499 00:0369: 53 45 49      .byte "SEI" ; 47
+  1500 00:036C: 53 54 41      .byte "STA" ; 48
+  1501 00:036F: 53 54 58      .byte "STX" ; 49
+  1502 00:0372: 53 54 59      .byte "STY" ; 50
+  1503 00:0375: 54 41 58      .byte "TAX" ; 51
+  1504 00:0378: 54 41 59      .byte "TAY" ; 52
+  1505 00:037B: 54 53 58      .byte "TSX" ; 53
+  1506 00:037E: 54 58 41      .byte "TXA" ; 54
+  1507 00:0381: 54 58 53      .byte "TXS" ; 55
+  1508 00:0384: 54 59 41      .byte "TYA" ; 56
+  1509 00:0387: 42 52 41      .byte "BRA" ; 57
+  1510 00:038A: 50 4C 58      .byte "PLX" ; 58
+  1511 00:038D: 50 4C 59      .byte "PLY" ; 59
+  1512 00:0390: 50 48 58      .byte "PHX" ; 60
+  1513 00:0393: 50 48 59      .byte "PHY" ; 61
+  1514 00:0396: 53 54 5A      .byte "STZ" ; 62
+  1515 00:0399: 54 52 42      .byte "TRB" ; 63
+  1516 00:039C: 54 53 42      .byte "TSB" ; 64
+  1517                        
+  1518 00:039F: 50 45 41      .byte "PEA" ; 65
+  1519 00:03A2: 50 45 49      .byte "PEI" ; 66
+  1520 00:03A5: 50 45 52      .byte "PER" ; 67
+  1521 00:03A8: 50 4C 42      .byte "PLB" ; 68
+  1522 00:03AB: 50 4C 44      .byte "PLD" ; 69
+  1523 00:03AE: 50 48 42      .byte "PHB" ; 70
+  1524 00:03B1: 50 48 44      .byte "PHD" ; 71
+  1525 00:03B4: 50 48 4B      .byte "PHK" ; 72
+  1526                        
+  1527 00:03B7: 52 45 50      .byte "REP" ; 73
+  1528 00:03BA: 53 45 50      .byte "SEP" ; 74
+  1529                        
+  1530 00:03BD: 54 43 44      .byte "TCD" ; 75
+  1531 00:03C0: 54 44 43      .byte "TDC" ; 76
+  1532 00:03C3: 54 43 53      .byte "TCS" ; 77
+  1533 00:03C6: 54 53 43      .byte "TSC" ; 78
+  1534 00:03C9: 54 58 59      .byte "TXY" ; 79
+  1535 00:03CC: 54 59 58      .byte "TYX" ; 80
+  1536 00:03CF: 58 42 41      .byte "XBA" ; 81
+  1537 00:03D2: 58 43 45      .byte "XCE" ; 82
+  1538                        
+  1539 00:03D5: 42 52 4C      .byte "BRL" ; 83
+  1540 00:03D8: 4A 53 4C      .byte "JSL" ; 84
+  1541 00:03DB: 52 54 4C      .byte "RTL" ; 85
+  1542 00:03DE: 4D 56 4E      .byte "MVN" ; 86
+  1543 00:03E1: 4D 56 50      .byte "MVP" ; 87
+  1544 00:03E4: 43 4F 50      .byte "COP" ; 88
+  1545 00:03E7: 57 41 49      .byte "WAI" ; 89
+  1546 00:03EA: 53 54 50      .byte "STP" ; 90
+  1547 00:03ED: 57 44 4D      .byte "WDM" ; 91
+  1548                        
+  1549                        MODES:
+  1550 00:03F0: 00 00         .word 0
+  1551 00:03F2: xx xx         .word FIMM ; 1
+  1552 00:03F4: xx xx         .word FABS ; 2
+  1553 00:03F6: xx xx         .word FABSL ; 3
+  1554 00:03F8: xx xx         .word FDIR ; 4
+  1555 00:03FA: xx xx         .word FACC ; 5
+  Tue Oct  6 2026 15:25                                                                                                    Page 28
+
+
+  1556 00:03FC: xx xx         .word FIMP ; 6
+  1557 00:03FE: xx xx         .word FINDINX ; 7
+  1558 00:0400: xx xx         .word FINDINXL ; 8
+  1559 00:0402: xx xx         .word FINXIND ; 9
+  1560 00:0404: xx xx         .word FDIRINXX ; 10
+  1561 00:0406: xx xx         .word FDIRINXY ; 11
+  1562 00:0408: xx xx         .word FABSX ; 12
+  1563 00:040A: xx xx         .word FABSLX ; 13
+  1564 00:040C: xx xx         .word FABSY ; 14
+  1565 00:040E: xx xx         .word FPCR ; 15
+  1566 00:0410: xx xx         .word FPCRL ; 16
+  1567 00:0412: xx xx         .word FABSIND ; 17
+  1568 00:0414: xx xx         .word FIND ; 18
+  1569 00:0416: xx xx         .word FINDL ; 19
+  1570 00:0418: xx xx         .word FABSINXIND ; 20
+  1571 00:041A: xx xx         .word FSTACK ; 21
+  1572 00:041C: xx xx         .word FSTACKREL ; 22
+  1573 00:041E: xx xx         .word FSRINDINX ; 23
+  1574 00:0420: xx xx         .word FBLOCK ; 24
+  1575                        
+  1576                        LENS:
+  1577 00:0422: 02            .byte $02 ; IMM
+  1578 00:0423: 03            .byte $03 ; ABS
+  1579 00:0424: 04            .byte $04 ; ABS LONG
+  1580 00:0425: 02            .byte $02 ; DIRECT
+  1581 00:0426: 01            .byte $01 ; ACC
+  1582 00:0427: 01            .byte $01 ; IMPLIED
+  1583 00:0428: 02            .byte $02 ; DIR IND INX
+  1584 00:0429: 02            .byte $02 ; DIR IND INX L
+  1585 00:042A: 02            .byte $02 ; DIR INX IND
+  1586 00:042B: 02            .byte $02 ; DIR INX X
+  1587 00:042C: 02            .byte $02 ; DIR INX Y
+  1588 00:042D: 03            .byte $03 ; ABS X
+  1589 00:042E: 04            .byte $04 ; ABS L X
+  1590 00:042F: 03            .byte $03 ; ABS Y
+  1591 00:0430: 02            .byte $02 ; PCR
+  1592 00:0431: 03            .byte $03 ; PCR L
+  1593 00:0432: 03            .byte $03 ; ABS IND
+  1594 00:0433: 02            .byte $02 ; DIR IND
+  1595 00:0434: 02            .byte $02 ; DIR IND L
+  1596 00:0435: 03            .byte $03 ; ABS INX IND
+  1597 00:0436: 01            .byte $01 ; STACK
+  1598 00:0437: 02            .byte $02 ; SR
+  1599 00:0438: 02            .byte $02 ; SR INX
+  1600 00:0439: 03            .byte $03 ; MOV
+  1601                        
+  1602                        ATRIBL:
+  1603 00:043A: 0B 04         .byte 11,4  ; BRK 00
+  1604 00:043C: 23 09         .byte 35,9  ; ORA D,X 01
+  1605 00:043E: 58 04         .byte 88,4  ; COP (REALLY 2) 02
+  1606 00:0440: 23 16         .byte 35,22 ; ORA-,X 03
+  1607 00:0442: 40 04         .byte 64,4  ; TSB D 04
+  1608 00:0444: 23 04         .byte 35,4  ; ORA D 05
+  1609 00:0446: 03 04         .byte 3,4   ; ASL D 06
+  1610 00:0448: 23 13         .byte 35,19 ; ORA [D] 07
+  1611 00:044A: 25 15         .byte 37,21 ; PHP 08
+  1612 00:044C: 23 01         .byte 35,1  ; ORA IMM 09
+  1613 00:044E: 03 05         .byte 3,5   ; ASL ACC 0A
+  Tue Oct  6 2026 15:25                                                                                                    Page 29
+
+
+  1614 00:0450: 47 15         .byte 71,21 ; PHD 0B
+  1615 00:0452: 40 02         .byte 64,2  ; TSB ABS 0C
+  1616 00:0454: 23 02         .byte 35,2  ; ORA ABS 0D
+  1617 00:0456: 03 02         .byte 3,2   ; ASL ABS 0E
+  1618 00:0458: 23 03         .byte 35,3  ; ORA ABS L 0F
+  1619 00:045A: 0A 0F         .byte 10,15 ; BPL 10
+  1620 00:045C: 23 07         .byte 35,7  ; ORA (D),Y 11
+  1621 00:045E: 23 12         .byte 35,18 ; ORA (D) 12
+  1622 00:0460: 23 17         .byte 35,23 ; ORA S,Y 13
+  1623 00:0462: 3F 04         .byte 63,4  ; TRB D 14
+  1624 00:0464: 23 0A         .byte 35,10 ; ORA D,X 15
+  1625 00:0466: 03 0A         .byte 3,10  ; ASL D,X 16
+  1626 00:0468: 23 08         .byte 35,8  ; ORA (DL),Y 17
+  1627 00:046A: 0E 06         .byte 14,6  ; CLC 18
+  1628 00:046C: 23 0E         .byte 35,14 ; ORA ABS,Y 19
+  1629 00:046E: 19 05         .byte 25,5  ; NC ACC 1A
+  1630 00:0470: 4D 06         .byte 77,6  ; TCS 1B
+  1631 00:0472: 3F 02         .byte 63,2  ; TRB ABS,X 1C
+  1632 00:0474: 23 0C         .byte 35,12 ; ORA ABS,X 1D
+  1633 00:0476: 03 0C         .byte 3,12  ; ASL ABS,X 1E
+  1634 00:0478: 23 0D         .byte 35,13 ; ORA ABSL,X 1F
+  1635 00:047A: 1D 02         .byte 29,2  ; JSR ABS 20
+  1636 00:047C: 02 07         .byte 2,7   ; AND (D, X) 21
+  1637 00:047E: 1D 03         .byte 29,3  ; JSL ABS L 22
+  1638 00:0480: 02 16         .byte 2,22  ; AND SR 23
+  1639 00:0482: 07 04         .byte 7,4   ; BIT D 24
+  1640 00:0484: 02 04         .byte 2,4   ; AND D 25
+  1641 00:0486: 28 04         .byte 40,4  ; ROL D 26
+  1642 00:0488: 02 13         .byte 2,19  ; AND (DL) 27
+  1643 00:048A: 27 06         .byte 39,6  ; PLP 28
+  1644 00:048C: 02 01         .byte 2,1   ; AND IMM 29
+  1645 00:048E: 28 05         .byte 40,5  ; ROL ACC 2A
+  1646 00:0490: 45 15         .byte 69,21 ; PLD 2B
+  1647 00:0492: 07 02         .byte 7,2   ; BIT ABS 2C
+  1648 00:0494: 02 02         .byte 2,2   ; AND ABS 2D
+  1649                        ; .byte 40,5  ; ROL A 2E
+  1650 00:0496: 28 02         .byte 40,2  ; ROL ABS 2E
+  1651 00:0498: 02 03         .byte 2,3   ; AND ABS L 2F
+  1652 00:049A: 08 0F         .byte 8,15  ; BMI 30
+  1653 00:049C: 02 0B         .byte 2,11  ; AND D,Y 31
+  1654 00:049E: 02 12         .byte 2,18  ; AND (D) 32
+  1655 00:04A0: 02 17         .byte 2,23  ; AND (SR),Y 33
+  1656 00:04A2: 07 0A         .byte 7,10  ; BIT D,X 34
+  1657 00:04A4: 02 0A         .byte 2,10  ; AND D,X 35
+  1658 00:04A6: 28 0A         .byte 40,10 ; ROL D,X 36
+  1659 00:04A8: 02 08         .byte 2,8   ; AND (DL),Y 37
+  1660 00:04AA: 2D 06         .byte 45,6  ; SEC 38
+  1661 00:04AC: 19 0E         .byte 25,14 ; AND ABS,Y 39
+  1662 00:04AE: 15 05         .byte 21,5  ; DEC 3A
+  1663 00:04B0: 4E 06         .byte 78,6  ; TSC 3B
+  1664 00:04B2: 07 0C         .byte 7,12  ; BIT A,X 3C
+  1665 00:04B4: 02 0C         .byte 2,12  ; AND ABS,X 3D
+  1666 00:04B6: 28 0C         .byte 40,12 ; ROL A,X 3E
+  1667 00:04B8: 02 0D         .byte 2,13  ; AND AL,X 3F
+  1668 00:04BA: 2A 06         .byte 42,6  ; RTI 40
+  1669 00:04BC: 18 09         .byte 24,9  ; EOR (D,X) 41
+  1670 00:04BE: 5B 04         .byte 91,4  ; WDM 42
+  1671 00:04C0: 18 16         .byte 24,22 ; EOR (D,X) 43
+  Tue Oct  6 2026 15:25                                                                                                    Page 30
+
+
+  1672 00:04C2: 57 18         .byte 87,24 ; MVP 44
+  1673 00:04C4: 18 04         .byte 24,4  ; EOR D 45
+  1674 00:04C6: 21 04         .byte 33,4  ; LSR D 46
+  1675 00:04C8: 18 13         .byte 24,19 ; EOR (DL) 47
+  1676 00:04CA: 24 06         .byte 36,6  ; PHA 48
+  1677 00:04CC: 18 01         .byte 24,1  ; EOR IMM 49
+  1678 00:04CE: 21 05         .byte 33,5  ; LSR ABS L 4A
+  1679 00:04D0: 48 06         .byte 72,6  ; PHK 4B
+  1680 00:04D2: 1C 02         .byte 28,2  ; JMP ABS 4C
+  1681 00:04D4: 18 02         .byte 24,2  ; EOR ABS 4D
+  1682 00:04D6: 21 02         .byte 33,2  ; LSR ABS 4E
+  1683 00:04D8: 18 05         .byte 24,5  ; EOR ABS L 4F
+  1684 00:04DA: 0C 0F         .byte 12,15 ; BVC 50
+  1685 00:04DC: 18 07         .byte 24,7  ; EOR (D),Y 51
+  1686 00:04DE: 18 12         .byte 24,18 ; EOR (D) 52
+  1687 00:04E0: 18 17         .byte 24,23 ; EOR (SR),Y 53
+  1688 00:04E2: 56 18         .byte 86,24 ; MVN 54
+  1689 00:04E4: 18 0A         .byte 24,10 ; EOR D,X 55
+  1690 00:04E6: 21 0A         .byte 33,10 ; LSR D,X 56
+  1691 00:04E8: 18 08         .byte 24,8  ; EOR (DL),Y 57
+  1692 00:04EA: 10 06         .byte 16,6  ; CLI 58
+  1693 00:04EC: 18 0E         .byte 24,14 ; EOR 59
+  1694 00:04EE: 3D 15         .byte 61,21 ; PHY 5A
+  1695 00:04F0: 4B 06         .byte 75,6  ; TCD 5B
+  1696 00:04F2: 1C 03         .byte 28,3  ; JMP ABSL 5C
+  1697 00:04F4: 18 0C         .byte 24,12 ; EOR ABS,X 5D
+  1698 00:04F6: 21 0C         .byte 33,12 ; LSR ABS,X 5E
+  1699 00:04F8: 18 0D         .byte 24,13 ; EOR ABSL,X 5F
+  1700 00:04FA: 2B 06         .byte 43,6  ; RTS 60
+  1701 00:04FC: 01 09         .byte 1,9   ; ADC (D, X) 61
+  1702 00:04FE: 43 10         .byte 67,16 ; PER 62
+  1703 00:0500: 01 16         .byte 1,22  ; ADC SR 63
+  1704 00:0502: 3E 04         .byte 62,4  ; STZ D 64
+  1705 00:0504: 01 04         .byte 1,4   ; ADC D 65
+  1706 00:0506: 29 04         .byte 41,4  ; ROR D 66
+  1707 00:0508: 01 13         .byte 1,19  ; ADC (DL) 67
+  1708 00:050A: 26 15         .byte 38,21 ; PLA 68
+  1709 00:050C: 01 01         .byte 1,1   ; ADC 69
+  1710 00:050E: 29 05         .byte 41,5  ; ROR ABSL 6A
+  1711 00:0510: 55 06         .byte 85,6  ; RTL 6B
+  1712 00:0512: 1C 11         .byte 28,17 ; JMP (A) 6C
+  1713 00:0514: 01 02         .byte 1,2   ; ADC ABS 6D
+  1714 00:0516: 29 02         .byte 41,2  ; ROR ABS 6E
+  1715 00:0518: 01 03         .byte 1,3   ; ADC ABSL 6F
+  1716 00:051A: 0D 0F         .byte 13,15 ; BVS 70
+  1717 00:051C: 01 08         .byte 1,8   ; ADC (D),Y 71
+  1718 00:051E: 01 12         .byte 1,18  ; ADC (D) 72
+  1719 00:0520: 01 17         .byte 1,23  ; ADC (SR),Y 73
+  1720 00:0522: 3E 0A         .byte 62,10 ; STZ D,X 74
+  1721 00:0524: 01 0A         .byte 1,10  ; ADC D,X 75
+  1722 00:0526: 29 0A         .byte 41,10 ; ROR D,X 76
+  1723 00:0528: 01 08         .byte 1,8   ; ADC (DL),Y 77
+  1724 00:052A: 2F 06         .byte 47,6  ; SEI 78
+  1725 00:052C: 01 0E         .byte 1,14  ; ADC ABS,Y 79
+  1726 00:052E: 3B 15         .byte 59,21 ; PLY 7A
+  1727 00:0530: 4C 06         .byte 76,6  ; TDC 7B
+  1728 00:0532: 1C 14         .byte 28,20 ; JMP (A, X) 7C
+  1729 00:0534: 01 0C         .byte 1,12  ; ADC ABS,X 7D
+  Tue Oct  6 2026 15:25                                                                                                    Page 31
+
+
+  1730 00:0536: 29 0C         .byte 41,12 ; ROR ABS,X 7E
+  1731 00:0538: 01 0D         .byte 1,13  ; ADC ABSL,X 7F
+  1732                        
+  1733                        ATRIBH:
+  1734 00:053A: 39 0F         .byte 57,15 ; BRA 80
+  1735 00:053C: 30 09         .byte 48,9  ; STA (D, X) 81
+  1736 00:053E: 53 10         .byte 83,16 ; BRL 82
+  1737 00:0540: 30 16         .byte 48,22 ; STA-,S 83
+  1738 00:0542: 32 04         .byte 50,4  ; STY D 84
+  1739 00:0544: 30 04         .byte 48,4  ; STA D 85
+  1740 00:0546: 31 04         .byte 49,4  ; STX D 86
+  1741 00:0548: 30 13         .byte 48,19 ; STA [ D ] 87
+  1742 00:054A: 17 06         .byte 23,6  ; DEY 88
+  1743 00:054C: 07 01         .byte 7,1   ; BIT IMM 89
+  1744 00:054E: 36 06         .byte 54,6  ; TXA 8A
+  1745 00:0550: 46 15         .byte 70,21 ; PHB 8B
+  1746 00:0552: 32 02         .byte 50,2  ; STY ABS 8C
+  1747 00:0554: 30 02         .byte 48,2  ; STA ABS 8D
+  1748 00:0556: 31 02         .byte 49,2  ; STX ABS 8E
+  1749 00:0558: 30 03         .byte 48,3  ; STA ABS L 8F
+  1750 00:055A: 04 0F         .byte 4,15  ; BC 90
+  1751 00:055C: 30 07         .byte 48,7  ; STA (D),Y 91
+  1752 00:055E: 30 12         .byte 48,18 ; STA (D) 92
+  1753 00:0560: 30 17         .byte 48,23 ; STA (SR),Y 93
+  1754 00:0562: 32 0A         .byte 50,10 ; STY D,X 94
+  1755 00:0564: 30 0A         .byte 48,10 ; STA D,X 95
+  1756 00:0566: 31 0B         .byte 49,11 ; STX D,Y 96
+  1757 00:0568: 30 08         .byte 48,8  ; STA (DL),Y 97
+  1758 00:056A: 38 06         .byte 56,6  ; TYA 98
+  1759 00:056C: 30 0E         .byte 48,14 ; STA ABS,Y 99
+  1760 00:056E: 37 06         .byte 55,6  ; TXS D 9A
+  1761 00:0570: 4F 06         .byte 79,6  ; TXY 9B
+  1762 00:0572: 3E 02         .byte 62,2  ; STZ ABS 9C
+  1763 00:0574: 30 0C         .byte 48,12 ; STA ABS,X 9D
+  1764 00:0576: 3E 0C         .byte 62,12 ; STZ ABS,X 9E
+  1765 00:0578: 30 0D         .byte 48,13 ; STA ABSL,X 9F
+  1766 00:057A: 20 01         .byte 32,1  ; LDY IMM A0
+  1767 00:057C: 1E 09         .byte 30,9  ; LDA (D,X) A1
+  1768 00:057E: 1F 01         .byte 31,1  ; LDX IMM A2
+  1769 00:0580: 1E 16         .byte 30,22 ; LDA SR A3
+  1770 00:0582: 20 04         .byte 32,4  ; LDY D A4
+  1771 00:0584: 1E 04         .byte 30,4  ; LDA D A5
+  1772 00:0586: 1F 04         .byte 31,4  ; LDX D A6
+  1773 00:0588: 1E 13         .byte 30,19 ; LDA (DL) A7
+  1774 00:058A: 34 06         .byte 52,6  ; TAY A8
+  1775 00:058C: 1E 01         .byte 30,1  ; LDA IMM A9
+  1776 00:058E: 33 06         .byte 51,6  ; TAX AA
+  1777 00:0590: 44 15         .byte 68,21 ; PLB AB
+  1778 00:0592: 20 02         .byte 32,2  ; LDY ABS AC
+  1779 00:0594: 1E 02         .byte 30,2  ; LDA ABS AD
+  1780 00:0596: 1F 02         .byte 31,2  ; LDX ABS AE
+  1781 00:0598: 1E 03         .byte 30,3  ; LDA ABS L AF
+  1782 00:059A: 05 0F         .byte 5,15  ; BCS B0
+  1783 00:059C: 1E 07         .byte 30,7  ; LDA (D),Y B1
+  1784 00:059E: 1E 12         .byte 30,18 ; LDA (D) B2
+  1785 00:05A0: 1E 17         .byte 30,23 ; LDA (SR),Y B3
+  1786 00:05A2: 20 0A         .byte 32,10 ; LDY D,X B4
+  1787 00:05A4: 1E 0A         .byte 30,10 ; LDA D,X B5
+  Tue Oct  6 2026 15:25                                                                                                    Page 32
+
+
+  1788 00:05A6: 1E 0B         .byte 30,11 ; LDX D,Y B6
+  1789 00:05A8: 1E 08         .byte 30,8  ; LDA (DL),Y B7
+  1790 00:05AA: 11 06         .byte 17,6  ; CLV B8
+  1791 00:05AC: 1E 0E         .byte 30,14 ; LDA ABS,Y B9
+  1792 00:05AE: 35 06         .byte 53,6  ; TSX BA
+  1793 00:05B0: 50 06         .byte 80,6  ; TYX BB
+  1794 00:05B2: 20 0C         .byte 32,12 ; LDY ABS,X BC
+  1795 00:05B4: 1E 0C         .byte 30,12 ; LDA ABS,X BD
+  1796 00:05B6: 1F 0E         .byte 31,14 ; LDX ABS,Y BE
+  1797 00:05B8: 1E 0D         .byte 30,13 ; LDA ABSL,X BF
+  1798 00:05BA: 14 01         .byte 20,1  ; CPY C0
+  1799 00:05BC: 12 09         .byte 18,9  ; CMP (D,X) C1
+  1800 00:05BE: 49 01         .byte 73,1  ; REP C2
+  1801 00:05C0: 12 16         .byte 18,22 ; CMP C3
+  1802 00:05C2: 14 04         .byte 20,4  ; CPY D C4
+  1803 00:05C4: 12 04         .byte 18,4  ; CMP D C5
+  1804 00:05C6: 15 04         .byte 21,4  ; DEC D C6
+  1805 00:05C8: 12 13         .byte 18,19 ; CMP (DL) C7
+  1806 00:05CA: 1B 06         .byte 27,6  ; INY C8
+  1807 00:05CC: 12 01         .byte 18,1  ; CMP IMM C9
+  1808 00:05CE: 16 06         .byte 22,6  ; DEX CA
+  1809 00:05D0: 59 06         .byte 89,6  ; WAI CB
+  1810 00:05D2: 14 02         .byte 20,2  ; CPY ABS CC
+  1811 00:05D4: 12 02         .byte 18,2  ; CMP ABS CD
+  1812 00:05D6: 15 02         .byte 21,2  ; DEC ABS CE
+  1813 00:05D8: 12 03         .byte 18,3  ; CMP ABSL CF
+  1814 00:05DA: 09 0F         .byte 9,15  ; BNE D0
+  1815 00:05DC: 12 07         .byte 18,7  ; CMP (D0,Y D1
+  1816 00:05DE: 12 12         .byte 18,18 ; CMP (D) D2
+  1817 00:05E0: 12 17         .byte 18,23 ; CMP D3
+  1818 00:05E2: 42 04         .byte 66,4  ; PEI D D4
+  1819 00:05E4: 12 0A         .byte 18,10 ; CMP D,X D5
+  1820 00:05E6: 15 0A         .byte 21,10 ; DEC D,X D6
+  1821 00:05E8: 12 08         .byte 18,8  ; CMP (DL),Y D7
+  1822 00:05EA: 0F 06         .byte 15,6  ; CLD D8
+  1823 00:05EC: 12 0E         .byte 18,14 ; CMP ABS,Y D9
+  1824 00:05EE: 3C 15         .byte 60,21 ; PHX DA
+  1825 00:05F0: 64 06         .byte 100,6 ; STP DB
+  1826 00:05F2: 1C 11         .byte 28,17 ; JMP (A) DC
+  1827 00:05F4: 12 0C         .byte 18,12 ; CMP ABS,X DD
+  1828 00:05F6: 15 0C         .byte 21,12 ; DEC ABS,X DE
+  1829 00:05F8: 12 0D         .byte 18,13 ; CMP ABSL,X DF
+  1830 00:05FA: 13 01         .byte 19,1  ; CPX IMM E0
+  1831 00:05FC: 2C 09         .byte 44,9  ; SBC (D,X) E1
+  1832 00:05FE: 4A 01         .byte 74,1  ; SEP IMM E2
+  1833 00:0600: 2C 16         .byte 44,22 ; SBC SR E3
+  1834 00:0602: 13 04         .byte 19,4  ; CPX D E4
+  1835 00:0604: 2C 04         .byte 44,4  ; SBC D E5
+  1836 00:0606: 19 04         .byte 25,4  ; INC D E6
+  1837 00:0608: 2C 13         .byte 44,19 ; SBD (DL) E7
+  1838 00:060A: 1A 06         .byte 26,6  ; INX D E8
+  1839 00:060C: 2C 01         .byte 44,1  ; SBC IMM E9
+  1840 00:060E: 22 06         .byte 34,6  ; NOP EA
+  1841 00:0610: 51 06         .byte 81,6  ; XBA EB
+  1842 00:0612: 13 02         .byte 19,2  ; CPX ABS EC
+  1843 00:0614: 2C 02         .byte 44,2  ; SBC ABS ED
+  1844 00:0616: 19 02         .byte 25,2  ; INC ABS EE
+  1845 00:0618: 2C 03         .byte 44,3  ; SBC ABSL EF
+  Tue Oct  6 2026 15:25                                                                                                    Page 33
+
+
+  1846 00:061A: 06 0F         .byte 6,15  ; BEQ F0
+  1847 00:061C: 2C 07         .byte 44,7  ; SBC (D),Y F1
+  1848 00:061E: 2C 12         .byte 44,18 ; SBC (D) F2
+  1849 00:0620: 2C 17         .byte 44,23 ; SBC (SR),Y F3
+  1850 00:0622: 41 02         .byte 65,2  ; PEA F4
+  1851 00:0624: 2C 0A         .byte 44,10 ; SBC D,X F5
+  1852 00:0626: 19 0A         .byte 25,10 ; INC D,X F6
+  1853 00:0628: 2C 08         .byte 44,8  ; SBC (DL),Y F7
+  1854 00:062A: 2E 06         .byte 46,6  ; SED F8
+  1855 00:062C: 2C 0E         .byte 44,14 ; SBC ABS,Y F9
+  1856 00:062E: 3A 15         .byte 58,21 ; PLX FA
+  1857 00:0630: 52 06         .byte 82,6  ; XCE FB
+  1858 00:0632: 1D 14         .byte 29,20 ; JSR (A,X) FC
+  1859 00:0634: 2C 0C         .byte 44,12 ; SBC ABS,X FD
+  1860 00:0636: 19 0C         .byte 25,12 ; INC ABS,X FE
+  1861 00:0638: 2C 0D         .byte 44,13 ; SBC ABSL,X FF
+  1862                        	END
+
+
+      Lines assembled: 1986
+      Errors: 0

@@ -1,0 +1,16 @@
+Section CODE:
+	0000e000 _BEG_CODE
+	0000e000 kernel
+	0000e2cb space
+	0000e36e chrout
+	0000e2d3 printhex
+	0000e35f chrin
+	0000e2c6 newline
+	0000e4c0 disass8
+	0000e4bc disass16
+	0000eae4 _END_CODE
+
+Section startup:
+	0000ffe4 _BEG_STARTUP
+	00010000 _END_STARTUP
+

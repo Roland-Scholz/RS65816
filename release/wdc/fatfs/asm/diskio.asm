@@ -15,6 +15,7 @@ R3	equ	13
 ;#include <stdio.h>
 ;#include "ff.h"			/* Basic definitions of FatFs */
 ;#include "diskio.h"		/* Declarations FatFs MAI */
+;#include "misc.h"
 ;
 ;/* Example: Declarations of the platform and disk functions in the project */
 ;//#include "platform.h"
@@ -136,10 +137,28 @@ _~disk_initialize:
 pdrv_0	set	3
 ;	DSTATUS stat;
 ;	int result;
-;
-;	printf("disk_initialize 0x%02x\n", pdrv);
+;	FILE *fin;
+;	char *image;
+;	
+;	//fin = fopen("..\\res\sd32.img", "rwb");
+;	if (fin) {
 stat_1	set	0
 result_1	set	1
+fin_1	set	3
+image_1	set	7
+	lda	<L7+fin_1
+	ora	<L7+fin_1+2
+	beq	L10001
+;		image = (char *)farmalloc(32*1024*1024);
+	pea	#^$0
+	pea	#<$0
+	jsr	_~farmalloc
+	sta	<L7+image_1
+	stx	<L7+image_1+2
+;	}
+;	
+;	printf("disk_initialize 0x%02x\n", pdrv);
+L10001:
 	lda	<L6+pdrv_0
 	and	#$ff
 	pha
@@ -147,6 +166,7 @@ result_1	set	1
 	pea	#<L5
 	pea	#8
 	jsr	_~printf
+;	
 ;	
 ;	return RES_OK;
 	lda	#$0
@@ -186,7 +206,7 @@ result_1	set	1
 ;	return STA_NOINIT;
 ;*/
 ;}
-L6	equ	3
+L6	equ	11
 L7	equ	1
 	ends
 	efunc
@@ -217,7 +237,7 @@ _~disk_read:
 	longi	on
 	tsc
 	sec
-	sbc	#L10
+	sbc	#L11
 	tcs
 	phd
 	tcd
@@ -231,28 +251,28 @@ count_0	set	13
 ;	printf("disk_read 0x%02x, buffer:%p, sector:%p, count:0x%04x\n", pdrv, buff, sector, count);
 res_1	set	0
 result_1	set	2
-	pei	<L10+count_0
-	pei	<L10+sector_0+2
-	pei	<L10+sector_0
-	pei	<L10+buff_0+2
-	pei	<L10+buff_0
-	lda	<L10+pdrv_0
+	pei	<L11+count_0
+	pei	<L11+sector_0+2
+	pei	<L11+sector_0
+	pei	<L11+buff_0+2
+	pei	<L11+buff_0
+	lda	<L11+pdrv_0
 	and	#$ff
 	pha
-	pea	#^L9
-	pea	#<L9
+	pea	#^L10
+	pea	#<L10
 	pea	#18
 	jsr	_~printf
 ;	
 ;	return RES_OK;
 	lda	#$0
 	tay
-	lda	<L10+1
-	sta	<L10+1+12
+	lda	<L11+1
+	sta	<L11+1+12
 	pld
 	tsc
 	clc
-	adc	#L10+12
+	adc	#L11+12
 	tcs
 	tya
 	rts
@@ -289,12 +309,12 @@ result_1	set	2
 ;	return RES_PARERR;
 ;	*/
 ;}
-L10	equ	4
-L11	equ	1
+L11	equ	4
+L12	equ	1
 	ends
 	efunc
 	data
-L9:
+L10:
 	db	$64,$69,$73,$6B,$5F,$72,$65,$61,$64,$20,$30,$78,$25,$30,$32
 	db	$78,$2C,$20,$62,$75,$66,$66,$65,$72,$3A,$25,$70,$2C,$20,$73
 	db	$65,$63,$74,$6F,$72,$3A,$25,$70,$2C,$20,$63,$6F,$75,$6E,$74
@@ -324,7 +344,7 @@ _~disk_write:
 	longi	on
 	tsc
 	sec
-	sbc	#L14
+	sbc	#L15
 	tcs
 	phd
 	tcd
@@ -338,28 +358,28 @@ count_0	set	13
 ;	printf("disk_write 0x%02x, buffer:%p, sector:%p, count:0x%04x\n", pdrv, buff, sector, count);
 res_1	set	0
 result_1	set	2
-	pei	<L14+count_0
-	pei	<L14+sector_0+2
-	pei	<L14+sector_0
-	pei	<L14+buff_0+2
-	pei	<L14+buff_0
-	lda	<L14+pdrv_0
+	pei	<L15+count_0
+	pei	<L15+sector_0+2
+	pei	<L15+sector_0
+	pei	<L15+buff_0+2
+	pei	<L15+buff_0
+	lda	<L15+pdrv_0
 	and	#$ff
 	pha
-	pea	#^L13
-	pea	#<L13
+	pea	#^L14
+	pea	#<L14
 	pea	#18
 	jsr	_~printf
 ;	
 ;	return RES_OK;
 	lda	#$0
 	tay
-	lda	<L14+1
-	sta	<L14+1+12
+	lda	<L15+1
+	sta	<L15+1+12
 	pld
 	tsc
 	clc
-	adc	#L14+12
+	adc	#L15+12
 	tcs
 	tya
 	rts
@@ -397,12 +417,12 @@ result_1	set	2
 ;	return RES_PARERR;
 ;*/
 ;}
-L14	equ	4
-L15	equ	1
+L15	equ	4
+L16	equ	1
 	ends
 	efunc
 	data
-L13:
+L14:
 	db	$64,$69,$73,$6B,$5F,$77,$72,$69,$74,$65,$20,$30,$78,$25,$30
 	db	$32,$78,$2C,$20,$62,$75,$66,$66,$65,$72,$3A,$25,$70,$2C,$20
 	db	$73,$65,$63,$74,$6F,$72,$3A,$25,$70,$2C,$20,$63,$6F,$75,$6E
@@ -430,7 +450,7 @@ _~disk_ioctl:
 	longi	on
 	tsc
 	sec
-	sbc	#L18
+	sbc	#L19
 	tcs
 	phd
 	tcd
@@ -443,28 +463,28 @@ buff_0	set	7
 ;	printf("disk_ioctl 0x%02x, cmd:0x%02x, buffer:%p \n", pdrv, cmd, buff);
 res_1	set	0
 result_1	set	2
-	pei	<L18+buff_0+2
-	pei	<L18+buff_0
-	lda	<L18+cmd_0
+	pei	<L19+buff_0+2
+	pei	<L19+buff_0
+	lda	<L19+cmd_0
 	and	#$ff
 	pha
-	lda	<L18+pdrv_0
+	lda	<L19+pdrv_0
 	and	#$ff
 	pha
-	pea	#^L17
-	pea	#<L17
+	pea	#^L18
+	pea	#<L18
 	pea	#14
 	jsr	_~printf
 ;	
 ;	return RES_OK;
 	lda	#$0
 	tay
-	lda	<L18+1
-	sta	<L18+1+8
+	lda	<L19+1
+	sta	<L19+1+8
 	pld
 	tsc
 	clc
-	adc	#L18+8
+	adc	#L19+8
 	tcs
 	tya
 	rts
@@ -492,16 +512,17 @@ result_1	set	2
 ;	return RES_PARERR;
 ;*/
 ;}
-L18	equ	4
-L19	equ	1
+L19	equ	4
+L20	equ	1
 	ends
 	efunc
 	data
-L17:
+L18:
 	db	$64,$69,$73,$6B,$5F,$69,$6F,$63,$74,$6C,$20,$30,$78,$25,$30
 	db	$32,$78,$2C,$20,$63,$6D,$64,$3A,$30,$78,$25,$30,$32,$78,$2C
 	db	$20,$62,$75,$66,$66,$65,$72,$3A,$25,$70,$20,$0A,$00
 	ends
 ;
 ;
+	xref	_~farmalloc
 	xref	_~printf

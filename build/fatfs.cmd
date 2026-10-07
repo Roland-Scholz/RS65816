@@ -6,13 +6,13 @@ path=%PATH%;%WDC%\bin
 set HOME=C:\github\RS65816
 
 set PROJ=fatfs
-set SRC=%HOME%\src\fatfs\source
+set SRC=%HOME%\src
 set REL=%HOME%\release\%COMPILER%\%PROJ%
 set LST=%REL%\lst
 set OBJ=%REL%\obj
 set ASM=%REL%\asm
 
-set WDC_INC_65816=%WDC%\include;%SRC%;%HOME%\FreeRTOS-LTS\FreeRTOS\FreeRTOS-Kernel\include;%HOME%\FreeRTOS-LTS\FreeRTOS\FreeRTOS-Kernel\portable\WDC65816
+set WDC_INC_65816=%WDC%\include;%SRC%\include;
 set WDC_LIB=%WDC%\lib
 
 echo WDC_INC=%WDC_INC_65816%

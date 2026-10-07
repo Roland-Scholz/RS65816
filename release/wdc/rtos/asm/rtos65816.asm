@@ -328,99 +328,29 @@ fr_1	set	11
 	pea	#12
 	jsr	_~printf
 ;
-;//	vTaskDelay(taskParm->tickDelay);
-;
-;
-;
-;	f_mount(&FatFs, "", 0);		/* Give a work area to the default drive */
-	pea	#<$0
-	pea	#^L12+12
-	pea	#<L12+12
-	lda	#<_~FatFs
-	sta	<R0
-	xref	_BEG_DATA
-	lda	#_BEG_DATA>>16
-	pha
-	pei	<R0
-	jsr	_~f_mount
-;
-;	fr = f_open(&Fil, "newfile.txt", FA_WRITE | FA_CREATE_ALWAYS);	/* Create a file */
-	pea	#<$a
-	pea	#^L12+13
-	pea	#<L12+13
-	lda	#<_~Fil
-	sta	<R0
-	xref	_BEG_DATA
-	lda	#_BEG_DATA>>16
-	pha
-	pei	<R0
-	jsr	_~f_open
-	sta	<L14+fr_1
-;	if (fr == FR_OK) {
-	lda	<L14+fr_1
-	bne	L10001
-;		f_write(&Fil, "It works!\r\n", 11, &bw);	/* Write data to the file */
-	pea	#0
-	clc
-	tdc
-	adc	#<L14+bw_1
-	pha
-	pea	#<$b
-	pea	#^L12+25
-	pea	#<L12+25
-	lda	#<_~Fil
-	sta	<R0
-	xref	_BEG_DATA
-	lda	#_BEG_DATA>>16
-	pha
-	pei	<R0
-	jsr	_~f_write
-;		fr = f_close(&Fil);							/* Close the file */
-	lda	#<_~Fil
-	sta	<R0
-	xref	_BEG_DATA
-	lda	#_BEG_DATA>>16
-	pha
-	pei	<R0
-	jsr	_~f_close
-	sta	<L14+fr_1
-;		if (fr == FR_OK && bw == 11) {		/* Lights green LED if data written well */
-	lda	<L14+fr_1
-	bne	L10001
-	lda	<L14+bw_1
-	cmp	#<$b
-	bne	L10001
-;			//DDRB |= 0x10; PORTB |= 0x10;	/* Set PB4 high */
-;			printf("OK!\n");
-	pea	#^L12+37
-	pea	#<L12+37
-	pea	#6
-	jsr	_~printf
-;		}
-;	}
-;
-;	printf("task ended\n");
-L10001:
-	pea	#^L12+42
-	pea	#<L12+42
-	pea	#6
-	jsr	_~printf
-;	for(;;)
-;		;
+;	for(;;) {
 L10003:
+;		vTaskDelay(taskParm->tickDelay);
+	ldy	#$b
+	lda	[<L14+taskParm_1],Y
+	pha
+	dey
+	dey
+	lda	[<L14+taskParm_1],Y
+	pha
+	jsr	_~vTaskDelay
+;	}
 	bra	L10003
+;		
 ;
 ;}
-L13	equ	17
-L14	equ	5
+L13	equ	13
+L14	equ	1
 	ends
 	efunc
 	data
 L12:
-	db	$25,$73,$20,$44,$42,$3A,$25,$30,$32,$58,$0A,$00,$00,$6E,$65
-	db	$77,$66,$69,$6C,$65,$2E,$74,$78,$74,$00,$49,$74,$20,$77,$6F
-	db	$72,$6B,$73,$21,$0D,$0A,$00,$4F,$4B,$21,$0A,$00,$74,$61,$73
-	db	$6B,$20,$65,$6E,$64,$65,$64,$0A,$00
+	db	$25,$73,$20,$44,$42,$3A,$25,$30,$32,$58,$0A,$00
 	ends
 ;
 ;int main (int argc, char ** argv) {
@@ -432,7 +362,7 @@ _~main:
 	longi	on
 	tsc
 	sec
-	sbc	#L19
+	sbc	#L16
 	tcs
 	phd
 	tcd
@@ -464,14 +394,14 @@ p_1	set	61
 i_1	set	65
 	pea	#<$320
 	jsr	_~pvPortMallocStack
-	sta	<L20+pxHeapReg_1
-	stx	<L20+pxHeapReg_1+2
+	sta	<L17+pxHeapReg_1
+	stx	<L17+pxHeapReg_1+2
 ;	printf("pxHeapReg:%p %u\n", pxHeapReg, sizeof(reg) * 100);
 	pea	#<$320
-	pei	<L20+pxHeapReg_1+2
-	pei	<L20+pxHeapReg_1
-	pea	#^L18
-	pea	#<L18
+	pei	<L17+pxHeapReg_1+2
+	pei	<L17+pxHeapReg_1
+	pea	#^L15
+	pea	#<L15
 	pea	#12
 	jsr	_~printf
 ;	
@@ -479,23 +409,23 @@ i_1	set	65
 ;	
 ;	reg.xSizeInBytes = 0x010000;
 	lda	#$0
-	sta	<L20+reg_1+4
+	sta	<L17+reg_1+4
 	ina
-	sta	<L20+reg_1+6
+	sta	<L17+reg_1+6
 ;	
 ;	for(i = 0; i < 99; i++) {
-	stz	<L20+i_1
-L10008:
+	stz	<L17+i_1
+L10006:
 ;		reg.pucStartAddress = (char *)((i+2) * 0x010000U);
 	lda	#$2
 	clc
-	adc	<L20+i_1
+	adc	<L17+i_1
 	sta	<R1
 	ldy	#$0
 	lda	<R1
-	bpl	L21
+	bpl	L18
 	dey
-L21:
+L18:
 	sta	<R1
 	sty	<R1+2
 	pei	<R1+2
@@ -504,19 +434,68 @@ L21:
 	xref	_~~lasl
 	jsr	_~~lasl
 	stx	<R0+2
-	sta	<L20+reg_1
+	sta	<L17+reg_1
 	lda	<R0+2
-	sta	<L20+reg_1+2
+	sta	<L17+reg_1+2
 ;		pxHeapReg[i] = reg;
 	clc
 	tdc
-	adc	#<L20+reg_1
+	adc	#<L17+reg_1
 	sta	<R0
 	lda	#$0
 	pha
 	pei	<R0
 	tay
-	lda	<L20+i_1
+	lda	<L17+i_1
+	bpl	L19
+	dey
+L19:
+	sta	<R1
+	sty	<R1+2
+	pei	<R1+2
+	pei	<R1
+	lda	#$3
+	xref	_~~lasl
+	jsr	_~~lasl
+	sta	<R0
+	stx	<R0+2
+	lda	<L17+pxHeapReg_1
+	clc
+	adc	<R0
+	sta	<R2
+	lda	<L17+pxHeapReg_1+2
+	adc	<R0+2
+	pha
+	pei	<R2
+	lda	#$8
+	xref	_~~fmov
+	jsr	_~~fmov
+;		
+;	}
+	inc	<L17+i_1
+	sec
+	lda	<L17+i_1
+	sbc	#<$63
+	bvs	L20
+	eor	#$8000
+L20:
+	bpl	L10006
+;	reg.pucStartAddress = NULL;
+	stz	<L17+reg_1
+	stz	<L17+reg_1+2
+;	reg.xSizeInBytes = 0;
+	stz	<L17+reg_1+4
+	stz	<L17+reg_1+6
+;	pxHeapReg[i] = reg;
+	clc
+	tdc
+	adc	#<L17+reg_1
+	sta	<R0
+	lda	#$0
+	pha
+	pei	<R0
+	tay
+	lda	<L17+i_1
 	bpl	L22
 	dey
 L22:
@@ -529,60 +508,11 @@ L22:
 	jsr	_~~lasl
 	sta	<R0
 	stx	<R0+2
-	lda	<L20+pxHeapReg_1
+	lda	<L17+pxHeapReg_1
 	clc
 	adc	<R0
 	sta	<R2
-	lda	<L20+pxHeapReg_1+2
-	adc	<R0+2
-	pha
-	pei	<R2
-	lda	#$8
-	xref	_~~fmov
-	jsr	_~~fmov
-;		
-;	}
-	inc	<L20+i_1
-	sec
-	lda	<L20+i_1
-	sbc	#<$63
-	bvs	L23
-	eor	#$8000
-L23:
-	bpl	L10008
-;	reg.pucStartAddress = NULL;
-	stz	<L20+reg_1
-	stz	<L20+reg_1+2
-;	reg.xSizeInBytes = 0;
-	stz	<L20+reg_1+4
-	stz	<L20+reg_1+6
-;	pxHeapReg[i] = reg;
-	clc
-	tdc
-	adc	#<L20+reg_1
-	sta	<R0
-	lda	#$0
-	pha
-	pei	<R0
-	tay
-	lda	<L20+i_1
-	bpl	L25
-	dey
-L25:
-	sta	<R1
-	sty	<R1+2
-	pei	<R1+2
-	pei	<R1
-	lda	#$3
-	xref	_~~lasl
-	jsr	_~~lasl
-	sta	<R0
-	stx	<R0+2
-	lda	<L20+pxHeapReg_1
-	clc
-	adc	<R0
-	sta	<R2
-	lda	<L20+pxHeapReg_1+2
+	lda	<L17+pxHeapReg_1+2
 	adc	<R0+2
 	pha
 	pei	<R2
@@ -592,31 +522,31 @@ L25:
 ;
 ;	
 ;	printf("*** RTOS main \n");
-	pea	#^L18+17
-	pea	#<L18+17
+	pea	#^L15+17
+	pea	#<L15+17
 	pea	#6
 	jsr	_~printf
 ;	printf("*** RTOS vPortHeapResetState \n");
-	pea	#^L18+33
-	pea	#<L18+33
+	pea	#^L15+33
+	pea	#<L15+33
 	pea	#6
 	jsr	_~printf
 ;	vPortHeapResetState();
 	jsr	_~vPortHeapResetState
 ;
 ;	printf("*** RTOS vPortDefineHeapRegions \n");
-	pea	#^L18+64
-	pea	#<L18+64
+	pea	#^L15+64
+	pea	#<L15+64
 	pea	#6
 	jsr	_~printf
 ;	vPortDefineHeapRegions( pxHeapReg );
-	pei	<L20+pxHeapReg_1+2
-	pei	<L20+pxHeapReg_1
+	pei	<L17+pxHeapReg_1+2
+	pei	<L17+pxHeapReg_1
 	jsr	_~vPortDefineHeapRegions
 ;	
 ;	vPortFreeStack(pxHeapReg);
-	pei	<L20+pxHeapReg_1+2
-	pei	<L20+pxHeapReg_1
+	pei	<L17+pxHeapReg_1+2
+	pei	<L17+pxHeapReg_1
 	jsr	_~vPortFreeStack
 ;	
 ;	printHeapStats();
@@ -624,73 +554,73 @@ L25:
 ;	
 ;	pp.ptr = shellTask;
 	lda	#<_~shellTask
-	sta	<L20+pp_1
+	sta	<L17+pp_1
 	xref	_BEG_DATA
 	lda	#_BEG_DATA>>16
-	sta	<L20+pp_1+2
+	sta	<L17+pp_1+2
 ;	taskParm_1.dataBank = pp.parts.bank;
 	sep	#$20
 	longa	off
-	sta	<L20+taskParm_1_1+4
+	sta	<L17+taskParm_1_1+4
 ;	taskParm_2.dataBank = pp.parts.bank;
-	lda	<L20+pp_1+2
-	sta	<L20+taskParm_2_1+4
+	lda	<L17+pp_1+2
+	sta	<L17+taskParm_2_1+4
 ;	taskParm_3.dataBank = pp.parts.bank;
-	lda	<L20+pp_1+2
-	sta	<L20+taskParm_3_1+4
+	lda	<L17+pp_1+2
+	sta	<L17+taskParm_3_1+4
 	rep	#$20
 	longa	on
 ;	
 ;	taskParm_1.taskName = "task1";
-	lda	#<L18+98
-	sta	<L20+taskParm_1_1
-	lda	#^L18+98
-	sta	<L20+taskParm_1_1+2
+	lda	#<L15+98
+	sta	<L17+taskParm_1_1
+	lda	#^L15+98
+	sta	<L17+taskParm_1_1+2
 ;	taskParm_1.taskAddr = shellTask;
 	lda	#<_~shellTask
-	sta	<L20+taskParm_1_1+5
+	sta	<L17+taskParm_1_1+5
 	xref	_BEG_DATA
 	lda	#_BEG_DATA>>16
-	sta	<L20+taskParm_1_1+7
+	sta	<L17+taskParm_1_1+7
 ;	taskParm_1.tickDelay = 10;
 	lda	#$a
-	sta	<L20+taskParm_1_1+9
+	sta	<L17+taskParm_1_1+9
 	lda	#$0
-	sta	<L20+taskParm_1_1+11
+	sta	<L17+taskParm_1_1+11
 ;	
 ;	taskParm_2.taskName = "2";
-	lda	#<L18+104
-	sta	<L20+taskParm_2_1
-	lda	#^L18+104
-	sta	<L20+taskParm_2_1+2
+	lda	#<L15+104
+	sta	<L17+taskParm_2_1
+	lda	#^L15+104
+	sta	<L17+taskParm_2_1+2
 ;	taskParm_2.taskAddr = shellTask;
 	lda	#<_~shellTask
-	sta	<L20+taskParm_2_1+5
+	sta	<L17+taskParm_2_1+5
 	xref	_BEG_DATA
 	lda	#_BEG_DATA>>16
-	sta	<L20+taskParm_2_1+7
+	sta	<L17+taskParm_2_1+7
 ;	taskParm_2.tickDelay = 5;
 	lda	#$5
-	sta	<L20+taskParm_2_1+9
+	sta	<L17+taskParm_2_1+9
 	lda	#$0
-	sta	<L20+taskParm_2_1+11
+	sta	<L17+taskParm_2_1+11
 ;
 ;	taskParm_3.taskName = "3";
-	lda	#<L18+106
-	sta	<L20+taskParm_3_1
-	lda	#^L18+106
-	sta	<L20+taskParm_3_1+2
+	lda	#<L15+106
+	sta	<L17+taskParm_3_1
+	lda	#^L15+106
+	sta	<L17+taskParm_3_1+2
 ;	taskParm_3.taskAddr = shellTask;
 	lda	#<_~shellTask
-	sta	<L20+taskParm_3_1+5
+	sta	<L17+taskParm_3_1+5
 	xref	_BEG_DATA
 	lda	#_BEG_DATA>>16
-	sta	<L20+taskParm_3_1+7
+	sta	<L17+taskParm_3_1+7
 ;	taskParm_3.tickDelay = 1;
 	lda	#$1
-	sta	<L20+taskParm_3_1+9
+	sta	<L17+taskParm_3_1+9
 	dea
-	sta	<L20+taskParm_3_1+11
+	sta	<L17+taskParm_3_1+11
 ;	
 ;	rc = xTaskCreate( taskParm_1.taskAddr, "Task1", 512, (void *) &taskParm_1, 0, NULL);	
 	pea	#^$0
@@ -699,19 +629,19 @@ L25:
 	pea	#0
 	clc
 	tdc
-	adc	#<L20+taskParm_1_1
+	adc	#<L17+taskParm_1_1
 	pha
 	pea	#<$200
-	pea	#^L18+108
-	pea	#<L18+108
-	pei	<L20+taskParm_1_1+7
-	pei	<L20+taskParm_1_1+5
+	pea	#^L15+108
+	pea	#<L15+108
+	pei	<L17+taskParm_1_1+7
+	pei	<L17+taskParm_1_1+5
 	jsr	_~xTaskCreate
-	sta	<L20+rc_1
+	sta	<L17+rc_1
 ;	printf("task create rc: %d\n", rc);
 	pha
-	pea	#^L18+114
-	pea	#<L18+114
+	pea	#^L15+114
+	pea	#<L15+114
 	pea	#8
 	jsr	_~printf
 ;	/*
@@ -722,25 +652,25 @@ L25:
 ;	*/
 ;	
 ;	if (rc != pdPASS) {
-	lda	<L20+rc_1
+	lda	<L17+rc_1
 	cmp	#<$1
-	beq	L10009
+	beq	L10007
 ;		printf("shell could not be created rc: %d\n", rc);
-	pei	<L20+rc_1
-	pea	#^L18+134
-	pea	#<L18+134
+	pei	<L17+rc_1
+	pea	#^L15+134
+	pea	#<L15+134
 	pea	#8
 	jsr	_~printf
 ;		return pdPASS;
 	lda	#$1
-L27:
+L24:
 	tay
-	lda	<L19+1
-	sta	<L19+1+6
+	lda	<L16+1
+	sta	<L16+1+6
 	pld
 	tsc
 	clc
-	adc	#L19+6
+	adc	#L16+6
 	tcs
 	tya
 	rts
@@ -749,7 +679,7 @@ L27:
 ;	/* Start the scheduler so the tasks start executing. */
 ;
 ;	vTaskStartScheduler();
-L10009:
+L10007:
 	jsr	_~vTaskStartScheduler
 ;
 ;	/* If all is well then main() will never reach here as the scheduler will
@@ -757,14 +687,14 @@ L10009:
 ;	there was insufficient heap memory available for the idle task to be created.
 ;	Chapter 2 provides more information on heap memory management. */
 ;	printf("Error starting RTOS scheduler\n");
-	pea	#^L18+169
-	pea	#<L18+169
+	pea	#^L15+169
+	pea	#<L15+169
 	pea	#6
 	jsr	_~printf
 ;
 ;	return pdFAIL;
 	lda	#$0
-	bra	L27
+	bra	L24
 ;
 ;
 ;/*	
@@ -788,12 +718,12 @@ L10009:
 ;	for (;;) {}
 ;*/	
 ;}
-L19	equ	79
-L20	equ	13
+L16	equ	79
+L17	equ	13
 	ends
 	efunc
 	data
-L18:
+L15:
 	db	$70,$78,$48,$65,$61,$70,$52,$65,$67,$3A,$25,$70,$20,$25,$75
 	db	$0A,$00,$2A,$2A,$2A,$20,$52,$54,$4F,$53,$20,$6D,$61,$69,$6E
 	db	$20,$0A,$00,$2A,$2A,$2A,$20,$52,$54,$4F,$53,$20,$76,$50,$6F
@@ -810,11 +740,8 @@ L18:
 	db	$6C,$65,$72,$0A,$00
 	ends
 ;
-	xref	_~f_mount
-	xref	_~f_write
-	xref	_~f_close
-	xref	_~f_open
 	xref	_~vTaskStartScheduler
+	xref	_~vTaskDelay
 	xref	_~xTaskCreate
 	xref	_~vPortHeapResetState
 	xref	_~vPortFreeStack

@@ -1,0 +1,736 @@
+  Tue Oct  6 2026 15:25                                                                                                    Page 1
+
+
+                                               ***************************************
+                                               **      WDC 65C816 Macro Assembler   **
+                                               **                                   **
+                                               **     Version 3.49.1- Feb  6 2006    **
+                                               ***************************************
+
+     1                        		INCLUDE ..\src\equations.asm
+     2                        
+     3                        		XDEF 	kernel
+     4                        		XDEF	space
+     5                        		XDEF	chrout
+     6                        		XDEF	printhex
+     7                        		XDEF	chrin
+     8                        		XDEF	newline
+     9                        			
+    10                        		XREF	disass8
+    11                        		XREF	disass16
+    12                        
+    13                        		CODE
+    14                        		
+    15                        ;----------------------------------------------------------------------------
+    16                        ; Start of Kernel
+    17                        ;----------------------------------------------------------------------------
+    18 00:0000: 78           kernel		sei
+    19 00:0001: C2 09        		rep	#CARRY+DECIMAL_FLAG		
+    20 00:0003: FB           		xce					;switch to native mode
+    21                        
+    22                        		A16
++   22 00:0004: C2 20        		rep	#ACC
++   22                        		longa	on
+    23 00:0006: A9 FF CF     		lda	#$cfff				;stack to $1ff
+    24 00:0009: 1B           		tcs	
+    25 00:000A: A9 00 00     		lda	#0
+    26 00:000D: 5B           		tcd					;direct to 0
+    27                        		
+    28                        		A8					;acc 	8-bit
++   28 00:000E: E2 20        		sep	#ACC
++   28                        		longa	off
+    29                        		I16					;index 16-bit
++   29 00:0010: C2 10        		rep	#IX
++   29                        		longi	on
+    30 00:0012: 48           		pha
+    31 00:0013: AB           		plb					;databank = 0
+    32                        
+    33                        
+    34 00:0014: A2 FF 02     		ldx	#$02ff
+    35 00:0017: 9E 00 00     kernel1		stz	$0,x
+    36 00:001A: CA           		dex
+    37 00:001B: 10 FA        		bpl	kernel1
+    38                        		
+    39 00:001D: A9 54        		lda	#$54				;MVN
+    40 00:001F: 85 00        		sta	MOVENEG		
+    41 00:0021: A9 60        		lda	#$60		
+    42 00:0023: 85 03        		sta	MOVERTS				;RTS
+    43                        
+    44                        menu
+    45                        menustart:	
+    46 00:0025: A2 xx xx     		ldx	#MSGSTART
+  Tue Oct  6 2026 15:25                                                                                                    Page 2
+
+
+    47 00:0028: 20 xx xx     		jsr	print
+    48                        		
+    49 00:002B: 20 xx xx     menuadr:	jsr	newline
+    50 00:002E: A9 46        		lda	#'F'
+    51 00:0030: 20 xx xx     		jsr	chrout
+    52 00:0033: 08           		php
+    53 00:0034: 68           		pla
+    54 00:0035: 20 xx xx     		jsr	printhex
+    55 00:0038: 20 xx xx     		jsr	space
+    56 00:003B: A9 42        		lda	#'B'
+    57 00:003D: 20 xx xx     		jsr	chrout
+    58 00:0040: 8B           		phb
+    59 00:0041: 68           		pla
+    60 00:0042: 20 xx xx     		jsr	printhex
+    61 00:0045: 20 xx xx     		jsr	space
+    62 00:0048: A9 4B        		lda	#'K'
+    63 00:004A: 20 xx xx     		jsr	chrout
+    64 00:004D: 4B           		phk
+    65 00:004E: 68           		pla
+    66 00:004F: 20 xx xx     		jsr	printhex
+    67 00:0052: 20 xx xx     		jsr	space
+    68 00:0055: A9 44        		lda	#'D'
+    69 00:0057: 20 xx xx     		jsr	chrout
+    70 00:005A: 7B           		tdc
+    71 00:005B: EB           		xba
+    72 00:005C: 20 xx xx     		jsr	printhex
+    73 00:005F: EB           		xba
+    74 00:0060: 20 xx xx     		jsr	printhex
+    75 00:0063: 20 xx xx     		jsr	space
+    76 00:0066: A9 53        		lda	#'S'
+    77 00:0068: 20 xx xx     		jsr	chrout
+    78 00:006B: 3B           		tsc
+    79 00:006C: EB           		xba
+    80 00:006D: 20 xx xx     		jsr	printhex
+    81 00:0070: EB           		xba
+    82 00:0071: 20 xx xx     		jsr	printhex
+    83 00:0074: 20 xx xx     		jsr	space
+    84                        
+    85 00:0077: A5 05        		lda	<memptr+2
+    86 00:0079: 20 xx xx     		jsr	printhex
+    87 00:007C: A9 3A        		lda	#':'
+    88 00:007E: 20 xx xx     		jsr	chrout
+    89 00:0081: A5 04        		lda	<memptr+1
+    90 00:0083: 20 xx xx     		jsr	printhex
+    91 00:0086: A5 03        		lda	<memptr
+    92 00:0088: 20 xx xx     		jsr	printhex
+    93 00:008B: A9 3E        		lda	#'>'
+    94 00:008D: 20 xx xx     		jsr	chrout
+    95 00:0090: 20 xx xx     		jsr	space
+    96                        	
+    97 00:0093: 20 xx xx     menuloop:	jsr	getupper
+    98 00:0096: A2 0B 00     		ldx	#menuvec-menukey-1
+    99                        			
+   100 00:0099: DD xx xx     menuloop1:	cmp	menukey,x
+   101 00:009C: F0 06        		beq	menufound
+   102 00:009E: CA           		dex	
+   103 00:009F: 10 F8        		bpl	menuloop1
+   104 00:00A1: 4C xx xx     		jmp	menuadr
+  Tue Oct  6 2026 15:25                                                                                                    Page 3
+
+
+   105 00:00A4: A9 00        menufound:	lda	#0
+   106 00:00A6: EB           		xba
+   107 00:00A7: 8A           		txa	
+   108 00:00A8: 0A           		asl	
+   109 00:00A9: AA           		tax	
+   110 00:00AA: FC xx xx     		jsr	(menuvec,x)
+   111 00:00AD: 4C xx xx     		jmp	menuadr
+   112                        
+   113                        ;----------------------------------------------------------------------------
+   114                        ; Menu routines
+   115                        ;----------------------------------------------------------------------------
+   116 00:00B0: A5 05        setdatabank:	lda	<memptr+2
+   117 00:00B2: 20 xx xx     		jsr	printhex
+   118 00:00B5: A9 3A        		lda	#':'
+   119 00:00B7: 20 xx xx     		jsr	chrout
+   120 00:00BA: 20 xx xx     		jsr	space
+   121 00:00BD: 20 xx xx     		jsr	inputhex
+   122 00:00C0: 85 05        		sta	<memptr+2
+   123 00:00C2: 60           		rts
+   124                        ;
+   125                        ;
+   126                        ;
+   127 00:00C3: A7 03        changemem:	lda	[memptr]
+   128 00:00C5: 20 xx xx     		jsr	printhex
+   129 00:00C8: A9 3A        		lda	#':'
+   130 00:00CA: 20 xx xx     		jsr	chrout
+   131 00:00CD: 20 xx xx     		jsr	space
+   132 00:00D0: 20 xx xx     		jsr	inputhex
+   133 00:00D3: 87 03        		sta	[memptr]
+   134 00:00D5: 60           		rts
+   135                        ;
+   136                        ;
+   137                        ;
+   138 00:00D6: A2 xx xx     hexdownload:	ldx	#MSGDOWNL
+   139 00:00D9: 20 xx xx     		jsr	print
+   140                        		
+   141                        		I8
++  141 00:00DC: E2 10        		sep	#IX
++  141                        		longi	off
+   142 00:00DE: 20 xx xx     download:	jsr	chrin		; wait for leading ":"
+   143 00:00E1: C9 3A        		cmp	#':'
+   144 00:00E3: D0 F9        		bne	download
+   145                        	
+   146 00:00E5: A9 00        		lda	#0
+   147 00:00E7: 85 07        		sta	<chksum
+   148                        
+   149 00:00E9: 20 xx xx     		jsr	gethex		; number of bytes in line
+   150 00:00EC: AA           		tax	
+   151 00:00ED: 20 xx xx     		jsr	getadr		; addess in ptr
+   152 00:00F0: 20 xx xx     		jsr	gethex		; record-type 0=data record
+   153 00:00F3: D0 17        		bne	download1
+   154                        			
+   155 00:00F5: A8           		tay			; Acc zero
+   156 00:00F6: 20 xx xx     download2:	jsr	gethex		; read byte
+   157 00:00F9: 91 01        		sta	(ptr),y		; store at address
+   158 00:00FB: C8           		iny	
+   159 00:00FC: CA           		dex			; decement length
+   160 00:00FD: D0 F7        		bne	download2	; line not completely read
+  Tue Oct  6 2026 15:25                                                                                                    Page 4
+
+
+   161                        	
+   162 00:00FF: 20 xx xx     		jsr	gethex		; line finished
+   163 00:0102: A5 07        		lda	<chksum		; read checksum
+   164 00:0104: F0 D8        		beq	download	; checksum OK, next line
+   165 00:0106: 20 xx xx     		jsr	debug		; print debug
+   166 00:0109: 4C xx xx     		jmp	download	; read next line
+   167                        	
+   168 00:010C: 20 xx xx     download1:	jsr	gethex
+   169 00:010F: 4C xx xx     		jmp	kernel
+   170                        	
+   171 00:0112: 42 07        debug:		wdm	7
+   172 00:0114: 4C xx xx     		jmp	debug
+   173                        		
+   174                        ;		lda	<ptr+1
+   175                        ;		jsr	printhex
+   176                        ;		lda	<ptr
+   177                        ;		jsr	printhex
+   178                        ;		jsr	space
+   179                        ;		lda	<chksum
+   180                        ;		jsr	printhex
+   181                        ;		jmp	newline
+   182                        
+   183                        		longi	on
+   184                        		
+   185 00:0117: 64 6F 77 6E  MSGDOWNL:	.byte	"downloading...",EOL,0
+       00:011B: 6C 6F 61 64 
+       00:011F: 69 6E 67 2E 
+       00:0123: 2E 2E 0D 00 
+   186                        ;
+   187                        ;
+   188                        ;
+   189 00:0127: A2 xx xx     copymem:	ldx	#msgcopy1
+   190 00:012A: 20 xx xx     		jsr	print
+   191                        	
+   192 00:012D: 20 xx xx     		jsr	enteradr
+   193 00:0130: C9 78        		cmp	#'x'
+   194 00:0132: F0 3A        		beq	copyend
+   195                        		
+   196 00:0134: A2 xx xx     		ldx	#msgfill2
+   197 00:0137: 20 xx xx     		jsr	print
+   198                        	
+   199 00:013A: 20 xx xx     		jsr	inputhex
+   200 00:013D: 85 02        		sta	ptr+1
+   201 00:013F: 20 xx xx     		jsr	inputhex
+   202 00:0142: 85 01        		sta	ptr
+   203                        		
+   204 00:0144: A2 xx xx     		ldx	#msgcopy2
+   205 00:0147: 20 xx xx     		jsr	print
+   206                        
+   207 00:014A: 20 xx xx     		jsr	inputhex
+   208 00:014D: 85 14        		sta	TEMP+1
+   209 00:014F: 20 xx xx     		jsr	inputhex
+   210 00:0152: 85 13        		sta	TEMP
+   211                        		
+   212 00:0154: A5 05        		lda	memptr+2
+   213 00:0156: 85 01        		sta	MOVEBNK
+   214 00:0158: 85 02        		sta	MOVEBNK+1
+   215                        		
+  Tue Oct  6 2026 15:25                                                                                                    Page 5
+
+
+   216                        		A16
++  216 00:015A: C2 20        		rep	#ACC
++  216                        		longa	on
+   217 00:015C: 38           		sec
+   218 00:015D: A5 01        		lda	ptr
+   219 00:015F: E5 03        		sbc	memptr
+   220 00:0161: 90 09        		bcc	copymem2
+   221                        			
+   222 00:0163: A6 03        		ldx	memptr
+   223 00:0165: A4 13        		ldy	TEMP	
+   224 00:0167: 8B           		phb	
+   225 00:0168: 20 00 02     		jsr	MOVENEG
+   226 00:016B: AB           		plb	
+   227                        			
+   228                        copymem2:	A8		
++  228 00:016C: E2 20        		sep	#ACC
++  228                        		longa	off
+   229 00:016E: 60           copyend:	rts
+   230                        ;
+   231                        ; Routine to fill memory with prior user interaction
+   232                        ; fills from: memptr to: ptr
+   233                        ; 
+   234                        fillmem:	
+   235 00:016F: A2 xx xx     		ldx	#msgfill1
+   236 00:0172: 20 xx xx     		jsr	print
+   237                        	
+   238 00:0175: 20 xx xx     		jsr	enteradr
+   239 00:0178: C9 78        		cmp	#'x'
+   240 00:017A: F0 36        		beq	fillend
+   241                        	
+   242 00:017C: A2 xx xx     		ldx	#msgfill2
+   243 00:017F: 20 xx xx     		jsr	print
+   244                        	
+   245 00:0182: 20 xx xx     		jsr	inputhex
+   246 00:0185: 85 02        		sta	<ptr+1
+   247 00:0187: 20 xx xx     		jsr	inputhex
+   248 00:018A: 85 01        		sta	<ptr
+   249                        	
+   250 00:018C: A2 xx xx     		ldx	#msgfill3
+   251 00:018F: 20 xx xx     		jsr	print
+   252                        	
+   253 00:0192: 20 xx xx     		jsr	inputhex
+   254 00:0195: 87 03        		sta	[memptr]
+   255 00:0197: A5 05        		lda	<memptr+2
+   256 00:0199: 85 01        		sta	MOVEBNK
+   257 00:019B: 85 02        		sta	MOVEBNK+1
+   258                        		
+   259                        		A16
++  259 00:019D: C2 20        		rep	#ACC
++  259                        		longa	on
+   260 00:019F: 38           		sec
+   261 00:01A0: A5 01        		lda	<ptr
+   262 00:01A2: E5 03        		sbc	<memptr
+   263 00:01A4: 90 0C        		bcc	fillend		
+   264 00:01A6: F0 0A        		beq	fillend
+   265 00:01A8: 3A           		dea
+   266                        
+   267 00:01A9: A6 03        		ldx	memptr
+  Tue Oct  6 2026 15:25                                                                                                    Page 6
+
+
+   268 00:01AB: 9B           		txy
+   269 00:01AC: C8           		iny
+   270 00:01AD: 8B           		phb
+   271 00:01AE: 20 00 02     		jsr	MOVENEG
+   272 00:01B1: AB           		plb
+   273                        fillend:	A8
++  273 00:01B2: E2 20        		sep	#ACC
++  273                        		longa	off
+   274 00:01B4: 60           		rts
+   275                        		
+   276 00:01B5: 66 69 6C 6C  msgfill1:	.byte	"fill from: ", 0
+       00:01B9: 20 66 72 6F 
+       00:01BD: 6D 3A 20 00 
+   277 00:01C1: 20 74 6F 20  msgfill2:	.byte	" to ", 0
+       00:01C5: 00 
+   278 00:01C6: 20 77 69 74  msgfill3:	.byte	" with: ",0
+       00:01CA: 68 3A 20 00 
+   279                        
+   280 00:01CE: 63 6F 70 79  msgcopy1:	.byte	"copy from: ", 0
+       00:01D2: 20 66 72 6F 
+       00:01D6: 6D 3A 20 00 
+   281 00:01DA: 20 64 65 73  msgcopy2:	.byte	" dest: ", 0
+       00:01DE: 74 3A 20 00 
+   282                        ;
+   283                        ;
+   284                        ;
+   285 00:01E2: A9 22        gotoadr:	lda 	#$22		;JSL opcode
+   286 00:01E4: 85 05        		sta	JSLOP
+   287 00:01E6: A9 60        		lda	#$60
+   288 00:01E8: 85 09        		sta	JSLRTS
+   289                        		
+   290 00:01EA: A5 03        		lda	<memptr
+   291 00:01EC: 85 06        		sta	JSLADR
+   292 00:01EE: A5 04        		lda	<memptr+1
+   293 00:01F0: 85 07        		sta	JSLADR+1
+   294 00:01F2: A5 05        		lda	<memptr+2
+   295 00:01F4: 85 08        		sta	JSLADR+2
+   296                        
+   297                        		;wdm	6
+   298 00:01F6: 4C 05 02     		jmp	JSLOP	
+   299                        ;
+   300                        ;
+   301                        ;		
+   302                        memdump:
+   303 00:01F9: 20 xx xx     		jsr	newline
+   304 00:01FC: A2 10 00     		ldx	#16
+   305 00:01FF: 20 xx xx     memdump3:	jsr	memdump16
+   306 00:0202: CA           		dex	
+   307 00:0203: D0 FA        		bne	memdump3
+   308 00:0205: 60           		rts	
+   309                        			
+   310 00:0206: A5 05        memdump16:	lda	<memptr+2
+   311 00:0208: 20 xx xx     		jsr	printhex
+   312 00:020B: A9 3A        		lda	#':'
+   313 00:020D: 20 xx xx     		jsr	chrout
+   314                        			
+   315 00:0210: A5 04        		lda	<memptr+1
+   316 00:0212: 20 xx xx     		jsr	printhex
+  Tue Oct  6 2026 15:25                                                                                                    Page 7
+
+
+   317 00:0215: A5 03        		lda	<memptr
+   318 00:0217: 20 xx xx     		jsr	printhex
+   319                        			
+   320 00:021A: 20 xx xx     		jsr	space
+   321                        	
+   322 00:021D: A0 00 00     		ldy	#0
+   323 00:0220: C0 08 00     memdump1:	cpy 	#8
+   324 00:0223: D0 06        		bne	memdump7
+   325 00:0225: 20 xx xx     		jsr 	space
+   326 00:0228: 20 xx xx     		jsr	space
+   327 00:022B: B7 03        memdump7:	lda	[memptr],y
+   328 00:022D: 20 xx xx     		jsr	printhex
+   329 00:0230: 20 xx xx     		jsr	space
+   330 00:0233: C8           		iny	
+   331 00:0234: C0 10 00     		cpy	#16
+   332 00:0237: D0 E7        		bne	memdump1
+   333                        			
+   334 00:0239: 20 xx xx     		jsr	space
+   335 00:023C: A9 7C        		lda	#'|'
+   336 00:023E: 20 xx xx     		jsr	chrout
+   337                        	
+   338 00:0241: A0 00 00     		ldy	#0
+   339 00:0244: B7 03        memdump5:	lda	[memptr],y
+   340 00:0246: 30 04        		bmi	memdump4
+   341                        ;		cmp	#TABU		; if >= TABU
+   342                        ;		bcs	memdump4	; print space
+   343 00:0248: C9 20        		cmp	#32		; if < space, print space
+   344 00:024A: B0 02        		bcs	memdump2
+   345 00:024C: A9 20        memdump4:	lda	#' '
+   346 00:024E: 20 xx xx     memdump2:	jsr	chrout
+   347 00:0251: C8           		iny	
+   348 00:0252: C0 10 00     		cpy	#16
+   349 00:0255: D0 ED        		bne	memdump5
+   350                        	
+   351 00:0257: A9 7C        		lda	#'|'
+   352 00:0259: 20 xx xx     		jsr	chrout
+   353                        	
+   354 00:025C: 18           		clc
+   355 00:025D: 98           		tya	
+   356 00:025E: 65 03        		adc	<memptr
+   357 00:0260: 85 03        		sta	<memptr
+   358 00:0262: 90 06        		bcc	memdump8
+   359 00:0264: E6 04        		inc	<memptr+1
+   360 00:0266: D0 02        		bne	memdump8
+   361 00:0268: E6 05        		inc	<memptr+2
+   362 00:026A: 4C xx xx     memdump8:	jmp	newline
+   363                        ;
+   364                        ;
+   365                        ;
+   366                        setaddress:
+   367 00:026D: A2 xx xx     		ldx	#MSGADDR
+   368 00:0270: 20 xx xx     		jsr	print
+   369 00:0273: 4C xx xx     		jmp	enteradr
+   370                        
+   371 00:0276: 61 64 64 72  MSGADDR:	.byte	"address: ",0
+       00:027A: 65 73 73 3A 
+       00:027E: 20 00 
+   372                        ;
+  Tue Oct  6 2026 15:25                                                                                                    Page 8
+
+
+   373                        ;
+   374                        ;
+   375 00:0280: 68           prthelp:	pla	
+   376 00:0281: 68           		pla	
+   377 00:0282: 4C xx xx     		jmp	menu
+   378                        ;
+   379                        ;
+   380                        ;		
+   381 00:0285: A2 00 00     enteradr:	ldx	#0
+   382 00:0288: 86 03        		stx	<memptr
+   383 00:028A: A9 04        		lda	#4
+   384 00:028C: 85 04        		sta	ADRCNT
+   385                        		
+   386 00:028E: 20 xx xx     enteradrC:	jsr	chrin
+   387 00:0291: C9 0D        		cmp	#EOL
+   388 00:0293: F0 30        		beq	enteradrEnd
+   389                        	
+   390 00:0295: C9 78        		cmp	#'x'
+   391 00:0297: F0 2C        		beq	enteradrEnd
+   392                        	
+   393 00:0299: 20 xx xx     enteradrD:	jsr	chrout
+   394 00:029C: C9 3A        		cmp	#':'
+   395 00:029E: B0 08        		bcs	enteradrE
+   396 00:02A0: C9 30        		cmp	#'0'
+   397 00:02A2: 90 EA        		bcc	enteradrC
+   398                        	
+   399 00:02A4: 29 0F        		and	#%00001111
+   400 00:02A6: B0 0A        		bcs	enteradrF
+   401                        	
+   402 00:02A8: C9 67        enteradrE:	cmp	#'g'
+   403 00:02AA: B0 E2        		bcs	enteradrC
+   404 00:02AC: C9 61        		cmp	#'a'
+   405 00:02AE: 90 DE        		bcc	enteradrC
+   406                        	
+   407 00:02B0: E9 37        		sbc	#'7'
+   408 00:02B2: 0A           enteradrF:	asl
+   409 00:02B3: 0A           		asl
+   410 00:02B4: 0A           		asl
+   411 00:02B5: 0A           		asl
+   412 00:02B6: A2 04 00     		ldx	#4
+   413 00:02B9: 0A           enteradrG:	asl
+   414 00:02BA: 26 03        		rol	<memptr
+   415 00:02BC: 26 04        		rol	<memptr+1
+   416 00:02BE: CA           		dex
+   417 00:02BF: D0 F8        		bne	enteradrG
+   418                        
+   419 00:02C1: C6 04        		dec	ADRCNT
+   420 00:02C3: D0 C9        		bne	enteradrC
+   421 00:02C5: 60           enteradrEnd:	rts
+   422                        ;----------------------------------------------------------------------------
+   423                        ; Print routines
+   424                        ;----------------------------------------------------------------------------
+   425 00:02C6: 48           newline:	pha	
+   426 00:02C7: A9 0D        		lda	#EOL
+   427 00:02C9: D0 03        		bne	space1
+   428                        	
+   429 00:02CB: 48           space:		pha	
+   430 00:02CC: A9 20        		lda	#32
+  Tue Oct  6 2026 15:25                                                                                                    Page 9
+
+
+   431                        	
+   432 00:02CE: 20 xx xx     space1:		jsr	chrout
+   433 00:02D1: 68           		pla	
+   434 00:02D2: 60           		rts	
+   435                        
+   436 00:02D3: 48           printhex:	pha	
+   437 00:02D4: 48           		pha	
+   438 00:02D5: 4A           		lsr	
+   439 00:02D6: 4A           		lsr	
+   440 00:02D7: 4A           		lsr	
+   441 00:02D8: 4A           		lsr	
+   442 00:02D9: 20 xx xx     		jsr	printnibble
+   443 00:02DC: 68           		pla	
+   444 00:02DD: 29 0F        		and	#15
+   445 00:02DF: 20 xx xx     		jsr	printnibble
+   446 00:02E2: 68           		pla	
+   447 00:02E3: 60           		rts	
+   448                        	
+   449 00:02E4: 18           printnibble:	clc	
+   450 00:02E5: 69 30        		adc	#48
+   451 00:02E7: C9 3A        		cmp	#58
+   452 00:02E9: 90 02        		bcc	printnibble1
+   453 00:02EB: 69 06        		adc	#6
+   454 00:02ED: 4C xx xx     printnibble1:	jmp	chrout
+   455                        	
+   456                        
+   457 00:02F0: 48           print:		pha	
+   458 00:02F1: DA           		phx
+   459                        		
+   460 00:02F2: BD 00 00     print2:		lda	$0,x
+   461 00:02F5: F0 06        		beq	print1
+   462 00:02F7: 20 xx xx     		jsr	chrout
+   463 00:02FA: E8           		inx
+   464 00:02FB: 80 F5        		bra	print2
+   465                        		
+   466 00:02FD: FA           print1:		plx
+   467 00:02FE: 68           		pla
+   468 00:02FF: 60           		rts
+   469                        		
+   470                        
+   471                        ;----------------------------------------------------------------------------
+   472                        ; Input routines
+   473                        ;----------------------------------------------------------------------------
+   474 00:0300: 20 xx xx     inputhex:	jsr	inputnibble
+   475 00:0303: 0A           		asl	
+   476 00:0304: 0A           		asl	
+   477 00:0305: 0A           		asl	
+   478 00:0306: 0A           		asl	
+   479 00:0307: 85 06        		sta	<gethex_A
+   480 00:0309: 20 xx xx     		jsr	inputnibble
+   481                        		;clc	
+   482 00:030C: 05 06        		ora	<gethex_A
+   483 00:030E: 85 06        		sta	<gethex_A
+   484 00:0310: 60           		rts	
+   485                        	
+   486 00:0311: 20 xx xx     inputnibble:	jsr	getupper
+   487 00:0314: 20 xx xx     		jsr	chrout
+   488 00:0317: 38           		sec	
+  Tue Oct  6 2026 15:25                                                                                                    Page 10
+
+
+   489 00:0318: E9 30        		sbc	#48
+   490 00:031A: C9 0A        		cmp	#10
+   491 00:031C: 90 02        		bcc	inputnibble1
+   492 00:031E: E9 07        		sbc	#7
+   493 00:0320: 60           inputnibble1:	rts
+   494                        ;
+   495                        ;
+   496                        ;		
+   497 00:0321: 20 xx xx     getupper:	jsr	chrin
+   498 00:0324: C9 61        		cmp	#97
+   499 00:0326: 90 06        		bcc	getupperex	
+   500 00:0328: C9 7B        		cmp	#123
+   501 00:032A: B0 02        		bcs	getupperex
+   502 00:032C: E9 1F        		sbc	#31
+   503 00:032E: 60           getupperex	rts	
+   504                        ;
+   505                        ;
+   506                        ;	
+   507 00:032F: 20 xx xx     getadr:		jsr	gethex
+   508 00:0332: 85 02        		sta	<ptr+1		
+   509 00:0334: 20 xx xx     		jsr	gethex
+   510 00:0337: 85 01        		sta	<ptr
+   511 00:0339: 60           		rts	
+   512                        ;
+   513                        ;
+   514                        ;	
+   515 00:033A: 20 xx xx     gethex:		jsr	getnibble
+   516 00:033D: 0A           		asl	
+   517 00:033E: 0A           		asl	
+   518 00:033F: 0A           		asl	
+   519 00:0340: 0A           		asl	
+   520 00:0341: 85 06        		sta	<gethex_A
+   521 00:0343: 20 xx xx     		jsr	getnibble
+   522 00:0346: 05 06        		ora	<gethex_A
+   523 00:0348: 85 06        		sta	<gethex_A
+   524                        	
+   525 00:034A: 18           		clc	
+   526 00:034B: 65 07        		adc	<chksum
+   527 00:034D: 85 07        		sta	<chksum
+   528 00:034F: A5 06        		lda	<gethex_A
+   529 00:0351: 60           		rts	
+   530                        	
+   531 00:0352: 20 xx xx     getnibble:	jsr	getupper
+   532 00:0355: 38           		sec	
+   533 00:0356: E9 30        		sbc	#48
+   534 00:0358: C9 0A        		cmp	#10
+   535 00:035A: 90 02        		bcc	getnibble1
+   536 00:035C: E9 07        		sbc	#7
+   537 00:035E: 60           getnibble1:	rts	
+   538                        
+   539                        ;----------------------------------------------------------------------------
+   540                        ; reads a byte from chrin in ACC and serbyte
+   541                        ;----------------------------------------------------------------------------
+   542 00:035F: AF 01 E0 FF  chrin		lda	>IO0+STATA
+   543 00:0363: 29 01        		and	#1
+   544 00:0365: F0 F8        		beq	chrin
+   545 00:0367: AF 03 E0 FF  		lda	>IO0+RECA
+   546 00:036B: 85 00        		sta	<serbyte
+  Tue Oct  6 2026 15:25                                                                                                    Page 11
+
+
+   547 00:036D: 60           		rts
+   548                        
+   549                        ;----------------------------------------------------------------------------
+   550                        ; writes acc to chrout
+   551                        ;----------------------------------------------------------------------------	
+   552 00:036E: 48           chrout		pha
+   553 00:036F: AF 01 E0 FF  		lda	>IO0+STATA
+   554 00:0373: 29 04        		and	#4
+   555 00:0375: F0 F7        		beq	chrout
+   556 00:0377: 68           		pla
+   557 00:0378: 8F 03 E0 FF  		sta	>IO0+TRANSA
+   558 00:037C: 60           		rts
+   559                        		
+   560                        ;----------------------------------------------------------------------------
+   561                        ; wait 19200 baud
+   562                        ;----------------------------------------------------------------------------	
+   563                        ;rs232baud2	ldy	#29		
+   564                        ;		bne	rs232baud1
+   565                        ;rs232baud	ldy	#58				; 2	2 + 58*5 -1 + 6 = 297
+   566                        ;rs232baud1	dey					; 2
+   567                        ;		bne	rs232baud1			; 3
+   568                        ;		rts					; 6
+   569                        		
+   570                        ;----------------------------------------------------------------------------
+   571                        ; Kernel messages
+   572                        ;----------------------------------------------------------------------------	
+   573 00:037D: 3F 42 43 44  menukey:	.byte	"?BCDFGKLMNST"
+       00:0381: 46 47 4B 4C 
+       00:0385: 4D 4E 53 54 
+   574                        
+   575 00:0389: xx xx        menuvec:	.word	prthelp
+   576 00:038B: xx xx        		.word	setdatabank
+   577 00:038D: xx xx        		.word	changemem
+   578 00:038F: xx xx        		.word	hexdownload
+   579 00:0391: xx xx        		.word	fillmem
+   580 00:0393: xx xx        		.word	gotoadr
+   581 00:0395: xx xx        		.word	disass16	;disass16
+   582 00:0397: xx xx        		.word	disass8		;disass8
+   583 00:0399: xx xx        		.word	memdump
+   584 00:039B: xx xx        		.word	setaddress
+   585 00:039D: xx xx        		.word	prthelp		;setbreak
+   586 00:039F: xx xx        		.word	copymem		;copymem
+   587                        
+   588 00:03A1: 0D 0D        MSGSTART:	.byte	EOL, EOL
+   589 00:03A3: 2A 2A 2A 20  		.byte	"*** 65816 - 6Mhz Homebrew by R. Scholz", EOL, EOL
+       00:03A7: 36 35 38 31 
+       00:03AB: 36 20 2D 20 
+       00:03AF: 36 4D 68 7A 
+       00:03B3: 20 48 6F 6D 
+       00:03B7: 65 62 72 65 
+       00:03BB: 77 20 62 79 
+       00:03BF: 20 52 2E 20 
+       00:03C3: 53 63 68 6F 
+       00:03C7: 6C 7A 0D 0D 
+   590 00:03CB: 3F 20 2D 20  		.byte	"? - This help list", EOL
+       00:03CF: 54 68 69 73 
+       00:03D3: 20 68 65 6C 
+       00:03D7: 70 20 6C 69 
+  Tue Oct  6 2026 15:25                                                                                                    Page 12
+
+
+       00:03DB: 73 74 0D 
+   591 00:03DE: 42 20 2D 20  		.byte	"B - Set data bank", EOL
+       00:03E2: 53 65 74 20 
+       00:03E6: 64 61 74 61 
+       00:03EA: 20 62 61 6E 
+       00:03EE: 6B 0D 
+   592 00:03F0: 43 20 2D 20  		.byte	"C - Change byte", EOL
+       00:03F4: 43 68 61 6E 
+       00:03F8: 67 65 20 62 
+       00:03FC: 79 74 65 0D 
+   593 00:0400: 44 20 2D 20  		.byte	"D - Download Intel-Hex file", EOL
+       00:0404: 44 6F 77 6E 
+       00:0408: 6C 6F 61 64 
+       00:040C: 20 49 6E 74 
+       00:0410: 65 6C 2D 48 
+       00:0414: 65 78 20 66 
+       00:0418: 69 6C 65 0D 
+   594 00:041C: 46 20 2D 20  		.byte	"F - Fill memory", EOL
+       00:0420: 46 69 6C 6C 
+       00:0424: 20 6D 65 6D 
+       00:0428: 6F 72 79 0D 
+   595 00:042C: 47 20 2D 20  		.byte	"G - Goto address", EOL
+       00:0430: 47 6F 74 6F 
+       00:0434: 20 61 64 64 
+       00:0438: 72 65 73 73 
+       00:043C: 0D 
+   596 00:043D: 4B 20 2D 20  		.byte	"K - Disassemble 16", EOL
+       00:0441: 44 69 73 61 
+       00:0445: 73 73 65 6D 
+       00:0449: 62 6C 65 20 
+       00:044D: 31 36 0D 
+   597 00:0450: 4C 20 2D 20  		.byte	"L - Disassemble 8", EOL
+       00:0454: 44 69 73 61 
+       00:0458: 73 73 65 6D 
+       00:045C: 62 6C 65 20 
+       00:0460: 38 0D 
+   598 00:0462: 4D 20 2D 20  		.byte	"M - Memory dump", EOL
+       00:0466: 4D 65 6D 6F 
+       00:046A: 72 79 20 64 
+       00:046E: 75 6D 70 0D 
+   599 00:0472: 4E 20 2D 20  		.byte	"N - New address", EOL
+       00:0476: 4E 65 77 20 
+       00:047A: 61 64 64 72 
+       00:047E: 65 73 73 0D 
+   600 00:0482: 53 20 2D 20  		.byte 	"S - Set breakpoint", EOL
+       00:0486: 53 65 74 20 
+       00:048A: 62 72 65 61 
+       00:048E: 6B 70 6F 69 
+       00:0492: 6E 74 0D 
+   601 00:0495: 54 20 2D 20  		.byte	"T - Transfer memory", EOL
+       00:0499: 54 72 61 6E 
+       00:049D: 73 66 65 72 
+       00:04A1: 20 6D 65 6D 
+       00:04A5: 6F 72 79 0D 
+   602 00:04A9: 00           		.byte	0
+
+
+      Lines assembled: 738
+  Tue Oct  6 2026 15:25                                                                                                    Page 13
+
+
+      Errors: 0
